@@ -228,7 +228,7 @@ export const socialLinks: Record<string, string> = {
  * credit should cover more than one person.
  */
 export const credits = {
-  people: [{ name: 'Patrice', role: 'Design and build', url: '' }],
+  people: [{ name: 'Patrice IRADUKUNDA', role: 'Designed & Developed', url: 'https://www.linkedin.com/in/patrice-iradukunda-74931827a/' }],
 };
 
 export const footerColumns = [
