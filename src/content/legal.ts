@@ -154,3 +154,125 @@ export const howItWorks = {
     { n: '03', title: 'We find the buyer', body: 'Enquiries and test drives come to you already qualified. Our commission is in the listed price; you receive what we agreed.' },
   ],
 };
+
+
+/** The verification story. Linked from every listing badge and the footer. */
+export const trust = {
+  title: 'Trust and verification',
+  intro:
+    'Voltaris does not own most of the vehicles listed here. Our job is to check them, and to be precise about what "checked" means — an unexplained tick is worth nothing.',
+  checks: [
+    {
+      title: 'Ownership documents',
+      body: 'The registration document is matched to the person or business listing the vehicle. A seller who cannot produce it does not get listed, whatever the vehicle is worth.',
+    },
+    {
+      title: 'Import and duty status',
+      body: 'Confirmed against Rwanda Revenue Authority records where applicable. This is where most problems with imported vehicles surface, and it is far cheaper to find before a sale than after.',
+    },
+    {
+      title: 'Battery state of health',
+      body: 'Read from the vehicle’s own diagnostics, never estimated from the dashboard range display and never taken from the seller. On a used EV this single number determines what the car is actually worth.',
+    },
+    {
+      title: 'Physical inspection',
+      body: 'A Voltaris agent has seen the vehicle in person — not photographs, not a video call.',
+    },
+  ],
+  badge: {
+    title: 'What the verified mark means',
+    body: 'All four checks completed. Nothing less earns it. A listing without the mark says so plainly rather than staying quiet about it, and you can ask us which checks are outstanding before you view.',
+  },
+  limits: {
+    title: 'What it does not mean',
+    body: 'Verification is not a warranty, not a mechanical guarantee, and not a valuation. It confirms the vehicle is what the listing says it is and that the paperwork is sound. Inspect it and take a test drive before committing — we arrange both.',
+  },
+  reporting: {
+    title: 'If something is wrong',
+    body: 'If a listing is inaccurate, tell us and we will check it. If it is misleading, we take it down. Write to hello@voltaris.rw with the listing link.',
+  },
+};
+
+export const help = {
+  title: 'Help',
+  intro: 'The questions people actually ask. If yours is not here, a person reads every message sent through the contact form.',
+  sections: [
+    {
+      heading: 'Buying',
+      faqs: [
+        {
+          q: 'Do I pay Voltaris or the seller?',
+          a: 'The price shown is the price to you. Our commission comes from the seller and is already inside that number — there is no separate fee.',
+        },
+        {
+          q: 'Can I see the vehicle before buying?',
+          a: 'Yes, and you should. Request a test drive from any listing and we arrange the slot with the seller. Range on paper and range on the Nyabugogo climb are different numbers.',
+        },
+        {
+          q: 'Is the battery report available for used EVs?',
+          a: 'For verified listings, yes — ask through the enquiry form. It is read from the vehicle’s diagnostics, not estimated.',
+        },
+        {
+          q: 'Do I pay import duty on an electric vehicle?',
+          a: 'Electric vehicles are exempt from import duty in Rwanda, with relief on VAT and withholding tax. Confirm the current position with RRA before purchase — incentive schemes are reviewed periodically.',
+        },
+      ],
+    },
+    {
+      heading: 'Selling',
+      faqs: [
+        {
+          q: 'How do I list my vehicle?',
+          a: 'Self-service listing is not open yet. Use the form on the Sell page and a member of the team will come back within a working day to photograph the vehicle and agree a price.',
+        },
+        {
+          q: 'What do you charge?',
+          a: 'A commission on the sale, agreed with you before the listing goes live. You receive the figure we agreed; the commission sits in the difference between that and the listed price.',
+        },
+        {
+          q: 'Who sees my phone number?',
+          a: 'Private sellers’ numbers are never published. Enquiries reach you through Voltaris. Dealers can opt into showing contact details publicly.',
+        },
+      ],
+    },
+    {
+      heading: 'Account',
+      faqs: [
+        {
+          q: 'I have forgotten my password.',
+          a: 'Self-service reset is not live yet. Email hello@voltaris.rw from the address on the account and we will reset it.',
+        },
+        {
+          q: 'Do I need an account to enquire?',
+          a: 'No. Enquiries and test drive requests are open to anyone. An account lets you save vehicles and track your enquiries in one place.',
+        },
+      ],
+    },
+    {
+      heading: 'Charging and ownership',
+      faqs: [
+        {
+          q: 'Can I charge from a normal household socket?',
+          a: 'Yes. Most EVs include a cable for a standard socket, adding roughly 10–15 km of range per hour — enough to refill a typical day’s driving overnight. A wall box is several times faster.',
+        },
+        {
+          q: 'How long does an EV battery last?',
+          a: 'Modern batteries typically hold 80–90% of capacity after eight years, and manufacturers usually warrant them for eight years or a set mileage. For a used EV, ask for the battery health report rather than relying on the seller’s estimate.',
+        },
+      ],
+    },
+  ],
+};
+
+export const careers = {
+  title: 'Careers',
+  intro: 'Voltaris is small and based in Kigali. We are not running open vacancies right now, but we read every message and keep good ones on file.',
+  interests: [
+    'Engineering — TypeScript, Python, and the boring reliability work that makes a marketplace trustworthy',
+    'Vehicle inspection — mechanical knowledge, EV diagnostics, and the judgement to say no to a listing',
+    'Sales and partnerships — dealers, fleets, and mobility operators across Rwanda',
+    'Content — writing about EV ownership for this market rather than translating it from another',
+  ],
+  closing:
+    'If one of those describes you, write to hello@voltaris.rw with what you have built or done. We would rather see something real than a CV template.',
+};

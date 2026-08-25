@@ -21,6 +21,10 @@ const STATIC_ROUTES: {
   { path: '/how-it-works', priority: 0.5, changeFrequency: 'monthly' },
   { path: '/about', priority: 0.5, changeFrequency: 'monthly' },
   { path: '/contact', priority: 0.5, changeFrequency: 'monthly' },
+  // Trust is a real landing page: it is what a hesitant buyer searches for.
+  { path: '/trust-and-verification', priority: 0.6, changeFrequency: 'monthly' },
+  { path: '/help', priority: 0.5, changeFrequency: 'monthly' },
+  { path: '/careers', priority: 0.3, changeFrequency: 'monthly' },
   { path: '/legal/terms', priority: 0.3, changeFrequency: 'yearly' },
   { path: '/legal/privacy', priority: 0.3, changeFrequency: 'yearly' },
   { path: '/trust-and-verification', priority: 0.5, changeFrequency: 'monthly' },
