@@ -1,13 +1,24 @@
 import { ApiError, isApiFailure } from './errors';
+import { envNumber, envString } from '@/lib/env';
 import type { ApiEnvelope } from '@/types/api';
 
 const isServer = typeof window === 'undefined';
 
 function baseUrl(): string {
+  // envString, not `??`: a blank API_INTERNAL_BASE_URL would otherwise win over
+  // the public one and point every server-side fetch at an empty string.
   const url = isServer
-    ? (process.env.API_INTERNAL_BASE_URL ?? process.env.NEXT_PUBLIC_API_BASE_URL)
-    : process.env.NEXT_PUBLIC_API_BASE_URL;
-  if (!url) throw new Error('API base URL is not configured. See .env.example.');
+    ? envString(process.env.API_INTERNAL_BASE_URL, envString(process.env.NEXT_PUBLIC_API_BASE_URL, ''))
+    : envString(process.env.NEXT_PUBLIC_API_BASE_URL, '');
+  if (!url) {
+    // Name the variable. "API base URL is not configured" sends someone reading
+    // .env.example; naming it sends them straight to the dashboard field.
+    throw new Error(
+      'NEXT_PUBLIC_API_BASE_URL is not set (or is empty). ' +
+        'Set it to your API origin including the version prefix, ' +
+        'for example https://api.voltaris.rw/api/v1',
+    );
+  }
   return url.replace(/\/$/, '');
 }
 
@@ -75,7 +86,9 @@ export async function request<T>(path: string, options: RequestOptions = {}): Pr
   const url = `${baseUrl()}${path.startsWith('/') ? path : `/${path}`}${toQueryString(query)}`;
 
   const controller = new AbortController();
-  const limit = timeoutMs ?? Number(process.env.API_SERVER_TIMEOUT_MS ?? 8000);
+  // envNumber, not Number(x ?? 8000): Number('') is 0, which would abort every
+  // server-side request immediately.
+  const limit = timeoutMs ?? envNumber(process.env.API_SERVER_TIMEOUT_MS, 8000);
   const timer = setTimeout(() => controller.abort(), limit);
   signal?.addEventListener('abort', () => controller.abort(), { once: true });
 

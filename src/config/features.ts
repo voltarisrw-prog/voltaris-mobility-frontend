@@ -11,9 +11,7 @@
  * missing environment variable is "hide it".
  */
 
-function enabled(value: string | undefined): boolean {
-  return value === 'true' || value === '1';
-}
+import { envFlag } from '@/lib/env';
 
 export const features = {
   /**
@@ -21,24 +19,24 @@ export const features = {
    * Requires: a real payment provider adapter in the backend. `StubProvider`
    * refuses to run in production, so this must stay off until one exists.
    */
-  checkout: enabled(process.env.NEXT_PUBLIC_FEATURE_CHECKOUT),
+  checkout: envFlag(process.env.NEXT_PUBLIC_FEATURE_CHECKOUT),
 
   /**
    * Seller self-service listing submission.
    * Requires: `POST /seller-listings`. Media upload already works, but without
    * the listing endpoint the form loses everything on submit.
    */
-  sellerListings: enabled(process.env.NEXT_PUBLIC_FEATURE_SELLER_LISTINGS),
+  sellerListings: envFlag(process.env.NEXT_PUBLIC_FEATURE_SELLER_LISTINGS),
 
   /**
    * Password reset and email verification links.
    * Requires: an email transport. Without one the endpoints accept the request
    * and nothing ever arrives, which is worse than not offering it.
    */
-  passwordReset: enabled(process.env.NEXT_PUBLIC_FEATURE_PASSWORD_RESET),
+  passwordReset: envFlag(process.env.NEXT_PUBLIC_FEATURE_PASSWORD_RESET),
 
   /** Rentals. Needs an availability calendar, not just a daily price. */
-  rentals: enabled(process.env.NEXT_PUBLIC_FEATURE_RENTALS),
+  rentals: envFlag(process.env.NEXT_PUBLIC_FEATURE_RENTALS),
 } as const;
 
 export type Feature = keyof typeof features;

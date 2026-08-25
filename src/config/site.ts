@@ -1,8 +1,12 @@
+import { envUrl } from '@/lib/env';
+
 export const site = {
   name: 'Voltaris Mobility',
   legalName: 'Voltaris Mobility Ltd',
   tagline: 'Find your next drive',
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? 'https://voltaris.rw',
+  // envUrl, not `??`: a blank NEXT_PUBLIC_SITE_URL in a hosting dashboard is an
+  // empty string, which `??` passes straight through to `new URL('')`.
+  url: envUrl('NEXT_PUBLIC_SITE_URL', process.env.NEXT_PUBLIC_SITE_URL, 'https://voltaris.rw'),
   locale: 'en_RW',
   currency: 'RWF',
   country: 'RW',
