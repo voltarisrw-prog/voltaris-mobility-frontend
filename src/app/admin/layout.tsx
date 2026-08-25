@@ -11,6 +11,21 @@ const NAV = [
   { href: '/admin/audit', label: 'Audit log' },
 ];
 
+/**
+ * Never prerendered. Every page in this segment is per-viewer: it reads the
+ * session cookie and returns that person's data.
+ *
+ * Without this, Next tries to statically generate them at build time. It
+ * normally discovers they are dynamic when `cookies()` is called — but the API
+ * client validates its configuration *before* reading cookies, so a missing
+ * NEXT_PUBLIC_API_BASE_URL throws first and the build fails on a page that
+ * should never have been prerendered at all.
+ *
+ * Declaring it removes the guesswork: the build no longer depends on a runtime
+ * variable being present, which is the correct relationship between the two.
+ */
+export const dynamic = 'force-dynamic';
+
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   let session;
   try {
