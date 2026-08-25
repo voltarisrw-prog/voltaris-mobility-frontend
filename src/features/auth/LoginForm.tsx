@@ -10,6 +10,7 @@ import { login } from '@/lib/api/auth';
 import { ApiError, displayMessage } from '@/lib/api/errors';
 import { loginSchema } from '@/lib/validation/schemas';
 import { safeNext } from './safeNext';
+import { features } from '@/config/features';
 import type { z } from 'zod';
 
 type Values = z.infer<typeof loginSchema>;
@@ -104,9 +105,13 @@ export function LoginForm() {
       </Button>
 
       <div className="flex justify-between font-data text-eyebrow uppercase">
-        <Link href="/forgot-password" className="text-volt hover:underline">
-          Forgot password
-        </Link>
+        {features.passwordReset ? (
+          <Link href="/forgot-password" className="text-volt hover:underline">
+            Forgot password
+          </Link>
+        ) : (
+          <span className="text-steel-muted">Locked out? Contact support</span>
+        )}
         <Link href="/register" className="text-volt hover:underline">
           Create an account
         </Link>

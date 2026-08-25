@@ -14,6 +14,7 @@ import { getSimilarVehicles, getVehicleBySlug } from '@/lib/api/vehicles';
 import { breadcrumbJsonLd, faqJsonLd, vehicleJsonLd } from '@/lib/seo/jsonld';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { formatKm, formatKwh } from '@/lib/format';
+import { features } from '@/config/features';
 import type { VehicleDetail, VehicleSummary } from '@/types/vehicle';
 
 type Params = Promise<{ slug: string }>;
@@ -223,7 +224,7 @@ export default async function VehiclePage({ params }: { params: Params }) {
                 >
                   Ask about this vehicle
                 </Link>
-                {vehicle.purchase_enabled && (
+                {features.checkout && vehicle.purchase_enabled && (
                   <Link
                     href={`/checkout/start?vehicle=${vehicle.id}`}
                     className="block border border-hairline px-5 py-3 text-center font-data text-eyebrow uppercase text-steel transition-colors hover:border-chrome hover:text-chrome"

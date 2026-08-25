@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { SellerListingFlow } from '@/features/sellers/SellerListingFlow';
+import { SellWaitingList } from '@/features/sellers/SellWaitingList';
+import { features } from '@/config/features';
 import { buildMetadata } from '@/lib/seo/metadata';
 
 export const metadata: Metadata = buildMetadata({
@@ -27,7 +29,7 @@ export default function SellPage() {
             Four steps, about ten minutes. Nothing goes live until a reviewer has checked it.
           </p>
           <div className="mt-10">
-            <SellerListingFlow />
+            {features.sellerListings ? <SellerListingFlow /> : <SellWaitingList />}
           </div>
         </div>
 
