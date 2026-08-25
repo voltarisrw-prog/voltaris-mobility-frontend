@@ -7,7 +7,7 @@ import { listDealers } from '@/lib/api/dealers';
 const STATIC_ROUTES: {
   path: string;
   priority: number;
-  changeFrequency: 'daily' | 'weekly' | 'monthly';
+  changeFrequency: 'daily' | 'weekly' | 'monthly' | 'yearly';
 }[] = [
   { path: '/', priority: 1, changeFrequency: 'daily' },
   { path: '/cars', priority: 0.9, changeFrequency: 'daily' },
@@ -19,6 +19,10 @@ const STATIC_ROUTES: {
   { path: '/sell', priority: 0.8, changeFrequency: 'monthly' },
   { path: '/test-drive', priority: 0.6, changeFrequency: 'monthly' },
   { path: '/how-it-works', priority: 0.5, changeFrequency: 'monthly' },
+  { path: '/about', priority: 0.5, changeFrequency: 'monthly' },
+  { path: '/contact', priority: 0.5, changeFrequency: 'monthly' },
+  { path: '/legal/terms', priority: 0.3, changeFrequency: 'yearly' },
+  { path: '/legal/privacy', priority: 0.3, changeFrequency: 'yearly' },
   { path: '/trust-and-verification', priority: 0.5, changeFrequency: 'monthly' },
 ];
 
