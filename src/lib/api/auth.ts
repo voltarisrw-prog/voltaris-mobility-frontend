@@ -1,21 +1,20 @@
 import { request } from './client';
 
 /**
- * Authentication is entirely cookie-based. The backend sets an httpOnly, SameSite
- * session cookie plus a readable CSRF cookie. No token is ever returned to JS, so
- * there is nothing for this module to store.
+ * Backend authentication response.
  *
- * BACKEND DEPENDENCY
- *   POST /auth/register            create account, sends verification email
- *   POST /auth/login               may respond MFA_REQUIRED before issuing a session
- *   POST /auth/logout              clears the session cookie
- *   POST /auth/forgot-password     always 204, regardless of whether the email exists
- *   POST /auth/reset-password      consumes a single-use token
- *   POST /auth/verify-email        consumes a single-use token
- *   GET  /auth/session             current viewer, or 401
+ * The backend issues httpOnly cookies for browser authentication.
+ * The token fields are returned by the API for non-browser clients,
+ * but browser code should never persist them in localStorage/sessionStorage.
  */
+export interface AuthResponse {
+  access_token: string;
+  refresh_token: string;
+  expires_in: number;
+  csrf_token: string;
+  user: Session['user'] | null;
+}
 
-/** Mirrors the backend `Role` enum exactly, including case. */
 export type Role =
   | 'BUYER'
   | 'SELLER'
@@ -26,9 +25,12 @@ export type Role =
   | 'ADMIN'
   | 'SUPER_ADMIN';
 
-/** Roles permitted to open the admin surface. The backend authorizes every call
- *  regardless — this only decides what to render. */
-export const STAFF_ROLES: readonly Role[] = ['SALES_AGENT', 'FINANCE', 'ADMIN', 'SUPER_ADMIN'];
+export const STAFF_ROLES: readonly Role[] = [
+  'SALES_AGENT',
+  'FINANCE',
+  'ADMIN',
+  'SUPER_ADMIN',
+];
 
 export interface Session {
   user: {
@@ -47,8 +49,16 @@ export interface LoginInput {
   otp?: string;
 }
 
-export function login(input: LoginInput): Promise<Session> {
-  return request<Session>('/auth/login', { method: 'POST', body: input, auth: true });
+export function login(
+  input: LoginInput,
+): Promise<AuthResponse> {
+  return request<AuthResponse>(
+    '/auth/login',
+    {
+      method: 'POST',
+      body: input,
+    },
+  );
 }
 
 export function register(input: {
@@ -56,51 +66,100 @@ export function register(input: {
   email: string;
   phone: string;
   password: string;
-}): Promise<{ verification_required: boolean }> {
-  return request('/auth/register', { method: 'POST', body: input });
+}): Promise<{ user_id: string; verification_required: boolean }> {
+  return request(
+    '/auth/register',
+    {
+      method: 'POST',
+      body: input,
+    },
+  );
 }
 
 export function logout(): Promise<void> {
-  return request<void>('/auth/logout', { method: 'POST', auth: true });
+  return request<void>(
+    '/auth/logout',
+    {
+      method: 'POST',
+      auth: true,
+    },
+  );
 }
 
-export function forgotPassword(email: string): Promise<void> {
-  return request<void>('/auth/forgot-password', { method: 'POST', body: { email }, auth: true });
+export function refresh(): Promise<AuthResponse> {
+  return request<AuthResponse>(
+    '/auth/refresh',
+    {
+      method: 'POST',
+      auth: true,
+      skipRefresh: true,
+    },
+  );
 }
 
-export function resetPassword(token: string, password: string): Promise<void> {
-  return request<void>('/auth/reset-password', {
-    method: 'POST',
-    body: { token, password },
-    auth: true,
-  });
+export function forgotPassword(
+  email: string,
+): Promise<void> {
+  return request<void>(
+    '/auth/forgot-password',
+    {
+      method: 'POST',
+      body: { email },
+    },
+  );
 }
 
-export function verifyEmail(token: string): Promise<void> {
-  return request<void>('/auth/verify-email', { method: 'POST', body: { token }, auth: true });
+export function resetPassword(
+  token: string,
+  password: string,
+): Promise<void> {
+  return request<void>(
+    '/auth/reset-password',
+    {
+      method: 'POST',
+      body: { token, password },
+    },
+  );
+}
+
+export function verifyEmail(
+  token: string,
+): Promise<void> {
+  return request<void>(
+    '/auth/verify-email',
+    {
+      method: 'POST',
+      body: { token },
+    },
+  );
 }
 
 export function getSession(): Promise<Session> {
-  return request<Session>('/auth/session', { auth: true });
+  return request<Session>(
+    '/auth/session',
+    {
+      auth: true,
+    },
+  );
 }
 
-/**
- * Google sign-in, step one. Returns the URL to send the browser to; the backend
- * generates and stores the `state` and `nonce` server-side, so nothing the client
- * holds can be tampered with.
- */
-export function googleAuthorizeUrl(): Promise<{ authorization_url: string }> {
-  return request<{ authorization_url: string }>('/auth/google/authorize');
+export function googleAuthorizeUrl(): Promise<{
+  authorization_url: string;
+}> {
+  return request<{
+    authorization_url: string;
+  }>('/auth/google/authorize');
 }
 
-/**
- * Step two. The backend exchanges the code server-side, verifies Google's ID token
- * against its JWKS, and links to an existing account by provider subject or verified
- * email — one account per person. The session cookies come back on this response.
- */
-export function googleCallback(code: string, state: string): Promise<Session> {
-  return request<Session>('/auth/google/callback', {
-    method: 'POST',
-    body: { code, state },
-  });
+export function googleCallback(
+  code: string,
+  state: string,
+): Promise<AuthResponse> {
+  return request<AuthResponse>(
+    '/auth/google/callback',
+    {
+      method: 'POST',
+      body: { code, state },
+    },
+  );
 }

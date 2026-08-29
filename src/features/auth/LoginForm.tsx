@@ -30,8 +30,14 @@ export function LoginForm() {
   const onSubmit = handleSubmit(async (values) => {
     setFormError(null);
     try {
-      await login(values);
-      // The session cookie is set by the backend on this response. Nothing is stored here.
+      const result = await login(values);
+
+      // Authentication is cookie-based.
+      // Never persist access_token or refresh_token in browser storage.
+      if (!result.user) {
+        throw new Error('Authentication succeeded but no user session was returned.');
+      }
+
       router.replace(safeNext(searchParams.get('next')));
       router.refresh();
     } catch (cause) {
