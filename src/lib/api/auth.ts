@@ -1,19 +1,15 @@
 import { request } from './client';
 
 /**
- * Backend authentication response.
+ * Cookie-based browser authentication.
  *
- * The backend issues httpOnly cookies for browser authentication.
- * The token fields are returned by the API for non-browser clients,
- * but browser code should never persist them in localStorage/sessionStorage.
+ * The backend sets:
+ *   - voltaris_session  -> httpOnly access/session cookie
+ *   - voltaris_refresh  -> httpOnly refresh cookie
+ *   - voltaris_csrf     -> readable CSRF cookie
+ *
+ * Tokens are therefore never stored in localStorage/sessionStorage.
  */
-export interface AuthResponse {
-  access_token: string;
-  refresh_token: string;
-  expires_in: number;
-  csrf_token: string;
-  user: Session['user'] | null;
-}
 
 export type Role =
   | 'BUYER'
@@ -32,15 +28,29 @@ export const STAFF_ROLES: readonly Role[] = [
   'SUPER_ADMIN',
 ];
 
+export interface PublicUser {
+  id: string;
+  full_name: string;
+  email: string;
+  roles: Role[];
+  email_verified: boolean;
+  mfa_enabled: boolean;
+}
+
 export interface Session {
-  user: {
-    id: string;
-    full_name: string;
-    email: string;
-    email_verified: boolean;
-    roles: Role[];
-    mfa_enabled: boolean;
-  };
+  user: PublicUser;
+}
+
+/**
+ * Backend /auth/login returns tokens + user.
+ * Browser code should expose only the session portion.
+ */
+interface AuthTokenResponse {
+  access_token: string;
+  refresh_token: string;
+  expires_in: number;
+  csrf_token: string;
+  user: PublicUser | null;
 }
 
 export interface LoginInput {
@@ -49,117 +59,106 @@ export interface LoginInput {
   otp?: string;
 }
 
-export function login(
-  input: LoginInput,
-): Promise<AuthResponse> {
-  return request<AuthResponse>(
-    '/auth/login',
-    {
-      method: 'POST',
-      body: input,
-    },
-  );
+export async function login(input: LoginInput): Promise<Session> {
+  const response = await request<AuthTokenResponse>('/auth/login', {
+    method: 'POST',
+    body: input,
+  });
+
+  if (!response.user) {
+    throw new Error('Authentication succeeded but no user session was returned.');
+  }
+
+  return {
+    user: response.user,
+  };
 }
 
-export function register(input: {
+export async function register(input: {
   full_name: string;
   email: string;
   phone: string;
   password: string;
-}): Promise<{ user_id: string; verification_required: boolean }> {
-  return request(
-    '/auth/register',
-    {
-      method: 'POST',
-      body: input,
-    },
-  );
+}): Promise<{ verification_required: boolean }> {
+  return request('/auth/register', {
+    method: 'POST',
+    body: input,
+  });
 }
 
-export function logout(): Promise<void> {
-  return request<void>(
-    '/auth/logout',
-    {
-      method: 'POST',
-      auth: true,
-    },
-  );
+export async function logout(): Promise<void> {
+  await request<void>('/auth/logout', {
+    method: 'POST',
+  });
 }
 
-export function refresh(): Promise<AuthResponse> {
-  return request<AuthResponse>(
-    '/auth/refresh',
-    {
-      method: 'POST',
-      auth: true,
-      skipRefresh: true,
-    },
-  );
+export async function refreshSession(): Promise<Session> {
+  const response = await request<AuthTokenResponse>('/auth/refresh', {
+    method: 'POST',
+  });
+
+  if (!response.user) {
+    throw new Error('Session refresh succeeded but no user session was returned.');
+  }
+
+  return {
+    user: response.user,
+  };
 }
 
-export function forgotPassword(
-  email: string,
-): Promise<void> {
-  return request<void>(
-    '/auth/forgot-password',
-    {
-      method: 'POST',
-      body: { email },
-    },
-  );
+export async function forgotPassword(email: string): Promise<void> {
+  await request<void>('/auth/forgot-password', {
+    method: 'POST',
+    body: { email },
+  });
 }
 
-export function resetPassword(
+export async function resetPassword(
   token: string,
   password: string,
 ): Promise<void> {
-  return request<void>(
-    '/auth/reset-password',
-    {
-      method: 'POST',
-      body: { token, password },
-    },
-  );
+  await request<void>('/auth/reset-password', {
+    method: 'POST',
+    body: { token, password },
+  });
 }
 
-export function verifyEmail(
-  token: string,
-): Promise<void> {
-  return request<void>(
-    '/auth/verify-email',
-    {
-      method: 'POST',
-      body: { token },
-    },
-  );
+export async function verifyEmail(token: string): Promise<void> {
+  await request<void>('/auth/verify-email', {
+    method: 'POST',
+    body: { token },
+  });
 }
 
-export function getSession(): Promise<Session> {
-  return request<Session>(
-    '/auth/session',
-    {
-      auth: true,
-    },
-  );
+export async function getSession(): Promise<Session> {
+  return request<Session>('/auth/session', {
+    auth: true,
+  });
 }
 
-export function googleAuthorizeUrl(): Promise<{
+export async function googleAuthorizeUrl(): Promise<{
   authorization_url: string;
 }> {
-  return request<{
-    authorization_url: string;
-  }>('/auth/google/authorize');
+  return request<{ authorization_url: string }>('/auth/google/authorize');
 }
 
-export function googleCallback(
+export async function googleCallback(
   code: string,
   state: string,
-): Promise<AuthResponse> {
-  return request<AuthResponse>(
+): Promise<Session> {
+  const response = await request<AuthTokenResponse>(
     '/auth/google/callback',
     {
       method: 'POST',
       body: { code, state },
     },
   );
+
+  if (!response.user) {
+    throw new Error('Google authentication succeeded but no user session was returned.');
+  }
+
+  return {
+    user: response.user,
+  };
 }
