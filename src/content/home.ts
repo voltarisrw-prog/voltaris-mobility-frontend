@@ -56,7 +56,7 @@ export const hero = {
 export const entrance = {
   eyebrow: 'The entrance',
   headline: 'Choose your drive.',
-  sub: 'Eight ways in. Every one of them leads somewhere organised.',
+  sub: 'Eight ways in. Every one leads somewhere organised.',
   categories: [
     { label: 'Buy', line: 'Own it outright', href: '/cars?mode=sale', span: 'lg:col-span-2' },
     { label: 'Rent', line: 'By the day or the month', href: '/cars?mode=rental' },
