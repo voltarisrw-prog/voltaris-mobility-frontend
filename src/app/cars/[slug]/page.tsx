@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { ChevronDown } from 'lucide-react';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { CompareToggleButton } from '@/components/CompareToggleButton';
 import { JsonLd } from '@/components/JsonLd';
@@ -89,22 +90,51 @@ export default async function VehiclePage({ params }: { params: Params }) {
     { name: title, path: `/cars/${vehicle.slug}` },
   ];
 
-  const specs: { label: string; value: string }[] = [
-    { label: 'Driving range', value: `${vehicle.range_km} km` },
-    { label: 'Battery', value: formatKwh(vehicle.battery_kwh) },
-    { label: 'Power', value: `${vehicle.power_kw} kW` },
-    { label: 'Odometer', value: formatKm(vehicle.mileage_km) },
-    { label: 'Drivetrain', value: vehicle.drivetrain.toUpperCase() },
-    { label: 'Seats', value: String(vehicle.seats) },
-    { label: 'AC charging', value: `${vehicle.charging.ac_kw} kW` },
+  /**
+   * Grouped rather than one flat ten-row list — "Range & battery" and "Charging"
+   * answer different questions a buyer has, and a flat list made both equally hard
+   * to scan for either one. Seats and Odometer don't literally describe physical
+   * dimensions; they land in "Dimensions" because it's the closest fit among the
+   * four groups this was scoped to. If vehicle.dimensions (length/width/height/boot)
+   * ever gets surfaced on this page, that's the natural point to split this into its
+   * own group and give Seats/Odometer a better home.
+   */
+  const specGroups: { label: string; specs: { label: string; value: string }[] }[] = [
     {
-      label: 'DC charging',
-      value: vehicle.charging.dc_kw ? `${vehicle.charging.dc_kw} kW` : 'Not supported',
+      label: 'Range & battery',
+      specs: [
+        { label: 'Driving range', value: `${vehicle.range_km} km` },
+        { label: 'Battery', value: formatKwh(vehicle.battery_kwh) },
+      ],
     },
-    { label: 'Charge port', value: vehicle.charging.port_type },
     {
-      label: '10–80% on DC',
-      value: vehicle.charging.dc_10_80_minutes ? `${vehicle.charging.dc_10_80_minutes} min` : '—',
+      label: 'Charging',
+      specs: [
+        { label: 'AC charging', value: `${vehicle.charging.ac_kw} kW` },
+        {
+          label: 'DC charging',
+          value: vehicle.charging.dc_kw ? `${vehicle.charging.dc_kw} kW` : 'Not supported',
+        },
+        { label: 'Charge port', value: vehicle.charging.port_type },
+        {
+          label: '10–80% on DC',
+          value: vehicle.charging.dc_10_80_minutes ? `${vehicle.charging.dc_10_80_minutes} min` : '—',
+        },
+      ],
+    },
+    {
+      label: 'Performance',
+      specs: [
+        { label: 'Power', value: `${vehicle.power_kw} kW` },
+        { label: 'Drivetrain', value: vehicle.drivetrain.toUpperCase() },
+      ],
+    },
+    {
+      label: 'Dimensions',
+      specs: [
+        { label: 'Seats', value: String(vehicle.seats) },
+        { label: 'Odometer', value: formatKm(vehicle.mileage_km) },
+      ],
     },
   ];
 
@@ -136,17 +166,37 @@ export default async function VehiclePage({ params }: { params: Params }) {
 
           <section className="mt-10">
             <h2 className="eyebrow">Specification</h2>
-            <dl className="mt-4 grid grid-cols-1 border-t border-hairline sm:grid-cols-2">
-              {specs.map((spec) => (
-                <div
-                  key={spec.label}
-                  className="flex items-baseline justify-between gap-4 border-b border-hairline/60 py-3 sm:odd:pr-8 sm:even:pl-8"
-                >
-                  <dt className="text-sm text-steel">{spec.label}</dt>
-                  <dd className="font-data text-sm tabular-nums text-chrome">{spec.value}</dd>
-                </div>
+            {/* Native <details>/<summary> — same collapsible pattern already used for
+                FAQs below, rather than a bespoke accordion. Each group defaults open
+                (nothing here was hidden before; this only adds the option to collapse
+                a group you don't care about, e.g. Charging on a listing you're buying
+                for someone who'll only ever charge at home). */}
+            <div className="mt-4 divide-y divide-hairline border-t border-hairline">
+              {specGroups.map((group) => (
+                <details key={group.label} open className="group py-1">
+                  <summary className="flex cursor-pointer list-none items-center justify-between py-3 marker:hidden">
+                    <span className="font-display text-sm font-semibold tracking-tight text-chrome">
+                      {group.label}
+                    </span>
+                    <ChevronDown
+                      aria-hidden="true"
+                      className="h-4 w-4 text-steel-muted transition-transform duration-200 group-open:rotate-180"
+                    />
+                  </summary>
+                  <dl className="grid grid-cols-1 pb-3 sm:grid-cols-2">
+                    {group.specs.map((spec) => (
+                      <div
+                        key={spec.label}
+                        className="flex items-baseline justify-between gap-4 border-b border-hairline/60 py-3 sm:odd:pr-8 sm:even:pl-8"
+                      >
+                        <dt className="text-sm text-steel">{spec.label}</dt>
+                        <dd className="font-data text-sm tabular-nums text-chrome">{spec.value}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                </details>
               ))}
-            </dl>
+            </div>
           </section>
 
           {vehicle.features.length > 0 && (
@@ -168,8 +218,14 @@ export default async function VehiclePage({ params }: { params: Params }) {
               <div className="mt-4 divide-y divide-hairline/60 border-y border-hairline/60">
                 {vehicle.faqs.map((faq) => (
                   <details key={faq.question} className="group py-4">
-                    <summary className="cursor-pointer list-none font-display text-sm font-semibold tracking-tight marker:hidden">
-                      {faq.question}
+                    <summary className="flex cursor-pointer list-none items-center justify-between gap-4 marker:hidden">
+                      <span className="font-display text-sm font-semibold tracking-tight">
+                        {faq.question}
+                      </span>
+                      <ChevronDown
+                        aria-hidden="true"
+                        className="h-4 w-4 shrink-0 text-steel-muted transition-transform duration-200 group-open:rotate-180"
+                      />
                     </summary>
                     <p className="mt-2 text-sm leading-relaxed text-steel">{faq.answer}</p>
                   </details>
