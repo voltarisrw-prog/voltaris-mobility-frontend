@@ -15,6 +15,12 @@ const csv = (schema: z.ZodTypeAny) =>
 const int = (min: number, max: number) =>
   z.coerce.number().int().min(min).max(max).optional().catch(undefined);
 
+const isoDate = z
+  .string()
+  .regex(/^\d{4}-\d{2}-\d{2}$/)
+  .optional()
+  .catch(undefined);
+
 export const SORT_OPTIONS = [
   { value: 'relevance', label: 'Most relevant' },
   { value: 'newest', label: 'Newest listings' },
@@ -35,6 +41,12 @@ export const vehicleFiltersSchema = z.object({
   condition: z.enum(['new', 'used', 'certified']).optional().catch(undefined),
   location: z.string().trim().toLowerCase().max(40).optional().catch(undefined),
   mode: z.enum(['sale', 'rental']).optional().catch(undefined),
+  // Only meaningful alongside mode: 'rental'. A native <input type="date"> already
+  // constrains the format at the source; this just refuses anything that slipped in
+  // some other way (a hand-edited URL) rather than passing it to the backend.
+  rentalLocation: z.string().trim().toLowerCase().max(60).optional().catch(undefined),
+  rentalStart: isoDate,
+  rentalEnd: isoDate,
   minPrice: int(0, 5_000_000_000),
   maxPrice: int(0, 5_000_000_000),
   minYear: int(1990, 2100),
@@ -62,6 +74,23 @@ export const vehicleFiltersSchema = z.object({
 
 export type VehicleFilters = z.infer<typeof vehicleFiltersSchema>;
 
+export interface RentalWindow {
+  location: string;
+  start: string;
+  end: string;
+}
+
+/**
+ * A rental window only means anything once all three parts are chosen — dates
+ * without a pickup location can't be priced or checked for availability. Callers
+ * use this instead of checking the three fields individually so "what counts as a
+ * complete rental search" is defined in exactly one place.
+ */
+export function rentalWindow(filters: VehicleFilters): RentalWindow | null {
+  if (!filters.rentalLocation || !filters.rentalStart || !filters.rentalEnd) return null;
+  return { location: filters.rentalLocation, start: filters.rentalStart, end: filters.rentalEnd };
+}
+
 export type RawSearchParams = Record<string, string | string[] | undefined>;
 
 export function parseFilters(input: RawSearchParams): VehicleFilters {
@@ -73,6 +102,11 @@ export function parseFilters(input: RawSearchParams): VehicleFilters {
   }
   if (filters.minYear && filters.maxYear && filters.minYear > filters.maxYear) {
     [filters.minYear, filters.maxYear] = [filters.maxYear, filters.minYear];
+  }
+  if (filters.rentalStart && filters.rentalEnd && filters.rentalStart > filters.rentalEnd) {
+    // ISO date strings sort lexicographically, so a plain string compare is correct
+    // here without parsing either one into a Date.
+    [filters.rentalStart, filters.rentalEnd] = [filters.rentalEnd, filters.rentalStart];
   }
   return filters;
 }

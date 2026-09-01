@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { buildHref, canonicalPath, isIndexable, parseFilters, toSearchParams } from '../filters';
+import {
+  buildHref,
+  canonicalPath,
+  isIndexable,
+  parseFilters,
+  rentalWindow,
+  toSearchParams,
+} from '../filters';
 
 describe('parseFilters', () => {
   it('drops unknown and malformed values instead of failing', () => {
@@ -67,5 +74,38 @@ describe('indexation policy', () => {
 describe('canonicalPath', () => {
   it('drops sort, which reorders but never changes the result set', () => {
     expect(canonicalPath(parseFilters({ make: 'byd', sort: 'price_asc' }))).toBe('/cars?make=byd');
+  });
+});
+
+describe('rentalWindow', () => {
+  it('returns null unless location, start, and end are all present', () => {
+    expect(rentalWindow(parseFilters({ mode: 'rental' }))).toBeNull();
+    expect(rentalWindow(parseFilters({ rentalLocation: 'kigali' }))).toBeNull();
+    expect(
+      rentalWindow(parseFilters({ rentalLocation: 'kigali', rentalStart: '2026-09-10' })),
+    ).toBeNull();
+  });
+
+  it('swaps an inverted date range the same way price and year ranges are swapped', () => {
+    const filters = parseFilters({
+      rentalLocation: 'kigali',
+      rentalStart: '2026-09-20',
+      rentalEnd: '2026-09-10',
+    });
+    expect(rentalWindow(filters)).toEqual({
+      location: 'kigali',
+      start: '2026-09-10',
+      end: '2026-09-20',
+    });
+  });
+
+  it('rejects a malformed date rather than passing it to the backend', () => {
+    const filters = parseFilters({
+      rentalLocation: 'kigali',
+      rentalStart: 'not-a-date',
+      rentalEnd: '2026-09-20',
+    });
+    expect(filters.rentalStart).toBeUndefined();
+    expect(rentalWindow(filters)).toBeNull();
   });
 });

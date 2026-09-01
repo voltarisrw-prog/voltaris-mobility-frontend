@@ -15,6 +15,12 @@ import { toSearchParams, type VehicleFilters } from '@/lib/vehicles/filters';
  *
  * None of these are live yet. Contracts are typed here so pages can be built and
  * tested against them; see ARCHITECTURE.md "Backend dependencies".
+ *
+ * GET /vehicles additionally accepts rentalLocation/rentalStart/rentalEnd (see
+ * lib/vehicles/filters.ts). When all three are present the backend must (a) return
+ * only vehicles actually free for that window and (b) populate each result's
+ * `rental_quote` with the priced total — see lib/api/rentals.ts for why this rides
+ * on the existing listing endpoint instead of a separate one.
  */
 
 export const VEHICLE_LIST_TAG = 'vehicles:list';

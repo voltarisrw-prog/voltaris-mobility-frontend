@@ -49,11 +49,14 @@ None of these exist yet. Each is typed and documented at its call site.
 | `GET /vehicles/by-slug/{slug}`                                   | detail page                 |
 | `GET /vehicles/{id}/similar`                                     | detail page                 |
 | `GET /vehicles/sitemap`                                          | `sitemap.xml`               |
-| `POST /vehicles/compare`                                         | comparison (UI not built)   |
+| `POST /vehicles/compare`                                         | comparison — now has an on-ramp from cards and detail pages |
 | `GET /dealers`, `/dealers/{slug}`, `/dealers/{slug}/vehicles`    | dealer pages (UI not built) |
 | `POST /inquiries`                                                | enquiry form (UI not built) |
 | `POST /test-drives`, `GET /test-drives/{ref}`                    | test drive (UI not built)   |
 | `POST /orders/{id}/checkout-session`, `GET /orders/{id}/payment` | checkout (UI not built)     |
+| `GET /vehicles?rentalLocation=&rentalStart=&rentalEnd=`          | rental-aware marketplace and detail (lib/api/vehicles.ts) |
+| `GET /rentals/locations`                                         | rental location picker (lib/api/rentals.ts) |
+| `GET /vehicles/{id}/rental-quote`                                | rental price preview before checkout (lib/api/rentals.ts) |
 
 ### Two contracts the backend must honour
 
@@ -100,6 +103,9 @@ Measured Phase 1 build: homepage 111 kB first load, marketplace 126 kB.
 /cars/{slug}                    vehicle detail
 /cars/{slug}/enquire            enquiry form
 /compare?ids=…                  comparison, shareable
+/rent                           rental landing — location + date range, then hands
+                                off into /cars with rentalLocation/rentalStart/
+                                rentalEnd rather than a parallel listings page
 /sell                           seller listing flow
 /test-drive                     test drive request
 /test-drive/{reference}         public status tracking
@@ -115,7 +121,7 @@ Measured Phase 1 build: homepage 111 kB first load, marketplace 126 kB.
 /login /register                auth
 /forgot-password /reset-password /verify-email
 /account/*                      profile, saved, searches, inquiries,
-                                test-drives, orders, notifications
+                                test-drives, orders, rentals, notifications
 /checkout/start                 creates the order server-side, then redirects
 /checkout/{orderId}             payment state read from the backend
 /admin/*                        dashboard, vehicles, leads, audit

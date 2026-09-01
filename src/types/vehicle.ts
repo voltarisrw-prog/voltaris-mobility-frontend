@@ -38,6 +38,14 @@ export interface VehicleSummary {
   price: number | null;
   currency: string;
   rental_price_per_day?: number | null;
+  /**
+   * Populated by the backend only on `GET /vehicles` requests that included
+   * rentalLocation/rentalStart/rentalEnd (see lib/vehicles/filters.ts). Its absence
+   * means "no rental window was requested," not "not available" — that distinction
+   * matters because a null quote should render the flat daily rate, while
+   * `rental_quote.available === false` should render as unavailable for those dates.
+   */
+  rental_quote?: { nights: number; total: number; available: boolean } | null;
   mileage_km: number;
   battery_kwh: number;
   range_km: number;

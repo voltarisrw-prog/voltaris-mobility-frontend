@@ -24,26 +24,46 @@ export const dynamic = 'force-dynamic';
 export default async function StartCheckoutPage({
   searchParams,
 }: {
-  searchParams: Promise<{ vehicle?: string; kind?: string; days?: string }>;
+  searchParams: Promise<{
+    vehicle?: string;
+    kind?: string;
+    rentalLocation?: string;
+    rentalStart?: string;
+    rentalEnd?: string;
+  }>;
 }) {
-  const { vehicle, kind, days } = await searchParams;
+  const { vehicle, kind, rentalLocation, rentalStart, rentalEnd } = await searchParams;
   if (!vehicle) notFound();
 
   const orderKind =
     kind === 'rental' ? 'rental' : kind === 'reservation' ? 'reservation' : 'purchase';
+
+  const rental =
+    orderKind === 'rental' && rentalLocation && rentalStart && rentalEnd
+      ? { location_id: rentalLocation, start_date: rentalStart, end_date: rentalEnd }
+      : undefined;
+
+  // A rental checkout without a complete window has nothing to price — send the
+  // person back to choose one rather than letting the backend guess or reject it
+  // with an opaque error deeper in the flow.
+  if (orderKind === 'rental' && !rental) {
+    redirect(`/cars/${encodeURIComponent(vehicle)}`);
+  }
 
   let order;
   try {
     order = await createOrder({
       vehicle_id: vehicle,
       kind: orderKind,
-      ...(orderKind === 'rental' && days ? { rental_days: Number(days) } : {}),
+      ...(rental ? { rental } : {}),
     });
   } catch (cause) {
     if (cause instanceof ApiError && cause.isUnauthorized) {
-      redirect(
-        `/login?next=${encodeURIComponent(`/checkout/start?vehicle=${vehicle}&kind=${orderKind}`)}`,
-      );
+      const query = new URLSearchParams({ vehicle, kind: orderKind });
+      if (rentalLocation) query.set('rentalLocation', rentalLocation);
+      if (rentalStart) query.set('rentalStart', rentalStart);
+      if (rentalEnd) query.set('rentalEnd', rentalEnd);
+      redirect(`/login?next=${encodeURIComponent(`/checkout/start?${query.toString()}`)}`);
     }
     if (cause instanceof ApiError && cause.isNotFound) notFound();
     throw cause;
