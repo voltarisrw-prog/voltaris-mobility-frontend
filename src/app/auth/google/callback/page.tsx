@@ -1,23 +1,13 @@
-import type { Metadata } from 'next';
 import { Suspense } from 'react';
-import { LoadingSkeleton } from '@/components/ui';
 import { GoogleCallback } from '@/features/auth/GoogleCallback';
-import { buildMetadata } from '@/lib/seo/metadata';
-
-export const metadata: Metadata = buildMetadata({
-  title: 'Signing you in',
-  description: 'Completing Google sign-in.',
-  path: '/auth/google/callback',
-  noindex: true,
-  follow: false,
-});
+import { LoadingSkeleton } from '@/components/ui';
 
 export default function GoogleCallbackPage() {
   return (
-    <div className="shell max-w-sm py-24">
+    <main className="min-h-screen flex items-center justify-center">
       <Suspense fallback={<LoadingSkeleton lines={3} />}>
         <GoogleCallback />
       </Suspense>
-    </div>
+    </main>
   );
 }

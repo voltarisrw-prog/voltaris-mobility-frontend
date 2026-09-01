@@ -6,7 +6,7 @@ const nextConfig = {
     formats: ['image/avif', 'image/webp'],
     // Vehicle media lives in object storage (R2) behind a CDN hostname.
     remotePatterns: [
-      { protocol: 'https', hostname: 'media.voltaris.rw' },
+      { protocol: 'https', hostname: 'media.voltaris.com' },
       { protocol: 'https', hostname: '**.r2.dev' },
     ],
     deviceSizes: [360, 480, 640, 828, 1080, 1280, 1600, 1920],
