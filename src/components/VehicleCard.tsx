@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { ShieldCheck } from 'lucide-react';
 import { RangeMeter } from './RangeMeter';
 import { formatKm, formatKwh, formatPrice } from '@/lib/format';
 import type { VehicleSummary } from '@/types/vehicle';
@@ -48,24 +49,22 @@ export function VehicleCard({
           </div>
         )}
 
-        {/* Grade the base of the image so the badges never sit on a bright sky. */}
+        {/* Grade the base of the image so a status badge never sits on a bright sky.
+            "Verified" used to live here too, but a corner badge on a photo is
+            something people scan past — it doesn't reach anyone at the moment they're
+            actually weighing the price. It now sits inline with the price instead,
+            where the decision happens. Sold stays here: it's a status about the
+            listing itself, not a trust signal, and belongs with the image. */}
         <div
           className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-b from-transparent to-surface/80"
           aria-hidden="true"
         />
 
-        <div className="absolute left-0 top-0 flex flex-col items-start gap-px">
-          {vehicle.verified && (
-            <span className="bg-volt px-2 py-1 font-data text-eyebrow uppercase text-surface">
-              Verified
-            </span>
-          )}
-          {sold && (
-            <span className="bg-chrome px-2 py-1 font-data text-eyebrow uppercase text-surface">
-              Sold
-            </span>
-          )}
-        </div>
+        {sold && (
+          <span className="absolute left-0 top-0 bg-chrome px-2 py-1 font-data text-eyebrow uppercase text-surface">
+            Sold
+          </span>
+        )}
       </div>
 
       <div className="flex flex-1 flex-col gap-4 p-5">
@@ -101,6 +100,18 @@ export function VehicleCard({
 
         <div className="mt-auto flex items-end justify-between gap-4 border-t border-hairline/60 pt-4">
           <div>
+            {vehicle.verified && (
+              /* The signal that used to live on the photo corner, now read at the exact
+                 moment someone is looking at the number they'd have to commit to. This
+                 is currently a single "documents verified" fact from the backend — see
+                 VerificationBadge — not a battery-health or inspection score. Once the
+                 API exposes a structured inspection result, this is the slot to extend,
+                 not the photo overlay. */
+              <p className="mb-1 inline-flex items-center gap-1 font-data text-[0.6875rem] uppercase tracking-wide text-volt">
+                <ShieldCheck aria-hidden="true" className="h-3.5 w-3.5" />
+                Verified
+              </p>
+            )}
             <p className="font-display text-lg font-semibold tabular-nums tracking-tight text-chrome">
               {formatPrice(vehicle.price, vehicle.currency)}
             </p>
