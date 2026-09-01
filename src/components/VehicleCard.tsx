@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ShieldCheck } from 'lucide-react';
 import { RangeMeter } from './RangeMeter';
+import { CompareToggleButton } from './CompareToggleButton';
 import { formatKm, formatKwh, formatPrice } from '@/lib/format';
 import type { VehicleSummary } from '@/types/vehicle';
 
@@ -65,6 +66,13 @@ export function VehicleCard({
             Sold
           </span>
         )}
+
+        {/* z-10 because the card's stretched link (see the title <Link> below) covers
+            the whole article via an absolutely-positioned ::after — without this the
+            pseudo-element would swallow the click before it reaches the button. */}
+        <div className="absolute right-2 top-2 z-10">
+          <CompareToggleButton vehicleId={vehicle.id} variant="icon" />
+        </div>
       </div>
 
       <div className="flex flex-1 flex-col gap-4 p-5">

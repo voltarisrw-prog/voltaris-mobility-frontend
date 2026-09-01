@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
+import { CompareToggleButton } from '@/components/CompareToggleButton';
 import { JsonLd } from '@/components/JsonLd';
 import { PriceDisplay } from '@/components/PriceDisplay';
 import { RangeMeter } from '@/components/RangeMeter';
@@ -234,6 +235,12 @@ export default async function VehiclePage({ params }: { params: Params }) {
                 )}
               </div>
             )}
+
+            {/* Available regardless of sold status — comparing against a sold listing's
+                specs is still useful context, even though it can't be the thing you buy. */}
+            <div className="mt-2">
+              <CompareToggleButton vehicleId={vehicle.id} variant="button" />
+            </div>
 
             <div className="mt-6 border-t border-hairline/60 pt-5">
               <p className="eyebrow">Listed by</p>

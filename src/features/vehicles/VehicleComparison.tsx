@@ -9,6 +9,7 @@ import { compareVehicles } from '@/lib/api/vehicles';
 import { displayMessage } from '@/lib/api/errors';
 import { formatKm, formatKwh, formatPrice } from '@/lib/format';
 import { track } from '@/lib/analytics';
+import { syncCompareFromUrl } from '@/lib/compare/store';
 import type { VehicleDetail } from '@/types/vehicle';
 
 const MAX = 4;
@@ -143,6 +144,15 @@ export function VehicleComparison() {
   const ids = (searchParams.get('ids') ?? '').split(',').filter(Boolean).slice(0, MAX);
 
   const key = ids.join(',');
+
+  // The basket that fed vehicles in from cards and detail pages hands off to this
+  // page's URL, and from here the URL is what's authoritative — including when
+  // someone removes a vehicle below. Folding it back keeps the two from disagreeing
+  // if the person browses back to the marketplace afterwards.
+  useEffect(() => {
+    syncCompareFromUrl(ids);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [key]);
 
   /**
    * The result is stamped with the id set that produced it. Loading is then derived

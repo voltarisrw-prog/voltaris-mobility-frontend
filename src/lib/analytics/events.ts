@@ -17,6 +17,8 @@ export interface AnalyticsEvents {
   search: { query: string; result_count: number };
   filter_used: { filter: string; value: string; result_count: number };
   compare_vehicle: { vehicle_ids: string[]; count: number };
+  compare_add: { vehicle_id: string; count: number };
+  compare_remove: { vehicle_id: string; count: number };
   favorite_vehicle: { vehicle_id: string; action: 'add' | 'remove' };
   seller_listing_started: Record<string, never>;
   seller_listing_submitted: { make: string; model: string; year: number };

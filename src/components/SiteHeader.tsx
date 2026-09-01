@@ -7,12 +7,18 @@ import { Heart, Home, Plus, Scale, Search, User } from 'lucide-react';
 import { VoltarisLogo } from './VoltarisLogo';
 import { nav } from '@/content/home';
 import { cn } from '@/lib/format';
+import { useCompareIds } from '@/lib/compare/useCompare';
 
 const MOBILE_ICONS = { home: Home, search: Search, scale: Scale, plus: Plus, heart: Heart, user: User };
 
 export function SiteHeader() {
   const pathname = usePathname();
   const [compact, setCompact] = useState(false);
+  const compareIds = useCompareIds();
+  // The nav's own Compare entry is the only static thing about it: the moment a
+  // vehicle is queued, it should lead straight into that comparison rather than to
+  // the empty state — that's the whole point of making this a real on-ramp.
+  const compareHref = compareIds.length > 0 ? `/compare?ids=${compareIds.join(',')}` : '/compare';
 
   useEffect(() => {
     // Passive listener behind a rAF gate — scroll handlers are a classic INP regression.
@@ -58,11 +64,13 @@ export function SiteHeader() {
 
           <nav aria-label="Main" className="hidden items-center gap-8 lg:flex">
             {nav.primary.map((item) => {
+              const isCompare = item.href.split('?')[0] === '/compare';
+              const href = isCompare ? compareHref : item.href;
               const active = pathname === item.href.split('?')[0];
               return (
                 <Link
                   key={item.href}
-                  href={item.href}
+                  href={href}
                   aria-current={active ? 'page' : undefined}
                   className={cn(
                     'relative font-data text-eyebrow uppercase transition-colors duration-150',
@@ -70,6 +78,11 @@ export function SiteHeader() {
                   )}
                 >
                   {item.label}
+                  {isCompare && compareIds.length > 0 && (
+                    <span className="ml-1.5 inline-flex h-4 min-w-[1rem] items-center justify-center rounded-full bg-volt px-1 font-data text-[0.6rem] text-surface">
+                      {compareIds.length}
+                    </span>
+                  )}
                   {active && <span className="absolute -bottom-2 left-0 h-px w-full bg-volt" />}
                 </Link>
               );
@@ -111,23 +124,34 @@ export function SiteHeader() {
         <ul className="grid grid-cols-6">
           {nav.mobile.map((item) => {
             const Icon = MOBILE_ICONS[item.icon];
+            const isCompare = item.href === '/compare';
+            const href = isCompare ? compareHref : item.href;
             // Compare is URL-driven (/compare?ids=...) — treat any path under /compare as active,
             // not just an exact match, so the tab lights up once vehicles are queued.
-            const active =
-              item.href === '/compare' ? pathname.startsWith('/compare') : pathname === item.href;
+            const active = isCompare ? pathname.startsWith('/compare') : pathname === item.href;
             return (
               <li key={item.href}>
                 <Link
-                  href={item.href}
+                  href={href}
                   aria-current={active ? 'page' : undefined}
                   className={cn(
                     // min-h stays the same 44px+ touch target; horizontal padding tightens
                     // slightly at six items so labels don't wrap on a 360px viewport.
-                    'flex min-h-[3.5rem] flex-col items-center justify-center gap-1 px-0.5 transition-colors',
+                    'relative flex min-h-[3.5rem] flex-col items-center justify-center gap-1 px-0.5 transition-colors',
                     active ? 'text-volt' : 'text-steel-muted',
                   )}
                 >
-                  <Icon className="h-[18px] w-[18px]" />
+                  <span className="relative">
+                    <Icon className="h-[18px] w-[18px]" />
+                    {isCompare && compareIds.length > 0 && (
+                      <span
+                        aria-hidden="true"
+                        className="absolute -right-1.5 -top-1.5 flex h-3.5 min-w-[0.875rem] items-center justify-center rounded-full bg-volt px-0.5 font-data text-[0.5rem] text-surface"
+                      >
+                        {compareIds.length}
+                      </span>
+                    )}
+                  </span>
                   <span className="font-data text-[0.56rem] uppercase leading-none tracking-wider">
                     {item.label}
                   </span>
