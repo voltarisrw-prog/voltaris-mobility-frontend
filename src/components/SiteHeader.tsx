@@ -3,12 +3,12 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { Heart, Home, Plus, Search, User } from 'lucide-react';
+import { Heart, Home, Plus, Scale, Search, User } from 'lucide-react';
 import { VoltarisLogo } from './VoltarisLogo';
 import { nav } from '@/content/home';
 import { cn } from '@/lib/format';
 
-const MOBILE_ICONS = { home: Home, search: Search, plus: Plus, heart: Heart, user: User };
+const MOBILE_ICONS = { home: Home, search: Search, scale: Scale, plus: Plus, heart: Heart, user: User };
 
 export function SiteHeader() {
   const pathname = usePathname();
@@ -108,22 +108,29 @@ export function SiteHeader() {
         className="fixed inset-x-0 bottom-0 z-40 border-t border-hairline bg-surface/95 backdrop-blur-xl lg:hidden"
         style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
       >
-        <ul className="grid grid-cols-5">
+        <ul className="grid grid-cols-6">
           {nav.mobile.map((item) => {
             const Icon = MOBILE_ICONS[item.icon];
-            const active = pathname === item.href;
+            // Compare is URL-driven (/compare?ids=...) — treat any path under /compare as active,
+            // not just an exact match, so the tab lights up once vehicles are queued.
+            const active =
+              item.href === '/compare' ? pathname.startsWith('/compare') : pathname === item.href;
             return (
               <li key={item.href}>
                 <Link
                   href={item.href}
                   aria-current={active ? 'page' : undefined}
                   className={cn(
-                    'flex min-h-[3.5rem] flex-col items-center justify-center gap-1 transition-colors',
+                    // min-h stays the same 44px+ touch target; horizontal padding tightens
+                    // slightly at six items so labels don't wrap on a 360px viewport.
+                    'flex min-h-[3.5rem] flex-col items-center justify-center gap-1 px-0.5 transition-colors',
                     active ? 'text-volt' : 'text-steel-muted',
                   )}
                 >
                   <Icon className="h-[18px] w-[18px]" />
-                  <span className="font-data text-[0.6rem] uppercase tracking-wider">{item.label}</span>
+                  <span className="font-data text-[0.56rem] uppercase leading-none tracking-wider">
+                    {item.label}
+                  </span>
                 </Link>
               </li>
             );

@@ -17,10 +17,16 @@ export const nav = {
     { href: '/blog', label: 'Blog' },
     { href: '/dealers', label: 'Dealers' },
   ],
-  /** Mobile bottom bar. Five items is the ceiling for thumb reach. */
+  /**
+   * Mobile bottom bar. Six items, tightened to a 2.75rem icon column so the row
+   * still fits the thumb-reach ceiling from the five-item version. Compare sits
+   * between Explore and Sell — it's a decision-stage action, not a destination,
+   * so it belongs next to discovery rather than at either end of the bar.
+   */
   mobile: [
     { href: '/', label: 'Home', icon: 'home' as const },
     { href: '/cars', label: 'Explore', icon: 'search' as const },
+    { href: '/compare', label: 'Compare', icon: 'scale' as const },
     { href: '/sell', label: 'Sell', icon: 'plus' as const },
     { href: '/account/saved', label: 'Saved', icon: 'heart' as const },
     { href: '/account', label: 'Account', icon: 'user' as const },
