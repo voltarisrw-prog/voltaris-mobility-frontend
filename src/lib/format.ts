@@ -31,3 +31,12 @@ export function formatKwh(value: number): string {
 export function cn(...values: (string | false | null | undefined)[]): string {
   return values.filter(Boolean).join(' ');
 }
+
+/** Shared by ProsePage and the guide/blog table of contents — one definition of
+    "how a heading becomes a URL fragment" for the whole site. */
+export function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
