@@ -53,10 +53,14 @@ const config: Config = {
       keyframes: {
         'rise-in': { from: { opacity: '0', transform: 'translateY(14px)' }, to: { opacity: '1', transform: 'none' } },
         'lane-pulse': { '0%,100%': { opacity: '0.35' }, '50%': { opacity: '0.9' } },
+        'sheet-in': { from: { transform: 'translateY(100%)' }, to: { transform: 'translateY(0)' } },
+        'backdrop-in': { from: { opacity: '0' }, to: { opacity: '1' } },
       },
       animation: {
         'rise-in': 'rise-in 700ms cubic-bezier(0.16, 1, 0.3, 1) both',
         'lane-pulse': 'lane-pulse 4s ease-in-out infinite',
+        'sheet-in': 'sheet-in 320ms cubic-bezier(0.16, 1, 0.3, 1) both',
+        'backdrop-in': 'backdrop-in 200ms ease-out both',
       },
     },
   },
