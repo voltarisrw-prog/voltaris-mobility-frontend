@@ -9,13 +9,10 @@
 
 export const nav = {
   primary: [
-    { href: '/cars', label: 'Buy' },
+    { href: '/cars?mode=sale', label: 'Buy' },
     { href: '/cars?mode=rental', label: 'Rent' },
-    { href: '/sell', label: 'Sell' },
     { href: '/compare', label: 'Compare' },
-    { href: '/guides', label: 'EV Guide' },
-    { href: '/blog', label: 'Blog' },
-    { href: '/dealers', label: 'Dealers' },
+    { href: '/sell', label: 'Sell' },
   ],
   /**
    * Mobile bottom bar. Six items, tightened to a 2.75rem icon column so the row
