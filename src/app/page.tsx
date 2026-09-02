@@ -124,52 +124,64 @@ export default async function HomePage() {
 
       {/* 03 — THE ENTRANCE ------------------------------------------------ */}
       <div className="lane-rule" />
-      <section className="shell py-20">
-        <header className="max-w-2xl">
-          <p className="eyebrow">{entrance.eyebrow}</p>
-          <h2 className="mt-4 font-display text-display">{entrance.headline}</h2>
-          <p className="mt-4 text-base text-steel">{entrance.sub}</p>
-        </header>
+      <section className="shell py-24 sm:py-32">
+        <div className="grid gap-12 lg:grid-cols-[minmax(14rem,0.7fr)_minmax(0,2fr)] lg:gap-20">
+          <header className="max-w-sm">
+            <p className="eyebrow">{entrance.eyebrow}</p>
+            <h2 className="mt-5 font-display text-display">{entrance.headline}</h2>
+            <p className="mt-5 text-base leading-relaxed text-steel">{entrance.sub}</p>
+          </header>
 
-        <ul className="mt-12 grid gap-px bg-hairline sm:grid-cols-2 lg:grid-cols-4">
-          {entrance.categories.map((category, index) => {
-            const featured = index === 0 || index === 3;
+          <nav aria-label="Explore Voltaris" className="border-t border-hairline">
+            <ul>
+              {entrance.categories.map((category, index) => {
+                const featured = index === 0 || index === 3;
 
-            return (
-              <li
-                key={category.label}
-                className={`panel ${category.span ?? ''} ${featured ? 'lg:col-span-2' : ''}`}
-              >
-                <Link
-                  href={category.href}
-                  className={`group relative flex min-h-[13rem] flex-col justify-between overflow-hidden p-7 transition-colors duration-300 hover:bg-slab sm:p-8 ${
-                    featured ? 'lg:min-h-[18rem] lg:p-10' : ''
-                  }`}
-                >
-                  <span
-                    className={`font-display font-semibold tracking-tight ${
-                      featured ? 'text-4xl sm:text-5xl' : 'text-2xl'
-                    }`}
-                  >
-                    {category.label}
-                  </span>
+                return (
+                  <li key={category.label} className="border-b border-hairline">
+                    <Link
+                      href={category.href}
+                      className="group relative flex items-center justify-between gap-6 py-5 transition-colors duration-300 sm:py-6"
+                    >
+                      <span className="flex min-w-0 items-baseline gap-4 sm:gap-7">
+                        <span className="font-data text-[0.6rem] uppercase tracking-[0.18em] text-steel-muted">
+                          {String(index + 1).padStart(2, "0")}
+                        </span>
 
-                  <span className="flex items-end justify-between gap-4">
-                    <span className="max-w-[18rem] text-sm text-steel">{category.line}</span>
-                    <ArrowRight
-                      className={`shrink-0 text-steel-muted transition-all duration-300 group-hover:translate-x-1 group-hover:text-volt ${
-                        featured ? 'h-5 w-5' : 'h-4 w-4'
-                      }`}
-                      aria-hidden="true"
-                    />
-                  </span>
+                        <span
+                          className={`font-display font-semibold leading-none tracking-[-0.035em] transition-transform duration-300 group-hover:translate-x-2 ${
+                            featured
+                              ? "text-4xl sm:text-5xl lg:text-6xl"
+                              : "text-2xl sm:text-3xl"
+                          }`}
+                        >
+                          {category.label}
+                        </span>
+                      </span>
 
-                  <span className="absolute inset-x-7 bottom-0 h-px origin-left scale-x-0 bg-volt transition-transform duration-500 ease-out group-hover:scale-x-100 lg:inset-x-10" />
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
+                      <span className="flex shrink-0 items-center gap-4">
+                        <span className="hidden text-right text-xs text-steel sm:block">
+                          {category.line}
+                        </span>
+                        <ArrowRight
+                          className={`h-5 w-5 text-steel-muted transition-all duration-300 group-hover:translate-x-1 group-hover:text-volt ${
+                            featured ? "sm:h-6 sm:w-6" : ""
+                          }`}
+                          aria-hidden="true"
+                        />
+                      </span>
+
+                      <span
+                        className="absolute inset-x-0 bottom-0 h-px origin-left scale-x-0 bg-volt transition-transform duration-500 ease-out group-hover:scale-x-100"
+                        aria-hidden="true"
+                      />
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
+        </div>
       </section>
 
       {/* 04 — SMART DISCOVERY AND THE AISLES --------------------------- */}
