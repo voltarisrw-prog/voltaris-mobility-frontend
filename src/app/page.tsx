@@ -62,26 +62,16 @@ export default async function HomePage() {
       {/* 01 — HERO ------------------------------------------------------- */}
       <section className="relative isolate overflow-hidden">
         <HeroMedia />
-        <div className="shell relative flex min-h-[88svh] flex-col justify-end py-16 sm:py-20">
-          <div className="max-w-2xl animate-rise-in pb-4 sm:pb-8">
-            <p className="eyebrow">{hero.eyebrow}</p>
-            <h1 className="mt-4 max-w-xl font-display text-hero">{hero.headline}</h1>
-            <p className="mt-5 max-w-md font-display text-lg tracking-tight text-steel sm:text-xl">
-              {hero.sub}
-            </p>
+        <div className="shell relative flex min-h-[100svh] flex-col items-center justify-center py-16 text-center sm:py-20">
+          <div className="max-w-5xl animate-rise-in pb-20 sm:pb-24">
+            <h1 className="mt-0 max-w-5xl font-display text-hero">{hero.headline}</h1>
 
-            <div className="mt-7 flex flex-wrap items-center gap-3">
+            <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
               <Link
                 href={hero.primaryCta.href}
                 className="bg-volt px-7 py-4 font-data text-eyebrow uppercase text-surface transition-colors hover:bg-volt-bright"
               >
                 {hero.primaryCta.label}
-              </Link>
-              <Link
-                href={hero.secondaryCta.href}
-                className="border border-chrome px-7 py-4 font-data text-eyebrow uppercase transition-colors hover:bg-chrome hover:text-surface"
-              >
-                {hero.secondaryCta.label}
               </Link>
             </div>
           </div>
