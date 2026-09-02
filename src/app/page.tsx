@@ -132,27 +132,43 @@ export default async function HomePage() {
         </header>
 
         <ul className="mt-12 grid gap-px bg-hairline sm:grid-cols-2 lg:grid-cols-4">
-          {entrance.categories.map((category) => (
-            <li key={category.label} className={`panel ${category.span ?? ''}`}>
-              <Link
-                href={category.href}
-                className="group relative flex min-h-[11rem] flex-col justify-between overflow-hidden p-7 transition-colors duration-200 hover:bg-slab"
+          {entrance.categories.map((category, index) => {
+            const featured = index === 0 || index === 3;
+
+            return (
+              <li
+                key={category.label}
+                className={`panel ${category.span ?? ''} ${featured ? 'lg:col-span-2' : ''}`}
               >
-                <span className="font-display text-2xl font-semibold tracking-tight">
-                  {category.label}
-                </span>
-                <span className="flex items-end justify-between gap-4">
-                  <span className="text-sm text-steel">{category.line}</span>
-                  <ArrowRight
-                    className="h-4 w-4 shrink-0 text-steel-muted transition-all duration-200 group-hover:translate-x-1 group-hover:text-volt"
-                    aria-hidden="true"
-                  />
-                </span>
-                {/* A lane line that lights on hover, tying the aisle to the mark. */}
-                <span className="absolute inset-x-7 bottom-0 h-px origin-left scale-x-0 bg-volt transition-transform duration-300 ease-out group-hover:scale-x-100" />
-              </Link>
-            </li>
-          ))}
+                <Link
+                  href={category.href}
+                  className={`group relative flex min-h-[13rem] flex-col justify-between overflow-hidden p-7 transition-colors duration-300 hover:bg-slab sm:p-8 ${
+                    featured ? 'lg:min-h-[18rem] lg:p-10' : ''
+                  }`}
+                >
+                  <span
+                    className={`font-display font-semibold tracking-tight ${
+                      featured ? 'text-4xl sm:text-5xl' : 'text-2xl'
+                    }`}
+                  >
+                    {category.label}
+                  </span>
+
+                  <span className="flex items-end justify-between gap-4">
+                    <span className="max-w-[18rem] text-sm text-steel">{category.line}</span>
+                    <ArrowRight
+                      className={`shrink-0 text-steel-muted transition-all duration-300 group-hover:translate-x-1 group-hover:text-volt ${
+                        featured ? 'h-5 w-5' : 'h-4 w-4'
+                      }`}
+                      aria-hidden="true"
+                    />
+                  </span>
+
+                  <span className="absolute inset-x-7 bottom-0 h-px origin-left scale-x-0 bg-volt transition-transform duration-500 ease-out group-hover:scale-x-100 lg:inset-x-10" />
+                </Link>
+              </li>
+            );
+          })}
         </ul>
       </section>
 
