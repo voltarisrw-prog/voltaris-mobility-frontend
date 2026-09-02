@@ -93,7 +93,7 @@ export default async function DealerPage({ params }: { params: Params }) {
       </p>
 
       <section className="mt-12">
-        <h2 className="font-display text-headline">Currently listed</h2>
+        <h2 className="section-heading">Currently listed</h2>
         <div className="mt-6">
           {vehicles.length === 0 ? (
             <EmptyState

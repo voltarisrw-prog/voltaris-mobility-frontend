@@ -12,7 +12,7 @@ export default async function InquiriesPage() {
   const inquiries = await getMyInquiries();
   return (
     <section>
-      <h2 className="font-display text-xl font-semibold tracking-tight">Your enquiries</h2>
+      <h2 className="section-heading">Your enquiries</h2>
       <div className="mt-8">
         {inquiries.items.length === 0 ? (
           <EmptyState

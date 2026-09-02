@@ -329,7 +329,9 @@ export default async function VehiclePage({ params }: { params: Params }) {
 
       {similar.length > 0 && (
         <section className="mt-20">
-          <h2 className="font-display text-headline">Similar electric vehicles</h2>
+          <h2 className="section-heading">
+            Similar electric vehicles
+          </h2>
           <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {similar.slice(0, 3).map((item) => (
               <VehicleCard key={item.id} vehicle={item} />

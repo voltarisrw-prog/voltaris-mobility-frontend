@@ -8,7 +8,7 @@ export default async function OrdersPage() {
   const orders = await listOrders();
   return (
     <section>
-      <h2 className="font-display text-xl font-semibold tracking-tight">Orders</h2>
+      <h2 className="section-heading">Orders</h2>
       <div className="mt-8">
         {orders.items.length === 0 ? (
           <EmptyState

@@ -149,7 +149,7 @@ export default async function ChargingPage({
       </div>
 
       <section className="mt-16 max-w-prose">
-        <h2 className="font-display text-xl font-semibold tracking-tight">Common questions</h2>
+        <h2 className="section-heading">Common questions</h2>
         <div className="mt-4 divide-y divide-hairline/60 border-y border-hairline/60">
           {FAQS.map((faq) => (
             <details key={faq.question} className="py-4">

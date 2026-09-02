@@ -6,7 +6,7 @@ export default async function SavedSearchesPage() {
   const searches = await getSavedSearches();
   return (
     <section>
-      <h2 className="font-display text-xl font-semibold tracking-tight">Saved searches</h2>
+      <h2 className="section-heading">Saved searches</h2>
       <p className="mt-2 text-sm text-steel">
         We check new listings against these and email you when something matches.
       </p>

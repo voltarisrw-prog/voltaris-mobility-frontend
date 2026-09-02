@@ -170,7 +170,7 @@ export default async function ArticlePage({ params }: { params: Params }) {
 
           {article.faqs.length > 0 && (
             <section className="mt-14">
-              <h2 className="font-display text-xl font-semibold tracking-tight">
+              <h2 className="section-heading">
                 Common questions
               </h2>
               <div className="mt-4 divide-y divide-hairline/60 border-y border-hairline/60">

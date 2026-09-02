@@ -48,6 +48,15 @@
   .eyebrow {
     @apply font-data text-eyebrow uppercase text-steel-muted;
   }
+  /* The scale's fourth, unofficial step: hero/display/headline are named tokens for
+     page-level moments; this is what every "section within a page" heading actually
+     uses underneath — Specification groups, FAQ headers, account sub-pages, dealer
+     and vehicle-detail sections. It was copy-pasted as a literal utility string in
+     15 places before this existed as its own class; giving it a name is what let two
+     of those places be caught rendering *larger* than their own page's h1. */
+  .section-heading {
+    @apply font-display text-xl font-semibold tracking-tight;
+  }
 
   /* ------------------------------------------------------------------
      The vanishing point.

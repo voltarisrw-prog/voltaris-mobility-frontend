@@ -6,7 +6,7 @@ export default async function NotificationsPage() {
   const notifications = await getNotifications();
   return (
     <section>
-      <h2 className="font-display text-xl font-semibold tracking-tight">Notifications</h2>
+      <h2 className="section-heading">Notifications</h2>
       <div className="mt-8">
         {notifications.items.length === 0 ? (
           <EmptyState

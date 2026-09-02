@@ -5,7 +5,7 @@ export default async function ProfilePage() {
   const profile = await getProfile();
   return (
     <section>
-      <h2 className="font-display text-xl font-semibold tracking-tight">Profile</h2>
+      <h2 className="section-heading">Profile</h2>
       <p className="mt-2 text-sm text-steel">
         Member since{' '}
         {new Date(profile.created_at).toLocaleDateString('en-RW', { dateStyle: 'long' })}.

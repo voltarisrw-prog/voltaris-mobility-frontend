@@ -76,7 +76,7 @@ export async function CategoryLanding({ page }: { page: LandingPage }) {
         <article className="max-w-prose">
           {page.body.map((section) => (
             <section key={section.heading} className="mb-10">
-              <h2 className="font-display text-xl font-semibold tracking-tight">
+              <h2 className="section-heading">
                 {section.heading}
               </h2>
               <p className="mt-3 text-sm leading-relaxed text-steel">{section.text}</p>
@@ -84,7 +84,7 @@ export async function CategoryLanding({ page }: { page: LandingPage }) {
           ))}
 
           <section>
-            <h2 className="font-display text-xl font-semibold tracking-tight">Common questions</h2>
+            <h2 className="section-heading">Common questions</h2>
             <div className="mt-4 divide-y divide-hairline/60 border-y border-hairline/60">
               {page.faqs.map((faq) => (
                 <details key={faq.question} className="py-4">

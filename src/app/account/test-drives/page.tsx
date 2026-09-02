@@ -6,7 +6,7 @@ export default async function TestDrivesPage() {
   const drives = await getMyTestDrives();
   return (
     <section>
-      <h2 className="font-display text-xl font-semibold tracking-tight">Test drives</h2>
+      <h2 className="section-heading">Test drives</h2>
       <div className="mt-8">
         {drives.items.length === 0 ? (
           <EmptyState

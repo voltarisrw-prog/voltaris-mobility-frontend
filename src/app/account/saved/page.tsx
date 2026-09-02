@@ -6,7 +6,7 @@ export default async function SavedVehiclesPage() {
   const saved = await getSavedVehicles();
   return (
     <section>
-      <h2 className="font-display text-xl font-semibold tracking-tight">Saved vehicles</h2>
+      <h2 className="section-heading">Saved vehicles</h2>
       <div className="mt-8">
         {saved.items.length === 0 ? (
           <EmptyState

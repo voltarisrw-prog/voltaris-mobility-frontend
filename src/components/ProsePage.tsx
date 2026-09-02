@@ -104,7 +104,7 @@ export function ProsePage({
           <div className="mt-12 space-y-10">
             {toc.map((section) => (
               <section key={section.id} id={section.id} className="scroll-mt-24">
-                <h2 className="font-display text-xl font-semibold tracking-tight">
+                <h2 className="section-heading">
                   {section.heading}
                 </h2>
                 <p className="mt-3 text-sm leading-relaxed text-steel">{section.body}</p>
