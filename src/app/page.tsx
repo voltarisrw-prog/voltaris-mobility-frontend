@@ -309,73 +309,99 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 06 — COMPARISON -------------------------------------------------- */}
-      <div className="lane-rule" />
-      <section className="panel-deep">
-        <div className="shell grid gap-12 py-20 lg:grid-cols-2 lg:items-center">
-          <div>
-            <p className="eyebrow">Side by side</p>
-            <h2 className="mt-4 font-display text-display">Don&rsquo;t guess. Compare.</h2>
-            <p className="mt-5 max-w-md text-base leading-relaxed text-steel">
-              Specifications on their own tell you very little. Voltaris works out what each
-              kilometre of range costs, how long a full charge takes on a home socket, and which car
-              wins each row.
-            </p>
-            <Link
-              href="/compare"
-              className="mt-8 inline-block border border-chrome px-6 py-3.5 font-data text-eyebrow uppercase transition-colors hover:bg-chrome hover:text-surface"
-            >
-              Open the comparison
-            </Link>
+      {/* 06 — DECISION ---------------------------------------------------- */}
+      <section className="relative overflow-hidden border-y border-hairline">
+        <div className="shell py-28 sm:py-36">
+          <div className="grid gap-16 lg:grid-cols-[minmax(0,1.05fr)_minmax(22rem,0.95fr)] lg:items-end lg:gap-24">
+            <div>
+              <p className="eyebrow">Side by side</p>
+              <h2 className="mt-5 max-w-4xl font-display text-[clamp(3.5rem,8vw,7rem)] font-semibold leading-[0.86] tracking-[-0.06em]">
+                Don&rsquo;t guess.
+                <br />
+                Compare.
+              </h2>
+
+              <p className="mt-7 max-w-lg text-lg leading-relaxed text-steel sm:text-xl">
+                Specifications only tell part of the story. Voltaris turns the numbers into
+                something you can actually use when choosing your next drive.
+              </p>
+
+              <Link
+                href="/compare"
+                className="mt-9 inline-flex items-center gap-3 border-b border-chrome pb-2 font-data text-eyebrow uppercase tracking-[0.12em] text-chrome transition-colors hover:border-volt hover:text-volt"
+              >
+                Open the comparison
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </Link>
+            </div>
+
+            <div>
+              <p className="mb-5 font-data text-[0.6rem] uppercase tracking-[0.18em] text-steel-muted">
+                Example comparison
+              </p>
+
+              <dl className="border-t border-hairline">
+                {[
+                  ["Cost per km of range", "RWF 87,500", "RWF 102,300"],
+                  ["Efficiency", "14.4 kWh/100km", "16.9 kWh/100km"],
+                  ["Full charge, home socket", "8.6 hours", "9.4 hours"],
+                  ["10–80% on DC", "40 min", "No DC charging"],
+                ].map(([label, a, b]) => (
+                  <div
+                    key={label}
+                    className="grid grid-cols-[minmax(0,1fr)_auto] gap-5 border-b border-hairline py-4 sm:grid-cols-[minmax(0,1fr)_auto_auto]"
+                  >
+                    <dt className="text-sm text-steel">{label}</dt>
+                    <dd className="font-data text-xs tabular-nums text-chrome">{a}</dd>
+                    <dd className="hidden font-data text-xs tabular-nums text-steel-muted sm:block">
+                      {b}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+
+              <p className="mt-5 font-data text-[0.6rem] uppercase tracking-[0.12em] text-steel-muted">
+                Illustrative figures · real values calculated from selected vehicles
+              </p>
+            </div>
           </div>
 
-          {/* A miniature of the real comparison table, not a decorative graphic. */}
-          <div className="border border-hairline panel p-6">
-            <dl className="divide-y divide-hairline/60 text-sm">
-              {[
-                ['Cost per km of range', 'RWF 87,500', 'RWF 102,300'],
-                ['Efficiency', '14.4 kWh/100km', '16.9 kWh/100km'],
-                ['Full charge, home socket', '8.6 hours', '9.4 hours'],
-                ['10–80% on DC', '40 min', 'No DC charging'],
-              ].map(([label, a, b]) => (
-                <div
-                  key={label}
-                  className="grid grid-cols-[1fr_auto_auto] items-baseline gap-4 py-3.5"
-                >
-                  <dt className="text-steel">{label}</dt>
-                  <dd className="bg-volt-wash px-2 py-1 font-data text-xs tabular-nums text-volt">
-                    {a}
-                  </dd>
-                  <dd className="font-data text-xs tabular-nums text-steel-muted">{b}</dd>
-                </div>
-              ))}
-            </dl>
-            <p className="mt-5 font-data text-xs text-steel-muted">
-              Illustrative layout. Real figures are calculated from the vehicles you select.
-            </p>
+          <div className="mt-28 border-t border-hairline pt-10 sm:mt-36 sm:pt-12">
+            <div className="grid gap-10 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,2fr)] lg:items-end lg:gap-20">
+              <header>
+                <p className="eyebrow">{trust.eyebrow}</p>
+                <h3 className="mt-4 font-display text-4xl font-semibold leading-[0.9] tracking-[-0.05em] sm:text-5xl">
+                  {trust.headline}
+                </h3>
+              </header>
+
+              <div>
+                <dl className="grid gap-0 border-t border-hairline sm:grid-cols-3 sm:border-t-0">
+                  {trust.points.map((point, index) => (
+                    <div
+                      key={point.title}
+                      className="border-b border-hairline py-5 sm:border-b-0 sm:border-l sm:px-6 sm:first:border-l-0 sm:first:pl-0"
+                    >
+                      <dt className="font-display text-base font-semibold tracking-tight">
+                        {point.title}
+                      </dt>
+                      <dd className="mt-2 max-w-xs text-sm leading-relaxed text-steel">
+                        {point.line}
+                      </dd>
+                      <span className="mt-5 block font-data text-[0.58rem] uppercase tracking-[0.16em] text-steel-muted">
+                        0{index + 1}
+                      </span>
+                    </div>
+                  ))}
+                </dl>
+
+                <p className="mt-7 max-w-2xl text-sm leading-relaxed text-steel-muted">
+                  {trust.note}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
-      </section>
-
-      {/* 07 — TRUST ------------------------------------------------------- */}
-      <div className="lane-rule" />
-      <section className="shell py-20">
-        <header className="max-w-2xl">
-          <p className="eyebrow">{trust.eyebrow}</p>
-          <h2 className="mt-4 font-display text-display">{trust.headline}</h2>
-          <p className="mt-4 text-base text-steel">{trust.sub}</p>
-        </header>
-
-        <dl className="mt-12 grid gap-px bg-hairline sm:grid-cols-2 lg:grid-cols-3">
-          {trust.points.map((point) => (
-            <div key={point.title} className="panel p-7">
-              <dt className="font-display text-base font-semibold tracking-tight">{point.title}</dt>
-              <dd className="mt-2 text-sm leading-relaxed text-steel">{point.line}</dd>
-            </div>
-          ))}
-        </dl>
-
-        <p className="mt-8 max-w-2xl text-sm leading-relaxed text-steel-muted">{trust.note}</p>
       </section>
 
       {/* 08 — SELL -------------------------------------------------------- */}
