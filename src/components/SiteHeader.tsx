@@ -81,7 +81,7 @@ export function SiteHeader() {
                   href={href}
                   aria-current={active ? 'page' : undefined}
                   className={cn(
-                    'relative font-data text-eyebrow uppercase transition-colors duration-150',
+                    'relative font-data text-[0.72rem] uppercase tracking-[0.12em] transition-colors duration-150',
                     active ? 'text-chrome' : 'text-chrome/90 hover:text-volt',
                   )}
                 >
