@@ -3,10 +3,11 @@ import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { DealerCard } from '@/components/DealerCard';
 import { EmptyState } from '@/components/EmptyState';
 import { JsonLd } from '@/components/JsonLd';
-import { listDealers } from '@/lib/api/dealers';
+import { DealerShowcase, type DealerShowcaseItem } from '@/features/dealers/DealerShowcase';
+import { getDealer, listDealers } from '@/lib/api/dealers';
 import { breadcrumbJsonLd } from '@/lib/seo/jsonld';
 import { buildMetadata } from '@/lib/seo/metadata';
-import type { DealerSummary } from '@/types/dealer';
+import type { DealerDetail, DealerSummary } from '@/types/dealer';
 
 export const metadata: Metadata = buildMetadata({
   title: 'Electric vehicle dealers in Rwanda',
@@ -14,6 +15,36 @@ export const metadata: Metadata = buildMetadata({
     'Every dealer and mobility partner listing electric vehicles on Voltaris, with verification status and current inventory.',
   path: '/dealers',
 });
+
+/**
+ * The dealer directory (`/dealers`, `DealerSummary`) only carries a small
+ * square `logo_url` — fine at 56px in `DealerCard`, not at coverflow scale.
+ * The photographic cover photo lives on `DealerDetail`, a separate request
+ * per dealer, so a hero showcase here means fetching a handful of details
+ * up front rather than the whole directory. Capped at 5 verified dealers and
+ * run in parallel; any dealer whose detail fetch fails or who has no cover
+ * photo on file is just left out of the showcase — the directory grid below
+ * still lists every dealer regardless.
+ */
+async function loadShowcaseDealers(dealers: DealerSummary[]): Promise<DealerShowcaseItem[]> {
+  const candidates = dealers.filter((dealer) => dealer.verified).slice(0, 5);
+  const details = await Promise.all(
+    candidates.map((dealer) => getDealer(dealer.slug).catch(() => null)),
+  );
+
+  return details
+    .filter((detail): detail is DealerDetail => detail !== null && detail.cover_image_url !== null)
+    .map((detail) => ({
+      slug: detail.slug,
+      name: detail.name,
+      city: detail.city,
+      verified: detail.verified,
+      vehicleCount: detail.vehicle_count,
+      coverImageUrl: detail.cover_image_url as string,
+      ...(detail.whatsapp ? { whatsapp: detail.whatsapp } : {}),
+      ...(detail.phone ? { phone: detail.phone } : {}),
+    }));
+}
 
 export default async function DealersPage() {
   let dealers: DealerSummary[] = [];
@@ -23,6 +54,8 @@ export default async function DealersPage() {
   } catch {
     failed = true;
   }
+
+  const showcaseDealers = dealers.length > 0 ? await loadShowcaseDealers(dealers) : [];
 
   const trail = [
     { name: 'Home', path: '/' },
@@ -38,6 +71,8 @@ export default async function DealersPage() {
         Voltaris does not own these vehicles. These are the businesses that do — each one checked
         before it can carry a verified mark.
       </p>
+
+      {showcaseDealers.length > 1 && <DealerShowcase dealers={showcaseDealers} />}
 
       <div className="mt-10">
         {failed || dealers.length === 0 ? (

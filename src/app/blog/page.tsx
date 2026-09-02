@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { EmptyState } from '@/components/EmptyState';
 import { JsonLd } from '@/components/JsonLd';
+import { BlogShowcase } from '@/features/blog/BlogShowcase';
 import { listPosts, type ArticleSummary } from '@/lib/api/content';
 import { breadcrumbJsonLd } from '@/lib/seo/jsonld';
 import { absoluteUrl, buildMetadata } from '@/lib/seo/metadata';
@@ -52,14 +53,16 @@ export default async function BlogPage() {
         <p className="eyebrow">From the team</p>
         <h1 className="mt-4 font-display text-display">The Voltaris blog</h1>
         <p className="mt-4 text-base leading-relaxed text-steel">
-          What is changing in Rwanda&rsquo;s EV market, and what we are building. For the
-          evergreen material — buying, charging, ownership — see the{' '}
+          What is changing in Rwanda&rsquo;s EV market, and what we are building. For the evergreen
+          material — buying, charging, ownership — see the{' '}
           <Link href="/guides" className="text-volt underline underline-offset-2">
             guides
           </Link>
           .
         </p>
       </header>
+
+      {posts.length > 1 && <BlogShowcase posts={posts.slice(0, 6)} />}
 
       <div className="mt-12">
         {failed || posts.length === 0 ? (
@@ -99,7 +102,9 @@ export default async function BlogPage() {
                   <p className="mt-4 font-data text-xs text-steel-muted">
                     {lead.author} ·{' '}
                     <time dateTime={lead.published_at}>
-                      {new Date(lead.published_at).toLocaleDateString('en-RW', { dateStyle: 'long' })}
+                      {new Date(lead.published_at).toLocaleDateString('en-RW', {
+                        dateStyle: 'long',
+                      })}
                     </time>
                   </p>
                 </div>
@@ -132,7 +137,9 @@ export default async function BlogPage() {
                     <p className="mt-2 text-sm leading-relaxed text-steel">{post.excerpt}</p>
                     <p className="mt-3 font-data text-xs text-steel-muted">
                       <time dateTime={post.published_at}>
-                        {new Date(post.published_at).toLocaleDateString('en-RW', { dateStyle: 'medium' })}
+                        {new Date(post.published_at).toLocaleDateString('en-RW', {
+                          dateStyle: 'medium',
+                        })}
                       </time>
                     </p>
                   </article>
