@@ -127,9 +127,15 @@ export function HeroMedia() {
         on white bodywork. Graded to solid at the base so the section below joins
         without a seam.
       */}
-      <div className="absolute inset-0 bg-gradient-to-r from-surface via-surface/88 to-surface/25" />
-      <div className="absolute inset-0 bg-gradient-to-t from-surface/95 via-surface/35 to-surface/55" />
-      <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-surface" />
+      {/* Editorial grade: keep the vehicle visible instead of burying it
+          under a conventional landing-page scrim. */}
+      <div className="absolute inset-0 bg-gradient-to-br from-volt-deep/35 via-transparent to-surface/20" />
+
+      {/* Local text protection. The image stays dominant everywhere else. */}
+      <div className="absolute inset-y-0 left-0 w-full bg-gradient-to-r from-surface/85 via-surface/35 to-transparent sm:w-[72%]" />
+
+      {/* Soft transition into the next section without flattening the image. */}
+      <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-surface/90" />
     </div>
   );
 }
