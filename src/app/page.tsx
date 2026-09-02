@@ -254,34 +254,59 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="shell py-20">
-        <header className="max-w-2xl">
-          <p className="eyebrow">{needs.eyebrow}</p>
-          <h2 className="mt-4 font-display text-display">{needs.headline}</h2>
-          <p className="mt-4 text-base text-steel">{needs.sub}</p>
-        </header>
+      <section className="relative overflow-hidden py-28 sm:py-36">
+        <div className="shell">
+          <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(20rem,0.65fr)] lg:gap-24">
+            <header>
+              <p className="eyebrow">{needs.eyebrow}</p>
+              <h2 className="mt-5 max-w-4xl font-display text-[clamp(3.5rem,9vw,8rem)] font-semibold leading-[0.84] tracking-[-0.06em]">
+                {needs.headline}
+              </h2>
+            </header>
 
-        <ul className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {needs.options.map((option) => (
-            <li key={option.label}>
-              <Link
-                href={option.href}
-                className="group flex items-center justify-between gap-4 border border-hairline p-6 transition-colors duration-200 hover:border-volt"
-              >
-                <span>
-                  <span className="block font-display text-lg font-semibold tracking-tight">
-                    {option.label}
-                  </span>
-                  <span className="mt-1 block text-sm text-steel">{option.line}</span>
-                </span>
-                <ArrowRight
-                  className="h-4 w-4 shrink-0 text-steel-muted transition-all duration-200 group-hover:translate-x-1 group-hover:text-volt"
-                  aria-hidden="true"
-                />
-              </Link>
-            </li>
-          ))}
-        </ul>
+            <div className="flex items-end lg:pb-2">
+              <p className="max-w-md text-lg leading-relaxed text-steel sm:text-xl">
+                {needs.sub}
+              </p>
+            </div>
+          </div>
+
+          <nav aria-label="Find your next drive" className="mt-20 border-t border-hairline">
+            <ul>
+              {needs.options.map((option, index) => (
+                <li key={option.label} className="border-b border-hairline">
+                  <Link
+                    href={option.href}
+                    className="group relative grid gap-4 py-7 sm:grid-cols-[4rem_minmax(0,1fr)_auto] sm:items-center sm:py-9"
+                  >
+                    <span className="font-data text-[0.62rem] uppercase tracking-[0.18em] text-steel-muted">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+
+                    <span className="min-w-0">
+                      <span className="block font-display text-3xl font-semibold leading-none tracking-[-0.04em] transition-transform duration-500 group-hover:translate-x-3 sm:text-5xl lg:text-6xl">
+                        {option.label}
+                      </span>
+                      <span className="mt-2 block max-w-lg text-sm text-steel sm:text-base">
+                        {option.line}
+                      </span>
+                    </span>
+
+                    <ArrowRight
+                      className="hidden h-7 w-7 text-steel-muted transition-all duration-500 group-hover:translate-x-2 group-hover:text-volt sm:block"
+                      aria-hidden="true"
+                    />
+
+                    <span
+                      className="absolute inset-x-0 bottom-0 h-px origin-left scale-x-0 bg-volt transition-transform duration-500 group-hover:scale-x-100"
+                      aria-hidden="true"
+                    />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </div>
       </section>
 
       {/* 06 — COMPARISON -------------------------------------------------- */}
