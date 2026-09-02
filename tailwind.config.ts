@@ -26,6 +26,7 @@ const config: Config = {
         // Type and metal
         chrome: '#E8EAED',
         steel: { DEFAULT: '#A8AEB8', muted: '#6C727C' },
+        bronze: '#2B1A0A',
         // The single accent: the road light
         volt: {
           DEFAULT: '#5CC8FF',
