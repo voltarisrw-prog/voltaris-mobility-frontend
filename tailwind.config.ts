@@ -19,7 +19,7 @@ const config: Config = {
     extend: {
       colors: {
         // Surfaces, darkest to lightest
-        surface: '#070A0F',
+        surface: '#0C0906',
         abyss: '#050A16',
         slab: '#0B1220',
         hairline: '#1B2436',
