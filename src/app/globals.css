@@ -9,7 +9,7 @@
   html {
     -webkit-text-size-adjust: 100%;
     scroll-behavior: smooth;
-    background-color: #00030c;
+    background-color: #070a0f;
   }
   body {
     /* Transparent, so the fixed environment layer beneath is visible. `html` keeps
@@ -25,7 +25,7 @@
     @apply outline-none ring-2 ring-volt ring-offset-2 ring-offset-surface;
   }
   * {
-    scrollbar-color: #1b2436 #00030c;
+    scrollbar-color: #1b2436 #070a0f;
   }
   @media (prefers-reduced-motion: reduce) {
     html {
