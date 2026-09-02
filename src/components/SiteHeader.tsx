@@ -15,6 +15,7 @@ export function SiteHeader() {
   const pathname = usePathname();
   const [compact, setCompact] = useState(false);
   const compareIds = useCompareIds();
+  const isHome = pathname === '/';
   // The nav's own Compare entry is the only static thing about it: the moment a
   // vehicle is queued, it should lead straight into that comparison rather than to
   // the empty state — that's the whole point of making this a real on-ramp.
@@ -41,8 +42,15 @@ export function SiteHeader() {
     <>
       <header
         className={cn(
-          'sticky top-0 z-40 border-b bg-surface/85 backdrop-blur-xl transition-all duration-300 ease-out',
-          compact ? 'border-hairline' : 'border-transparent',
+          'z-40 border-b transition-all duration-300 ease-out',
+          isHome
+            ? 'fixed inset-x-0 top-0'
+            : 'sticky top-0',
+          compact
+            ? 'border-hairline bg-surface/88 backdrop-blur-xl'
+            : isHome
+              ? 'border-transparent bg-gradient-to-b from-surface/45 via-surface/10 to-transparent'
+              : 'border-transparent bg-surface/85 backdrop-blur-xl',
         )}
       >
         <a
