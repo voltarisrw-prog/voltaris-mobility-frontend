@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { HeroMedia } from '@/features/home/HeroMedia';
+import { ShowcaseSlider } from '@/features/home/ShowcaseSlider';
 import { UniversalSearch } from '@/features/vehicles/UniversalSearch';
 import { AisleRail } from '@/features/vehicles/AisleRail';
 import { JsonLd } from '@/components/JsonLd';
@@ -19,6 +20,7 @@ import {
   inquiry,
   needs,
   sell,
+  showcase,
   testDrive,
   trust,
 } from '@/content/home';
@@ -56,9 +58,12 @@ export default async function HomePage() {
    * its own — one empty rail should not take down the homepage, and a rail with no
    * results renders as nothing rather than as a row of skeletons pretending.
    */
-  const results = await Promise.allSettled(
-    aisles.map((aisle) => listVehicles({ ...aisle.query })),
-  );
+  const [showcaseVehicles, results] = await Promise.all([
+    listVehicles({ ...showcase.query })
+      .then((page) => page.items.slice(0, 6))
+      .catch(() => [] as VehicleSummary[]),
+    Promise.allSettled(aisles.map((aisle) => listVehicles({ ...aisle.query }))),
+  ]);
 
   const railData: { id: string; vehicles: VehicleSummary[] }[] = aisles.map((aisle, index) => {
     const result = results[index];
@@ -107,7 +112,21 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 02 — THE ENTRANCE ----------------------------------------------- */}
+      {/* 02 — THE SHOWCASE ------------------------------------------------ */}
+      {showcaseVehicles.length > 0 && (
+        <>
+          <div className="lane-rule" />
+          <section className="pt-16 sm:pt-20">
+            <header className="shell max-w-2xl">
+              <p className="eyebrow">{showcase.eyebrow}</p>
+              <h2 className="mt-4 font-display text-display">{showcase.headline}</h2>
+            </header>
+            <ShowcaseSlider vehicles={showcaseVehicles} />
+          </section>
+        </>
+      )}
+
+      {/* 03 — THE ENTRANCE ------------------------------------------------ */}
       <div className="lane-rule" />
       <section className="shell py-20">
         <header className="max-w-2xl">
@@ -141,7 +160,7 @@ export default async function HomePage() {
         </ul>
       </section>
 
-      {/* 03/04 — SMART DISCOVERY AND THE AISLES --------------------------- */}
+      {/* 04 — SMART DISCOVERY AND THE AISLES --------------------------- */}
       <div className="lane-rule" />
       <section className="pt-20">
         <header className="shell max-w-2xl">
@@ -249,9 +268,14 @@ export default async function HomePage() {
                 ['Full charge, home socket', '8.6 hours', '9.4 hours'],
                 ['10–80% on DC', '40 min', 'No DC charging'],
               ].map(([label, a, b]) => (
-                <div key={label} className="grid grid-cols-[1fr_auto_auto] items-baseline gap-4 py-3.5">
+                <div
+                  key={label}
+                  className="grid grid-cols-[1fr_auto_auto] items-baseline gap-4 py-3.5"
+                >
                   <dt className="text-steel">{label}</dt>
-                  <dd className="bg-volt-wash px-2 py-1 font-data text-xs tabular-nums text-volt">{a}</dd>
+                  <dd className="bg-volt-wash px-2 py-1 font-data text-xs tabular-nums text-volt">
+                    {a}
+                  </dd>
                   <dd className="font-data text-xs tabular-nums text-steel-muted">{b}</dd>
                 </div>
               ))}
@@ -410,7 +434,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 15 — ENQUIRY --------------------------------------------------- */}
+      {/* 12 — ENQUIRY --------------------------------------------------- */}
       <div className="lane-rule" />
       <section className="shell py-20">
         <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:gap-20">
@@ -421,7 +445,10 @@ export default async function HomePage() {
             <ul className="mt-8 space-y-3">
               {inquiry.points.map((point) => (
                 <li key={point} className="flex items-baseline gap-3 text-sm text-steel">
-                  <span aria-hidden="true" className="h-px w-4 shrink-0 translate-y-[-3px] bg-volt" />
+                  <span
+                    aria-hidden="true"
+                    className="h-px w-4 shrink-0 translate-y-[-3px] bg-volt"
+                  />
                   {point}
                 </li>
               ))}
@@ -434,7 +461,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 14 — FINAL CTA --------------------------------------------------- */}
+      {/* 13 — FINAL CTA --------------------------------------------------- */}
       <div className="lane-rule" />
       <section className="relative isolate overflow-hidden">
         <div className="vanishing-glow absolute inset-0" aria-hidden="true" />

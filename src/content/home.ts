@@ -70,6 +70,17 @@ export const entrance = {
 };
 
 /**
+ * Section 03 — the showcase. A real query (verified, highest price first), not a
+ * hand-picked "featured" list — see the note on `aisles` below. Kept to a handful
+ * of vehicles: this is a highlight reel, not another way to browse the catalog.
+ */
+export const showcase = {
+  eyebrow: 'The showroom floor',
+  headline: 'Verified. Priced. Ready to drive.',
+  query: { verified: true, sort: 'price_desc' as const },
+};
+
+/**
  * Section 04 — the aisles.
  *
  * Each rail is a real query against the marketplace, so an empty aisle is an empty
