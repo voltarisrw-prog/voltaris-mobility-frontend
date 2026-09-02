@@ -75,20 +75,22 @@ export function CoverflowShowcase<T>({
     >
       <div
         onKeyDown={onKeyDown}
-        className="relative mx-auto flex h-[26rem] max-w-shell items-center justify-center overflow-hidden sm:h-[30rem] lg:h-[36rem]"
-        style={{ perspective: '1800px' }}
+        className="relative mx-auto flex h-[26rem] max-w-shell items-center justify-center overflow-hidden [--cylinder-radius:22rem] sm:h-[30rem] sm:[--cylinder-radius:30rem] lg:h-[36rem] lg:[--cylinder-radius:38rem]"
+        style={{ perspective: '1600px', transformStyle: 'preserve-3d' }}
       >
         {items.map((item, index) => {
           const offset = circularOffset(index, safeCurrent, count);
           const isCenter = offset === 0;
           // Beyond ±1 a card exists only so the next step in either direction
           // has something to animate in from — it is never meant to be seen.
-          const hidden = Math.abs(offset) > 1;
+          const hidden = Math.abs(offset) > 2;
+          const distance = Math.abs(offset);
           const style: React.CSSProperties = {
-            transform: `translateX(${offset * 62}%) scale(${isCenter ? 1 : 0.74}) rotateY(${offset * -22}deg)`,
-            opacity: hidden ? 0 : isCenter ? 1 : 0.55,
-            zIndex: 20 - Math.abs(offset) * 5,
+            transform: `rotateY(${offset * -32}deg) translateZ(var(--cylinder-radius)) scale(${isCenter ? 1 : distance === 1 ? 0.84 : 0.68})`,
+            opacity: hidden ? 0 : isCenter ? 1 : distance === 1 ? 0.72 : 0.38,
+            zIndex: 30 - distance * 5,
             pointerEvents: hidden ? 'none' : 'auto',
+            transformStyle: 'preserve-3d',
           };
           const key = getKey(item);
 
