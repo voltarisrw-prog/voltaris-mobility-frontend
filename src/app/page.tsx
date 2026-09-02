@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { HeroMedia } from '@/features/home/HeroMedia';
 import { ShowcaseSlider } from '@/features/home/ShowcaseSlider';
-import { UniversalSearch } from '@/features/vehicles/UniversalSearch';
 import { AisleRail } from '@/features/vehicles/AisleRail';
 import { JsonLd } from '@/components/JsonLd';
 import { listVehicles } from '@/lib/api/vehicles';
@@ -82,15 +81,15 @@ export default async function HomePage() {
       {/* 01 — HERO ------------------------------------------------------- */}
       <section className="relative isolate overflow-hidden">
         <HeroMedia />
-        <div className="shell relative flex min-h-[85svh] flex-col justify-center py-20 sm:py-28">
-          <div className="max-w-3xl animate-rise-in">
+        <div className="shell relative flex min-h-[88svh] flex-col justify-end py-16 sm:py-20">
+          <div className="max-w-2xl animate-rise-in pb-4 sm:pb-8">
             <p className="eyebrow">{hero.eyebrow}</p>
-            <h1 className="mt-6 font-display text-hero">{hero.headline}</h1>
-            <p className="mt-6 font-display text-xl tracking-tight text-steel sm:text-2xl">
+            <h1 className="mt-4 max-w-xl font-display text-hero">{hero.headline}</h1>
+            <p className="mt-5 max-w-md font-display text-lg tracking-tight text-steel sm:text-xl">
               {hero.sub}
             </p>
 
-            <div className="mt-9 flex flex-wrap gap-3">
+            <div className="mt-7 flex flex-wrap items-center gap-3">
               <Link
                 href={hero.primaryCta.href}
                 className="bg-volt px-7 py-4 font-data text-eyebrow uppercase text-surface transition-colors hover:bg-volt-bright"
@@ -106,9 +105,6 @@ export default async function HomePage() {
             </div>
           </div>
 
-          <div className="mt-14 max-w-3xl">
-            <UniversalSearch />
-          </div>
         </div>
       </section>
 
