@@ -29,10 +29,18 @@ import { useEffect, useRef, useState } from 'react';
  * of the page.
  */
 
-const BLUR =
-  'data:image/webp;base64,UklGRpoAAABXRUJQVlA4II4AAAAwBACdASoUAA0APu1iqU2ppaOiMAgBMB2JZwCnFYvgxf+Iueqrv7oz7AAA/sdWv36lO8A3U/xCqAwd111NA43o8R48Dm6YyCiUXXfQ+5Q+lYMPJOQZNzVinRNMc6SXpvLJSQhja9YWvWedfRy58V7SZaLiNkFnB73M+11ILPer9tycs8l5Vj+oB4BXgAAA';
-
 const VIDEO_URL = process.env.NEXT_PUBLIC_HERO_VIDEO_URL ?? '';
+
+const HERO_IMAGES = [
+  '/hero/gallery/car1.jpeg',
+  '/hero/gallery/car2.jpeg',
+  '/hero/gallery/car3.jpeg',
+  '/hero/gallery/car4.jpeg',
+  '/hero/gallery/car5.jpeg',
+  '/hero/gallery/car6.jpeg',
+  '/hero/gallery/car7.jpeg',
+  '/hero/gallery/car8.jpeg',
+];
 
 interface NetworkInformation {
   saveData?: boolean;
@@ -56,11 +64,24 @@ export function HeroMedia() {
   const video = useRef<HTMLVideoElement>(null);
   const [enabled, setEnabled] = useState(false);
   const [playing, setPlaying] = useState(false);
+  const [activeImage, setActiveImage] = useState(0);
 
   useEffect(() => {
     // Deferred to idle so the decision never competes with the poster's decode.
     const schedule = window.requestIdleCallback ?? ((cb: () => void) => window.setTimeout(cb, 400));
     schedule(() => setEnabled(shouldLoadVideo()));
+  }, []);
+
+  useEffect(() => {
+    // Editorial image rotation. Keep the first image visible long enough to
+    // establish the hero before moving through the showroom.
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const timer = window.setInterval(() => {
+      setActiveImage((current) => (current + 1) % HERO_IMAGES.length);
+    }, 5000);
+
+    return () => window.clearInterval(timer);
   }, []);
 
   useEffect(() => {
@@ -84,17 +105,19 @@ export function HeroMedia() {
 
   return (
     <div ref={frame} aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
-      <Image
-        src="/hero/showroom-1536.webp"
-        alt=""
-        fill
-        priority
-        // The source is 1535px wide; asking for more would upscale and cost bytes.
-        sizes="100vw"
-        placeholder="blur"
-        blurDataURL={BLUR}
-        className="object-cover object-center"
-      />
+      {HERO_IMAGES.map((src, index) => (
+        <Image
+          key={src}
+          src={src}
+          alt=""
+          fill
+          priority={index === 0}
+          sizes="100vw"
+          className={`object-cover object-center transition-opacity duration-[1400ms] ease-in-out ${
+            index === activeImage ? 'opacity-100' : 'opacity-0'
+          }`}
+        />
+      ))}
 
       {enabled && (
         <video
