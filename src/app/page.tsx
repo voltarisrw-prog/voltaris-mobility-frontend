@@ -186,53 +186,74 @@ export default async function HomePage() {
 
       {/* 04 — SMART DISCOVERY AND THE AISLES --------------------------- */}
       <div className="lane-rule" />
-      <section className="pt-20">
-        <header className="shell max-w-2xl">
-          <p className="eyebrow">Everything worth driving</p>
-          <h2 className="mt-4 font-display text-display">One place. Properly organised.</h2>
-          <p className="mt-4 text-base text-steel">
-            Aisles instead of an endless grid. Each one is a live query, so what you see is what is
-            actually on the floor right now.
-          </p>
-        </header>
+      <section className="relative overflow-hidden py-28 sm:py-36">
+        <div className="shell">
+          <div className="grid gap-12 lg:grid-cols-[1fr_2fr] lg:items-end lg:gap-20">
+            <header className="max-w-lg">
+              <p className="eyebrow">The floor</p>
+              <h2 className="mt-5 font-display text-[clamp(3rem,7vw,6.5rem)] font-semibold leading-[0.88] tracking-[-0.055em]">
+                Explore what is moving.
+              </h2>
+            </header>
 
-        {anyInventory ? (
-          <div className="mt-6 divide-y divide-hairline/60">
-            {aisles.map((aisle, index) => {
-              const data = railData.find((rail) => rail.id === aisle.id);
-              return (
-                <AisleRail
-                  key={aisle.id}
-                  title={aisle.title}
-                  line={aisle.line}
-                  href={aisle.href}
-                  vehicles={data?.vehicles ?? []}
-                  priority={index === 0}
-                />
-              );
-            })}
-          </div>
-        ) : (
-          <div className="shell mt-10">
-            <div className="border border-dashed border-hairline p-12 text-center">
-              <p className="font-display text-xl tracking-tight">The floor is being stocked.</p>
-              <p className="mx-auto mt-3 max-w-md text-sm text-steel">
-                Listings appear here the moment they clear review. Nothing is shown before it has
-                been checked.
+            <div className="max-w-xl pb-1 lg:ml-auto">
+              <p className="text-lg leading-relaxed text-steel sm:text-xl">
+                A live selection of vehicles available now. Browse by what has just arrived,
+                what goes the distance, or what fits the budget.
               </p>
-              <Link
-                href="/sell"
-                className="mt-7 inline-block bg-volt px-6 py-3 font-data text-eyebrow uppercase text-surface transition-colors hover:bg-volt-bright"
-              >
-                Be the first to list
-              </Link>
             </div>
           </div>
-        )}
+
+          {anyInventory ? (
+            <>
+              {(() => {
+                const featuredRail = railData.find((rail) => rail.id === "new-arrivals");
+
+                return featuredRail ? (
+                  <div className="mt-16 sm:mt-20">
+                    <AisleRail
+                      title="Just arrived"
+                      line="The newest listings to clear review."
+                      href="/cars?sort=newest"
+                      vehicles={featuredRail.vehicles}
+                      priority
+                    />
+                  </div>
+                ) : null;
+              })()}
+
+              <nav
+                aria-label="Browse vehicle collections"
+                className="mt-10 border-y border-hairline"
+              >
+                <ul className="flex flex-wrap">
+                  {aisles.slice(1).map((aisle) => (
+                    <li key={aisle.id} className="border-r border-hairline last:border-r-0">
+                      <Link
+                        href={aisle.href}
+                        className="group flex items-center gap-3 px-4 py-4 font-data text-[0.65rem] uppercase tracking-[0.16em] text-steel-muted transition-colors hover:text-volt sm:px-5"
+                      >
+                        <span>{aisle.title}</span>
+                        <ArrowRight
+                          className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1"
+                          aria-hidden="true"
+                        />
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            </>
+          ) : (
+            <div className="mt-16 border-y border-hairline py-12">
+              <p className="text-sm text-steel">
+                The showroom is being refreshed. Check back soon for new vehicles.
+              </p>
+            </div>
+          )}
+        </div>
       </section>
 
-      {/* 05 — PERSONALISED DISCOVERY ------------------------------------- */}
-      <div className="lane-rule" />
       <section className="shell py-20">
         <header className="max-w-2xl">
           <p className="eyebrow">{needs.eyebrow}</p>
