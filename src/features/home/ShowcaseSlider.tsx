@@ -1,6 +1,8 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
 import { CoverflowShowcase } from '@/components/CoverflowShowcase';
 import type { VehicleSummary } from '@/types/vehicle';
 
@@ -69,6 +71,31 @@ export function ShowcaseSlider({
               </h3>
             </div>
 
+            <div className="absolute inset-x-0 bottom-0 z-10 p-4 sm:p-5 lg:p-6">
+              <div className="flex flex-wrap items-center gap-2.5">
+                <Link
+                  href={`/cars/${vehicle.slug}`}
+                  className="group inline-flex min-h-11 items-center gap-2 bg-volt px-4 py-3 font-data text-[0.58rem] uppercase tracking-[0.14em] text-surface transition-colors hover:bg-volt-bright"
+                >
+                  Book a Ride
+                  <ArrowRight
+                    className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1"
+                    aria-hidden="true"
+                  />
+                </Link>
+
+                <Link
+                  href={`/cars/${vehicle.slug}`}
+                  className="group inline-flex min-h-11 items-center gap-2 border border-white/30 bg-black/25 px-4 py-3 font-data text-[0.58rem] uppercase tracking-[0.14em] text-white backdrop-blur-md transition-colors hover:border-white/70 hover:bg-black/45"
+                >
+                  Buy
+                  <ArrowRight
+                    className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1"
+                    aria-hidden="true"
+                  />
+                </Link>
+              </div>
+            </div>
 
           </>
         );
