@@ -82,29 +82,56 @@ export default async function HomePage() {
       {showcaseVehicles.length > 0 && (
         <>
           <div className="lane-rule" />
-          <section className="pt-20 sm:pt-28 lg:pt-32">
-            <header className="shell">
-              <div className="grid gap-8 border-b border-hairline pb-8 lg:grid-cols-[minmax(10rem,0.35fr)_minmax(0,1.65fr)] lg:items-end lg:gap-16 lg:pb-10">
-                <div>
-                  <p className="eyebrow">{showcase.eyebrow}</p>
-                  <p className="mt-3 font-data text-[0.6rem] uppercase tracking-[0.18em] text-steel-muted">
-                    06 selected vehicles · live inventory
-                  </p>
-                </div>
 
-                <div className="flex items-end justify-between gap-8">
-                  <h2 className="max-w-5xl font-display text-[clamp(3.5rem,8vw,7.5rem)] font-semibold leading-[0.82] tracking-[-0.065em]">
-                    {showcase.headline}
-                  </h2>
-                  <span className="hidden shrink-0 pb-1 font-data text-[0.65rem] uppercase tracking-[0.18em] text-steel-muted lg:block">
-                    02 / 06
-                  </span>
+          <section className="relative isolate overflow-hidden border-y border-hairline">
+            <div
+              className="absolute inset-0 bg-[radial-gradient(ellipse_55%_70%_at_50%_45%,rgba(92,200,255,0.08),transparent_68%)]"
+              aria-hidden="true"
+            />
+            <div
+              className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-[#0c0906] via-[#0c0906]/70 to-transparent"
+              aria-hidden="true"
+            />
+            <div
+              className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-[#0c0906] via-[#0c0906]/60 to-transparent"
+              aria-hidden="true"
+            />
+
+            <div className="relative py-16 sm:py-20 lg:py-24">
+              <header className="shell">
+                <div className="flex flex-col gap-8 border-b border-hairline pb-7 sm:flex-row sm:items-end sm:justify-between sm:gap-10">
+                  <div>
+                    <div className="flex items-center gap-3">
+                      <span
+                        className="relative flex h-2 w-2"
+                        aria-hidden="true"
+                      >
+                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-volt/60 motion-reduce:hidden" />
+                        <span className="relative inline-flex h-2 w-2 rounded-full bg-volt" />
+                      </span>
+
+                      <p className="font-data text-[0.65rem] uppercase tracking-[0.2em] text-volt">
+                        Live showroom
+                      </p>
+                    </div>
+                  </div>
+
+                  <Link
+                    href="/cars"
+                    className="group inline-flex w-fit items-center gap-3 border-b border-chrome/50 pb-2 font-data text-[0.65rem] uppercase tracking-[0.16em] text-chrome transition-colors hover:border-volt hover:text-volt"
+                  >
+                    View all
+                    <ArrowRight
+                      className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1"
+                      aria-hidden="true"
+                    />
+                  </Link>
                 </div>
+              </header>
+
+              <div className="mt-2 sm:mt-4">
+                <ShowcaseSlider vehicles={showcaseVehicles} />
               </div>
-            </header>
-
-            <div className="mt-3 sm:mt-5">
-              <ShowcaseSlider vehicles={showcaseVehicles} />
             </div>
           </section>
         </>

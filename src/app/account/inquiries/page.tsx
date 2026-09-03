@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import type { InquiryRecord } from '@/lib/api/users';
 import { EmptyState } from '@/components/EmptyState';
 import { getMyInquiries } from '@/lib/api/users';
 

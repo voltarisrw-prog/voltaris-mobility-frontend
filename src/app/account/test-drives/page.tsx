@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import type { TestDriveRecord } from '@/lib/api/users';
 import { EmptyState } from '@/components/EmptyState';
 import { getMyTestDrives } from '@/lib/api/users';
 
