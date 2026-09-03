@@ -7,6 +7,7 @@ import { RoadTransition } from '@/features/home/RoadTransition';
 import { WayIn } from '@/features/home/WayIn';
 import { Garage } from '@/features/home/Garage';
 import { RwandaInMotion } from '@/features/home/RwandaInMotion';
+import { FinalStatement } from '@/features/home/FinalStatement';
 import { JsonLd } from '@/components/JsonLd';
 import { listVehicles } from '@/lib/api/vehicles';
 import { buildMetadata, absoluteUrl } from '@/lib/seo/metadata';
@@ -144,6 +145,9 @@ export default async function HomePage() {
 
       {/* 06 — RWANDA IN MOTION --------------------------------------- */}
       <RwandaInMotion />
+
+      {/* 07 — FINAL STATEMENT ---------------------------------------- */}
+      <FinalStatement />
 
     </>
   );
