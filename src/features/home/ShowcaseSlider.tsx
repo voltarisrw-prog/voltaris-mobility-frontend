@@ -74,7 +74,7 @@ export function ShowcaseSlider({
             <div className="absolute inset-y-0 inset-x-0 z-10 pointer-events-none">
               <Link
                 href={`/cars/${vehicle.slug}`}
-                className="group pointer-events-auto absolute left-3 top-1/2 -translate-y-1/2 inline-flex min-h-12 items-center gap-2 border border-volt/70 bg-volt px-3 py-3 font-data text-[0.56rem] uppercase tracking-[0.14em] text-surface shadow-[0_12px_35px_-12px_rgba(92,200,255,0.65)] transition-all duration-300 hover:-translate-y-1/2 hover:bg-volt-bright hover:shadow-[0_16px_45px_-12px_rgba(92,200,255,0.8)] sm:left-5 sm:px-4 lg:left-6"
+                className="group pointer-events-auto absolute left-3 top-1/2 -translate-y-1/2 inline-flex min-h-12 items-center gap-2 border border-white bg-white px-3 py-3 font-data text-[0.56rem] font-bold uppercase tracking-[0.14em] text-black shadow-[0_12px_35px_-12px_rgba(0,0,0,0.55)] transition-all duration-300 hover:-translate-y-1/2 hover:bg-white/90 hover:shadow-[0_16px_45px_-12px_rgba(0,0,0,0.7)] sm:left-5 sm:px-4 lg:left-6"
               >
                 <span>Book a Ride</span>
                 <ArrowRight
@@ -85,7 +85,7 @@ export function ShowcaseSlider({
 
               <Link
                 href={`/cars/${vehicle.slug}`}
-                className="group pointer-events-auto absolute right-3 top-1/2 -translate-y-1/2 inline-flex min-h-12 items-center gap-2 border border-white/30 bg-black/35 px-3 py-3 font-data text-[0.56rem] uppercase tracking-[0.14em] text-white shadow-[0_12px_35px_-12px_rgba(0,0,0,0.8)] backdrop-blur-md transition-all duration-300 hover:-translate-y-1/2 hover:border-white/70 hover:bg-black/55 sm:right-5 sm:px-4 lg:right-6"
+                className="group pointer-events-auto absolute right-3 top-1/2 -translate-y-1/2 inline-flex min-h-12 items-center gap-2 border border-white bg-white px-3 py-3 font-data text-[0.56rem] font-bold uppercase tracking-[0.14em] text-black shadow-[0_12px_35px_-12px_rgba(0,0,0,0.55)] transition-all duration-300 hover:-translate-y-1/2 hover:bg-white/90 hover:shadow-[0_16px_45px_-12px_rgba(0,0,0,0.7)] sm:right-5 sm:px-4 lg:right-6"
               >
                 <span>Buy</span>
                 <ArrowRight
