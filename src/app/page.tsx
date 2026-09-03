@@ -6,6 +6,7 @@ import { ShowcaseSlider } from '@/features/home/ShowcaseSlider';
 import { RoadTransition } from '@/features/home/RoadTransition';
 import { WayIn } from '@/features/home/WayIn';
 import { Garage } from '@/features/home/Garage';
+import { RwandaInMotion } from '@/features/home/RwandaInMotion';
 import { JsonLd } from '@/components/JsonLd';
 import { listVehicles } from '@/lib/api/vehicles';
 import { buildMetadata, absoluteUrl } from '@/lib/seo/metadata';
@@ -140,6 +141,9 @@ export default async function HomePage() {
 
       {/* 05 — THE GARAGE ---------------------------------------------- */}
       <Garage />
+
+      {/* 06 — RWANDA IN MOTION --------------------------------------- */}
+      <RwandaInMotion />
 
     </>
   );
