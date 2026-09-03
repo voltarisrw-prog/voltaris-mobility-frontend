@@ -122,7 +122,7 @@ export function RoadTransition() {
 
           <div className="mt-7 flex items-end justify-between gap-8 sm:mt-9 lg:mt-10">
             <p className="max-w-md font-display text-[clamp(1.7rem,3.5vw,3.25rem)] leading-[0.95] tracking-[-0.025em] text-chrome/90">
-              A way to move.
+              A way to move
             </p>
 
             <span className="hidden font-data text-[0.58rem] uppercase tracking-[0.18em] text-chrome/55 sm:block">
