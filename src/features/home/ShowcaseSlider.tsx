@@ -1,8 +1,6 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
 import { CoverflowShowcase } from '@/components/CoverflowShowcase';
 import type { VehicleSummary } from '@/types/vehicle';
 
@@ -38,7 +36,6 @@ export function ShowcaseSlider({
       }
       renderCenter={(vehicle) => {
         const title = `${vehicle.make} ${vehicle.model}`;
-        const detailHref = `/cars/${vehicle.slug}`;
 
         return (
           <>
@@ -72,31 +69,7 @@ export function ShowcaseSlider({
               </h3>
             </div>
 
-            <div className="pointer-events-none absolute inset-x-0 top-1/2 z-[90] -translate-y-1/2 px-3 sm:px-5 lg:px-7">
-              <div className="pointer-events-auto relative flex w-full items-center justify-between gap-3">
-                <Link
-                  href="/ride"
-                  className="group inline-flex min-h-11 max-w-[46%] items-center justify-center gap-2 rounded-full bg-white px-4 py-3 font-data text-[0.6rem] font-semibold uppercase tracking-[0.13em] text-surface shadow-lg transition-all duration-200 hover:bg-volt hover:text-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volt sm:flex-none sm:px-5"
-                >
-                  Book a Ride
-                  <ArrowRight
-                    className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-1"
-                    aria-hidden="true"
-                  />
-                </Link>
 
-                <Link
-                  href={detailHref}
-                  className="group inline-flex min-h-11 max-w-[46%] items-center justify-center gap-2 rounded-full border border-white/70 bg-black/55 px-4 py-3 font-data text-[0.6rem] font-semibold uppercase tracking-[0.13em] text-white shadow-lg backdrop-blur-md transition-all duration-200 hover:border-white hover:bg-white hover:text-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white sm:flex-none sm:px-5"
-                >
-                  Buy
-                  <ArrowRight
-                    className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-1"
-                    aria-hidden="true"
-                  />
-                </Link>
-              </div>
-            </div>
           </>
         );
       }}
