@@ -89,7 +89,7 @@ export function ShowcaseSlider({
                   href={detailHref}
                   className="group inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-full border border-white/70 bg-black/55 px-4 py-3 font-data text-[0.6rem] font-semibold uppercase tracking-[0.13em] text-white shadow-lg backdrop-blur-md transition-all duration-200 hover:border-white hover:bg-white hover:text-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white sm:flex-none sm:px-5"
                 >
-                  More
+                  Buy
                   <ArrowRight
                     className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-1"
                     aria-hidden="true"
