@@ -1,7 +1,10 @@
 'use client';
 
-import { useCallback, useState, type ReactNode } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useCallback, useEffect, useState, type ReactNode } from 'react';
+import { ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react';
+
+/** How long each slide stays centered before autoplay advances to the next. */
+const AUTOPLAY_INTERVAL_MS = 6000;
 
 /**
  * The mechanics behind every coverflow on the site: center dominant, previous
@@ -10,6 +13,19 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
  * click-a-side-card-to-center-it, arrow-key navigation, and a
  * prefers-reduced-motion opt-out (the site's global reduced-motion rule only
  * targets `animation`, not `transition`, so this needs its own).
+ *
+ * Also autoplays — advancing on its own every AUTOPLAY_INTERVAL_MS — but
+ * only when all of the following hold, so it never fights the person looking
+ * at it: `prefers-reduced-motion` is not set (autoplay never starts at all
+ * for it, matching the transition opt-out above rather than just slowing
+ * down), nobody is hovering or keyboard-focused inside the carousel, and the
+ * explicit pause button hasn't been pressed. Any manual navigation (an
+ * arrow, a side card) resets the interval rather than stacking on top of it,
+ * so acting on the carousel never gets immediately overridden by an
+ * autoplay tick a moment later. The pause/play button is not optional
+ * polish — WCAG 2.2.2 requires a way to stop anything that auto-updates on
+ * a cycle longer than five seconds, and the prev/next arrows don't satisfy
+ * that on their own.
  *
  * What differs between the vehicle, blog, and dealer versions is only the
  * card content and its size — supplied by the caller — not the sliding
@@ -60,6 +76,39 @@ export function CoverflowShowcase<T>({
     if (event.key === 'ArrowRight') go(1);
   };
 
+  // Autoplay state — see the component doc comment for exactly what has to
+  // be true for it to actually run.
+  const [paused, setPaused] = useState(false);
+  const [hovered, setHovered] = useState(false);
+  const [focused, setFocused] = useState(false);
+  // Read once at init (guarded for SSR, where `window` doesn't exist) rather
+  // than synchronously in an effect — an effect should only subscribe here,
+  // not also perform the initial read; see the change-listener effect below.
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(() =>
+    typeof window === 'undefined'
+      ? false
+      : window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+  );
+
+  useEffect(() => {
+    const query = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const onChange = (event: MediaQueryListEvent) => setPrefersReducedMotion(event.matches);
+    query.addEventListener('change', onChange);
+    return () => query.removeEventListener('change', onChange);
+  }, []);
+
+  const autoplayActive = count > 1 && !paused && !hovered && !focused && !prefersReducedMotion;
+
+  useEffect(() => {
+    if (!autoplayActive) return;
+    // Depending on `current` restarts this interval on every advance,
+    // whether that advance came from autoplay itself or from a manual
+    // click — so a manual nudge always buys a full interval before the
+    // next automatic one, rather than autoplay ticking again moments later.
+    const id = setInterval(() => go(1), AUTOPLAY_INTERVAL_MS);
+    return () => clearInterval(id);
+  }, [autoplayActive, current, go]);
+
   if (count === 0) return null;
 
   // Derived, not stored: if a revalidated fetch returns fewer items than the
@@ -75,6 +124,14 @@ export function CoverflowShowcase<T>({
     >
       <div
         onKeyDown={onKeyDown}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        onFocus={() => setFocused(true)}
+        onBlur={(event) => {
+          if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+            setFocused(false);
+          }
+        }}
         className="relative mx-auto flex h-[37rem] w-full max-w-shell items-center justify-center overflow-hidden px-1 sm:h-[43rem] sm:px-4 md:h-[49rem] lg:h-[55rem] lg:px-0 [--cylinder-radius:21rem] sm:[--cylinder-radius:28rem] lg:[--cylinder-radius:36rem]"
         style={{ perspective: '1600px', transformStyle: 'preserve-3d' }}
       >
@@ -133,10 +190,12 @@ export function CoverflowShowcase<T>({
             aria-label="Previous vehicle"
             className="pointer-events-auto group inline-flex min-h-11 items-center gap-2 rounded-full border border-hairline bg-surface/85 px-4 py-2.5 font-data text-[0.6rem] uppercase tracking-[0.14em] text-steel backdrop-blur-md transition-colors hover:border-volt hover:text-volt"
           >
-            <ChevronLeft className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-1" aria-hidden="true" />
+            <ChevronLeft
+              className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-1"
+              aria-hidden="true"
+            />
             <span>Previous</span>
           </button>
-
           <button
             type="button"
             onClick={() => go(1)}
@@ -144,7 +203,10 @@ export function CoverflowShowcase<T>({
             className="pointer-events-auto group inline-flex min-h-11 items-center gap-2 rounded-full border border-hairline bg-surface/85 px-4 py-2.5 font-data text-[0.6rem] uppercase tracking-[0.14em] text-steel backdrop-blur-md transition-colors hover:border-volt hover:text-volt"
           >
             <span>Next</span>
-            <ChevronRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true" />
+            <ChevronRight
+              className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"
+              aria-hidden="true"
+            />
           </button>
         </div>
       )}
@@ -161,14 +223,15 @@ export function CoverflowShowcase<T>({
             aria-label="Previous vehicle"
             className="group inline-flex min-h-11 items-center gap-2 rounded-full px-2 font-data text-[0.6rem] uppercase tracking-[0.14em] text-steel transition-colors hover:text-chrome"
           >
-            <ChevronLeft className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-0.5" aria-hidden="true" />
+            <ChevronLeft
+              className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-0.5"
+              aria-hidden="true"
+            />
             Previous
           </button>
-
           <span className="font-data text-[0.58rem] uppercase tracking-[0.16em] text-steel-muted">
             Swipe or select
           </span>
-
           <button
             type="button"
             onClick={() => go(1)}
@@ -176,9 +239,33 @@ export function CoverflowShowcase<T>({
             className="group inline-flex min-h-11 items-center gap-2 rounded-full px-2 font-data text-[0.6rem] uppercase tracking-[0.14em] text-steel transition-colors hover:text-chrome"
           >
             Next
-            <ChevronRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" aria-hidden="true" />
+            <ChevronRight
+              className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5"
+              aria-hidden="true"
+            />
           </button>
         </div>
+      )}
+
+      {/* Always rendered (not just on desktop, unlike the arrows above) —
+          the one control here that has to be reachable on every breakpoint
+          whenever autoplay is actually running. Not shown at all once
+          reduced-motion has taken autoplay off the table, since there is
+          nothing left for it to stop. */}
+      {count > 1 && !prefersReducedMotion && (
+        <button
+          type="button"
+          onClick={() => setPaused((value) => !value)}
+          aria-label={paused ? 'Play showcase' : 'Pause showcase'}
+          aria-pressed={paused}
+          className="absolute right-2 top-2 z-40 inline-flex h-9 w-9 items-center justify-center rounded-full border border-hairline bg-surface/85 text-steel backdrop-blur-md transition-colors hover:border-volt hover:text-volt sm:right-4 sm:top-4 sm:h-10 sm:w-10 lg:right-6"
+        >
+          {paused ? (
+            <Play className="h-4 w-4" aria-hidden="true" />
+          ) : (
+            <Pause className="h-4 w-4" aria-hidden="true" />
+          )}
+        </button>
       )}
     </section>
   );
