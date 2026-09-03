@@ -124,24 +124,27 @@ export function CoverflowShowcase<T>({
       </div>
 
       {count > 1 && (
-        <>
+        <div className="pointer-events-none absolute inset-x-3 top-1/2 z-40 hidden -translate-y-1/2 items-center justify-between sm:flex lg:inset-x-8">
           <button
             type="button"
             onClick={() => go(-1)}
-            aria-label="Previous"
-            className="absolute left-2 top-1/2 z-40 hidden h-12 w-12 -translate-y-1/2 items-center justify-center border border-hairline bg-surface/70 text-chrome backdrop-blur-sm transition-colors hover:border-volt hover:text-volt sm:left-4 sm:flex lg:left-8"
+            aria-label="Previous vehicle"
+            className="pointer-events-auto group inline-flex items-center gap-3 border-b border-hairline bg-surface/75 px-1 pb-2 font-data text-[0.62rem] uppercase tracking-[0.16em] text-steel backdrop-blur-md transition-colors hover:border-volt hover:text-volt"
           >
-            <ChevronLeft className="h-5 w-5" />
+            <ChevronLeft className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-1" aria-hidden="true" />
+            <span>Previous</span>
           </button>
+
           <button
             type="button"
             onClick={() => go(1)}
-            aria-label="Next"
-            className="absolute right-2 top-1/2 z-40 hidden h-12 w-12 -translate-y-1/2 items-center justify-center border border-hairline bg-surface/70 text-chrome backdrop-blur-sm transition-colors hover:border-volt hover:text-volt sm:right-4 sm:flex lg:right-8"
+            aria-label="Next vehicle"
+            className="pointer-events-auto group inline-flex items-center gap-3 border-b border-hairline bg-surface/75 px-1 pb-2 font-data text-[0.62rem] uppercase tracking-[0.16em] text-steel backdrop-blur-md transition-colors hover:border-volt hover:text-volt"
           >
-            <ChevronRight className="h-5 w-5" />
+            <span>Next</span>
+            <ChevronRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true" />
           </button>
-        </>
+        </div>
       )}
 
       {/* Mobile: the hero arrows above are hidden below `sm` (thumb reach on a
@@ -149,22 +152,29 @@ export function CoverflowShowcase<T>({
           side cards or tap one to bring it to center instead. A visible pair
           of on-card controls stands in for the arrows there. */}
       {count > 1 && (
-        <div className="mt-5 flex items-center justify-center gap-3 sm:hidden">
+        <div className="mt-5 flex items-center justify-between border-t border-hairline pt-4 sm:hidden">
           <button
             type="button"
             onClick={() => go(-1)}
-            aria-label="Previous"
-            className="inline-flex h-10 w-10 items-center justify-center border border-hairline text-chrome"
+            aria-label="Previous vehicle"
+            className="group inline-flex items-center gap-2 font-data text-[0.62rem] uppercase tracking-[0.14em] text-steel transition-colors hover:text-chrome"
           >
-            <ChevronLeft className="h-4 w-4" />
+            <ChevronLeft className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-0.5" aria-hidden="true" />
+            Previous
           </button>
+
+          <span className="font-data text-[0.58rem] uppercase tracking-[0.16em] text-steel-muted">
+            Swipe or select
+          </span>
+
           <button
             type="button"
             onClick={() => go(1)}
-            aria-label="Next"
-            className="inline-flex h-10 w-10 items-center justify-center border border-hairline text-chrome"
+            aria-label="Next vehicle"
+            className="group inline-flex items-center gap-2 font-data text-[0.62rem] uppercase tracking-[0.14em] text-steel transition-colors hover:text-chrome"
           >
-            <ChevronRight className="h-4 w-4" />
+            Next
+            <ChevronRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" aria-hidden="true" />
           </button>
         </div>
       )}

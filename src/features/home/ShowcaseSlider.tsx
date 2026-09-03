@@ -80,41 +80,38 @@ export function ShowcaseSlider({ vehicles }: { vehicles: VehicleSummary[] }) {
               </Link>
             </div>
 
-            {/* 2 — book a test drive, left. */}
-            <Link
-              href={`/test-drive?vehicle=${vehicle.slug}`}
-              className="absolute left-4 top-1/2 z-10 flex -translate-y-1/2 items-center gap-1.5 border border-chrome/70 bg-surface/70 px-3 py-2 font-data text-[0.65rem] uppercase tracking-wide text-chrome backdrop-blur-sm transition-colors hover:border-volt hover:text-volt"
-            >
-              <Car className="h-3.5 w-3.5" aria-hidden="true" />
-              Free ride
-            </Link>
+            <div className="absolute inset-x-4 bottom-3 z-10 flex items-end justify-between gap-4 sm:bottom-4">
+              <Link
+                href={`/test-drive?vehicle=${vehicle.slug}`}
+                className="group inline-flex min-h-10 items-center gap-2 border border-chrome/70 bg-surface/75 px-3.5 py-2.5 font-data text-[0.62rem] uppercase tracking-[0.14em] text-chrome backdrop-blur-md transition-colors hover:border-volt hover:text-volt sm:min-h-11 sm:px-4"
+              >
+                <Car className="h-3.5 w-3.5" aria-hidden="true" />
+                <span>Book a ride</span>
+              </Link>
 
-            {/* 3 — everything about it, right. */}
-            <Link
-              href={detailHref}
-              className="absolute right-4 top-1/2 z-10 flex -translate-y-1/2 items-center gap-1.5 border border-volt/60 bg-volt/10 px-3 py-2 font-data text-[0.65rem] uppercase tracking-wide text-volt backdrop-blur-sm transition-colors hover:bg-volt hover:text-surface"
-            >
-              More
-              <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-            </Link>
+              <Link
+                href={detailHref}
+                className="group inline-flex min-h-10 items-center gap-2 border-b border-volt px-1 pb-2 font-data text-[0.62rem] uppercase tracking-[0.14em] text-volt transition-colors hover:text-volt-bright sm:min-h-11"
+              >
+                <span>View vehicle</span>
+                <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true" />
+              </Link>
+            </div>
 
             {/* 4 — price, bottom. The number itself, not a marketing line —
                 a "premium marketplace" reads as premium from the car and
                 the typography, not from a discount-sticker phrase on top
                 of it. */}
-            <Link
-              href={detailHref}
-              className="absolute inset-x-4 bottom-4 z-10 flex items-baseline justify-between"
-            >
+            <div className="absolute inset-x-4 bottom-16 z-10 flex items-baseline justify-between sm:bottom-[4.5rem]">
               <span className="font-data text-lg font-semibold tabular-nums text-chrome sm:text-xl">
                 {formatPrice(vehicle.price, vehicle.currency)}
               </span>
               {vehicle.verified && (
-                <span className="font-data text-[0.65rem] uppercase tracking-wide text-volt">
+                <span className="font-data text-[0.62rem] uppercase tracking-[0.14em] text-volt">
                   Verified
                 </span>
               )}
-            </Link>
+            </div>
           </>
         );
       }}

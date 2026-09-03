@@ -101,18 +101,15 @@ export default async function HomePage() {
               <header className="shell">
                 <div className="flex flex-col gap-8 border-b border-hairline pb-7 sm:flex-row sm:items-end sm:justify-between sm:gap-10">
                   <div>
-                    <div className="flex items-center gap-3">
-                      <span
-                        className="relative flex h-2 w-2"
-                        aria-hidden="true"
-                      >
+                    <div className="flex items-center gap-4">
+                      <span className="relative flex h-2.5 w-2.5 shrink-0" aria-hidden="true">
                         <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-volt/60 motion-reduce:hidden" />
-                        <span className="relative inline-flex h-2 w-2 rounded-full bg-volt" />
+                        <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-volt" />
                       </span>
 
-                      <p className="font-data text-[0.65rem] uppercase tracking-[0.2em] text-volt">
+                      <h2 className="font-display text-[clamp(2.5rem,5vw,4.5rem)] font-semibold leading-none tracking-[-0.055em] text-chrome">
                         Live showroom
-                      </p>
+                      </h2>
                     </div>
                   </div>
 
