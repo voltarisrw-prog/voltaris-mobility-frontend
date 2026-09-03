@@ -1,6 +1,7 @@
 import { ApiError, isApiFailure } from './errors';
-import { envNumber, envString } from '@/lib/env';
+import { envFlag, envNumber, envString } from '@/lib/env';
 import type { ApiEnvelope } from '@/types/api';
+import { resolveMock } from '@/lib/mock/resolve';
 
 const isServer = typeof window === 'undefined';
 
@@ -23,13 +24,7 @@ function baseUrl(): string {
   return url.replace(/\/$/, '');
 }
 
-export type QueryValue =
-  | string
-  | number
-  | boolean
-  | undefined
-  | null
-  | (string | number)[];
+export type QueryValue = string | number | boolean | undefined | null | (string | number)[];
 
 export interface RequestOptions {
   method?: 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE';
@@ -47,9 +42,7 @@ export interface RequestOptions {
   skipRefresh?: boolean;
 }
 
-function toQueryString(
-  query: Record<string, QueryValue> | undefined,
-): string {
+function toQueryString(query: Record<string, QueryValue> | undefined): string {
   if (!query) return '';
 
   const params = new URLSearchParams();
@@ -81,9 +74,7 @@ function toQueryString(
 function csrfToken(): string | undefined {
   if (isServer) return undefined;
 
-  const entry = document.cookie
-    .split('; ')
-    .find((cookie) => cookie.startsWith('voltaris_csrf='));
+  const entry = document.cookie.split('; ').find((cookie) => cookie.startsWith('voltaris_csrf='));
 
   if (!entry) return undefined;
 
@@ -102,38 +93,18 @@ async function forwardedCookies(): Promise<string | undefined> {
   return store.toString() || undefined;
 }
 
-async function performRequest<T>(
-  path: string,
-  options: RequestOptions = {},
-): Promise<T> {
-  const {
-    method = 'GET',
-    query,
-    body,
-    revalidate,
-    tags,
-    signal,
-    timeoutMs,
-    auth,
-  } = options;
+async function performRequest<T>(path: string, options: RequestOptions = {}): Promise<T> {
+  const { method = 'GET', query, body, revalidate, tags, signal, timeoutMs, auth } = options;
 
-  const url =
-    `${baseUrl()}${path.startsWith('/') ? path : `/${path}`}` +
-    `${toQueryString(query)}`;
+  const url = `${baseUrl()}${path.startsWith('/') ? path : `/${path}`}` + `${toQueryString(query)}`;
 
   const controller = new AbortController();
 
-  const limit =
-    timeoutMs ??
-    envNumber(process.env.API_SERVER_TIMEOUT_MS, 8000);
+  const limit = timeoutMs ?? envNumber(process.env.API_SERVER_TIMEOUT_MS, 8000);
 
   const timer = setTimeout(() => controller.abort(), limit);
 
-  signal?.addEventListener(
-    'abort',
-    () => controller.abort(),
-    { once: true },
-  );
+  signal?.addEventListener('abort', () => controller.abort(), { once: true });
 
   const headers: Record<string, string> = {
     Accept: 'application/json',
@@ -177,24 +148,17 @@ async function performRequest<T>(
     response = await fetch(url, {
       method,
       headers,
-      body:
-        body === undefined
-          ? undefined
-          : JSON.stringify(body),
+      body: body === undefined ? undefined : JSON.stringify(body),
       credentials: 'include',
       signal: controller.signal,
       ...cachePolicy,
     });
   } catch (cause) {
-    const aborted =
-      cause instanceof Error &&
-      cause.name === 'AbortError';
+    const aborted = cause instanceof Error && cause.name === 'AbortError';
 
     throw new ApiError(
       aborted ? 'TIMEOUT' : 'NETWORK_ERROR',
-      aborted
-        ? 'Request timed out'
-        : 'Network request failed',
+      aborted ? 'Request timed out' : 'Network request failed',
       0,
     );
   } finally {
@@ -210,11 +174,7 @@ async function performRequest<T>(
   try {
     payload = await response.json();
   } catch {
-    throw new ApiError(
-      'INVALID_RESPONSE',
-      'Response was not valid JSON',
-      response.status,
-    );
+    throw new ApiError('INVALID_RESPONSE', 'Response was not valid JSON', response.status);
   }
 
   if (isApiFailure(payload)) {
@@ -227,24 +187,28 @@ async function performRequest<T>(
   }
 
   if (!response.ok) {
-    throw new ApiError(
-      'UNEXPECTED_ERROR',
-      'Unexpected error',
-      response.status,
-    );
+    throw new ApiError('UNEXPECTED_ERROR', 'Unexpected error', response.status);
   }
 
   const envelope = payload as ApiEnvelope<T>;
 
-  return envelope.success === true
-    ? envelope.data
-    : (payload as T);
+  return envelope.success === true ? envelope.data : (payload as T);
 }
 
-export async function request<T>(
-  path: string,
-  options: RequestOptions = {},
-): Promise<T> {
+export async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
+  /*
+   * NEXT_PUBLIC_DEMO_DATA=true routes browsing endpoints (vehicles, dealers,
+   * articles) to the fixtures in lib/mock/ instead of the network — for
+   * running the frontend against something that looks like real inventory
+   * while the backend doesn't exist yet. See lib/mock/resolve.ts for exactly
+   * what is and isn't covered. Everything not covered falls through to the
+   * real request below, unchanged.
+   */
+  if (envFlag(process.env.NEXT_PUBLIC_DEMO_DATA)) {
+    const mocked = resolveMock<T>(path, options);
+    if (mocked !== undefined) return mocked;
+  }
+
   try {
     return await performRequest<T>(path, options);
   } catch (cause) {
