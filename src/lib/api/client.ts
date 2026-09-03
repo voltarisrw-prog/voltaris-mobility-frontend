@@ -205,7 +205,7 @@ export async function request<T>(path: string, options: RequestOptions = {}): Pr
    * real request below, unchanged.
    */
   if (envFlag(process.env.NEXT_PUBLIC_DEMO_DATA)) {
-    const mocked = resolveMock<T>(path, options);
+    const mocked = await resolveMock<T>(path, options);
     if (mocked !== undefined) return mocked;
   }
 

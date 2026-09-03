@@ -1,10 +1,25 @@
 import { ApiError } from '@/lib/api/errors';
 import type { RequestOptions } from '@/lib/api/client';
 import type { ArticleSummary } from '@/lib/api/content';
-import type { Page } from '@/types/api';
+import type { PublicUser } from '@/lib/api/auth';
+import type { Profile } from '@/lib/api/users';
+import type { CursorPage, Page } from '@/types/api';
 import type { DealerSummary } from '@/types/dealer';
 import type { VehicleDetail, VehicleSummary } from '@/types/vehicle';
-import { MOCK_ARTICLES, MOCK_DEALERS, MOCK_VEHICLES } from './fixtures';
+import {
+  DEMO_INQUIRIES,
+  DEMO_NOTIFICATIONS,
+  DEMO_PROFILE,
+  DEMO_RESERVATIONS,
+  DEMO_SAVED_SEARCHES,
+  DEMO_SAVED_VEHICLES,
+  DEMO_TEST_DRIVES,
+  DEMO_USER,
+  MOCK_ARTICLES,
+  MOCK_DEALERS,
+  MOCK_VEHICLES,
+} from './fixtures';
+import { clearDemoSession, readDemoSessionUserId, setDemoSession } from './session';
 
 /**
  * Resolves a subset of API paths against the fixtures in `./fixtures.ts`
@@ -12,20 +27,31 @@ import { MOCK_ARTICLES, MOCK_DEALERS, MOCK_VEHICLES } from './fixtures';
  * `undefined` for anything it doesn't recognise, so `request()` falls through
  * to the real network call for everything not covered here.
  *
- * Covered: browsing vehicles, dealers, and articles/blog — the read-only
- * catalog surface, which is what "does the frontend look right" actually
- * needs. NOT covered: auth, checkout, seller submissions, leads, rentals
- * writes, or anything under /me — those still need a real backend, and the
- * pages that call them already have the fallback states built earlier in
- * this project for exactly that case (an empty result, a waiting list, a
- * caught network error). `/rental-locations` is deliberately left unmocked
- * too: `getRentalLocations()` already falls back to a fixed list on failure,
- * so intercepting it here would just be a second copy of that fallback.
+ * Covered: browsing vehicles/dealers/articles, and a single demo account —
+ * login, register, session, logout, profile, and the /me/* lists the account
+ * pages read. NOT covered: checkout, seller submissions, leads, rental
+ * reservation writes, or Google OAuth (that needs a real redirect through
+ * Google's servers — /auth/google/authorize instead returns the same
+ * NOT_CONFIGURED error the real backend would send on an environment without
+ * it set up, so the button's existing error handling shows the right
+ * message rather than a generic network failure).
+ *
+ * The demo session is a plain cookie (lib/mock/session.ts), not a real
+ * httpOnly one — login/register/logout run this function client-side, so
+ * they can set/clear it directly. Writes that would normally persist to a
+ * database (a profile edit, saving a vehicle, a new saved search) echo back
+ * a success response but change nothing in the fixtures: there is no server
+ * for a demo session's edits to live on, so a page reload reverts them.
+ * That's a real limitation worth knowing about, not a bug.
  */
-export function resolveMock<T>(path: string, options: RequestOptions): T | undefined {
+export async function resolveMock<T>(
+  path: string,
+  options: RequestOptions,
+): Promise<T | undefined> {
   const query = options.query ?? {};
+  const method = options.method ?? 'GET';
 
-  if (path === '/vehicles' && (options.method ?? 'GET') === 'GET') {
+  if (path === '/vehicles' && method === 'GET') {
     return listVehicles(query) as T;
   }
 
@@ -43,7 +69,7 @@ export function resolveMock<T>(path: string, options: RequestOptions): T | undef
     return vehicleFacets() as T;
   }
 
-  if (path === '/vehicles/compare' && options.method === 'POST') {
+  if (path === '/vehicles/compare' && method === 'POST') {
     const ids = (options.body as { ids?: string[] } | undefined)?.ids ?? [];
     return MOCK_VEHICLES.filter((vehicle) => ids.includes(vehicle.id)) as T;
   }
@@ -71,7 +97,134 @@ export function resolveMock<T>(path: string, options: RequestOptions): T | undef
     return articlesPage(query) as T;
   }
 
+  // -------------------------------------------------------------------------
+  // auth
+
+  if (path === '/auth/login' && method === 'POST') {
+    setDemoSession(DEMO_USER.id);
+    return authTokenResponse() as T;
+  }
+
+  if (path === '/auth/register' && method === 'POST') {
+    // Matches the real "check your email" flow: the account isn't signed in
+    // yet. Use /login (any email/password) to actually get in.
+    return { verification_required: true } as T;
+  }
+
+  if (path === '/auth/logout' && method === 'POST') {
+    clearDemoSession();
+    return undefined as T;
+  }
+
+  if (path === '/auth/session' && method === 'GET') {
+    await requireDemoSession();
+    return { user: DEMO_USER } as T;
+  }
+
+  if (path === '/auth/refresh' && method === 'POST') {
+    await requireDemoSession();
+    return authTokenResponse() as T;
+  }
+
+  if (path === '/auth/google/authorize') {
+    throw new ApiError('NOT_CONFIGURED', 'Google sign-in is not configured', 400);
+  }
+
+  // -------------------------------------------------------------------------
+  // /me
+
+  if (path === '/me' && method === 'GET') {
+    await requireDemoSession();
+    return DEMO_PROFILE as T;
+  }
+
+  if (path === '/me' && method === 'PATCH') {
+    await requireDemoSession();
+    return { ...DEMO_PROFILE, ...(options.body as Partial<Profile>) } as T;
+  }
+
+  if (path === '/me/saved-vehicles' && method === 'GET') {
+    await requireDemoSession();
+    return page(DEMO_SAVED_VEHICLES) as T;
+  }
+
+  if (/^\/me\/saved-vehicles\/[^/]+$/.test(path) && (method === 'PUT' || method === 'DELETE')) {
+    await requireDemoSession();
+    return undefined as T;
+  }
+
+  if (path === '/me/saved-searches' && method === 'GET') {
+    await requireDemoSession();
+    return DEMO_SAVED_SEARCHES as T;
+  }
+
+  if (path === '/me/saved-searches' && method === 'POST') {
+    await requireDemoSession();
+    const body = options.body as { label: string; query: string };
+    return {
+      id: `search-${Date.now()}`,
+      label: body.label,
+      query: body.query,
+      alerts_enabled: true,
+      created_at: new Date().toISOString(),
+    } as T;
+  }
+
+  if (/^\/me\/saved-searches\/[^/]+$/.test(path) && method === 'DELETE') {
+    await requireDemoSession();
+    return undefined as T;
+  }
+
+  if (path === '/me/inquiries' && method === 'GET') {
+    await requireDemoSession();
+    return page(DEMO_INQUIRIES) as T;
+  }
+
+  if (path === '/me/test-drives' && method === 'GET') {
+    await requireDemoSession();
+    return page(DEMO_TEST_DRIVES) as T;
+  }
+
+  if (path === '/me/reservations' && method === 'GET') {
+    await requireDemoSession();
+    return page(DEMO_RESERVATIONS) as T;
+  }
+
+  if (path === '/me/notifications' && method === 'GET') {
+    await requireDemoSession();
+    return page(DEMO_NOTIFICATIONS) as T;
+  }
+
+  if (path === '/orders' && method === 'GET') {
+    await requireDemoSession();
+    // No orders in the demo catalog — checkout itself is behind
+    // NEXT_PUBLIC_FEATURE_CHECKOUT and isn't built yet, so there's nothing
+    // real to show here. The account page's own empty state covers it.
+    return { items: [], next_cursor: null } satisfies CursorPage<unknown> as T;
+  }
+
   return undefined;
+}
+
+async function requireDemoSession(): Promise<void> {
+  const userId = await readDemoSessionUserId();
+  if (userId !== DEMO_USER.id) {
+    throw new ApiError('UNAUTHORIZED', 'Sign in to continue.', 401);
+  }
+}
+
+function authTokenResponse() {
+  return {
+    access_token: 'demo',
+    refresh_token: 'demo',
+    expires_in: 900,
+    csrf_token: 'demo',
+    user: DEMO_USER as PublicUser,
+  };
+}
+
+function page<I>(items: I[]): Page<I> {
+  return { items, page: 1, per_page: items.length || 1, total: items.length, total_pages: 1 };
 }
 
 // ---------------------------------------------------------------------------

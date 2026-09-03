@@ -1,6 +1,15 @@
-import type { VehicleDetail, VehicleImage } from '@/types/vehicle';
+import type { VehicleDetail, VehicleImage, VehicleSummary } from '@/types/vehicle';
 import type { DealerDetail } from '@/types/dealer';
 import type { Article } from '@/lib/api/content';
+import type { PublicUser } from '@/lib/api/auth';
+import type {
+  InquiryRecord,
+  NotificationRecord,
+  Profile,
+  ReservationRecord,
+  SavedSearch,
+  TestDriveRecord,
+} from '@/lib/api/users';
 
 /**
  * Demo data for local/preview use while the real backend isn't reachable — see
@@ -805,5 +814,140 @@ export const MOCK_ARTICLES: Article[] = [
       '<p>A route Voltaris has now run several times with different EVs, with the charging stops and realistic dwell times that never make it onto the marketing map.</p>',
     faqs: [],
     related_slugs: [],
+  },
+];
+
+// ---------------------------------------------------------------------------
+// The signed-in demo account — see NEXT_PUBLIC_DEMO_DATA and lib/mock/session.ts.
+// Login accepts any email/password that passes the form's own validation and
+// signs in as this one fixed person; there's no real multi-account system
+// behind it. Profile edits and saved-vehicle/search writes echo back
+// successfully but aren't persisted anywhere — a page reload reverts them,
+// since there's no server for a demo session to actually live on.
+
+export const DEMO_USER: PublicUser = {
+  id: 'demo-user-1',
+  full_name: 'Aline Uwase',
+  email: 'aline@example.com',
+  roles: ['BUYER'],
+  email_verified: true,
+  mfa_enabled: false,
+};
+
+export const DEMO_PROFILE: Profile = {
+  id: DEMO_USER.id,
+  full_name: DEMO_USER.full_name,
+  email: DEMO_USER.email,
+  phone: '+250788223344',
+  email_verified: true,
+  preferred_language: 'en',
+  marketing_opt_in: true,
+  created_at: daysAgo(210),
+};
+
+function vehicleRef(slug: string) {
+  const vehicle = MOCK_VEHICLES.find((v) => v.slug === slug);
+  if (!vehicle) throw new Error(`lib/mock/fixtures: no vehicle with slug "${slug}"`);
+  return vehicle;
+}
+
+const taycan = vehicleRef('porsche-taycan-2023-kigali');
+const eqv = vehicleRef('mercedes-eqv-2023-kigali');
+const modelS = vehicleRef('tesla-model-s-2024-kigali');
+const eqs = vehicleRef('mercedes-eqs-2023-kigali');
+
+export const DEMO_SAVED_VEHICLES: VehicleSummary[] = [taycan, eqs];
+
+export const DEMO_SAVED_SEARCHES: SavedSearch[] = [
+  {
+    id: 'search-1',
+    label: 'Long-range EVs under 180M',
+    query: 'minRange=400&maxPrice=180000000&sort=range_desc',
+    alerts_enabled: true,
+    created_at: daysAgo(18),
+  },
+];
+
+export const DEMO_INQUIRIES: InquiryRecord[] = [
+  {
+    reference: 'ENQ-DEMO01',
+    vehicle: {
+      id: eqs.id,
+      slug: eqs.slug,
+      make: eqs.make,
+      model: eqs.model,
+      year: eqs.year,
+      primary_image: eqs.primary_image,
+    },
+    status: 'answered',
+    created_at: daysAgo(5),
+  },
+];
+
+export const DEMO_TEST_DRIVES: TestDriveRecord[] = [
+  {
+    reference: 'TD-DEMO01',
+    vehicle: {
+      id: modelS.id,
+      slug: modelS.slug,
+      make: modelS.make,
+      model: modelS.model,
+      year: modelS.year,
+    },
+    status: 'confirmed',
+    scheduled_for: new Date(now().getTime() + 3 * DAY).toISOString(),
+    location: 'Kigali — Kacyiru',
+  },
+];
+
+export const DEMO_RESERVATIONS: ReservationRecord[] = [
+  {
+    reference: 'RES-DEMO01',
+    vehicle: {
+      id: eqv.id,
+      slug: eqv.slug,
+      make: eqv.make,
+      model: eqv.model,
+      year: eqv.year,
+      primary_image: eqv.primary_image,
+    },
+    status: 'confirmed',
+    pickup_date: new Date(now().getTime() + 5 * DAY).toISOString().slice(0, 10),
+    return_date: new Date(now().getTime() + 7 * DAY).toISOString().slice(0, 10),
+    pickup_location: 'Kigali — Kanombe (Airport)',
+  },
+  {
+    reference: 'RES-DEMO02',
+    vehicle: {
+      id: taycan.id,
+      slug: taycan.slug,
+      make: taycan.make,
+      model: taycan.model,
+      year: taycan.year,
+      primary_image: taycan.primary_image,
+    },
+    status: 'completed',
+    pickup_date: daysAgo(20).slice(0, 10),
+    return_date: daysAgo(18).slice(0, 10),
+    pickup_location: 'Kigali — Kiyovu',
+  },
+];
+
+export const DEMO_NOTIFICATIONS: NotificationRecord[] = [
+  {
+    id: 'notif-1',
+    title: 'Your EQV rental is confirmed',
+    body: 'Pickup at Kanombe (Airport) is booked. Bring your driving licence.',
+    read: false,
+    created_at: daysAgo(1),
+    href: `/rent/reservation/${DEMO_RESERVATIONS[0]!.reference}`,
+  },
+  {
+    id: 'notif-2',
+    title: 'Kigali Prime Motors replied to your enquiry',
+    body: 'They answered your question about the EQS 580\u2019s warranty coverage.',
+    read: true,
+    created_at: daysAgo(5),
+    href: `/cars/${eqs.slug}`,
   },
 ];
