@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { HeroMedia } from '@/features/home/HeroMedia';
 import { ShowcaseSlider } from '@/features/home/ShowcaseSlider';
+import { RoadTransition } from '@/features/home/RoadTransition';
+import { WayIn } from '@/features/home/WayIn';
 import { JsonLd } from '@/components/JsonLd';
 import { listVehicles } from '@/lib/api/vehicles';
 import { buildMetadata, absoluteUrl } from '@/lib/seo/metadata';
@@ -128,6 +130,12 @@ export default async function HomePage() {
 
 
 
+
+      {/* 03 — THE ROAD --------------------------------------------------- */}
+      <RoadTransition />
+
+      {/* 04 — FIND YOUR WAY IN ----------------------------------------- */}
+      <WayIn />
 
     </>
   );
