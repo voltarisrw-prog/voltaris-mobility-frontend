@@ -86,9 +86,11 @@ export function CoverflowShowcase<T>({
           const hidden = Math.abs(offset) > 2;
           const distance = Math.abs(offset);
           const style: React.CSSProperties = {
-            transform: `rotateY(${offset * -32}deg) translateZ(var(--cylinder-radius)) scale(${isCenter ? 1 : distance === 1 ? 0.84 : 0.68})`,
+            transform: isCenter
+              ? 'translateZ(0) scale(1)'
+              : `rotateY(${offset * -32}deg) translateZ(var(--cylinder-radius)) scale(${distance === 1 ? 0.84 : 0.68})`,
             opacity: hidden ? 0 : isCenter ? 1 : distance === 1 ? 0.72 : 0.38,
-            zIndex: 30 - distance * 5,
+            zIndex: isCenter ? 100 : 30 - distance * 5,
             pointerEvents: hidden ? 'none' : 'auto',
             transformStyle: 'preserve-3d',
           };
@@ -99,7 +101,7 @@ export function CoverflowShowcase<T>({
               <div
                 key={key}
                 style={style}
-                className={`absolute shrink-0 overflow-hidden border border-hairline bg-abyss shadow-[0_30px_60px_-15px_rgba(0,3,12,0.7)] transition-[transform,opacity] duration-500 ease-out motion-reduce:transition-none ${centerSizeClassName}`}
+                className={`absolute isolate z-[100] shrink-0 overflow-hidden border border-hairline bg-abyss shadow-[0_30px_60px_-15px_rgba(0,3,12,0.7)] transition-[transform,opacity] duration-500 ease-out motion-reduce:transition-none ${centerSizeClassName}`}
               >
                 {renderCenter(item)}
               </div>

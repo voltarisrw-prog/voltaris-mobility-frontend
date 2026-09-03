@@ -72,13 +72,13 @@ export function ShowcaseSlider({
               </h3>
             </div>
 
-            <div className="absolute inset-x-0 bottom-0 z-20 p-4 sm:p-5 lg:p-6">
-              <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[90] p-4 sm:p-5 lg:p-6">
+              <div className="pointer-events-auto relative flex items-center gap-2 sm:gap-3">
                 <Link
                   href="/ride"
-                  className="group inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-white px-5 py-3 font-data text-[0.62rem] font-semibold uppercase tracking-[0.14em] text-surface transition-all duration-200 hover:bg-volt hover:text-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volt focus-visible:ring-offset-2 focus-visible:ring-offset-surface sm:w-auto"
+                  className="group inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-full bg-white px-4 py-3 font-data text-[0.6rem] font-semibold uppercase tracking-[0.13em] text-surface shadow-lg transition-all duration-200 hover:bg-volt hover:text-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volt sm:flex-none sm:px-5"
                 >
-                  Book a ride
+                  Book a Ride
                   <ArrowRight
                     className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-1"
                     aria-hidden="true"
@@ -87,7 +87,7 @@ export function ShowcaseSlider({
 
                 <Link
                   href={detailHref}
-                  className="group inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full border border-white/45 bg-black/25 px-5 py-3 font-data text-[0.62rem] font-semibold uppercase tracking-[0.14em] text-white backdrop-blur-md transition-all duration-200 hover:border-white hover:bg-white hover:text-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-surface sm:w-auto"
+                  className="group inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-full border border-white/70 bg-black/55 px-4 py-3 font-data text-[0.6rem] font-semibold uppercase tracking-[0.13em] text-white shadow-lg backdrop-blur-md transition-all duration-200 hover:border-white hover:bg-white hover:text-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white sm:flex-none sm:px-5"
                 >
                   More
                   <ArrowRight
