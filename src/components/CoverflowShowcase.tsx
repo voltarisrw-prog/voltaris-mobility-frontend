@@ -75,7 +75,7 @@ export function CoverflowShowcase<T>({
     >
       <div
         onKeyDown={onKeyDown}
-        className="relative mx-auto flex h-[26rem] max-w-shell items-center justify-center overflow-hidden [--cylinder-radius:22rem] sm:h-[30rem] sm:[--cylinder-radius:30rem] lg:h-[36rem] lg:[--cylinder-radius:38rem]"
+        className="relative mx-auto flex h-[25rem] w-full max-w-shell items-center justify-center overflow-hidden px-2 sm:h-[30rem] sm:px-4 lg:h-[36rem] lg:px-0 [--cylinder-radius:21rem] sm:[--cylinder-radius:28rem] lg:[--cylinder-radius:36rem]"
         style={{ perspective: '1600px', transformStyle: 'preserve-3d' }}
       >
         {items.map((item, index) => {
@@ -124,12 +124,12 @@ export function CoverflowShowcase<T>({
       </div>
 
       {count > 1 && (
-        <div className="pointer-events-none absolute inset-x-3 top-1/2 z-40 hidden -translate-y-1/2 items-center justify-between sm:flex lg:inset-x-8">
+        <div className="pointer-events-none absolute inset-x-2 top-1/2 z-40 hidden -translate-y-1/2 items-center justify-between md:flex lg:inset-x-6">
           <button
             type="button"
             onClick={() => go(-1)}
             aria-label="Previous vehicle"
-            className="pointer-events-auto group inline-flex items-center gap-3 border-b border-hairline bg-surface/75 px-1 pb-2 font-data text-[0.62rem] uppercase tracking-[0.16em] text-steel backdrop-blur-md transition-colors hover:border-volt hover:text-volt"
+            className="pointer-events-auto group inline-flex min-h-11 items-center gap-2 rounded-full border border-hairline bg-surface/85 px-4 py-2.5 font-data text-[0.6rem] uppercase tracking-[0.14em] text-steel backdrop-blur-md transition-colors hover:border-volt hover:text-volt"
           >
             <ChevronLeft className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-1" aria-hidden="true" />
             <span>Previous</span>
@@ -139,7 +139,7 @@ export function CoverflowShowcase<T>({
             type="button"
             onClick={() => go(1)}
             aria-label="Next vehicle"
-            className="pointer-events-auto group inline-flex items-center gap-3 border-b border-hairline bg-surface/75 px-1 pb-2 font-data text-[0.62rem] uppercase tracking-[0.16em] text-steel backdrop-blur-md transition-colors hover:border-volt hover:text-volt"
+            className="pointer-events-auto group inline-flex min-h-11 items-center gap-2 rounded-full border border-hairline bg-surface/85 px-4 py-2.5 font-data text-[0.6rem] uppercase tracking-[0.14em] text-steel backdrop-blur-md transition-colors hover:border-volt hover:text-volt"
           >
             <span>Next</span>
             <ChevronRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true" />
@@ -152,12 +152,12 @@ export function CoverflowShowcase<T>({
           side cards or tap one to bring it to center instead. A visible pair
           of on-card controls stands in for the arrows there. */}
       {count > 1 && (
-        <div className="mt-5 flex items-center justify-between border-t border-hairline pt-4 sm:hidden">
+        <div className="mt-4 flex items-center justify-between gap-3 border-t border-hairline pt-4 md:hidden">
           <button
             type="button"
             onClick={() => go(-1)}
             aria-label="Previous vehicle"
-            className="group inline-flex items-center gap-2 font-data text-[0.62rem] uppercase tracking-[0.14em] text-steel transition-colors hover:text-chrome"
+            className="group inline-flex min-h-11 items-center gap-2 rounded-full px-2 font-data text-[0.6rem] uppercase tracking-[0.14em] text-steel transition-colors hover:text-chrome"
           >
             <ChevronLeft className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-0.5" aria-hidden="true" />
             Previous
@@ -171,7 +171,7 @@ export function CoverflowShowcase<T>({
             type="button"
             onClick={() => go(1)}
             aria-label="Next vehicle"
-            className="group inline-flex items-center gap-2 font-data text-[0.62rem] uppercase tracking-[0.14em] text-steel transition-colors hover:text-chrome"
+            className="group inline-flex min-h-11 items-center gap-2 rounded-full px-2 font-data text-[0.6rem] uppercase tracking-[0.14em] text-steel transition-colors hover:text-chrome"
           >
             Next
             <ChevronRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" aria-hidden="true" />
