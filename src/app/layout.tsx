@@ -8,7 +8,6 @@ import { JsonLd } from '@/components/JsonLd';
 import { organizationJsonLd } from '@/lib/seo/jsonld';
 import { AnalyticsBootstrap } from '@/components/AnalyticsBootstrap';
 import { ToastProvider } from '@/components/ui';
-import { VoltarisEnvironment } from '@/features/environment/VoltarisEnvironment';
 
 const display = Archivo({
   subsets: ['latin'],
@@ -53,8 +52,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en-RW" className={`${display.variable} ${body.variable} ${data.variable}`}>
       <body>
-        {/* The environment sits at z-index -1 behind every route. */}
-        <VoltarisEnvironment />
         <JsonLd data={organizationJsonLd()} />
         <AnalyticsBootstrap />
         <ToastProvider>
