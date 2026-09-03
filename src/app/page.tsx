@@ -8,6 +8,7 @@ import { WayIn } from '@/features/home/WayIn';
 import { Garage } from '@/features/home/Garage';
 import { RwandaInMotion } from '@/features/home/RwandaInMotion';
 import { FinalStatement } from '@/features/home/FinalStatement';
+import { PartnersHome } from '@/features/home/PartnersHome';
 import { JsonLd } from '@/components/JsonLd';
 import { listVehicles } from '@/lib/api/vehicles';
 import { buildMetadata, absoluteUrl } from '@/lib/seo/metadata';
@@ -148,6 +149,9 @@ export default async function HomePage() {
 
       {/* 07 — FINAL STATEMENT ---------------------------------------- */}
       <FinalStatement />
+
+      {/* 08 — PARTNERS ----------------------------------------------- */}
+      <PartnersHome />
 
     </>
   );
