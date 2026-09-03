@@ -7,7 +7,7 @@ import { CoverflowShowcase } from '@/components/CoverflowShowcase';
 import type { VehicleSummary } from '@/types/vehicle';
 
 const CENTER_SIZE =
-  'h-[27rem] w-[calc(100vw-1rem)] max-w-[27rem] sm:h-[32rem] sm:w-[26rem] md:h-[36rem] md:w-[30rem] lg:h-[42rem] lg:w-[34rem]';
+  'h-[34rem] w-[min(92vw,30rem)] sm:h-[40rem] sm:w-[28rem] md:h-[46rem] md:w-[32rem] lg:h-[52rem] lg:w-[38rem]';
 
 const PEEK_SIZE =
   'h-[18rem] w-[calc(100vw-4rem)] max-w-[18rem] sm:h-[22rem] sm:w-[18rem] md:h-[25rem] md:w-[20rem] lg:h-[28rem] lg:w-[23rem]';
@@ -48,8 +48,8 @@ export function ShowcaseSlider({
                 alt={vehicle.primary_image.alt || title}
                 fill
                 priority
-                sizes="(min-width: 1024px) 34rem, (min-width: 768px) 30rem, (min-width: 640px) 26rem, calc(100vw - 1rem)"
-                className="object-contain p-2.5 sm:p-4 lg:p-5"
+                sizes="(min-width: 1024px) 38rem, (min-width: 768px) 32rem, (min-width: 640px) 28rem, 92vw"
+                className="object-contain p-1 sm:p-2 lg:p-3"
               />
             ) : (
               <div className="flex h-full items-center justify-center font-data text-[0.62rem] uppercase tracking-[0.14em] text-steel-muted">
