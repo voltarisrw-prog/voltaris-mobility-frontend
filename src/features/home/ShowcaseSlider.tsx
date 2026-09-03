@@ -31,7 +31,7 @@ export function ShowcaseSlider({ vehicles }: { vehicles: VehicleSummary[] }) {
             alt=""
             fill
             sizes="22rem"
-            className="object-cover"
+            className="object-contain p-3 sm:p-4 lg:p-5"
           />
         )
       }
@@ -47,7 +47,7 @@ export function ShowcaseSlider({ vehicles }: { vehicles: VehicleSummary[] }) {
                 fill
                 priority
                 sizes="(min-width: 1024px) 28rem, (min-width: 640px) 23rem, 19rem"
-                className="object-cover"
+                className="object-contain p-3 sm:p-4 lg:p-5"
               />
             ) : (
               <div className="flex h-full items-center justify-center font-data text-eyebrow uppercase text-steel-muted">
