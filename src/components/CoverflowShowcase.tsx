@@ -75,7 +75,7 @@ export function CoverflowShowcase<T>({
     >
       <div
         onKeyDown={onKeyDown}
-        className="relative mx-auto flex h-[25rem] w-full max-w-shell items-center justify-center overflow-hidden px-2 sm:h-[30rem] sm:px-4 lg:h-[36rem] lg:px-0 [--cylinder-radius:21rem] sm:[--cylinder-radius:28rem] lg:[--cylinder-radius:36rem]"
+        className="relative mx-auto flex h-[30rem] w-full max-w-shell items-center justify-center overflow-hidden px-1 sm:h-[35rem] sm:px-4 md:h-[40rem] lg:h-[46rem] lg:px-0 [--cylinder-radius:21rem] sm:[--cylinder-radius:28rem] lg:[--cylinder-radius:36rem]"
         style={{ perspective: '1600px', transformStyle: 'preserve-3d' }}
       >
         {items.map((item, index) => {
@@ -101,7 +101,7 @@ export function CoverflowShowcase<T>({
               <div
                 key={key}
                 style={style}
-                className={`absolute isolate z-[100] shrink-0 overflow-hidden border border-hairline bg-abyss shadow-[0_30px_60px_-15px_rgba(0,3,12,0.7)] transition-[transform,opacity] duration-500 ease-out motion-reduce:transition-none ${centerSizeClassName}`}
+                className={`absolute isolate z-[100] shrink-0 overflow-hidden rounded-[1.5rem] border border-white/10 bg-abyss shadow-[0_40px_100px_-25px_rgba(0,0,0,0.85)] sm:rounded-[1.75rem] lg:rounded-[2rem] transition-[transform,opacity] duration-500 ease-out motion-reduce:transition-none ${centerSizeClassName}`}
               >
                 {renderCenter(item)}
               </div>
