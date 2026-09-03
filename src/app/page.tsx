@@ -98,17 +98,14 @@ export default async function HomePage() {
 
             <div className="relative py-16 sm:py-20 lg:py-24">
               <header className="shell">
-                <div className="flex flex-col gap-8 border-b border-hairline pb-7 sm:flex-row sm:items-end sm:justify-between sm:gap-10">
+                <div className="flex flex-col gap-6 border-b border-hairline pb-7 sm:flex-row sm:items-end sm:justify-between sm:gap-10">
                   <div>
-                    <div className="flex justify-center">
-  <div className="relative flex h-28 w-28 items-center justify-center rounded-full border border-hairline bg-surface/80 px-5 text-center backdrop-blur-sm sm:h-32 sm:w-32 lg:h-36 lg:w-36">
-    <span
-      className="font-data text-[0.62rem] uppercase leading-[1.35] tracking-[0.2em] text-chrome sm:text-[0.68rem]"
-    >
-      Live<br />showroom
-    </span>
-  </div>
-</div>
+                    <p className="font-data text-[0.62rem] uppercase tracking-[0.2em] text-volt">
+                      Live showroom
+                    </p>
+                    <p className="mt-3 max-w-md font-display text-xl leading-tight text-chrome sm:text-2xl">
+                      Vehicles worth looking at twice.
+                    </p>
                   </div>
 
                   <Link

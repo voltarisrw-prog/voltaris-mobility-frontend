@@ -82,12 +82,12 @@ export function RwandaInMotion() {
       </div>
 
       <div
-        className="absolute inset-0 bg-[#050A16]/35"
+        className="absolute inset-0 bg-[#0C0906]/35"
         aria-hidden="true"
       />
 
       <div
-        className="absolute inset-0 bg-gradient-to-b from-[#050A16]/80 via-[#050A16]/15 to-[#0C0906]/95"
+        className="absolute inset-0 bg-gradient-to-b from-[#0C0906]/80 via-[#0C0906]/15 to-[#0C0906]/95"
         aria-hidden="true"
       />
 

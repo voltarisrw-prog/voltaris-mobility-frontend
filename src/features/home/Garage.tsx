@@ -85,7 +85,7 @@ export function Garage() {
                   />
 
                   <div
-                    className="absolute inset-0 bg-gradient-to-t from-[#050A16]/85 via-[#050A16]/15 to-transparent"
+                    className="absolute inset-0 bg-gradient-to-t from-[#0C0906]/85 via-[#0C0906]/15 to-transparent"
                     aria-hidden="true"
                   />
 

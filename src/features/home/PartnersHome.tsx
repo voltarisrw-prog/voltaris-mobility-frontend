@@ -55,7 +55,7 @@ export function PartnersHome() {
             />
 
             <div
-              className="absolute inset-0 bg-gradient-to-t from-[#050A16]/65 via-transparent to-[#050A16]/10"
+              className="absolute inset-0 bg-gradient-to-t from-[#0C0906]/65 via-transparent to-[#0C0906]/10"
               aria-hidden="true"
             />
 

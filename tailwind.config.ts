@@ -20,9 +20,9 @@ const config: Config = {
       colors: {
         // Surfaces, darkest to lightest
         surface: '#0C0906',
-        abyss: '#050A16',
-        slab: '#0B1220',
-        hairline: '#1B2436',
+        abyss: '#070403',
+        slab: '#17100B',
+        hairline: '#30251D',
         // Type and metal
         chrome: '#E8EAED',
         steel: { DEFAULT: '#A8AEB8', muted: '#6C727C' },

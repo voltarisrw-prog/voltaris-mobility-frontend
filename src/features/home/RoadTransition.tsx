@@ -88,12 +88,12 @@ export function RoadTransition() {
       </div>
 
       <div
-        className="absolute inset-0 bg-[#050A16]/35"
+        className="absolute inset-0 bg-[#0C0906]/35"
         aria-hidden="true"
       />
 
       <div
-        className="absolute inset-0 bg-gradient-to-b from-[#050A16]/75 via-[#050A16]/20 to-[#0C0906]/90"
+        className="absolute inset-0 bg-gradient-to-b from-[#0C0906]/75 via-[#0C0906]/20 to-[#0C0906]/90"
         aria-hidden="true"
       />
 

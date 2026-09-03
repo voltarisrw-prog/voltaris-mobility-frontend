@@ -49,8 +49,8 @@ export function SiteHeader() {
           compact
             ? 'border-hairline bg-surface/88 backdrop-blur-xl'
             : isHome
-              ? 'border-white/10 bg-[#00030c]/95 backdrop-blur-xl'
-              : 'border-white/10 bg-[#00030c]/95 backdrop-blur-xl',
+              ? 'border-white/10 bg-[#0C0906]/95 backdrop-blur-xl'
+              : 'border-white/10 bg-[#0C0906]/95 backdrop-blur-xl',
         )}
       >
         <a
