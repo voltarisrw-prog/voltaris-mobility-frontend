@@ -72,8 +72,8 @@ export function ShowcaseSlider({
               </h3>
             </div>
 
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[90] p-4 sm:p-5 lg:p-6">
-              <div className="pointer-events-auto relative flex items-center gap-2 sm:gap-3">
+            <div className="pointer-events-none absolute inset-x-0 top-1/2 z-[90] -translate-y-1/2 px-4 sm:px-6 lg:px-8">
+              <div className="pointer-events-auto relative flex items-center justify-between gap-4">
                 <Link
                   href="/ride"
                   className="group inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-full bg-white px-4 py-3 font-data text-[0.6rem] font-semibold uppercase tracking-[0.13em] text-surface shadow-lg transition-all duration-200 hover:bg-volt hover:text-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volt sm:flex-none sm:px-5"
