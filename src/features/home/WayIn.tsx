@@ -36,14 +36,10 @@ export function WayIn() {
     <section className="relative isolate overflow-hidden border-b border-hairline bg-surface">
       <div className="shell py-20 sm:py-24 lg:py-32">
         <header className="mb-16 max-w-2xl sm:mb-20 lg:mb-24">
-          <p className="font-data text-[0.62rem] uppercase tracking-[0.2em] text-steel-muted sm:text-[0.68rem]">
-            04 / Find your way in
-          </p>
-
           <h2 className="mt-7 max-w-xl font-display text-[clamp(3rem,7vw,6.5rem)] font-medium uppercase leading-[0.88] tracking-[-0.045em] text-chrome">
-            Your drive.
+            Your drive
             <br />
-            Your way.
+            Your way
           </h2>
         </header>
 

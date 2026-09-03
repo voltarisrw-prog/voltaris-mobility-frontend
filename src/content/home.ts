@@ -32,7 +32,7 @@ export const nav = {
 
 export const hero = {
   eyebrow: 'Born in Kigali',
-  headline: 'Find your next drive.',
+  headline: 'Find your next drive',
   sub: 'Buy. Rent. Sell. Explore.',
   primaryCta: { label: 'Explore cars', href: '/cars' },
   secondaryCta: { label: 'Sell your car', href: '/sell' },

@@ -103,16 +103,6 @@ export function RoadTransition() {
       />
 
       <div className="shell relative flex h-full flex-col justify-between py-8 sm:py-10 lg:py-12">
-        <div className="flex items-start justify-between">
-          <span className="font-data text-[0.62rem] uppercase tracking-[0.2em] text-chrome/75 sm:text-[0.68rem]">
-            01 / The road
-          </span>
-
-          <span className="font-data text-[0.58rem] uppercase tracking-[0.18em] text-chrome/55">
-            Voltaris mobility
-          </span>
-        </div>
-
         <div
           className="max-w-5xl pb-8 transition-opacity duration-300 sm:pb-12 lg:pb-16"
           style={{
@@ -127,7 +117,7 @@ export function RoadTransition() {
           <h2 className="max-w-4xl font-display text-[clamp(3.5rem,9vw,8.5rem)] font-medium uppercase leading-[0.84] tracking-[-0.045em] text-chrome">
             Not just
             <br />
-            a car.
+            a car
           </h2>
 
           <div className="mt-7 flex items-end justify-between gap-8 sm:mt-9 lg:mt-10">
