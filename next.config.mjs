@@ -34,3 +34,12 @@ const nextConfig = {
   },
 };
 export default nextConfig;
+
+// Configure Turbopack root to handle monorepo structure
+export const turbopack = {
+  root: '..',
+};
+
+export const turbopack = {
+  root: '..',
+};

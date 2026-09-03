@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import type { TestDriveRecord } from '@/lib/api/users';
 import { EmptyState } from '@/components/EmptyState';
 import { getMyTestDrives } from '@/lib/api/users';
 
@@ -8,7 +9,7 @@ export default async function TestDrivesPage() {
     <section>
       <h2 className="section-heading">Test drives</h2>
       <div className="mt-8">
-        {drives.items.length === 0 ? (
+        {drives.length === 0 ? (
           <EmptyState
             title="No test drives booked"
             body="Range on paper and range on a Kigali hill are different numbers. Book a drive from any listing."
@@ -16,7 +17,7 @@ export default async function TestDrivesPage() {
           />
         ) : (
           <ul className="divide-y divide-hairline/60 border-y border-hairline/60">
-            {drives.items.map((drive) => (
+            {drives.map((drive) => (
               <li
                 key={drive.reference}
                 className="flex flex-wrap items-baseline justify-between gap-3 py-4"

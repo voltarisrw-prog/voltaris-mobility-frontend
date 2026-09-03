@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import type { NotificationRecord } from '@/lib/api/users';
 import { EmptyState } from '@/components/EmptyState';
 import { getNotifications } from '@/lib/api/users';
 
@@ -8,14 +9,14 @@ export default async function NotificationsPage() {
     <section>
       <h2 className="section-heading">Notifications</h2>
       <div className="mt-8">
-        {notifications.items.length === 0 ? (
+        {notifications.length === 0 ? (
           <EmptyState
             title="Nothing to catch up on"
             body="Replies from sellers, test drive confirmations, and saved-search matches land here."
           />
         ) : (
           <ul className="divide-y divide-hairline/60 border-y border-hairline/60">
-            {notifications.items.map((item) => (
+            {notifications.map((item: NotificationRecord) => (
               <li key={item.id} className="py-4">
                 <div className="flex items-baseline justify-between gap-4">
                   <h3 className="font-display text-sm font-semibold tracking-tight">

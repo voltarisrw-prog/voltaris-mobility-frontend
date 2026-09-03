@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import type { InquiryRecord } from '@/lib/api/users';
 import { EmptyState } from '@/components/EmptyState';
 import { getMyInquiries } from '@/lib/api/users';
 
@@ -14,7 +15,7 @@ export default async function InquiriesPage() {
     <section>
       <h2 className="section-heading">Your enquiries</h2>
       <div className="mt-8">
-        {inquiries.items.length === 0 ? (
+        {inquiries.length === 0 ? (
           <EmptyState
             title="No enquiries yet"
             body="When you ask a seller about a vehicle, the conversation is tracked here."
@@ -22,7 +23,7 @@ export default async function InquiriesPage() {
           />
         ) : (
           <ul className="divide-y divide-hairline/60 border-y border-hairline/60">
-            {inquiries.items.map((inquiry) => (
+            {inquiries.map((inquiry) => (
               <li
                 key={inquiry.reference}
                 className="flex flex-wrap items-baseline justify-between gap-3 py-4"
