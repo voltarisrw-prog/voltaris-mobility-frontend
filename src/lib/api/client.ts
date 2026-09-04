@@ -1,7 +1,6 @@
 import { ApiError, isApiFailure } from './errors';
 import { envFlag, envNumber, envString } from '@/lib/env';
 import type { ApiEnvelope } from '@/types/api';
-import { resolveMock } from '@/lib/mock/resolve';
 
 const isServer = typeof window === 'undefined';
 
@@ -205,6 +204,14 @@ export async function request<T>(path: string, options: RequestOptions = {}): Pr
    * real request below, unchanged.
    */
   if (envFlag(process.env.NEXT_PUBLIC_DEMO_DATA)) {
+    // Dynamic, not static: this keeps every fixture in lib/mock/ (and
+    // whatever it takes to build them) out of the bundle and out of module
+    // evaluation entirely when the flag is off. A bad fixture — a renamed
+    // vehicle slug, anything that throws at module-load time — can then
+    // never crash the app for anyone not running in demo mode, because
+    // NEXT_PUBLIC_DEMO_DATA=false ships none of that code and never
+    // executes it.
+    const { resolveMock } = await import('@/lib/mock/resolve');
     const mocked = await resolveMock<T>(path, options);
     if (mocked !== undefined) return mocked;
   }
