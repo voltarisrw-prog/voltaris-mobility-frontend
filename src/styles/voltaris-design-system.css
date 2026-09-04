@@ -1,0 +1,734 @@
+/* ============================================================
+   VOLTARIS DESIGN SYSTEM
+   Single source of truth for the visual language.
+
+   Design direction:
+   - premium automotive
+   - dark glass surfaces
+   - controlled luminous accents
+   - precise borders
+   - subtle depth
+   - restrained motion
+
+   Brand:
+   #411900
+   #6A3717
+   ============================================================ */
+
+:root {
+  /* ----------------------------------------------------------
+     BRAND
+     ---------------------------------------------------------- */
+  --vds-brand-primary: #411900;
+  --vds-brand-secondary: #6A3717;
+
+  --vds-brand-primary-rgb: 65, 25, 0;
+  --vds-brand-secondary-rgb: 106, 55, 23;
+
+  /* ----------------------------------------------------------
+     LUMINOUS ACCENTS
+     ---------------------------------------------------------- */
+  --vds-accent: #63dcff;
+  --vds-accent-2: #a982ff;
+
+  --vds-accent-soft: rgba(99, 220, 255, .14);
+  --vds-accent-2-soft: rgba(169, 130, 255, .12);
+
+  /* ----------------------------------------------------------
+     APPLICATION SURFACES
+     ---------------------------------------------------------- */
+  --vds-bg: #0c0906;
+  --vds-bg-elevated: #15100c;
+
+  --vds-surface: rgba(255,255,255,.045);
+  --vds-surface-hover: rgba(255,255,255,.075);
+  --vds-surface-active: rgba(255,255,255,.105);
+
+  --vds-glass:
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,.095),
+      rgba(255,255,255,.025)
+    );
+
+  --vds-glass-strong:
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,.13),
+      rgba(255,255,255,.045)
+    );
+
+  /* ----------------------------------------------------------
+     BORDERS
+     ---------------------------------------------------------- */
+  --vds-border: rgba(255,255,255,.13);
+  --vds-border-hover: rgba(255,255,255,.24);
+  --vds-border-strong: rgba(255,255,255,.34);
+
+  --vds-border-brand:
+    rgba(var(--vds-brand-secondary-rgb), .70);
+
+  /* ----------------------------------------------------------
+     TEXT
+     ---------------------------------------------------------- */
+  --vds-text: rgba(255,255,255,.95);
+  --vds-text-secondary: rgba(255,255,255,.70);
+  --vds-text-muted: rgba(255,255,255,.46);
+  --vds-text-disabled: rgba(255,255,255,.25);
+
+  /* ----------------------------------------------------------
+     GEOMETRY
+     ---------------------------------------------------------- */
+  --vds-radius-xs: 6px;
+  --vds-radius-sm: 9px;
+  --vds-radius-md: 14px;
+  --vds-radius-lg: 20px;
+  --vds-radius-xl: 26px;
+  --vds-radius-pill: 999px;
+
+  /* ----------------------------------------------------------
+     SPACING
+     ---------------------------------------------------------- */
+  --vds-space-1: 4px;
+  --vds-space-2: 8px;
+  --vds-space-3: 12px;
+  --vds-space-4: 16px;
+  --vds-space-5: 20px;
+  --vds-space-6: 24px;
+  --vds-space-8: 32px;
+  --vds-space-10: 40px;
+  --vds-space-12: 48px;
+  --vds-space-16: 64px;
+
+  /* ----------------------------------------------------------
+     DEPTH
+     ---------------------------------------------------------- */
+  --vds-shadow-sm:
+    0 8px 24px rgba(0,0,0,.22);
+
+  --vds-shadow-md:
+    0 16px 40px rgba(0,0,0,.30);
+
+  --vds-shadow-lg:
+    0 24px 70px rgba(0,0,0,.44);
+
+  /* ----------------------------------------------------------
+     BRAND GLOW
+     ---------------------------------------------------------- */
+  --vds-glow-brand:
+    0 0 14px rgba(106,55,23,.38),
+    0 0 36px rgba(65,25,0,.24);
+
+  --vds-glow-accent:
+    0 0 14px rgba(99,220,255,.35),
+    0 0 34px rgba(99,220,255,.13);
+
+  /* ----------------------------------------------------------
+     MOTION
+     ---------------------------------------------------------- */
+  --vds-transition:
+    180ms cubic-bezier(.2,.8,.2,1);
+
+  --vds-transition-slow:
+    280ms cubic-bezier(.2,.8,.2,1);
+
+  --vds-blur: 18px;
+  --vds-blur-heavy: 28px;
+}
+
+/* ============================================================
+   GLASS
+   ============================================================ */
+
+.vds-glass {
+  background: var(--vds-glass);
+  border: 1px solid var(--vds-border);
+
+  box-shadow:
+    var(--vds-shadow-md),
+    inset 0 1px 0 rgba(255,255,255,.09);
+
+  backdrop-filter: blur(var(--vds-blur));
+  -webkit-backdrop-filter: blur(var(--vds-blur));
+
+  transition:
+    background var(--vds-transition),
+    border-color var(--vds-transition),
+    box-shadow var(--vds-transition);
+}
+
+.vds-glass:hover {
+  background: var(--vds-glass-strong);
+  border-color: var(--vds-border-hover);
+}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+
+.vds-button {
+  position: relative;
+  isolation: isolate;
+
+  min-height: 44px;
+  padding: 0 20px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+
+  border: 1px solid var(--vds-border);
+  border-radius: var(--vds-radius-pill);
+
+  color: var(--vds-text);
+
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+
+  cursor: pointer;
+
+  background: var(--vds-glass);
+
+  backdrop-filter: blur(var(--vds-blur));
+  -webkit-backdrop-filter: blur(var(--vds-blur));
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.10),
+    var(--vds-shadow-sm);
+
+  transition:
+    transform var(--vds-transition),
+    border-color var(--vds-transition),
+    box-shadow var(--vds-transition),
+    background var(--vds-transition);
+}
+
+.vds-button::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  z-index: -1;
+  border-radius: inherit;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,.12),
+      rgba(255,255,255,.025) 52%,
+      rgba(255,255,255,.06)
+    );
+
+  pointer-events: none;
+}
+
+.vds-button:hover {
+  transform: translateY(-1px);
+  border-color: var(--vds-border-hover);
+}
+
+.vds-button:active {
+  transform: translateY(0) scale(.985);
+}
+
+.vds-button:focus-visible {
+  outline: none;
+
+  box-shadow:
+    0 0 0 3px rgba(106,55,23,.30),
+    var(--vds-glow-brand);
+}
+
+/* Primary */
+.vds-button-primary {
+  border-color: rgba(106,55,23,.85);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(106,55,23,.90),
+      rgba(65,25,0,.72)
+    );
+
+  box-shadow:
+    var(--vds-glow-brand),
+    inset 0 1px 0 rgba(255,255,255,.18);
+}
+
+.vds-button-primary:hover {
+  border-color: rgba(180,112,65,.90);
+
+  box-shadow:
+    0 0 16px rgba(106,55,23,.45),
+    0 0 38px rgba(65,25,0,.25);
+}
+
+/* Secondary */
+.vds-button-secondary {
+  border-color: rgba(106,55,23,.65);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(106,55,23,.28),
+      rgba(65,25,0,.16)
+    );
+
+  box-shadow:
+    0 0 12px rgba(106,55,23,.18),
+    inset 0 1px 0 rgba(255,255,255,.10);
+}
+
+/* Ghost */
+.vds-button-ghost {
+  background: rgba(255,255,255,.035);
+}
+
+.vds-button-ghost:hover {
+  background: rgba(255,255,255,.075);
+}
+
+/* Danger */
+.vds-button-danger {
+  border-color: rgba(220,70,70,.55);
+  background:
+    linear-gradient(
+      135deg,
+      rgba(190,45,45,.55),
+      rgba(100,20,20,.40)
+    );
+}
+
+/* Icon */
+.vds-button-icon {
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  padding: 0;
+  border-radius: 50%;
+}
+
+/* ============================================================
+   FORM CONTROLS
+   ============================================================ */
+
+.vds-input,
+.vds-select,
+.vds-textarea {
+  width: 100%;
+
+  color: var(--vds-text);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,.065),
+      rgba(255,255,255,.025)
+    );
+
+  border: 1px solid var(--vds-border);
+  border-radius: var(--vds-radius-md);
+
+  box-shadow:
+    var(--vds-shadow-sm),
+    inset 0 1px 0 rgba(255,255,255,.06);
+
+  backdrop-filter: blur(var(--vds-blur));
+  -webkit-backdrop-filter: blur(var(--vds-blur));
+
+  transition:
+    border-color var(--vds-transition),
+    box-shadow var(--vds-transition),
+    background var(--vds-transition);
+}
+
+.vds-input,
+.vds-select {
+  min-height: 46px;
+  padding: 0 14px;
+}
+
+.vds-textarea {
+  min-height: 110px;
+  padding: 12px 14px;
+  resize: vertical;
+}
+
+.vds-input::placeholder,
+.vds-textarea::placeholder {
+  color: var(--vds-text-muted);
+}
+
+.vds-input:hover,
+.vds-select:hover,
+.vds-textarea:hover {
+  border-color: var(--vds-border-hover);
+}
+
+.vds-input:focus,
+.vds-select:focus,
+.vds-textarea:focus {
+  outline: none;
+
+  border-color: rgba(106,55,23,.90);
+
+  box-shadow:
+    0 0 0 3px rgba(106,55,23,.18),
+    var(--vds-glow-brand);
+}
+
+/* Search gets the more substantial command/search treatment. */
+.vds-search {
+  min-height: 56px;
+  border-radius: var(--vds-radius-pill);
+  padding-inline: 18px;
+}
+
+/* ============================================================
+   CARD
+   ============================================================ */
+
+.vds-card {
+  position: relative;
+  overflow: hidden;
+
+  border: 1px solid var(--vds-border);
+  border-radius: var(--vds-radius-lg);
+
+  background: var(--vds-glass);
+
+  box-shadow:
+    var(--vds-shadow-md),
+    inset 0 1px 0 rgba(255,255,255,.08);
+
+  backdrop-filter: blur(var(--vds-blur));
+  -webkit-backdrop-filter: blur(var(--vds-blur));
+
+  transition:
+    transform var(--vds-transition-slow),
+    border-color var(--vds-transition),
+    box-shadow var(--vds-transition);
+}
+
+.vds-card:hover {
+  transform: translateY(-2px);
+
+  border-color:
+    rgba(106,55,23,.55);
+
+  box-shadow:
+    var(--vds-shadow-lg),
+    var(--vds-glow-brand);
+}
+
+/* ============================================================
+   TABS
+   ============================================================ */
+
+.vds-tabs {
+  display: inline-flex;
+  overflow: hidden;
+
+  border: 1px solid var(--vds-border);
+  border-radius: var(--vds-radius-md);
+
+  background: rgba(255,255,255,.035);
+
+  box-shadow: var(--vds-shadow-sm);
+
+  backdrop-filter: blur(var(--vds-blur));
+  -webkit-backdrop-filter: blur(var(--vds-blur));
+}
+
+.vds-tab {
+  min-height: 44px;
+  padding: 0 20px;
+
+  color: var(--vds-text-secondary);
+
+  border: 0;
+  background: transparent;
+
+  cursor: pointer;
+
+  transition:
+    color var(--vds-transition),
+    background var(--vds-transition),
+    box-shadow var(--vds-transition);
+}
+
+.vds-tab:hover {
+  color: var(--vds-text);
+  background: rgba(255,255,255,.065);
+}
+
+.vds-tab-active {
+  color: var(--vds-text);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(106,55,23,.38),
+      rgba(65,25,0,.24)
+    );
+
+  box-shadow:
+    inset 0 0 0 1px rgba(106,55,23,.48),
+    var(--vds-glow-brand);
+}
+
+/* ============================================================
+   CHECKBOX
+   ============================================================ */
+
+.vds-checkbox {
+  appearance: none;
+
+  width: 22px;
+  height: 22px;
+
+  flex: 0 0 auto;
+
+  border: 1px solid rgba(255,255,255,.25);
+  border-radius: 7px;
+
+  background: rgba(255,255,255,.055);
+
+  cursor: pointer;
+
+  transition:
+    background var(--vds-transition),
+    border-color var(--vds-transition),
+    box-shadow var(--vds-transition);
+}
+
+.vds-checkbox:checked {
+  border-color: rgba(106,55,23,.90);
+
+  background:
+    linear-gradient(
+      135deg,
+      #6A3717,
+      #411900
+    );
+
+  box-shadow: var(--vds-glow-brand);
+}
+
+.vds-checkbox:focus-visible {
+  outline: none;
+
+  box-shadow:
+    0 0 0 3px rgba(106,55,23,.20),
+    var(--vds-glow-brand);
+}
+
+/* ============================================================
+   SWITCH
+   ============================================================ */
+
+.vds-switch {
+  position: relative;
+
+  width: 52px;
+  height: 30px;
+
+  padding: 3px;
+
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: var(--vds-radius-pill);
+
+  background: rgba(255,255,255,.065);
+
+  cursor: pointer;
+
+  transition:
+    background var(--vds-transition),
+    box-shadow var(--vds-transition);
+}
+
+.vds-switch-thumb {
+  display: block;
+
+  width: 22px;
+  height: 22px;
+
+  border-radius: 50%;
+
+  background: rgba(255,255,255,.82);
+
+  box-shadow: 0 3px 10px rgba(0,0,0,.35);
+
+  transition: transform var(--vds-transition);
+}
+
+.vds-switch-active {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(106,55,23,.82),
+      rgba(65,25,0,.62)
+    );
+
+  box-shadow: var(--vds-glow-brand);
+}
+
+.vds-switch-active .vds-switch-thumb {
+  transform: translateX(22px);
+}
+
+/* ============================================================
+   MODAL
+   ============================================================ */
+
+.vds-modal-backdrop {
+  background: rgba(4,3,2,.72);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.vds-modal {
+  border: 1px solid var(--vds-border-strong);
+  border-radius: var(--vds-radius-xl);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(34,25,18,.96),
+      rgba(15,11,8,.95)
+    );
+
+  box-shadow:
+    var(--vds-shadow-lg),
+    var(--vds-glow-brand);
+
+  backdrop-filter: blur(var(--vds-blur-heavy));
+  -webkit-backdrop-filter: blur(var(--vds-blur-heavy));
+}
+
+/* ============================================================
+   TOAST
+   ============================================================ */
+
+.vds-toast {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  min-height: 52px;
+  padding: 12px 16px;
+
+  color: var(--vds-text);
+
+  border: 1px solid var(--vds-border);
+  border-radius: var(--vds-radius-md);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(35,27,20,.95),
+      rgba(15,11,8,.94)
+    );
+
+  box-shadow:
+    var(--vds-shadow-md),
+    var(--vds-glow-brand);
+
+  backdrop-filter: blur(var(--vds-blur-heavy));
+  -webkit-backdrop-filter: blur(var(--vds-blur-heavy));
+}
+
+.vds-toast-success {
+  border-color: rgba(106,55,23,.72);
+}
+
+.vds-toast-error {
+  border-color: rgba(220,70,70,.60);
+}
+
+/* ============================================================
+   STATUS / SURFACES
+   ============================================================ */
+
+.vds-panel {
+  border: 1px solid var(--vds-border);
+  border-radius: var(--vds-radius-lg);
+  background: var(--vds-glass);
+  box-shadow: var(--vds-shadow-md);
+  backdrop-filter: blur(var(--vds-blur));
+  -webkit-backdrop-filter: blur(var(--vds-blur));
+}
+
+.vds-divider {
+  height: 1px;
+  background:
+    linear-gradient(
+      to right,
+      transparent,
+      rgba(106,55,23,.55),
+      transparent
+    );
+}
+
+/* ============================================================
+   DISABLED
+   ============================================================ */
+
+.vds-button:disabled,
+.vds-input:disabled,
+.vds-select:disabled,
+.vds-textarea:disabled,
+.vds-checkbox:disabled,
+.vds-switch:disabled {
+  opacity: .42;
+  cursor: not-allowed;
+  filter: saturate(.5);
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 640px) {
+  .vds-button {
+    min-height: 46px;
+    padding-inline: 17px;
+  }
+
+  .vds-button-icon {
+    width: 44px;
+    min-width: 44px;
+  }
+
+  .vds-tabs {
+    width: 100%;
+  }
+
+  .vds-tab {
+    flex: 1;
+    padding-inline: 12px;
+  }
+
+  .vds-card {
+    border-radius: var(--vds-radius-md);
+  }
+
+  .vds-modal {
+    border-radius: var(--vds-radius-lg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vds-button,
+  .vds-card,
+  .vds-input,
+  .vds-select,
+  .vds-textarea,
+  .vds-tab,
+  .vds-checkbox,
+  .vds-switch,
+  .vds-switch-thumb {
+    transition: none;
+  }
+}
