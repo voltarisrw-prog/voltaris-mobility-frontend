@@ -33,10 +33,10 @@ export function WayIn() {
   const [active, setActive] = useState(0);
 
   return (
-    <section className="relative isolate overflow-hidden border-b border-hairline bg-surface">
+    <section className="relative isolate overflow-hidden border-b border-[color:var(--vds-border)] vds-section bg-[color:var(--vds-bg)]">
       <div className="shell py-20 sm:py-24 lg:py-32">
         <header className="mb-16 max-w-2xl sm:mb-20 lg:mb-24">
-          <h2 className="mt-7 max-w-xl font-display text-[clamp(3rem,7vw,6.5rem)] font-medium uppercase leading-[0.88] tracking-[-0.045em] text-chrome">
+          <h2 className="mt-7 max-w-xl font-display text-[clamp(3rem,7vw,6.5rem)] font-medium uppercase leading-[0.88] tracking-[-0.045em] text-[color:var(--vds-text)]">
             Your drive
             <br />
             Your way
@@ -81,10 +81,10 @@ export function WayIn() {
                   href={path.href}
                   onMouseEnter={() => setActive(index)}
                   onFocus={() => setActive(index)}
-                  className="group relative block border-t border-hairline py-8 outline-none transition-colors duration-500 last:border-b sm:py-10 lg:py-12"
+                  className="group relative block border-t border-[color:var(--vds-border)] py-8 outline-none transition-colors duration-500 last:border-b sm:py-10 lg:py-12"
                 >
                   <div className="relative z-10 flex items-center gap-5 sm:gap-8 lg:gap-12">
-                    <span className="w-8 shrink-0 self-start pt-2 font-data text-[0.58rem] tracking-[0.16em] text-steel-muted transition-colors duration-500 group-hover:text-volt group-focus-visible:text-volt sm:w-10">
+                    <span className="w-8 shrink-0 self-start pt-2 font-data text-[0.58rem] tracking-[0.16em] text-[color:var(--vds-text-muted)] transition-colors duration-500 group-hover:text-[color:var(--vds-brand-secondary)] group-focus-visible:text-[color:var(--vds-brand-secondary)] sm:w-10">
                       {path.number}
                     </span>
 
@@ -93,8 +93,8 @@ export function WayIn() {
                         className={[
                           'font-display text-[clamp(3.4rem,9vw,8.5rem)] font-medium uppercase leading-[0.78] tracking-[-0.05em] transition-all duration-500',
                           isActive
-                            ? 'translate-x-2 text-chrome lg:translate-x-5'
-                            : 'text-chrome/65 group-hover:translate-x-2 group-hover:text-chrome group-focus-visible:translate-x-2 group-focus-visible:text-chrome',
+                            ? 'translate-x-2 text-[color:var(--vds-text)] lg:translate-x-5'
+                            : 'text-[color:var(--vds-text-secondary)] group-hover:translate-x-2 group-hover:text-[color:var(--vds-text)] group-focus-visible:translate-x-2 group-focus-visible:text-[color:var(--vds-text)]',
                         ].join(' ')}
                       >
                         {path.title}
@@ -104,8 +104,8 @@ export function WayIn() {
                         className={[
                           'mt-4 max-w-sm font-data text-[0.62rem] uppercase leading-[1.5] tracking-[0.16em] transition-all duration-500 sm:mt-5 sm:text-[0.68rem]',
                           isActive
-                            ? 'translate-x-2 text-chrome/70 lg:translate-x-5'
-                            : 'text-steel-muted group-hover:text-chrome/70 group-focus-visible:text-chrome/70',
+                            ? 'translate-x-2 text-[color:var(--vds-text-secondary)] lg:translate-x-5'
+                            : 'text-[color:var(--vds-text-muted)] group-hover:text-[color:var(--vds-text-secondary)] group-focus-visible:text-[color:var(--vds-text-secondary)]',
                         ].join(' ')}
                       >
                         {path.description}
@@ -117,7 +117,7 @@ export function WayIn() {
                         'flex h-11 w-11 shrink-0 items-center justify-center rounded-full border transition-all duration-500 sm:h-14 sm:w-14',
                         isActive
                           ? 'border-volt bg-volt text-surface'
-                          : 'border-hairline text-chrome group-hover:border-chrome group-hover:text-chrome group-focus-visible:border-chrome group-focus-visible:text-chrome',
+                          : 'border-[color:var(--vds-border)] text-[color:var(--vds-text)] group-hover:border-chrome group-hover:text-[color:var(--vds-text)] group-focus-visible:border-chrome group-focus-visible:text-[color:var(--vds-text)]',
                       ].join(' ')}
                     >
                       <ArrowUpRight

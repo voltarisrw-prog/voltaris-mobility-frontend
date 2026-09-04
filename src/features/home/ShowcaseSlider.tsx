@@ -51,7 +51,7 @@ export function ShowcaseSlider({
                 className="object-contain p-1 sm:p-2 lg:p-3"
               />
             ) : (
-              <div className="flex h-full items-center justify-center font-data text-[0.62rem] uppercase tracking-[0.14em] text-steel-muted">
+              <div className="flex h-full items-center justify-center font-data text-[0.62rem] uppercase tracking-[0.14em] text-[color:var(--vds-text-muted)]">
                 Photo coming
               </div>
             )}
@@ -74,7 +74,7 @@ export function ShowcaseSlider({
             <div className="absolute inset-y-0 inset-x-0 z-10 pointer-events-none">
               <Link
                 href={`/cars/${vehicle.slug}`}
-                className="group pointer-events-auto absolute left-3 top-1/2 -translate-y-1/2 inline-flex min-h-12 items-center gap-2 rounded-full rounded-full border border-white bg-white px-3 py-3 font-data text-[0.56rem] font-bold uppercase tracking-[0.14em] text-black shadow-[0_12px_35px_-12px_rgba(0,0,0,0.55)] transition-all duration-300 hover:-translate-y-1/2 hover:bg-white/90 hover:shadow-[0_16px_45px_-12px_rgba(0,0,0,0.7)] sm:left-5 sm:px-4 lg:left-6"
+                className="group pointer-events-auto absolute left-3 top-1/2 -translate-y-1/2 inline-flex min-h-12 items-center gap-2 rounded-full vds-link-outline px-3 py-3 font-data text-[0.56rem] font-bold uppercase tracking-[0.14em] text-black shadow-[0_12px_35px_-12px_rgba(0,0,0,0.55)] transition-all duration-300 hover:-translate-y-1/2 hover:bg-white/90 hover:shadow-[0_16px_45px_-12px_rgba(0,0,0,0.7)] sm:left-5 sm:px-4 lg:left-6"
               >
                 <span>Book a Ride</span>
                 <ArrowRight
@@ -85,7 +85,7 @@ export function ShowcaseSlider({
 
               <Link
                 href={`/cars/${vehicle.slug}`}
-                className="group pointer-events-auto absolute right-3 top-1/2 -translate-y-1/2 inline-flex min-h-12 items-center gap-2 rounded-full rounded-full border border-white bg-white px-3 py-3 font-data text-[0.56rem] font-bold uppercase tracking-[0.14em] text-black shadow-[0_12px_35px_-12px_rgba(0,0,0,0.55)] transition-all duration-300 hover:-translate-y-1/2 hover:bg-white/90 hover:shadow-[0_16px_45px_-12px_rgba(0,0,0,0.7)] sm:right-5 sm:px-4 lg:right-6"
+                className="group pointer-events-auto absolute right-3 top-1/2 -translate-y-1/2 inline-flex min-h-12 items-center gap-2 rounded-full vds-link-outline px-3 py-3 font-data text-[0.56rem] font-bold uppercase tracking-[0.14em] text-black shadow-[0_12px_35px_-12px_rgba(0,0,0,0.55)] transition-all duration-300 hover:-translate-y-1/2 hover:bg-white/90 hover:shadow-[0_16px_45px_-12px_rgba(0,0,0,0.7)] sm:right-5 sm:px-4 lg:right-6"
               >
                 <span>Buy</span>
                 <ArrowRight

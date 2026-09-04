@@ -34,8 +34,8 @@ export function HomeInquiryForm() {
     return (
       <div className="border border-volt/25 bg-volt-wash p-8">
         <h3 className="font-display text-headline">We have it</h3>
-        <p className="mt-4 max-w-prose text-sm leading-relaxed text-steel">
-          Reference <span className="font-data text-chrome">{reference}</span>. Someone from the
+        <p className="mt-4 max-w-prose text-sm leading-relaxed text-[color:var(--vds-text-secondary)]">
+          Reference <span className="font-data text-[color:var(--vds-text)]">{reference}</span>. Someone from the
           Voltaris team will reply within one working day, on whichever channel you gave us.
         </p>
       </div>
@@ -120,12 +120,12 @@ export function HomeInquiryForm() {
 
       <Field label="" error={errors.consent?.message}>
         {(p) => (
-          <label className="flex items-start gap-3 text-sm text-steel">
+          <label className="flex items-start gap-3 text-sm text-[color:var(--vds-text-secondary)]">
             <input
               {...p}
               {...register('consent')}
               type="checkbox"
-              className="mt-0.5 h-4 w-4 shrink-0 accent-volt"
+              className="mt-0.5 h-4 w-4 shrink-0 vds-checkbox"
             />
             Voltaris may use my details to reply to this enquiry.
           </label>

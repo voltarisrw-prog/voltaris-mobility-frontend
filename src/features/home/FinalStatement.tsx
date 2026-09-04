@@ -64,7 +64,7 @@ export function FinalStatement() {
     <section
       ref={sectionRef}
       aria-labelledby="final-statement-title"
-      className="relative isolate min-h-[88svh] overflow-hidden border-y border-hairline sm:min-h-[92svh] lg:min-h-[100svh]"
+      className="relative isolate min-h-[88svh] overflow-hidden border-y border-[color:var(--vds-border)] vds-section sm:min-h-[92svh] lg:min-h-[100svh]"
     >
       <div
         className="absolute inset-0"
@@ -106,7 +106,7 @@ export function FinalStatement() {
         >
           <h2
             id="final-statement-title"
-            className="max-w-6xl font-display text-[clamp(4.5rem,13vw,12rem)] font-medium uppercase leading-[0.72] tracking-[-0.065em] text-chrome"
+            className="max-w-6xl font-display text-[clamp(4.5rem,13vw,12rem)] font-medium uppercase leading-[0.72] tracking-[-0.065em] text-[color:var(--vds-text)]"
           >
             Ready
             <br />
@@ -126,13 +126,13 @@ export function FinalStatement() {
             transform: `translate3d(0, ${Math.max(0, 1 - progress * 1.5) * 24}px, 0)`,
           }}
         >
-          <p className="max-w-xl font-display text-[clamp(1.7rem,3.5vw,3.25rem)] leading-[0.95] tracking-[-0.025em] text-chrome">
+          <p className="max-w-xl font-display text-[clamp(1.7rem,3.5vw,3.25rem)] leading-[0.95] tracking-[-0.025em] text-[color:var(--vds-text)]">
             Your next drive is closer than you think
           </p>
 
           <Link
             href="/cars"
-            className="group flex shrink-0 items-center gap-3 border-b border-chrome/40 pb-2 font-data text-[0.62rem] uppercase tracking-[0.16em] text-chrome transition-colors hover:border-volt hover:text-volt focus-visible:border-volt focus-visible:text-volt"
+            className="group flex shrink-0 items-center gap-3 border-b border-chrome/40 pb-2 font-data text-[0.62rem] uppercase tracking-[0.16em] text-[color:var(--vds-text)] transition-colors hover:border-volt hover:text-[color:var(--vds-brand-secondary)] focus-visible:border-volt focus-visible:text-[color:var(--vds-brand-secondary)]"
           >
             Explore the garage
             <ArrowUpRight

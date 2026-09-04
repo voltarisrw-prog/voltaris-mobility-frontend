@@ -6,18 +6,18 @@ export function PartnersHome() {
   return (
     <section
       aria-labelledby="partners-home-title"
-      className="relative isolate overflow-hidden border-b border-hairline bg-surface"
+      className="relative isolate overflow-hidden border-b border-[color:var(--vds-border)] vds-section bg-[color:var(--vds-bg)]"
     >
       <div className="shell py-20 sm:py-24 lg:py-32">
         <div className="grid items-end gap-12 lg:grid-cols-[1fr_0.72fr] lg:gap-20">
           <div>
-            <p className="font-data text-[0.62rem] uppercase tracking-[0.18em] text-steel-muted sm:text-[0.68rem]">
+            <p className="font-data text-[0.62rem] uppercase tracking-[0.18em] text-[color:var(--vds-text-muted)] sm:text-[0.68rem]">
               Partners
             </p>
 
             <h2
               id="partners-home-title"
-              className="mt-7 max-w-4xl font-display text-[clamp(4rem,10vw,9.5rem)] font-medium uppercase leading-[0.78] tracking-[-0.055em] text-chrome"
+              className="mt-7 max-w-4xl font-display text-[clamp(4rem,10vw,9.5rem)] font-medium uppercase leading-[0.78] tracking-[-0.055em] text-[color:var(--vds-text)]"
             >
               Built with
               <br />
@@ -26,14 +26,14 @@ export function PartnersHome() {
           </div>
 
           <div className="lg:pb-2">
-            <p className="max-w-md font-display text-[clamp(1.45rem,2.8vw,2.4rem)] leading-[0.98] tracking-[-0.02em] text-chrome/85">
+            <p className="max-w-md font-display text-[clamp(1.45rem,2.8vw,2.4rem)] leading-[0.98] tracking-[-0.02em] text-[color:var(--vds-text-secondary)]">
               Dealers, businesses, and mobility partners moving Rwanda
               forward.
             </p>
 
             <Link
               href="/partners"
-              className="group mt-8 inline-flex items-center gap-3 border-b border-chrome/35 pb-2 font-data text-[0.62rem] uppercase tracking-[0.16em] text-chrome transition-colors hover:border-volt hover:text-volt focus-visible:border-volt focus-visible:text-volt sm:mt-10"
+              className="group mt-8 inline-flex items-center gap-3 border-b border-[color:var(--vds-border)] vds-section pb-2 font-data text-[0.62rem] uppercase tracking-[0.16em] text-[color:var(--vds-text)] transition-colors hover:border-volt hover:text-[color:var(--vds-brand-secondary)] focus-visible:border-volt focus-visible:text-[color:var(--vds-brand-secondary)] sm:mt-10"
             >
               Meet our partners
               <ArrowUpRight
@@ -60,7 +60,7 @@ export function PartnersHome() {
             />
 
             <div className="absolute bottom-5 left-5 sm:bottom-7 sm:left-7 lg:bottom-9 lg:left-9">
-              <span className="font-data text-[0.58rem] uppercase tracking-[0.18em] text-chrome/60">
+              <span className="font-data text-[0.58rem] uppercase tracking-[0.18em] text-[color:var(--vds-text)]/60">
                 Voltaris network
               </span>
             </div>

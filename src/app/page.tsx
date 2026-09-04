@@ -67,7 +67,7 @@ export default async function HomePage() {
             <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
               <Link
                 href={hero.primaryCta.href}
-                className="bg-volt px-7 py-4 font-data text-eyebrow uppercase text-surface transition-colors hover:bg-volt-bright"
+                className="bg-volt px-7 py-4 font-data text-eyebrow uppercase text-surface transition-colors hover:bg-[color:var(--vds-brand-secondary)]"
               >
                 {hero.primaryCta.label}
               </Link>
@@ -82,7 +82,7 @@ export default async function HomePage() {
         <>
           <div className="lane-rule" />
 
-          <section className="relative isolate overflow-hidden border-y border-hairline">
+          <section className="relative isolate overflow-hidden border-y border-[color:var(--vds-border)]">
             <div
               className="absolute inset-0 bg-[radial-gradient(ellipse_55%_70%_at_50%_45%,rgba(92,200,255,0.08),transparent_68%)]"
               aria-hidden="true"
@@ -98,19 +98,19 @@ export default async function HomePage() {
 
             <div className="relative py-16 sm:py-20 lg:py-24">
               <header className="shell">
-                <div className="flex flex-col gap-6 border-b border-hairline pb-7 sm:flex-row sm:items-end sm:justify-between sm:gap-10">
+                <div className="flex flex-col gap-6 border-b border-[color:var(--vds-border)] pb-7 sm:flex-row sm:items-end sm:justify-between sm:gap-10">
                   <div>
-                    <p className="font-data text-[0.62rem] uppercase tracking-[0.2em] text-volt">
+                    <p className="font-data text-[0.62rem] uppercase tracking-[0.2em] text-[color:var(--vds-brand-secondary)]">
                       Live showroom
                     </p>
-                    <p className="mt-3 max-w-md font-display text-xl leading-tight text-chrome sm:text-2xl">
+                    <p className="mt-3 max-w-md font-display text-xl leading-tight text-[color:var(--vds-text)] sm:text-2xl">
                       Vehicles worth looking at twice.
                     </p>
                   </div>
 
                   <Link
                     href="/cars"
-                    className="group inline-flex w-fit items-center gap-3 border-b border-chrome/50 pb-2 font-data text-[0.65rem] uppercase tracking-[0.16em] text-chrome transition-colors hover:border-volt hover:text-volt"
+                    className="group inline-flex w-fit items-center gap-3 border-b border-[color:var(--vds-border)] pb-2 font-data text-[0.65rem] uppercase tracking-[0.16em] text-[color:var(--vds-text)] transition-colors hover:border-volt hover:text-[color:var(--vds-brand-secondary)]"
                   >
                     View all
                     <ArrowRight

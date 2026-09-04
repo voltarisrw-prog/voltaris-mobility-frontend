@@ -69,7 +69,7 @@ export function RoadTransition() {
     <section
       ref={sectionRef}
       aria-label="The road"
-      className="relative isolate h-[78svh] min-h-[34rem] overflow-hidden border-y border-hairline sm:h-[86svh] lg:h-[92svh]"
+      className="relative isolate h-[78svh] min-h-[34rem] overflow-hidden border-y border-[color:var(--vds-border)] vds-section sm:h-[86svh] lg:h-[92svh]"
     >
       <div
         className="absolute inset-0"
@@ -110,22 +110,22 @@ export function RoadTransition() {
             transform: `translate3d(0, ${contentY}px, 0)`,
           }}
         >
-          <p className="mb-5 max-w-xs font-data text-[0.62rem] uppercase leading-[1.5] tracking-[0.18em] text-chrome/65 sm:mb-7 sm:text-[0.68rem]">
+          <p className="mb-5 max-w-xs font-data text-[0.62rem] uppercase leading-[1.5] tracking-[0.18em] text-[color:var(--vds-text-secondary)] sm:mb-7 sm:text-[0.68rem]">
             Beyond the showroom
           </p>
 
-          <h2 className="max-w-4xl font-display text-[clamp(3.5rem,9vw,8.5rem)] font-medium uppercase leading-[0.84] tracking-[-0.045em] text-chrome">
+          <h2 className="max-w-4xl font-display text-[clamp(3.5rem,9vw,8.5rem)] font-medium uppercase leading-[0.84] tracking-[-0.045em] text-[color:var(--vds-text)]">
             Not just
             <br />
             a car
           </h2>
 
           <div className="mt-7 flex items-end justify-between gap-8 sm:mt-9 lg:mt-10">
-            <p className="max-w-md font-display text-[clamp(1.7rem,3.5vw,3.25rem)] leading-[0.95] tracking-[-0.025em] text-chrome/90">
+            <p className="max-w-md font-display text-[clamp(1.7rem,3.5vw,3.25rem)] leading-[0.95] tracking-[-0.025em] text-[color:var(--vds-text)]">
               A way to move
             </p>
 
-            <span className="hidden font-data text-[0.58rem] uppercase tracking-[0.18em] text-chrome/55 sm:block">
+            <span className="hidden font-data text-[0.58rem] uppercase tracking-[0.18em] text-[color:var(--vds-text-muted)] sm:block">
               Keep moving
             </span>
           </div>

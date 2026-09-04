@@ -59,7 +59,7 @@ function FooterLink({
   return (
     <Link
       href={href}
-      className="group flex min-h-9 items-center gap-2 py-1 font-display text-[0.95rem] font-medium tracking-[-0.02em] text-white/55 transition-colors duration-200 hover:text-white focus-visible:text-volt focus-visible:outline-none sm:text-base"
+      className="group flex min-h-9 items-center gap-2 py-1 font-display text-[0.95rem] font-medium tracking-[-0.02em] text-white/55 transition-colors duration-200 hover:text-white focus-visible:text-[color:var(--vds-brand-secondary)] focus-visible:outline-none sm:text-base"
     >
       <span>{label}</span>
 
@@ -75,7 +75,7 @@ export function SiteFooter() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="relative overflow-hidden border-t border-white/[0.08] bg-[#070707] text-white">
+    <footer className="relative overflow-hidden border-t border-[color:var(--vds-border)] vds-site-footer text-white">
 
       {/* =========================================================
           COMPACT FOOTER
@@ -151,7 +151,7 @@ export function SiteFooter() {
             ACCREDITATION + LEGAL
         ======================================================== */}
 
-        <div className="mt-12 border-t border-white/[0.08] pt-6 sm:mt-14">
+        <div className="mt-12 border-t border-[color:var(--vds-border)] pt-6 sm:mt-14">
 
           <div className="flex flex-col gap-5 text-[0.56rem] uppercase tracking-[0.11em] text-white/25 lg:flex-row lg:items-center lg:justify-between lg:gap-8">
 
@@ -170,14 +170,14 @@ export function SiteFooter() {
 
               <Link
                 href="/legal/privacy"
-                className="transition-colors hover:text-white focus-visible:text-volt focus-visible:outline-none"
+                className="transition-colors hover:text-white focus-visible:text-[color:var(--vds-brand-secondary)] focus-visible:outline-none"
               >
                 Privacy
               </Link>
 
               <Link
                 href="/legal/terms"
-                className="transition-colors hover:text-white focus-visible:text-volt focus-visible:outline-none"
+                className="transition-colors hover:text-white focus-visible:text-[color:var(--vds-brand-secondary)] focus-visible:outline-none"
               >
                 Terms
               </Link>

@@ -64,7 +64,7 @@ export function RwandaInMotion() {
     <section
       ref={sectionRef}
       aria-labelledby="rwanda-in-motion-title"
-      className="relative isolate min-h-[78svh] overflow-hidden border-y border-hairline sm:min-h-[86svh] lg:min-h-[92svh]"
+      className="relative isolate min-h-[78svh] overflow-hidden border-y border-[color:var(--vds-border)] vds-section sm:min-h-[86svh] lg:min-h-[92svh]"
     >
       <div
         className="absolute inset-0"
@@ -106,7 +106,7 @@ export function RwandaInMotion() {
         >
           <h2
             id="rwanda-in-motion-title"
-            className="max-w-5xl font-display text-[clamp(4rem,12vw,11rem)] font-medium uppercase leading-[0.76] tracking-[-0.06em] text-chrome"
+            className="max-w-5xl font-display text-[clamp(4rem,12vw,11rem)] font-medium uppercase leading-[0.76] tracking-[-0.06em] text-[color:var(--vds-text)]"
           >
             Rwanda
             <br />
@@ -125,13 +125,13 @@ export function RwandaInMotion() {
           }}
         >
           <div className="max-w-xl">
-            <p className="font-display text-[clamp(1.7rem,3.5vw,3.25rem)] leading-[0.95] tracking-[-0.025em] text-chrome">
+            <p className="font-display text-[clamp(1.7rem,3.5vw,3.25rem)] leading-[0.95] tracking-[-0.025em] text-[color:var(--vds-text)]">
               Vehicles for the roads you know
               <br className="hidden sm:block" />
               and the roads still ahead
             </p>
 
-            <p className="mt-6 max-w-md font-data text-[0.62rem] uppercase leading-[1.6] tracking-[0.14em] text-chrome/65 sm:text-[0.68rem]">
+            <p className="mt-6 max-w-md font-data text-[0.62rem] uppercase leading-[1.6] tracking-[0.14em] text-[color:var(--vds-text-secondary)] sm:text-[0.68rem]">
               Voltaris connects people with vehicles that fit the way
               Rwanda moves — from everyday journeys to moments that matter.
             </p>
@@ -139,7 +139,7 @@ export function RwandaInMotion() {
 
           <Link
             href="/about"
-            className="group hidden shrink-0 items-center gap-3 border-b border-chrome/35 pb-2 font-data text-[0.62rem] uppercase tracking-[0.16em] text-chrome transition-colors hover:border-volt hover:text-volt focus-visible:border-volt focus-visible:text-volt sm:flex"
+            className="group hidden shrink-0 items-center gap-3 border-b border-[color:var(--vds-border)] vds-section pb-2 font-data text-[0.62rem] uppercase tracking-[0.16em] text-[color:var(--vds-text)] transition-colors hover:border-volt hover:text-[color:var(--vds-brand-secondary)] focus-visible:border-volt focus-visible:text-[color:var(--vds-brand-secondary)] sm:flex"
           >
             Discover Voltaris
             <ArrowUpRight
@@ -151,7 +151,7 @@ export function RwandaInMotion() {
 
         <Link
           href="/about"
-          className="group flex w-fit items-center gap-3 border-b border-chrome/35 pb-2 font-data text-[0.62rem] uppercase tracking-[0.16em] text-chrome transition-colors hover:border-volt hover:text-volt focus-visible:border-volt focus-visible:text-volt sm:hidden"
+          className="group flex w-fit items-center gap-3 border-b border-[color:var(--vds-border)] vds-section pb-2 font-data text-[0.62rem] uppercase tracking-[0.16em] text-[color:var(--vds-text)] transition-colors hover:border-volt hover:text-[color:var(--vds-brand-secondary)] focus-visible:border-volt focus-visible:text-[color:var(--vds-brand-secondary)] sm:hidden"
         >
           Discover Voltaris
           <ArrowUpRight

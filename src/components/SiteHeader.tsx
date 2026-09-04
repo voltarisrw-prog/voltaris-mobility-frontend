@@ -47,10 +47,10 @@ export function SiteHeader() {
             ? 'fixed inset-x-0 top-0'
             : 'sticky top-0',
           compact
-            ? 'border-hairline bg-surface/88 backdrop-blur-xl'
+            ? 'border-[color:var(--vds-border)] bg-[color:var(--vds-bg)]/88 backdrop-blur-xl'
             : isHome
-              ? 'border-white/10 bg-[#0C0906]/95 backdrop-blur-xl'
-              : 'border-white/10 bg-[#0C0906]/95 backdrop-blur-xl',
+              ? 'border-[color:var(--vds-border)] vds-site-header'
+              : 'border-[color:var(--vds-border)] vds-site-header',
         )}
       >
         <a
@@ -82,7 +82,7 @@ export function SiteHeader() {
                   aria-current={active ? 'page' : undefined}
                   className={cn(
                     'relative font-data text-[0.72rem] uppercase tracking-[0.12em] transition-colors duration-150',
-                    active ? 'text-chrome' : 'text-chrome/90 hover:text-volt',
+                    active ? 'text-[color:var(--vds-text)]' : 'text-[color:var(--vds-text)] hover:text-[color:var(--vds-brand-secondary)]',
                   )}
                 >
                   {item.label}
@@ -101,20 +101,20 @@ export function SiteHeader() {
             <Link
               href="/cars"
               aria-label="Search vehicles"
-              className="inline-flex h-10 w-10 items-center justify-center text-steel transition-colors hover:text-chrome lg:hidden"
+              className="inline-flex h-10 w-10 items-center justify-center text-[color:var(--vds-text-secondary)] transition-colors hover:text-[color:var(--vds-text)] lg:hidden"
             >
               <Search className="h-[18px] w-[18px]" />
             </Link>
             <Link
               href="/account"
               aria-label="Your account"
-              className="hidden h-10 w-10 items-center justify-center text-steel transition-colors hover:text-chrome sm:inline-flex"
+              className="hidden h-10 w-10 items-center justify-center text-[color:var(--vds-text-secondary)] transition-colors hover:text-[color:var(--vds-text)] sm:inline-flex"
             >
               <User className="h-[18px] w-[18px]" />
             </Link>
             <Link
               href="/sell"
-              className="hidden bg-volt px-4 py-2.5 font-data text-eyebrow uppercase text-surface transition-colors hover:bg-volt-bright sm:inline-block"
+              className="hidden bg-volt px-4 py-2.5 font-data text-eyebrow uppercase text-surface transition-colors hover:vds-button-primary sm:inline-block"
             >
               Sell your car
             </Link>
@@ -126,7 +126,7 @@ export function SiteHeader() {
           actually do, and it keeps Sell one tap away on every page. */}
       <nav
         aria-label="Primary"
-        className="fixed inset-x-0 bottom-0 z-40 border-t border-hairline bg-surface/95 backdrop-blur-xl lg:hidden"
+        className="fixed inset-x-0 bottom-0 z-40 border-t border-[color:var(--vds-border)] bg-[color:var(--vds-bg)]/95 backdrop-blur-xl lg:hidden"
         style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
       >
         <ul className="grid grid-cols-6">
@@ -146,7 +146,7 @@ export function SiteHeader() {
                     // min-h stays the same 44px+ touch target; horizontal padding tightens
                     // slightly at six items so labels don't wrap on a 360px viewport.
                     'relative flex min-h-[3.5rem] flex-col items-center justify-center gap-1 px-0.5 transition-colors',
-                    active ? 'text-volt' : 'text-steel-muted',
+                    active ? 'text-[color:var(--vds-brand-secondary)]' : 'text-[color:var(--vds-text-muted)]',
                   )}
                 >
                   <span className="relative">
