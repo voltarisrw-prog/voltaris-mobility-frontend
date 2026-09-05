@@ -21,9 +21,11 @@ import { track } from '@/lib/analytics';
 export function VehicleFilters({
   facets,
   resultCount,
+  basePath = '/cars',
 }: {
   facets: VehicleFacets;
   resultCount: number;
+  basePath?: string;
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -56,9 +58,9 @@ export function VehicleFilters({
       // Any filter change resets pagination — page 4 of the old result set is meaningless.
       const next: Filters = { ...filters, ...patch, page: undefined };
       if (meta) track('filter_used', { ...meta, result_count: resultCount });
-      startTransition(() => router.push(buildHref(next), { scroll: false }));
+      startTransition(() => router.push(buildHref(next, basePath), { scroll: false }));
     },
-    [filters, resultCount, router],
+    [filters, resultCount, router, basePath],
   );
 
   // Debounce so typing does not fire a navigation per keystroke.
@@ -105,7 +107,7 @@ export function VehicleFilters({
 
   const count = activeFilterCount(filters);
 
-  const fieldsProps = { facets, filters, apply, count, router, startTransition };
+  const fieldsProps = { facets, filters, apply, count, router, startTransition, basePath };
 
   return (
     <section aria-label="Filter vehicles" className="space-y-4">
@@ -236,6 +238,7 @@ function FilterFields({
   count,
   router,
   startTransition,
+  basePath,
 }: {
   facets: VehicleFacets;
   filters: Filters;
@@ -243,6 +246,7 @@ function FilterFields({
   count: number;
   router: ReturnType<typeof useRouter>;
   startTransition: ReturnType<typeof useTransition>[1];
+  basePath: string;
 }) {
   return (
     <>
@@ -321,7 +325,7 @@ function FilterFields({
         {count > 0 && (
           <button
             type="button"
-            onClick={() => startTransition(() => router.push('/cars'))}
+            onClick={() => startTransition(() => router.push(basePath))}
             className="self-start font-data text-eyebrow uppercase text-volt underline underline-offset-4"
           >
             Clear all filters

@@ -22,9 +22,11 @@ const CONDITION_LABEL: Record<VehicleSummary['condition'], string> = {
 export function VehicleCard({
   vehicle,
   priority = false,
+  mode,
 }: {
   vehicle: VehicleSummary;
   priority?: boolean;
+  mode?: 'sale' | 'rental';
 }) {
   const title = `${vehicle.make} ${vehicle.model}${vehicle.variant ? ` ${vehicle.variant}` : ''}`;
   const sold = vehicle.status === 'sold';
@@ -120,14 +122,38 @@ export function VehicleCard({
                 Verified
               </p>
             )}
-            <p className="font-display text-lg font-semibold tabular-nums tracking-tight text-chrome">
-              {formatPrice(vehicle.price, vehicle.currency)}
-            </p>
-            {vehicle.rental_price_per_day ? (
-              <p className="mt-0.5 font-data text-xs text-steel-muted">
-                or {formatPrice(vehicle.rental_price_per_day, vehicle.currency)} / day
-              </p>
-            ) : null}
+            {mode === 'rental' ? (
+              vehicle.rental_price_per_day ? (
+                <>
+                  <p className="font-display text-lg font-semibold tabular-nums tracking-tight text-chrome">
+                    {formatPrice(vehicle.rental_price_per_day, vehicle.currency)}
+                    <span className="ml-1 font-data text-xs font-normal text-steel-muted">
+                      / day
+                    </span>
+                  </p>
+                  {vehicle.price !== null ? (
+                    <p className="mt-0.5 font-data text-xs text-steel-muted">
+                      Purchase: {formatPrice(vehicle.price, vehicle.currency)}
+                    </p>
+                  ) : null}
+                </>
+              ) : (
+                <p className="font-data text-xs uppercase tracking-wide text-steel-muted">
+                  Rental price on request
+                </p>
+              )
+            ) : (
+              <>
+                <p className="font-display text-lg font-semibold tabular-nums tracking-tight text-chrome">
+                  {formatPrice(vehicle.price, vehicle.currency)}
+                </p>
+                {vehicle.rental_price_per_day ? (
+                  <p className="mt-0.5 font-data text-xs text-steel-muted">
+                    or {formatPrice(vehicle.rental_price_per_day, vehicle.currency)} / day
+                  </p>
+                ) : null}
+              </>
+            )}
           </div>
           <span className="font-data text-eyebrow uppercase text-steel-muted transition-colors group-hover:text-volt">
             View
