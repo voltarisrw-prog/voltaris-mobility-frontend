@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { Heart, Home, Plus, Scale, Search, User } from 'lucide-react';
+import { Heart, Home, Menu, Plus, Scale, Search, User, X } from 'lucide-react';
 import { VoltarisLogo } from './VoltarisLogo';
 import { nav } from '@/content/home';
 import { cn } from '@/lib/format';
@@ -14,6 +14,7 @@ const MOBILE_ICONS = { home: Home, search: Search, scale: Scale, plus: Plus, hea
 export function SiteHeader() {
   const pathname = usePathname();
   const [compact, setCompact] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const compareIds = useCompareIds();
   const isHome = pathname === '/';
   // The nav's own Compare entry is the only static thing about it: the moment a
@@ -75,7 +76,21 @@ export function SiteHeader() {
             />
           </Link>
 
-          <nav aria-label="Main" className="hidden items-center gap-6 xl:gap-8 lg:flex">
+          <button
+        type="button"
+        aria-label={mobileOpen ? 'Close navigation menu' : 'Open navigation menu'}
+        aria-expanded={mobileOpen}
+        onClick={() => setMobileOpen((value) => !value)}
+        className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-hairline bg-surface/70 text-chrome backdrop-blur-md transition-colors hover:border-volt hover:text-volt lg:hidden"
+      >
+        {mobileOpen ? (
+          <X className="h-5 w-5" aria-hidden="true" />
+        ) : (
+          <Menu className="h-5 w-5" aria-hidden="true" />
+        )}
+      </button>
+
+      <nav aria-label="Main" className="hidden items-center gap-6 xl:gap-8 lg:flex">
             {nav.primary.map((item) => {
               const isCompare = item.href.split('?')[0] === '/compare';
               const href = isCompare ? compareHref : item.href;
@@ -125,7 +140,63 @@ export function SiteHeader() {
             </Link>
           </div>
         </div>
-      </header>
+      
+      {mobileOpen && (
+        <div
+          className="fixed inset-0 z-[90] bg-abyss lg:hidden"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Mobile navigation"
+        >
+          <div className="flex min-h-dvh flex-col">
+            <div className="shell flex h-20 shrink-0 items-center justify-between border-b border-hairline">
+              <VoltarisLogo className="h-7" />
+
+              <button
+                type="button"
+                aria-label="Close navigation menu"
+                onClick={() => setMobileOpen(false)}
+                className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-hairline text-chrome transition-colors hover:border-volt hover:text-volt"
+              >
+                <X className="h-5 w-5" aria-hidden="true" />
+              </button>
+            </div>
+
+            <div className="shell flex flex-1 flex-col justify-center py-10">
+              <p className="eyebrow mb-8">Voltaris Mobility</p>
+
+              <nav aria-label="Mobile main">
+                <ul className="space-y-1">
+                  {nav.primary.map((item) => (
+                    <li key={item.href}>
+                      <Link
+                        href={item.href}
+                        onClick={() => setMobileOpen(false)}
+                        className="group flex min-h-14 items-center justify-between border-b border-hairline py-3 font-display text-2xl font-medium tracking-[-0.025em] text-chrome transition-colors hover:text-volt"
+                      >
+                        <span>{item.label}</span>
+                        <span
+                          className="font-data text-[0.55rem] uppercase tracking-[0.16em] text-steel-muted transition-colors group-hover:text-volt"
+                          aria-hidden="true"
+                        >
+                          Open
+                        </span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+
+              <div className="mt-10 border-t border-hairline pt-6">
+                <p className="max-w-xs font-data text-[0.58rem] uppercase leading-relaxed tracking-[0.14em] text-steel-muted">
+                  Mobility, selected with intention.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+</header>
 
       {/* Mobile bottom bar. Thumb reach beats a hamburger for the five things people
           actually do, and it keeps Sell one tap away on every page. */}
