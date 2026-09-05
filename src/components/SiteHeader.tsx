@@ -3,13 +3,11 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { Heart, Home, Menu, Plus, Scale, Search, User, X } from 'lucide-react';
+import { Menu, User, X } from 'lucide-react';
 import { VoltarisLogo } from './VoltarisLogo';
 import { nav } from '@/content/home';
 import { cn } from '@/lib/format';
 import { useCompareIds } from '@/lib/compare/useCompare';
-
-const MOBILE_ICONS = { home: Home, search: Search, scale: Scale, plus: Plus, heart: Heart, user: User };
 
 export function SiteHeader() {
   const pathname = usePathname();
@@ -76,21 +74,7 @@ export function SiteHeader() {
             />
           </Link>
 
-          <button
-        type="button"
-        aria-label={mobileOpen ? 'Close navigation menu' : 'Open navigation menu'}
-        aria-expanded={mobileOpen}
-        onClick={() => setMobileOpen((value) => !value)}
-        className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-hairline bg-surface/70 text-chrome backdrop-blur-md transition-colors hover:border-volt hover:text-volt lg:hidden"
-      >
-        {mobileOpen ? (
-          <X className="h-5 w-5" aria-hidden="true" />
-        ) : (
-          <Menu className="h-5 w-5" aria-hidden="true" />
-        )}
-      </button>
-
-      <nav aria-label="Main" className="hidden items-center gap-6 xl:gap-8 lg:flex">
+          <nav aria-label="Main" className="hidden items-center gap-6 xl:gap-8 lg:flex">
             {nav.primary.map((item) => {
               const isCompare = item.href.split('?')[0] === '/compare';
               const href = isCompare ? compareHref : item.href;
@@ -118,13 +102,19 @@ export function SiteHeader() {
           </nav>
 
           <div className="flex items-center gap-2">
-            <Link
-              href="/cars"
-              aria-label="Search vehicles"
-              className="inline-flex h-10 w-10 items-center justify-center text-[color:var(--vds-text-secondary)] transition-colors hover:text-[color:var(--vds-text)] lg:hidden"
+            <button
+              type="button"
+              aria-label={mobileOpen ? 'Close navigation menu' : 'Open navigation menu'}
+              aria-expanded={mobileOpen}
+              onClick={() => setMobileOpen((value) => !value)}
+              className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-hairline bg-surface/70 text-chrome backdrop-blur-md transition-colors hover:border-volt hover:text-volt lg:hidden"
             >
-              <Search className="h-[18px] w-[18px]" />
-            </Link>
+              {mobileOpen ? (
+                <X className="h-5 w-5" aria-hidden="true" />
+              ) : (
+                <Menu className="h-5 w-5" aria-hidden="true" />
+              )}
+            </button>
             <Link
               href="/account"
               aria-label="Your account"
@@ -277,59 +267,7 @@ export function SiteHeader() {
       )}
 </header>
 
-      {/* Mobile bottom bar. Thumb reach beats a hamburger for the five things people
-          actually do, and it keeps Sell one tap away on every page. */}
-      <nav
-        aria-label="Primary"
-        className={cn(
-          'fixed inset-x-0 bottom-0 z-40 border-t border-[color:var(--vds-border)] bg-[color:var(--vds-bg)]/95 backdrop-blur-xl lg:hidden',
-          'transition-[opacity,transform,visibility] duration-300',
-          mobileOpen
-            ? 'invisible translate-y-4 opacity-0 pointer-events-none'
-            : 'visible translate-y-0 opacity-100',
-        )}
-        style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
-      >
-        <ul className="grid grid-cols-6">
-          {nav.mobile.map((item) => {
-            const Icon = MOBILE_ICONS[item.icon];
-            const isCompare = item.href === '/compare';
-            const href = isCompare ? compareHref : item.href;
-            // Compare is URL-driven (/compare?ids=...) — treat any path under /compare as active,
-            // not just an exact match, so the tab lights up once vehicles are queued.
-            const active = isCompare ? pathname.startsWith('/compare') : pathname === item.href;
-            return (
-              <li key={item.href} className="min-w-0">
-                <Link
-                  href={href}
-                  aria-current={active ? 'page' : undefined}
-                  className={cn(
-                    // min-h stays the same 44px+ touch target; horizontal padding tightens
-                    // slightly at six items so labels don't wrap on a 360px viewport.
-                    'relative flex min-h-[3.5rem] min-w-0 flex-col items-center justify-center gap-1 px-0.5 transition-colors',
-                    active ? 'text-[color:var(--vds-brand-secondary)]' : 'text-[color:var(--vds-text-muted)]',
-                  )}
-                >
-                  <span className="relative">
-                    <Icon className="h-[18px] w-[18px]" />
-                    {isCompare && compareIds.length > 0 && (
-                      <span
-                        aria-hidden="true"
-                        className="absolute -right-1.5 -top-1.5 flex h-3.5 min-w-[0.875rem] items-center justify-center rounded-full bg-volt px-0.5 font-data text-[0.5rem] text-surface"
-                      >
-                        {compareIds.length}
-                      </span>
-                    )}
-                  </span>
-                  <span className="max-w-full truncate px-0.5 font-data text-[9px] font-semibold uppercase leading-none tracking-[0.04em] min-[360px]:text-[10px] min-[400px]:text-[11px]">
-                    {item.label}
-                  </span>
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
-      </nav>
+
     </>
   );
 }
