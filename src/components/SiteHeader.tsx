@@ -81,7 +81,7 @@ export function SiteHeader() {
                   href={href}
                   aria-current={active ? 'page' : undefined}
                   className={cn(
-                    'relative font-data text-[0.72rem] uppercase tracking-[0.12em] transition-colors duration-150',
+                    'relative font-data text-[15px] font-semibold uppercase tracking-[0.08em] transition-colors duration-150',
                     active ? 'text-[color:var(--vds-text)]' : 'text-[color:var(--vds-text)] hover:text-[color:var(--vds-brand-secondary)]',
                   )}
                 >
@@ -160,7 +160,7 @@ export function SiteHeader() {
                       </span>
                     )}
                   </span>
-                  <span className="font-data text-[0.56rem] uppercase leading-none tracking-wider">
+                  <span className="font-data text-[11px] font-semibold uppercase leading-none tracking-[0.06em]">
                     {item.label}
                   </span>
                 </Link>
