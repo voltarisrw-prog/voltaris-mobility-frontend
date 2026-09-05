@@ -173,8 +173,8 @@ export function SiteHeader() {
               </button>
             </div>
 
-            <div className="shell flex flex-1 flex-col justify-center py-10">
-              <div className="mb-8">
+            <div className="shell flex flex-1 flex-col justify-start overflow-y-auto py-12 sm:py-16">
+              <div className="mb-10 sm:mb-12">
                 <p className="eyebrow">Voltaris Mobility</p>
                 <p className="mt-2 max-w-xs font-data text-[0.58rem] uppercase tracking-[0.12em] text-steel-muted">
                   Move with intention.
@@ -182,7 +182,7 @@ export function SiteHeader() {
               </div>
 
               <nav aria-label="Mobile main">
-                <ul className="space-y-1">
+                <ul className="divide-y divide-hairline border-y border-hairline">
                   {nav.primary.map((item, index) => {
                     const isCompare = item.href.split('?')[0] === '/compare';
                     const href = isCompare ? compareHref : item.href;
@@ -192,7 +192,7 @@ export function SiteHeader() {
                       <li
                         key={item.href}
                         className={cn(
-                          'border-b border-hairline transition-all duration-500',
+                          'transition-all duration-500',
                           mobileOpen
                             ? 'translate-y-0 opacity-100'
                             : 'translate-y-5 opacity-0',
@@ -208,38 +208,27 @@ export function SiteHeader() {
                           onClick={() => setMobileOpen(false)}
                           aria-current={active ? 'page' : undefined}
                           className={cn(
-                            'group flex min-h-16 items-center justify-between py-3.5',
-                            'font-display text-[1.7rem] font-medium tracking-[-0.035em] sm:text-3xl',
+                            'group flex min-h-14 items-center justify-between py-3 px-1 sm:min-h-16 sm:py-4',
+                            'font-display text-[1.35rem] font-medium tracking-[-0.025em] sm:text-2xl',
                             'transition-colors duration-300',
                             active
                               ? 'text-volt'
                               : 'text-chrome hover:text-volt',
                           )}
                         >
-                          <span className="flex items-center gap-3">
-                            <span
-                              className={cn(
-                                'h-1.5 w-1.5 rounded-full bg-volt transition-all duration-300',
-                                active
-                                  ? 'scale-100'
-                                  : 'scale-0 group-hover:scale-100',
-                              )}
-                              aria-hidden="true"
-                            />
-                            {item.label}
-                          </span>
+                          <span>{item.label}</span>
 
                           <span
                             className={cn(
-                              'font-data text-[0.55rem] uppercase tracking-[0.16em]',
+                              'font-data text-base leading-none',
                               'transition-all duration-300',
                               active
                                 ? 'translate-x-0 text-volt opacity-100'
-                                : 'translate-x-2 text-steel-muted opacity-60 group-hover:translate-x-0 group-hover:text-volt group-hover:opacity-100',
+                                : 'translate-x-1 text-steel-muted opacity-50 group-hover:translate-x-0 group-hover:text-volt group-hover:opacity-100',
                             )}
                             aria-hidden="true"
                           >
-                            {active ? 'Current' : 'Open'}
+                            →
                           </span>
                         </Link>
                       </li>
@@ -248,7 +237,7 @@ export function SiteHeader() {
                 </ul>
               </nav>
 
-              <div className="mt-10 flex items-end justify-between gap-6 border-t border-hairline pt-6">
+              <div className="mt-12 flex items-end justify-between gap-6 border-t border-hairline pt-6 sm:mt-14">
                 <p className="max-w-xs font-data text-[0.58rem] uppercase leading-relaxed tracking-[0.14em] text-steel-muted">
                   Mobility, selected with intention.
                 </p>
