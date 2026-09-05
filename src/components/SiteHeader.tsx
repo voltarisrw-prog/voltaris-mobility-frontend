@@ -143,54 +143,133 @@ export function SiteHeader() {
       
       {mobileOpen && (
         <div
-          className="fixed inset-0 z-[90] bg-abyss lg:hidden"
+          className={cn(
+            'fixed inset-0 z-[90] bg-abyss lg:hidden transition-[opacity,visibility] duration-500',
+            mobileOpen
+              ? 'visible opacity-100'
+              : 'invisible pointer-events-none opacity-0',
+          )}
           role="dialog"
           aria-modal="true"
           aria-label="Mobile navigation"
+          aria-hidden={!mobileOpen}
         >
-          <div className="flex min-h-dvh flex-col">
+          <div
+            className={cn(
+              'flex min-h-dvh flex-col origin-top transition-[transform,opacity] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]',
+              mobileOpen ? 'translate-y-0 scale-100 opacity-100' : '-translate-y-6 scale-[0.985] opacity-0',
+            )}
+          >
             <div className="shell flex h-20 shrink-0 items-center justify-between border-b border-hairline">
-              <VoltarisLogo className="h-7" />
+              <Link
+                href="/"
+                aria-label="Voltaris Mobility home"
+                onClick={() => setMobileOpen(false)}
+                className="group inline-flex items-center rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volt/60"
+              >
+                <VoltarisLogo className="h-7 transition-transform duration-300 group-hover:scale-[1.03]" />
+              </Link>
 
               <button
                 type="button"
                 aria-label="Close navigation menu"
                 onClick={() => setMobileOpen(false)}
-                className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-hairline text-chrome transition-colors hover:border-volt hover:text-volt"
+                className="group inline-flex h-11 w-11 items-center justify-center rounded-full border border-hairline text-chrome transition-all duration-300 hover:border-volt hover:text-volt hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volt/60"
               >
-                <X className="h-5 w-5" aria-hidden="true" />
+                <X
+                  className="h-5 w-5 transition-transform duration-300 group-hover:rotate-90"
+                  aria-hidden="true"
+                />
               </button>
             </div>
 
             <div className="shell flex flex-1 flex-col justify-center py-10">
-              <p className="eyebrow mb-8">Voltaris Mobility</p>
+              <div className="mb-8">
+                <p className="eyebrow">Voltaris Mobility</p>
+                <p className="mt-2 max-w-xs font-data text-[0.58rem] uppercase tracking-[0.12em] text-steel-muted">
+                  Move with intention.
+                </p>
+              </div>
 
               <nav aria-label="Mobile main">
                 <ul className="space-y-1">
-                  {nav.primary.map((item) => (
-                    <li key={item.href}>
-                      <Link
-                        href={item.href}
-                        onClick={() => setMobileOpen(false)}
-                        className="group flex min-h-14 items-center justify-between border-b border-hairline py-3 font-display text-2xl font-medium tracking-[-0.025em] text-chrome transition-colors hover:text-volt"
+                  {nav.primary.map((item, index) => {
+                    const isCompare = item.href.split('?')[0] === '/compare';
+                    const href = isCompare ? compareHref : item.href;
+                    const active = pathname === item.href.split('?')[0];
+
+                    return (
+                      <li
+                        key={item.href}
+                        className={cn(
+                          'border-b border-hairline transition-all duration-500',
+                          mobileOpen
+                            ? 'translate-y-0 opacity-100'
+                            : 'translate-y-5 opacity-0',
+                        )}
+                        style={{
+                          transitionDelay: mobileOpen
+                            ? `${140 + index * 45}ms`
+                            : '0ms',
+                        }}
                       >
-                        <span>{item.label}</span>
-                        <span
-                          className="font-data text-[0.55rem] uppercase tracking-[0.16em] text-steel-muted transition-colors group-hover:text-volt"
-                          aria-hidden="true"
+                        <Link
+                          href={href}
+                          onClick={() => setMobileOpen(false)}
+                          aria-current={active ? 'page' : undefined}
+                          className={cn(
+                            'group flex min-h-16 items-center justify-between py-3.5',
+                            'font-display text-[1.7rem] font-medium tracking-[-0.035em] sm:text-3xl',
+                            'transition-colors duration-300',
+                            active
+                              ? 'text-volt'
+                              : 'text-chrome hover:text-volt',
+                          )}
                         >
-                          Open
-                        </span>
-                      </Link>
-                    </li>
-                  ))}
+                          <span className="flex items-center gap-3">
+                            <span
+                              className={cn(
+                                'h-1.5 w-1.5 rounded-full bg-volt transition-all duration-300',
+                                active
+                                  ? 'scale-100'
+                                  : 'scale-0 group-hover:scale-100',
+                              )}
+                              aria-hidden="true"
+                            />
+                            {item.label}
+                          </span>
+
+                          <span
+                            className={cn(
+                              'font-data text-[0.55rem] uppercase tracking-[0.16em]',
+                              'transition-all duration-300',
+                              active
+                                ? 'translate-x-0 text-volt opacity-100'
+                                : 'translate-x-2 text-steel-muted opacity-60 group-hover:translate-x-0 group-hover:text-volt group-hover:opacity-100',
+                            )}
+                            aria-hidden="true"
+                          >
+                            {active ? 'Current' : 'Open'}
+                          </span>
+                        </Link>
+                      </li>
+                    );
+                  })}
                 </ul>
               </nav>
 
-              <div className="mt-10 border-t border-hairline pt-6">
+              <div className="mt-10 flex items-end justify-between gap-6 border-t border-hairline pt-6">
                 <p className="max-w-xs font-data text-[0.58rem] uppercase leading-relaxed tracking-[0.14em] text-steel-muted">
                   Mobility, selected with intention.
                 </p>
+
+                <Link
+                  href="/cars"
+                  onClick={() => setMobileOpen(false)}
+                  className="shrink-0 font-data text-[0.58rem] uppercase tracking-[0.16em] text-steel-muted transition-colors duration-300 hover:text-volt"
+                >
+                  Explore
+                </Link>
               </div>
             </div>
           </div>
@@ -202,7 +281,13 @@ export function SiteHeader() {
           actually do, and it keeps Sell one tap away on every page. */}
       <nav
         aria-label="Primary"
-        className="fixed inset-x-0 bottom-0 z-40 border-t border-[color:var(--vds-border)] bg-[color:var(--vds-bg)]/95 backdrop-blur-xl lg:hidden"
+        className={cn(
+          'fixed inset-x-0 bottom-0 z-40 border-t border-[color:var(--vds-border)] bg-[color:var(--vds-bg)]/95 backdrop-blur-xl lg:hidden',
+          'transition-[opacity,transform,visibility] duration-300',
+          mobileOpen
+            ? 'invisible translate-y-4 opacity-0 pointer-events-none'
+            : 'visible translate-y-0 opacity-100',
+        )}
         style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
       >
         <ul className="grid grid-cols-6">
