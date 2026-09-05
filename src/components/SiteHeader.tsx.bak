@@ -67,15 +67,10 @@ export function SiteHeader() {
           )}
         >
           <Link href="/" aria-label="Voltaris Mobility, home">
-            <VoltarisLogo
-              className={cn(
-                'transition-all duration-300 ease-out',
-                compact ? 'h-6 sm:h-7' : 'h-7 sm:h-8 lg:h-9',
-              )}
-            />
+            <VoltarisLogo className={cn('transition-all duration-300 ease-out', compact ? 'h-7' : 'h-9')} />
           </Link>
 
-          <nav aria-label="Main" className="hidden items-center gap-6 xl:gap-8 lg:flex">
+          <nav aria-label="Main" className="hidden items-center gap-8 lg:flex">
             {nav.primary.map((item) => {
               const isCompare = item.href.split('?')[0] === '/compare';
               const href = isCompare ? compareHref : item.href;
@@ -86,7 +81,7 @@ export function SiteHeader() {
                   href={href}
                   aria-current={active ? 'page' : undefined}
                   className={cn(
-                    'relative font-data text-[13px] font-semibold uppercase tracking-[0.08em] transition-colors duration-150 xl:text-[15px]',
+                    'relative font-data text-[15px] font-semibold uppercase tracking-[0.08em] transition-colors duration-150',
                     active ? 'text-[color:var(--vds-text)]' : 'text-[color:var(--vds-text)] hover:text-[color:var(--vds-brand-secondary)]',
                   )}
                 >
@@ -143,14 +138,14 @@ export function SiteHeader() {
             // not just an exact match, so the tab lights up once vehicles are queued.
             const active = isCompare ? pathname.startsWith('/compare') : pathname === item.href;
             return (
-              <li key={item.href} className="min-w-0">
+              <li key={item.href}>
                 <Link
                   href={href}
                   aria-current={active ? 'page' : undefined}
                   className={cn(
                     // min-h stays the same 44px+ touch target; horizontal padding tightens
                     // slightly at six items so labels don't wrap on a 360px viewport.
-                    'relative flex min-h-[3.5rem] min-w-0 flex-col items-center justify-center gap-1 px-0.5 transition-colors',
+                    'relative flex min-h-[3.5rem] flex-col items-center justify-center gap-1 px-0.5 transition-colors',
                     active ? 'text-[color:var(--vds-brand-secondary)]' : 'text-[color:var(--vds-text-muted)]',
                   )}
                 >
@@ -165,7 +160,7 @@ export function SiteHeader() {
                       </span>
                     )}
                   </span>
-                  <span className="max-w-full truncate px-0.5 font-data text-[9px] font-semibold uppercase leading-none tracking-[0.04em] min-[360px]:text-[10px] min-[400px]:text-[11px]">
+                  <span className="font-data text-[11px] font-semibold uppercase leading-none tracking-[0.06em]">
                     {item.label}
                   </span>
                 </Link>

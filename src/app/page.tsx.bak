@@ -60,11 +60,11 @@ export default async function HomePage() {
       {/* 01 — HERO ------------------------------------------------------- */}
       <section className="relative isolate overflow-hidden">
         <HeroMedia />
-        <div className="shell relative flex min-h-[calc(100svh-4rem)] flex-col items-center justify-end py-12 pb-20 text-center sm:min-h-[88svh] sm:justify-end sm:py-20 sm:pb-20">
+        <div className="shell relative flex min-h-[100svh] flex-col items-center justify-center py-16 text-center sm:py-20">
           <div className="max-w-5xl animate-rise-in pb-20 sm:pb-24">
             <h1 className="mt-0 max-w-5xl font-display text-hero">{hero.headline}</h1>
 
-            <div className="mt-8 flex w-full flex-col items-stretch justify-center gap-2.5 sm:mt-9 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
+            <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
               <Link
                 href={hero.primaryCta.href}
                 className="bg-volt px-7 py-4 font-data text-eyebrow uppercase text-surface transition-colors hover:bg-[color:var(--vds-brand-secondary)]"

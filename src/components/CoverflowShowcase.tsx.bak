@@ -132,7 +132,7 @@ export function CoverflowShowcase<T>({
             setFocused(false);
           }
         }}
-        className="relative mx-auto flex h-[32rem] w-full max-w-shell items-center justify-center overflow-hidden px-0 sm:h-[40rem] sm:px-4 md:h-[48rem] lg:h-[55rem] lg:px-0 [--cylinder-radius:15rem] sm:[--cylinder-radius:25rem] md:[--cylinder-radius:30rem] lg:[--cylinder-radius:36rem]"
+        className="relative mx-auto flex h-[37rem] w-full max-w-shell items-center justify-center overflow-hidden px-1 sm:h-[43rem] sm:px-4 md:h-[49rem] lg:h-[55rem] lg:px-0 [--cylinder-radius:21rem] sm:[--cylinder-radius:28rem] lg:[--cylinder-radius:36rem]"
         style={{ perspective: '1600px', transformStyle: 'preserve-3d' }}
       >
         {items.map((item, index) => {
@@ -145,7 +145,7 @@ export function CoverflowShowcase<T>({
           const style: React.CSSProperties = {
             transform: isCenter
               ? 'translateZ(0) scale(1)'
-              : `rotateY(${offset * -24}deg) translateZ(var(--cylinder-radius)) scale(${distance === 1 ? 0.78 : 0.62})`,
+              : `rotateY(${offset * -32}deg) translateZ(var(--cylinder-radius)) scale(${distance === 1 ? 0.84 : 0.68})`,
             opacity: hidden ? 0 : isCenter ? 1 : distance === 1 ? 0.72 : 0.38,
             zIndex: isCenter ? 100 : 30 - distance * 5,
             pointerEvents: hidden ? 'none' : 'auto',
@@ -158,7 +158,7 @@ export function CoverflowShowcase<T>({
               <div
                 key={key}
                 style={style}
-                className={`absolute isolate z-[100] shrink-0 overflow-hidden rounded-[1.25rem] border border-white/10 bg-abyss shadow-[0_32px_80px_-24px_rgba(0,0,0,0.82)] sm:rounded-[1.75rem] lg:rounded-[2rem] sm:shadow-[0_40px_100px_-25px_rgba(0,0,0,0.85)] transition-[transform,opacity] duration-500 ease-out motion-reduce:transition-none ${centerSizeClassName}`}
+                className={`absolute isolate z-[100] shrink-0 overflow-hidden rounded-[1.5rem] border border-white/10 bg-abyss shadow-[0_40px_100px_-25px_rgba(0,0,0,0.85)] sm:rounded-[1.75rem] lg:rounded-[2rem] transition-[transform,opacity] duration-500 ease-out motion-reduce:transition-none ${centerSizeClassName}`}
               >
                 {renderCenter(item)}
               </div>
@@ -173,7 +173,7 @@ export function CoverflowShowcase<T>({
               aria-label={peekLabel(item)}
               tabIndex={hidden ? -1 : 0}
               style={style}
-              className={`absolute shrink-0 overflow-hidden rounded-[1rem] border border-hairline/60 bg-abyss transition-[transform,opacity] duration-500 ease-out motion-reduce:transition-none sm:rounded-none ${peekSizeClassName}`}
+              className={`absolute shrink-0 overflow-hidden border border-hairline/60 bg-abyss transition-[transform,opacity] duration-500 ease-out motion-reduce:transition-none ${peekSizeClassName}`}
             >
               {renderPeek(item)}
               <div className="absolute inset-0 bg-surface/45" aria-hidden="true" />

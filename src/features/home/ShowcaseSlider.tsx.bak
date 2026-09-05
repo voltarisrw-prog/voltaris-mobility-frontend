@@ -7,10 +7,10 @@ import { CoverflowShowcase } from '@/components/CoverflowShowcase';
 import type { VehicleSummary } from '@/types/vehicle';
 
 const CENTER_SIZE =
-  'h-[30rem] w-[min(88vw,27rem)] sm:h-[40rem] sm:w-[28rem] md:h-[46rem] md:w-[32rem] lg:h-[52rem] lg:w-[38rem]';
+  'h-[34rem] w-[min(92vw,30rem)] sm:h-[40rem] sm:w-[28rem] md:h-[46rem] md:w-[32rem] lg:h-[52rem] lg:w-[38rem]';
 
 const PEEK_SIZE =
-  'h-[15rem] w-[calc(100vw-5rem)] max-w-[15rem] sm:h-[22rem] sm:w-[18rem] md:h-[25rem] md:w-[20rem] lg:h-[28rem] lg:w-[23rem]';
+  'h-[18rem] w-[calc(100vw-4rem)] max-w-[18rem] sm:h-[22rem] sm:w-[18rem] md:h-[25rem] md:w-[20rem] lg:h-[28rem] lg:w-[23rem]';
 
 export function ShowcaseSlider({
   vehicles,
@@ -47,7 +47,7 @@ export function ShowcaseSlider({
                 alt={vehicle.primary_image.alt || title}
                 fill
                 priority
-                sizes="(min-width: 1024px) 38rem, (min-width: 768px) 32rem, (min-width: 640px) 28rem, 88vw"
+                sizes="(min-width: 1024px) 38rem, (min-width: 768px) 32rem, (min-width: 640px) 28rem, 92vw"
                 className="object-contain p-1 sm:p-2 lg:p-3"
               />
             ) : (
