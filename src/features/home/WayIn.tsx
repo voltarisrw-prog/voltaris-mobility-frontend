@@ -1,31 +1,51 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
 import { useState } from 'react';
 
-const PATHS = [
+const MOVES = [
   {
     number: '01',
-    title: 'Own',
-    description: 'Find a vehicle worth keeping.',
-    href: '/cars',
-    image: '/demo/vehicles/eqs-black.jpg',
+    title: 'City',
+    description: 'Easy electric and hybrid options for everyday urban driving',
+    href: '/cars?use=city',
+    accent: 'from-cyan-300/20 via-transparent to-transparent',
   },
   {
     number: '02',
-    title: 'Move',
-    description: 'Find the right way to get there.',
-    href: '/cars',
-    image: '/demo/lifestyle/driving-pov-palms.jpg',
+    title: 'Family',
+    description: 'More room for people, luggage and weekends away',
+    href: '/cars?use=family',
+    accent: 'from-amber-200/20 via-transparent to-transparent',
   },
   {
     number: '03',
-    title: 'Sell',
-    description: 'Put your vehicle in front of the right buyer.',
-    href: '/sell',
-    image: '/demo/lifestyle/dealership-handshake.jpg',
+    title: 'Business',
+    description: 'Comfortable vehicles for work, clients and daily movement',
+    href: '/cars?use=business',
+    accent: 'from-violet-300/20 via-transparent to-transparent',
+  },
+  {
+    number: '04',
+    title: 'Long distance',
+    description: 'Go farther with vehicles suited to longer journeys',
+    href: '/cars?use=long-distance',
+    accent: 'from-emerald-300/20 via-transparent to-transparent',
+  },
+  {
+    number: '05',
+    title: 'Upcountry',
+    description: "Practical choices for Rwanda's changing roads and terrain",
+    href: '/cars?use=upcountry',
+    accent: 'from-orange-300/20 via-transparent to-transparent',
+  },
+  {
+    number: '06',
+    title: 'Everyday',
+    description: 'Versatile vehicles for whatever the day brings',
+    href: '/cars?use=everyday',
+    accent: 'from-sky-300/20 via-transparent to-transparent',
   },
 ] as const;
 
@@ -33,106 +53,84 @@ export function WayIn() {
   const [active, setActive] = useState(0);
 
   return (
-    <section className="relative isolate overflow-hidden border-b border-[color:var(--vds-border)] vds-section bg-[color:var(--vds-bg)]">
-      <div className="shell py-20 sm:py-24 lg:py-32">
-        <header className="mb-16 max-w-2xl sm:mb-20 lg:mb-24">
-          <h2 className="mt-7 max-w-xl font-display text-[clamp(3rem,7vw,6.5rem)] font-medium uppercase leading-[0.88] tracking-[-0.045em] text-[color:var(--vds-text)]">
-            Your drive
-            <br />
-            Your way
+    <section className="relative isolate overflow-hidden border-b border-[color:var(--vds-border)] bg-[color:var(--vds-bg)]">
+      <div className="shell py-16 sm:py-20 lg:py-28">
+        <header className="mb-12 max-w-3xl sm:mb-16 lg:mb-20">
+          <p className="font-data text-[0.62rem] uppercase tracking-[0.2em] text-[color:var(--vds-brand-secondary)]">
+            Find your fit
+          </p>
+
+          <h2 className="mt-4 max-w-2xl text-5xl leading-[0.9] sm:text-6xl lg:text-8xl">
+            Choose the way you move
           </h2>
+
+          <p className="mt-6 max-w-xl font-sans text-base leading-relaxed text-[color:var(--vds-text-muted)] sm:text-lg">
+            Find a vehicle around what your life actually looks like
+          </p>
         </header>
 
-        <div className="relative">
-          <div
-            className="pointer-events-none absolute inset-0 hidden overflow-hidden lg:block"
-            aria-hidden="true"
-          >
-            {PATHS.map((path, index) => (
-              <div
-                key={path.title}
-                className="absolute inset-y-0 right-0 w-[42%] transition-all duration-700 ease-out"
-                style={{
-                  opacity: active === index ? 0.22 : 0,
-                  transform:
-                    active === index
-                      ? 'translateX(0) scale(1)'
-                      : 'translateX(32px) scale(1.04)',
-                }}
+        <div className="grid gap-px overflow-hidden border border-[color:var(--vds-border)] bg-[color:var(--vds-border)] sm:grid-cols-2 lg:grid-cols-3">
+          {MOVES.map((move, index) => {
+            const isActive = active === index;
+
+            return (
+              <Link
+                key={move.title}
+                href={move.href}
+                onMouseEnter={() => setActive(index)}
+                onFocus={() => setActive(index)}
+                className="group relative min-h-[20rem] overflow-hidden bg-[#0f0c09] p-6 outline-none transition-colors duration-500 hover:bg-[#15110d] focus-visible:bg-[#15110d] sm:min-h-[23rem] sm:p-8 lg:min-h-[27rem] lg:p-9"
               >
-                <Image
-                  src={path.image}
-                  alt=""
-                  fill
-                  sizes="42vw"
-                  className="object-cover object-center"
+                <div
+                  className={[
+                    'absolute inset-0 bg-gradient-to-br transition-opacity duration-700',
+                    move.accent,
+                    isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100',
+                  ].join(' ')}
+                  aria-hidden="true"
                 />
-              </div>
-            ))}
-          </div>
 
-          <div className="relative">
-            {PATHS.map((path, index) => {
-              const isActive = active === index;
-
-              return (
-                <Link
-                  key={path.title}
-                  href={path.href}
-                  onMouseEnter={() => setActive(index)}
-                  onFocus={() => setActive(index)}
-                  className="group relative block border-t border-[color:var(--vds-border)] py-8 outline-none transition-colors duration-500 last:border-b sm:py-10 lg:py-12"
-                >
-                  <div className="relative z-10 flex items-center gap-5 sm:gap-8 lg:gap-12">
-                    <span className="w-8 shrink-0 self-start pt-2 font-data text-[0.58rem] tracking-[0.16em] text-[color:var(--vds-text-muted)] transition-colors duration-500 group-hover:text-[color:var(--vds-brand-secondary)] group-focus-visible:text-[color:var(--vds-brand-secondary)] sm:w-10">
-                      {path.number}
+                <div className="relative z-10 flex h-full flex-col justify-between">
+                  <div className="flex items-start justify-between gap-4">
+                    <span className="font-data text-[0.58rem] tracking-[0.16em] text-[color:var(--vds-text-muted)]">
+                      {move.number}
                     </span>
-
-                    <div className="min-w-0 flex-1">
-                      <h3
-                        className={[
-                          'font-display text-[clamp(3.4rem,9vw,8.5rem)] font-medium uppercase leading-[0.78] tracking-[-0.05em] transition-all duration-500',
-                          isActive
-                            ? 'translate-x-2 text-[color:var(--vds-text)] lg:translate-x-5'
-                            : 'text-[color:var(--vds-text-secondary)] group-hover:translate-x-2 group-hover:text-[color:var(--vds-text)] group-focus-visible:translate-x-2 group-focus-visible:text-[color:var(--vds-text)]',
-                        ].join(' ')}
-                      >
-                        {path.title}
-                      </h3>
-
-                      <p
-                        className={[
-                          'mt-4 max-w-sm font-data text-[0.62rem] uppercase leading-[1.5] tracking-[0.16em] transition-all duration-500 sm:mt-5 sm:text-[0.68rem]',
-                          isActive
-                            ? 'translate-x-2 text-[color:var(--vds-text-secondary)] lg:translate-x-5'
-                            : 'text-[color:var(--vds-text-muted)] group-hover:text-[color:var(--vds-text-secondary)] group-focus-visible:text-[color:var(--vds-text-secondary)]',
-                        ].join(' ')}
-                      >
-                        {path.description}
-                      </p>
-                    </div>
 
                     <span
                       className={[
-                        'flex h-11 w-11 shrink-0 items-center justify-center rounded-full border transition-all duration-500 sm:h-14 sm:w-14',
+                        'flex h-11 w-11 shrink-0 items-center justify-center rounded-full border transition-all duration-500 sm:h-12 sm:w-12',
                         isActive
-                          ? 'border-volt bg-volt text-surface'
-                          : 'border-[color:var(--vds-border)] text-[color:var(--vds-text)] group-hover:border-chrome group-hover:text-[color:var(--vds-text)] group-focus-visible:border-chrome group-focus-visible:text-[color:var(--vds-text)]',
+                          ? 'border-[color:var(--vds-brand-secondary)] bg-[color:var(--vds-brand-secondary)] text-[#0c0906]'
+                          : 'border-[color:var(--vds-border)] text-[color:var(--vds-text)] group-hover:border-white group-focus-visible:border-white',
                       ].join(' ')}
                     >
                       <ArrowUpRight
                         className={[
-                          'h-4 w-4 transition-transform duration-500 sm:h-5 sm:w-5',
+                          'h-4 w-4 transition-transform duration-500',
                           isActive ? 'rotate-0' : '-rotate-45 group-hover:rotate-0 group-focus-visible:rotate-0',
                         ].join(' ')}
                         aria-hidden="true"
                       />
                     </span>
                   </div>
-                </Link>
-              );
-            })}
-          </div>
+
+                  <div>
+                    <h3 className="font-display text-4xl leading-none tracking-[-0.03em] sm:text-5xl lg:text-6xl">
+                      {move.title}
+                    </h3>
+
+                    <p className="mt-4 max-w-sm font-sans text-sm leading-relaxed text-[color:var(--vds-text-muted)] sm:text-base">
+                      {move.description}
+                    </p>
+
+                    <span className="mt-6 inline-flex border-b border-white/20 pb-1.5 font-data text-[0.56rem] uppercase tracking-[0.16em] text-[color:var(--vds-text-secondary)] transition-colors group-hover:border-[color:var(--vds-brand-secondary)] group-hover:text-[color:var(--vds-brand-secondary)]">
+                      Explore vehicles
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            );
+          })}
         </div>
       </div>
     </section>
