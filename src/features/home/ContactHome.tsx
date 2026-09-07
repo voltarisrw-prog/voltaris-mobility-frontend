@@ -50,7 +50,7 @@ export function ContactHome() {
   });
 
   return (
-    <section className="border-t border-[color:var(--vds-border)] bg-[#0c0906] py-20 text-[color:var(--vds-text)] sm:py-28 lg:py-36">
+    <section className="border-t border-[color:var(--vds-border)] bg-[#f3eee7] py-20 text-[#171411] sm:py-28 lg:py-36">
       <div className="mx-auto grid max-w-shell gap-10 px-5 sm:px-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-start lg:gap-16">
         <div className="max-w-xl lg:sticky lg:top-24">
           <p className="font-data text-[0.68rem] uppercase tracking-[0.22em] text-[#716a61]">
@@ -61,12 +61,12 @@ export function ContactHome() {
             Tell us what you need
           </h2>
 
-          <p className="mt-6 max-w-md text-base leading-relaxed text-[color:var(--vds-steel)] sm:text-lg">
+          <p className="mt-6 max-w-md text-base leading-relaxed text-[#5e5851] sm:text-lg">
             Not sure where to start? Tell us what you&apos;re looking for and we&apos;ll help you
             find the right next move
           </p>
 
-          <div className="mt-8 flex items-center gap-3 text-sm text-[color:var(--vds-steel)]">
+          <div className="mt-8 flex items-center gap-3 text-sm text-[#5e5851]">
             <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#171411] text-[#f3eee7]">
               <MessageCircle size={17} strokeWidth={1.7} />
             </span>
@@ -80,7 +80,7 @@ export function ContactHome() {
             aria-hidden="true"
           />
 
-          <div className="relative rounded-[1.75rem] border border-black/[0.08] bg-white p-5 text-[#171411] [color-scheme:light] shadow-[0_30px_90px_-28px_rgba(0,0,0,0.38)] sm:p-8 lg:p-10">
+          <div className="relative rounded-[1.75rem] border border-black/[0.08] bg-white p-5 shadow-[0_30px_90px_-28px_rgba(0,0,0,0.38)] sm:p-8 lg:p-10">
             {reference ? (
               <div className="flex min-h-[32rem] flex-col justify-center">
                 <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#171411] text-white">
@@ -102,7 +102,7 @@ export function ContactHome() {
 
                 <div className="mt-7 inline-flex w-fit items-center gap-3 rounded-xl border border-black/[0.08] bg-[#f6f3ef] px-4 py-3 text-sm">
                   <span className="text-[#716a61]">Reference</span>
-                  <span className="font-data text-[color:var(--vds-text)]">{reference}</span>
+                  <span className="font-data text-[#171411]">{reference}</span>
                 </div>
 
                 <button
@@ -130,7 +130,7 @@ export function ContactHome() {
                         {...props}
                         {...register('full_name')}
                         autoComplete="name"
-                        className={`${inputClass} !bg-white !text-black !caret-black placeholder:!text-[#8a837a]`}
+                        className={inputClass}
                       />
                     )}
                   </Field>
@@ -143,7 +143,7 @@ export function ContactHome() {
                           {...register('email')}
                           type="email"
                           autoComplete="email"
-                          className={`${inputClass} !bg-white !text-black !caret-black placeholder:!text-[#8a837a]`}
+                          className={inputClass}
                         />
                       )}
                     </Field>
@@ -160,7 +160,7 @@ export function ContactHome() {
                           {...register('phone')}
                           type="tel"
                           autoComplete="tel"
-                          className={`${inputClass} !bg-white !text-black !caret-black placeholder:!text-[#8a837a]`}
+                          className={inputClass}
                         />
                       )}
                     </Field>
@@ -168,7 +168,7 @@ export function ContactHome() {
 
                   <Field label="What can we help with?" error={errors.topic?.message} required>
                     {(props) => (
-                      <select {...props} {...register('topic')} className={`${selectClass} !bg-white !text-[#171411]`}>
+                      <select {...props} {...register('topic')} className={selectClass}>
                         <option value="buying">I want to buy</option>
                         <option value="renting">I want to rent</option>
                         <option value="selling">I want to sell</option>
@@ -190,7 +190,7 @@ export function ContactHome() {
                         {...register('message')}
                         rows={6}
                         placeholder="For example, I'm looking for an affordable hybrid for daily driving in Kigali..."
-                        className={`${inputClass} !bg-white !text-black !caret-black placeholder:!text-[#8a837a]`}
+                        className={inputClass}
                       />
                     )}
                   </Field>
