@@ -1,70 +1,48 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
-import { DEMO_LIBRARY_IMAGES } from '@/lib/mock/demoLibraryImages';
+import { MOCK_VEHICLES } from '@/lib/mock/fixtures';
 
-const ELECTRIC = [
-  {
-    make: 'Tesla',
-    model: 'Model S Plaid',
-    image: DEMO_LIBRARY_IMAGES[0]!,
-    href: '/cars?fuel=electric',
-  },
-  {
-    make: 'Porsche',
-    model: 'Taycan 4S',
-    image: DEMO_LIBRARY_IMAGES[7]!,
-    href: '/cars?fuel=electric',
-  },
-  {
-    make: 'Mercedes-Benz',
-    model: 'EQS 580',
-    image: DEMO_LIBRARY_IMAGES[14]!,
-    href: '/cars?fuel=electric',
-  },
-  {
-    make: 'BMW',
-    model: 'i5 eDrive40',
-    image: DEMO_LIBRARY_IMAGES[21]!,
-    href: '/cars?fuel=electric',
-  },
-];
+const fallbackVehicle = MOCK_VEHICLES.find(
+  (vehicle) => vehicle.status === 'available' && vehicle.primary_image,
+) ?? MOCK_VEHICLES[0]!;
 
-const HYBRID = [
-  {
-    make: 'Toyota',
-    model: 'Land Cruiser V8 Hybrid',
-    image: DEMO_LIBRARY_IMAGES[28]!,
-    href: '/cars?fuel=hybrid',
-  },
-  {
-    make: 'Lexus',
-    model: 'RX 500h F Sport',
-    image: DEMO_LIBRARY_IMAGES[35]!,
-    href: '/cars?fuel=hybrid',
-  },
-  {
-    make: 'Volvo',
-    model: 'XC90 Recharge T8',
-    image: DEMO_LIBRARY_IMAGES[42]!,
-    href: '/cars?fuel=hybrid',
-  },
-  {
-    make: 'Toyota',
-    model: 'RAV4 Hybrid AWD',
-    image: DEMO_LIBRARY_IMAGES[49]!,
-    href: '/cars?fuel=hybrid',
-  },
-];
-
-function rotatingItem<T>(items: T[]): T {
-  const bucket = Math.floor(Date.now() / (6 * 60 * 60 * 1000));
-  return items[bucket % items.length]!;
+function vehicleText(vehicle: (typeof MOCK_VEHICLES)[number]) {
+  return `${vehicle.make} ${vehicle.model} ${vehicle.variant ?? ''}`.toLowerCase();
 }
 
+function isHybrid(vehicle: (typeof MOCK_VEHICLES)[number]) {
+  return /hybrid|recharge|\b500h\b|\b450h\b|\b300h\b/.test(vehicleText(vehicle));
+}
+
+function isAvailable(vehicle: (typeof MOCK_VEHICLES)[number]) {
+  return vehicle.status === 'available' && Boolean(vehicle.primary_image);
+}
+
+const electricVehicle =
+  MOCK_VEHICLES.find(
+    (vehicle) => isAvailable(vehicle) && !isHybrid(vehicle),
+  ) ?? fallbackVehicle;
+
+const hybridVehicle =
+  MOCK_VEHICLES.find(
+    (vehicle) => isAvailable(vehicle) && isHybrid(vehicle),
+  ) ?? fallbackVehicle;
+
 export function PowertrainShowcase() {
-  const electric = rotatingItem(ELECTRIC);
-  const hybrid = rotatingItem(HYBRID);
+  const electric = {
+    make: electricVehicle.make,
+    model: `${electricVehicle.model}${electricVehicle.variant ? ` ${electricVehicle.variant}` : ''}`,
+    image: electricVehicle.primary_image!.card,
+    href: '/cars?fuel=electric',
+  };
+
+  const hybrid = {
+    make: hybridVehicle.make,
+    model: `${hybridVehicle.model}${hybridVehicle.variant ? ` ${hybridVehicle.variant}` : ''}`,
+    image: hybridVehicle.primary_image!.card,
+    href: '/cars?fuel=hybrid',
+  };
 
   return (
     <section className="border-y border-[color:var(--vds-border)] bg-[#0c0906]">
