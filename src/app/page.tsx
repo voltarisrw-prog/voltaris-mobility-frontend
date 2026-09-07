@@ -5,11 +5,12 @@ import { HeroMedia } from '@/features/home/HeroMedia';
 import { ShowcaseSlider } from '@/features/home/ShowcaseSlider';
 import { UniversalSearch } from '@/features/vehicles/UniversalSearch';
 import { WayIn } from '@/features/home/WayIn';
-import { Garage } from '@/features/home/Garage';
 import { RwandaInMotion } from '@/features/home/RwandaInMotion';
 import { FinalStatement } from '@/features/home/FinalStatement';
 import { PartnersHome } from '@/features/home/PartnersHome';
 import { EnquireHome } from '@/features/home/EnquireHome';
+import { ContactHome } from '@/features/home/ContactHome';
+import { NetworkHome } from '@/features/home/NetworkHome';
 import { JsonLd } from '@/components/JsonLd';
 import { listVehicles } from '@/lib/api/vehicles';
 import { buildMetadata, absoluteUrl } from '@/lib/seo/metadata';
@@ -114,7 +115,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 02 — LIVE SHOWROOM ------------------------------------------------ */}
+      {/* 05 — WORTH A CLOSER LOOK ----------------------------------------- */}
       {showcaseVehicles.length > 0 && (
         <>
           <div className="lane-rule" />
@@ -138,10 +139,10 @@ export default async function HomePage() {
                 <div className="flex flex-col gap-6 border-b border-[color:var(--vds-border)] pb-7 sm:flex-row sm:items-end sm:justify-between sm:gap-10">
                   <div>
                     <p className="font-data text-[0.62rem] uppercase tracking-[0.2em] text-[color:var(--vds-brand-secondary)]">
-                      Live inventory
+                      Worth a closer look
                     </p>
                     <p className="mt-3 max-w-md font-display text-xl leading-tight text-[color:var(--vds-text)] sm:text-2xl">
-                      Electric and hybrid vehicles currently available on Voltaris
+                      A few vehicles that deserve your attention
                     </p>
                   </div>
 
@@ -254,9 +255,6 @@ export default async function HomePage() {
       {/* 04 — FIND YOUR WAY IN ----------------------------------------- */}
       <WayIn />
 
-      {/* 05 — THE GARAGE ---------------------------------------------- */}
-      <Garage />
-
       {/* 06 — RWANDA IN MOTION --------------------------------------- */}
       <RwandaInMotion />
 
@@ -268,6 +266,12 @@ export default async function HomePage() {
 
       {/* 09 — ENQUIRE ----------------------------------------------- */}
       <EnquireHome />
+
+      {/* 10 — TALK TO VOLTARIS --------------------------------------- */}
+      <ContactHome />
+
+      {/* 11 — OUR NETWORK --------------------------------------------- */}
+      <NetworkHome />
 
     </>
   );

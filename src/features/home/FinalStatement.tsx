@@ -1,145 +1,129 @@
-'use client';
-
-import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowUpRight } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { ArrowUpRight, BadgeCheck, CarFront, GitCompare, SearchCheck } from 'lucide-react';
+
+const CONFIDENCE_POINTS = [
+  {
+    number: '01',
+    icon: SearchCheck,
+    title: 'Know what you are buying',
+    description:
+      'See the details that matter before you make a decision, from price and mileage to range, battery and condition',
+    href: '/cars',
+    action: 'Browse vehicles',
+  },
+  {
+    number: '02',
+    icon: BadgeCheck,
+    title: 'Buy with more confidence',
+    description:
+      'Explore verified listings and understand more about the vehicle and the people behind the listing',
+    href: '/trust-and-verification',
+    action: 'How verification works',
+  },
+  {
+    number: '03',
+    icon: CarFront,
+    title: 'See it before you decide',
+    description:
+      'When you find something you like, take the next step and arrange a test drive before committing',
+    href: '/test-drive',
+    action: 'Book a test drive',
+  },
+  {
+    number: '04',
+    icon: GitCompare,
+    title: 'Compare before you choose',
+    description:
+      'Put your options side by side and find the vehicle that makes the most sense for your needs',
+    href: '/compare',
+    action: 'Compare vehicles',
+  },
+] as const;
 
 export function FinalStatement() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const frameRef = useRef<number | null>(null);
-  const [progress, setProgress] = useState(0);
-
-  useEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return;
-
-    const reducedMotion = window.matchMedia(
-      '(prefers-reduced-motion: reduce)',
-    ).matches;
-
-    if (reducedMotion) return;
-
-    const update = () => {
-      frameRef.current = null;
-
-      const rect = section.getBoundingClientRect();
-      const viewport = window.innerHeight;
-      const total = viewport + rect.height;
-      const travelled = viewport - rect.top;
-
-      setProgress(Math.min(1, Math.max(0, travelled / total)));
-    };
-
-    const onScroll = () => {
-      if (frameRef.current === null) {
-        frameRef.current = window.requestAnimationFrame(update);
-      }
-    };
-
-    update();
-
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', update);
-
-    return () => {
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', update);
-
-      if (frameRef.current !== null) {
-        window.cancelAnimationFrame(frameRef.current);
-      }
-    };
-  }, []);
-
-  const imageScale = 1.04 + progress * 0.06;
-  const imageY = (progress - 0.5) * -22;
-  const contentY = Math.max(0, 1 - progress * 1.8) * 34;
-  const contentOpacity = Math.min(
-    1,
-    Math.max(0, (progress - 0.08) / 0.3),
-  );
-
   return (
     <section
-      ref={sectionRef}
-      aria-labelledby="final-statement-title"
-      className="relative isolate min-h-[88svh] overflow-hidden border-y border-[color:var(--vds-border)] vds-section sm:min-h-[92svh] lg:min-h-[100svh]"
+      aria-labelledby="confidence-title"
+      className="border-y border-[color:var(--vds-border)] bg-[#0c0906]"
     >
-      <div
-        className="absolute inset-0"
-        style={{
-          transform: `translate3d(0, ${imageY}px, 0) scale(${imageScale})`,
-        }}
-      >
-        <Image
-          src="/demo/lifestyle/vip-airport-transfer.jpg"
-          alt=""
-          fill
-          sizes="100vw"
-          className="object-cover object-center"
-        />
-      </div>
+      <div className="shell py-20 sm:py-24 lg:py-32">
+        <div className="grid gap-12 lg:grid-cols-[0.9fr_1.4fr] lg:gap-20">
+          <div className="lg:sticky lg:top-28 lg:self-start">
+            <p className="font-data text-[0.62rem] uppercase tracking-[0.2em] text-[color:var(--vds-brand-secondary)]">
+              Before you buy
+            </p>
 
-      <div
-        className="absolute inset-0 bg-[#0C0906]/30"
-        aria-hidden="true"
-      />
+            <h2
+              id="confidence-title"
+              className="mt-4 max-w-xl font-display text-[clamp(3.8rem,8vw,7rem)] leading-[0.82] tracking-[-0.055em]"
+            >
+              Buy with
+              <br />
+              more confidence
+            </h2>
 
-      <div
-        className="absolute inset-0 bg-gradient-to-b from-[#0C0906]/80 via-[#0C0906]/10 to-[#0C0906]/95"
-        aria-hidden="true"
-      />
+            <p className="mt-7 max-w-md font-sans text-base leading-relaxed text-[color:var(--vds-text-muted)] sm:text-lg">
+              Everything you need to move from browsing to a decision you feel
+              good about
+            </p>
 
-      <div
-        className="absolute inset-0 bg-[radial-gradient(ellipse_70%_75%_at_50%_48%,transparent_8%,rgba(5,10,22,0.2)_62%,rgba(5,10,22,0.72)_100%)]"
-        aria-hidden="true"
-      />
+            <Link
+              href="/cars"
+              className="group mt-8 inline-flex items-center gap-3 border-b border-[color:var(--vds-border)] pb-2 font-data text-[0.62rem] uppercase tracking-[0.16em] transition-colors hover:border-[color:var(--vds-brand-secondary)] hover:text-[color:var(--vds-brand-secondary)] focus-visible:border-[color:var(--vds-brand-secondary)] focus-visible:text-[color:var(--vds-brand-secondary)]"
+            >
+              Start exploring
+              <ArrowUpRight
+                className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                aria-hidden="true"
+              />
+            </Link>
+          </div>
 
-      <div className="shell relative flex min-h-[88svh] flex-col justify-between py-8 sm:min-h-[92svh] sm:py-10 lg:min-h-[100svh] lg:py-12">
-        <div
-          className="max-w-6xl pt-8 sm:pt-12 lg:pt-16"
-          style={{
-            opacity: contentOpacity,
-            transform: `translate3d(0, ${contentY}px, 0)`,
-          }}
-        >
-          <h2
-            id="final-statement-title"
-            className="max-w-6xl font-display text-[clamp(4.5rem,13vw,12rem)] font-medium uppercase leading-[0.72] tracking-[-0.065em] text-[color:var(--vds-text)]"
-          >
-            Ready
-            <br />
-            when you
-            <br />
-            are
-          </h2>
-        </div>
+          <div className="grid gap-px overflow-hidden border border-[color:var(--vds-border)] bg-[color:var(--vds-border)] sm:grid-cols-2">
+            {CONFIDENCE_POINTS.map((point) => {
+              const Icon = point.icon;
 
-        <div
-          className="flex flex-col items-start gap-8 pb-4 sm:flex-row sm:items-end sm:justify-between sm:gap-12 sm:pb-8 lg:pb-10"
-          style={{
-            opacity: Math.min(
-              1,
-              Math.max(0, (progress - 0.25) / 0.3),
-            ),
-            transform: `translate3d(0, ${Math.max(0, 1 - progress * 1.5) * 24}px, 0)`,
-          }}
-        >
-          <p className="max-w-xl font-display text-[clamp(1.7rem,3.5vw,3.25rem)] leading-[0.95] tracking-[-0.025em] text-[color:var(--vds-text)]">
-            Your next drive is closer than you think
-          </p>
+              return (
+                <Link
+                  key={point.number}
+                  href={point.href}
+                  className="group relative flex min-h-[19rem] flex-col justify-between bg-[#0f0c09] p-6 transition-colors duration-500 hover:bg-[#15110d] focus-visible:bg-[#15110d] sm:min-h-[23rem] sm:p-8 lg:p-9"
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <span className="font-data text-[0.58rem] tracking-[0.16em] text-[color:var(--vds-text-muted)]">
+                      {point.number}
+                    </span>
 
-          <Link
-            href="/cars"
-            className="group flex shrink-0 items-center gap-3 border-b border-chrome/40 pb-2 font-data text-[0.62rem] uppercase tracking-[0.16em] text-[color:var(--vds-text)] transition-colors hover:border-volt hover:text-[color:var(--vds-brand-secondary)] focus-visible:border-volt focus-visible:text-[color:var(--vds-brand-secondary)]"
-          >
-            Explore the garage
-            <ArrowUpRight
-              className="h-4 w-4 transition-transform duration-500 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-              aria-hidden="true"
-            />
-          </Link>
+                    <span className="flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--vds-border)] transition-all duration-300 group-hover:border-[color:var(--vds-brand-secondary)] group-hover:bg-[color:var(--vds-brand-secondary)] group-hover:text-[#0c0906]">
+                      <Icon
+                        className="h-4 w-4"
+                        strokeWidth={1.5}
+                        aria-hidden="true"
+                      />
+                    </span>
+                  </div>
+
+                  <div>
+                    <h3 className="max-w-xs font-display text-3xl leading-[0.92] tracking-[-0.025em] sm:text-4xl">
+                      {point.title}
+                    </h3>
+
+                    <p className="mt-4 max-w-sm font-sans text-sm leading-relaxed text-[color:var(--vds-text-secondary)]">
+                      {point.description}
+                    </p>
+
+                    <span className="mt-6 inline-flex items-center gap-2 border-b border-white/20 pb-1.5 font-data text-[0.56rem] uppercase tracking-[0.16em] text-[color:var(--vds-text-secondary)] transition-colors group-hover:border-[color:var(--vds-brand-secondary)] group-hover:text-[color:var(--vds-brand-secondary)]">
+                      {point.action}
+                      <ArrowUpRight
+                        className="h-3.5 w-3.5 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                        aria-hidden="true"
+                      />
+                    </span>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>

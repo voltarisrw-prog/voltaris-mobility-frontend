@@ -2,13 +2,34 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+
+const MOVES = [
+  {
+    number: '01',
+    title: 'Kigali',
+    description: 'Efficient electric and hybrid vehicles for everyday city driving',
+    href: '/cars?location=kigali',
+  },
+  {
+    number: '02',
+    title: 'Across Rwanda',
+    description: 'Comfortable choices for longer journeys between cities and districts',
+    href: '/cars',
+  },
+  {
+    number: '03',
+    title: 'Electric future',
+    description: 'Explore a new generation of vehicles built for cleaner everyday movement',
+    href: '/cars?fuel=electric',
+  },
+] as const;
 
 export function RwandaInMotion() {
   const sectionRef = useRef<HTMLElement>(null);
   const frameRef = useRef<number | null>(null);
-  const [progress, setProgress] = useState(0);
+  const [progress, setProgress] = useState(0.5);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -18,7 +39,9 @@ export function RwandaInMotion() {
       '(prefers-reduced-motion: reduce)',
     ).matches;
 
-    if (reducedMotion) return;
+    if (reducedMotion) {
+      return;
+    }
 
     const update = () => {
       frameRef.current = null;
@@ -52,19 +75,14 @@ export function RwandaInMotion() {
     };
   }, []);
 
-  const imageScale = 1.02 + progress * 0.06;
-  const imageY = (progress - 0.5) * -20;
-  const contentY = Math.max(0, 1 - progress * 1.7) * 34;
-  const contentOpacity = Math.min(
-    1,
-    Math.max(0, (progress - 0.12) / 0.34),
-  );
+  const imageScale = 1.02 + progress * 0.05;
+  const imageY = (progress - 0.5) * -18;
 
   return (
     <section
       ref={sectionRef}
       aria-labelledby="rwanda-in-motion-title"
-      className="relative isolate min-h-[78svh] overflow-hidden border-y border-[color:var(--vds-border)] vds-section sm:min-h-[86svh] lg:min-h-[92svh]"
+      className="relative isolate overflow-hidden border-y border-[color:var(--vds-border)] bg-[#0c0906]"
     >
       <div
         className="absolute inset-0"
@@ -82,83 +100,79 @@ export function RwandaInMotion() {
       </div>
 
       <div
-        className="absolute inset-0 bg-[#0C0906]/35"
+        className="absolute inset-0 bg-[#0c0906]/55"
         aria-hidden="true"
       />
 
       <div
-        className="absolute inset-0 bg-gradient-to-b from-[#0C0906]/80 via-[#0C0906]/15 to-[#0C0906]/95"
+        className="absolute inset-0 bg-gradient-to-b from-[#0c0906]/85 via-[#0c0906]/30 to-[#0c0906]/95"
         aria-hidden="true"
       />
 
       <div
-        className="absolute inset-0 bg-[radial-gradient(ellipse_70%_75%_at_55%_48%,transparent_8%,rgba(5,10,22,0.28)_68%,rgba(5,10,22,0.78)_100%)]"
+        className="absolute inset-0 bg-[radial-gradient(ellipse_70%_70%_at_55%_45%,transparent_10%,rgba(5,10,22,0.35)_68%,rgba(5,10,22,0.8)_100%)]"
         aria-hidden="true"
       />
 
-      <div className="shell relative flex min-h-[78svh] flex-col justify-between py-8 sm:min-h-[86svh] sm:py-10 lg:min-h-[92svh] lg:py-12">
-        <div
-          className="max-w-5xl"
-          style={{
-            opacity: contentOpacity,
-            transform: `translate3d(0, ${contentY}px, 0)`,
-          }}
-        >
+      <div className="shell relative py-20 sm:py-24 lg:py-32">
+        <div className="max-w-5xl">
+          <p className="font-data text-[0.62rem] uppercase tracking-[0.2em] text-[color:var(--vds-brand-secondary)]">
+            Rwanda
+          </p>
+
           <h2
             id="rwanda-in-motion-title"
-            className="max-w-5xl font-display text-[clamp(4rem,12vw,11rem)] font-medium uppercase leading-[0.76] tracking-[-0.06em] text-[color:var(--vds-text)]"
+            className="mt-4 max-w-5xl font-display text-[clamp(3.8rem,10vw,9rem)] leading-[0.8] tracking-[-0.055em] text-[color:var(--vds-text)]"
           >
-            Rwanda
+            Made for how
             <br />
-            in motion
+            Rwanda moves
           </h2>
+
+          <p className="mt-7 max-w-xl font-sans text-base leading-relaxed text-[color:var(--vds-text-secondary)] sm:text-lg">
+            Discover electric and hybrid vehicles around the places you go,
+            the journeys you make and the way you want to move
+          </p>
         </div>
 
-        <div
-          className="flex items-end justify-between gap-8"
-          style={{
-            opacity: Math.min(
-              1,
-              Math.max(0, (progress - 0.28) / 0.32),
-            ),
-            transform: `translate3d(0, ${Math.max(0, 1 - progress * 1.5) * 24}px, 0)`,
-          }}
-        >
-          <div className="max-w-xl">
-            <p className="font-display text-[clamp(1.7rem,3.5vw,3.25rem)] leading-[0.95] tracking-[-0.025em] text-[color:var(--vds-text)]">
-              Vehicles for the roads you know
-              <br className="hidden sm:block" />
-              and the roads still ahead
-            </p>
+        <div className="mt-14 grid gap-px overflow-hidden border border-[color:var(--vds-border)] bg-[color:var(--vds-border)] md:grid-cols-3 lg:mt-20">
+          {MOVES.map((move) => (
+            <Link
+              key={move.title}
+              href={move.href}
+              className="group relative min-h-[16rem] bg-[#0c0906]/75 p-6 backdrop-blur-sm transition-colors duration-500 hover:bg-[#15110d]/90 sm:min-h-[18rem] sm:p-8"
+            >
+              <div className="flex h-full flex-col justify-between">
+                <div className="flex items-start justify-between gap-4">
+                  <span className="font-data text-[0.58rem] tracking-[0.16em] text-[color:var(--vds-text-muted)]">
+                    {move.number}
+                  </span>
 
-            <p className="mt-6 max-w-md font-data text-[0.62rem] uppercase leading-[1.6] tracking-[0.14em] text-[color:var(--vds-text-secondary)] sm:text-[0.68rem]">
-              Voltaris connects people with vehicles that fit the way
-              Rwanda moves — from everyday journeys to moments that matter.
-            </p>
-          </div>
+                  <span className="flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--vds-border)] transition-all duration-300 group-hover:border-[color:var(--vds-brand-secondary)] group-hover:bg-[color:var(--vds-brand-secondary)] group-hover:text-[#0c0906]">
+                    <ArrowRight
+                      className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"
+                      aria-hidden="true"
+                    />
+                  </span>
+                </div>
 
-          <Link
-            href="/about"
-            className="group hidden shrink-0 items-center gap-3 border-b border-[color:var(--vds-border)] vds-section pb-2 font-data text-[0.62rem] uppercase tracking-[0.16em] text-[color:var(--vds-text)] transition-colors hover:border-volt hover:text-[color:var(--vds-brand-secondary)] focus-visible:border-volt focus-visible:text-[color:var(--vds-brand-secondary)] sm:flex"
-          >
-            Discover Voltaris
-            <ArrowUpRight
-              className="h-4 w-4 transition-transform duration-500 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-              aria-hidden="true"
-            />
-          </Link>
+                <div>
+                  <h3 className="font-display text-4xl leading-none tracking-[-0.03em] sm:text-5xl">
+                    {move.title}
+                  </h3>
+
+                  <p className="mt-4 max-w-sm font-sans text-sm leading-relaxed text-[color:var(--vds-text-secondary)]">
+                    {move.description}
+                  </p>
+
+                  <span className="mt-5 inline-flex border-b border-white/20 pb-1.5 font-data text-[0.56rem] uppercase tracking-[0.16em] text-[color:var(--vds-text-secondary)] transition-colors group-hover:border-[color:var(--vds-brand-secondary)] group-hover:text-[color:var(--vds-brand-secondary)]">
+                    Explore vehicles
+                  </span>
+                </div>
+              </div>
+            </Link>
+          ))}
         </div>
-
-        <Link
-          href="/about"
-          className="group flex w-fit items-center gap-3 border-b border-[color:var(--vds-border)] vds-section pb-2 font-data text-[0.62rem] uppercase tracking-[0.16em] text-[color:var(--vds-text)] transition-colors hover:border-volt hover:text-[color:var(--vds-brand-secondary)] focus-visible:border-volt focus-visible:text-[color:var(--vds-brand-secondary)] sm:hidden"
-        >
-          Discover Voltaris
-          <ArrowUpRight
-            className="h-4 w-4"
-            aria-hidden="true"
-          />
-        </Link>
       </div>
     </section>
   );
