@@ -11,8 +11,11 @@ export const nav = {
   primary: [
     { href: '/buy', label: 'Buy' },
     { href: '/rent', label: 'Rent' },
+    { href: '/test-drive', label: 'Test Drive' },
     { href: '/compare', label: 'Compare' },
     { href: '/sell', label: 'Sell' },
+    { href: '/about', label: 'About Us' },
+    { href: '/blog', label: 'Blog' },
   ],
   /**
    * Mobile bottom bar. Six items, tightened to a 2.75rem icon column so the row

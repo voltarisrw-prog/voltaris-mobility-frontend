@@ -74,7 +74,7 @@ export function SiteHeader() {
             />
           </Link>
 
-          <nav aria-label="Main" className="hidden items-center gap-6 xl:gap-8 lg:flex">
+          <nav aria-label="Main" className="hidden items-center gap-4 xl:gap-6 lg:flex">
             {nav.primary.map((item) => {
               const isCompare = item.href.split('?')[0] === '/compare';
               const href = isCompare ? compareHref : item.href;
