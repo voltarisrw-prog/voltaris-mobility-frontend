@@ -131,6 +131,28 @@ export async function resolveMock<T>(
   }
 
   // -------------------------------------------------------------------------
+  // rentals
+
+  if (path === '/rentals/locations' && method === 'GET') {
+    return [
+      { id: 'kigali-kacyiru', name: 'Kigali — Kacyiru', city: 'Kigali' },
+      { id: 'kigali-kiyovu', name: 'Kigali — Kiyovu', city: 'Kigali' },
+      { id: 'kigali-kimihurura', name: 'Kigali — Kimihurura', city: 'Kigali' },
+      { id: 'kigali-kanombe-airport', name: 'Kigali — Kanombe (Airport)', city: 'Kigali' },
+    ] as T;
+  }
+
+  const rentalQuote = path.match(/^\/vehicles\/([^/]+)\/rental-quote$/);
+  if (rentalQuote?.[1] && method === 'GET') {
+    return rentalQuoteData(
+      decodeURIComponent(rentalQuote[1]),
+      str(query.location),
+      str(query.start),
+      str(query.end),
+    ) as T;
+  }
+
+  // -------------------------------------------------------------------------
   // /me
 
   if (path === '/me' && method === 'GET') {
@@ -228,6 +250,93 @@ function page<I>(items: I[]): Page<I> {
 }
 
 // ---------------------------------------------------------------------------
+// rentals
+
+function rentalQuoteData(
+  vehicleId: string,
+  location: string | undefined,
+  start: string | undefined,
+  end: string | undefined,
+) {
+  const vehicle = MOCK_VEHICLES.find((item) => item.id === vehicleId);
+
+  if (!vehicle || vehicle.listing_mode === 'sale' || vehicle.rental_price_per_day == null) {
+    return {
+      vehicle_id: vehicleId,
+      location_id: location ?? '',
+      start_date: start ?? '',
+      end_date: end ?? '',
+      nights: 0,
+      daily_rate: 0,
+      currency: vehicle?.currency ?? 'RWF',
+      lines: [],
+      total: 0,
+      available: false,
+      unavailable_reason: 'Vehicle is not available for rental',
+    };
+  }
+
+  if (!location || !start || !end) {
+    return {
+      vehicle_id: vehicle.id,
+      location_id: location ?? '',
+      start_date: start ?? '',
+      end_date: end ?? '',
+      nights: 0,
+      daily_rate: vehicle.rental_price_per_day,
+      currency: vehicle.currency,
+      lines: [],
+      total: 0,
+      available: false,
+      unavailable_reason: 'Rental location and dates are required',
+    };
+  }
+
+  const startDate = new Date(`${start}T00:00:00Z`);
+  const endDate = new Date(`${end}T00:00:00Z`);
+  const millisecondsPerDay = 24 * 60 * 60 * 1000;
+  const nights = Math.ceil((endDate.getTime() - startDate.getTime()) / millisecondsPerDay);
+
+  const locationMatches = vehicle.location.slug === location;
+
+  const reserved = DEMO_RESERVATIONS.some((reservation) => {
+    if (reservation.vehicle.id !== vehicle.id) return false;
+
+    const pickup = new Date(`${reservation.pickup_date}T00:00:00Z`);
+    const returned = new Date(`${reservation.return_date}T00:00:00Z`);
+
+    return startDate < returned && endDate > pickup;
+  });
+
+  const available = nights > 0 && locationMatches && !reserved;
+  const total = available ? nights * vehicle.rental_price_per_day : 0;
+
+  return {
+    vehicle_id: vehicle.id,
+    location_id: location,
+    start_date: start,
+    end_date: end,
+    nights: Math.max(nights, 0),
+    daily_rate: vehicle.rental_price_per_day,
+    currency: vehicle.currency,
+    lines: available
+      ? [{ label: `${nights} rental day${nights === 1 ? '' : 's'}`, amount: total }]
+      : [],
+    total,
+    available,
+    ...(available
+      ? {}
+      : {
+          unavailable_reason: !locationMatches
+            ? 'Vehicle is not serviced at this rental location'
+            : reserved
+              ? 'Vehicle is already reserved for part of this rental window'
+              : 'Choose a valid rental window',
+        }),
+  };
+}
+
+// ---------------------------------------------------------------------------
 // vehicles
 
 function str(value: unknown): string | undefined {
@@ -274,6 +383,46 @@ function listVehicles(query: Record<string, unknown>): Page<VehicleSummary> {
   const mode = str(query.mode);
   if (mode === 'rental') items = items.filter((v) => v.listing_mode !== 'sale');
   if (mode === 'sale') items = items.filter((v) => v.listing_mode !== 'rental');
+
+  // Demo rental search: only return vehicles that are rentable and
+  // available for the requested pickup location and date window.
+  const rentalLocation = str(query.rentalLocation);
+  const rentalStart = str(query.rentalStart);
+  const rentalEnd = str(query.rentalEnd);
+
+  if (rentalLocation) {
+    items = items.filter((v) =>
+      v.listing_mode !== 'sale' &&
+      v.rental_price_per_day != null &&
+      v.location.slug === rentalLocation
+    );
+  }
+
+  if (rentalStart && rentalEnd) {
+    const start = new Date(rentalStart).getTime();
+    const end = new Date(rentalEnd).getTime();
+
+    if (Number.isFinite(start) && Number.isFinite(end) && end >= start) {
+      const activeReservations = DEMO_RESERVATIONS.filter((reservation) => {
+        const pickup = new Date(reservation.pickup_date).getTime();
+        const returned = new Date(reservation.return_date).getTime();
+
+        return (
+          Number.isFinite(pickup) &&
+          Number.isFinite(returned) &&
+          start < returned &&
+          end > pickup
+        );
+      });
+
+      items = items.filter(
+        (vehicle) =>
+          vehicle.listing_mode !== 'sale' &&
+          vehicle.rental_price_per_day != null &&
+          !activeReservations.some((reservation) => reservation.vehicle.id === vehicle.id),
+      );
+    }
+  }
 
   const minPrice = num(query.minPrice);
   if (minPrice !== undefined) items = items.filter((v) => (v.price ?? 0) >= minPrice);
