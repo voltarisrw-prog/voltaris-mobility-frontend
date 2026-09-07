@@ -80,7 +80,7 @@ export function ContactHome() {
             aria-hidden="true"
           />
 
-          <div className="relative rounded-[1.75rem] border border-black/[0.08] bg-white p-5 shadow-[0_30px_90px_-28px_rgba(0,0,0,0.38)] sm:p-8 lg:p-10">
+          <div className="relative rounded-[1.75rem] border border-black/[0.08] bg-white p-5 text-[#171411] [color-scheme:light] shadow-[0_30px_90px_-28px_rgba(0,0,0,0.38)] sm:p-8 lg:p-10">
             {reference ? (
               <div className="flex min-h-[32rem] flex-col justify-center">
                 <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#171411] text-white">
