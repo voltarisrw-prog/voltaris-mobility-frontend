@@ -95,7 +95,7 @@ export function PowertrainShowcase() {
                 href={href}
                 className="group relative isolate min-h-[34rem] overflow-hidden bg-[#15110d] sm:min-h-[42rem] lg:min-h-[50rem]"
               >
-                <div className="absolute inset-0 -z-10 overflow-hidden">
+                <div className="absolute inset-0 z-0 overflow-hidden">
                   <img
                     src={vehicle.primary_image!.card}
                     alt={`${vehicle.make} ${vehicle.model}`}
@@ -105,13 +105,13 @@ export function PowertrainShowcase() {
                   />
                 </div>
 
-                <div className="absolute inset-0 -z-[5] bg-black/10" />
+                <div className="absolute inset-0 z-[1] bg-black/10" />
 
-                <div className="absolute inset-0 -z-[4] bg-gradient-to-b from-black/30 via-transparent to-[#080604]" />
+                <div className="absolute inset-0 z-[2] bg-gradient-to-b from-black/30 via-transparent to-[#080604]" />
 
-                <div className="absolute inset-x-0 bottom-0 -z-[3] h-[55%] bg-gradient-to-t from-[#080604] via-[#080604]/65 to-transparent" />
+                <div className="absolute inset-x-0 bottom-0 z-[3] h-[55%] bg-gradient-to-t from-[#080604] via-[#080604]/65 to-transparent" />
 
-                <div className="absolute inset-x-0 top-0 flex items-start justify-between p-6 sm:p-8 lg:p-10">
+                <div className="absolute inset-x-0 top-0 z-10 flex items-start justify-between p-6 sm:p-8 lg:p-10">
                   <span className="font-data text-[0.58rem] uppercase tracking-[0.2em] text-white/55">
                     {number} / 02
                   </span>
@@ -121,7 +121,7 @@ export function PowertrainShowcase() {
                   </span>
                 </div>
 
-                <div className="absolute inset-x-0 bottom-0 p-6 sm:p-8 lg:p-10">
+                <div className="absolute inset-x-0 bottom-0 z-10 p-6 sm:p-8 lg:p-10">
                   <div className="max-w-2xl">
                     <p className="font-data text-[0.58rem] uppercase tracking-[0.2em] text-[color:var(--vds-brand-secondary)]">
                       {vehicle.make}
