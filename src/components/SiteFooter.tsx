@@ -160,9 +160,9 @@ export function SiteFooter() {
             </p>
 
             <p>
-              Design &amp; Development by{' '}
+              Designed &amp; Developed by{' '}
               <span className="text-white/60">
-                Patrice IRADUKUNDA
+                <a href="https://www.linkedin.com/in/patrice-iradukunda-74931827a/" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4 hover:opacity-70">Patrice IRADUKUNDA</a>
               </span>
             </p>
 
