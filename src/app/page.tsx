@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { HeroMedia } from '@/features/home/HeroMedia';
 import { ShowcaseSlider } from '@/features/home/ShowcaseSlider';
+import { UniversalSearch } from '@/features/vehicles/UniversalSearch';
 import { RoadTransition } from '@/features/home/RoadTransition';
 import { WayIn } from '@/features/home/WayIn';
 import { Garage } from '@/features/home/Garage';
@@ -60,20 +61,57 @@ export default async function HomePage() {
       {/* 01 — HERO ------------------------------------------------------- */}
       <section className="relative isolate overflow-hidden">
         <HeroMedia />
-        <div className="shell relative flex min-h-[calc(100svh-4rem)] flex-col items-center justify-end py-12 pb-20 text-center sm:min-h-[88svh] sm:justify-end sm:py-20 sm:pb-20">
-          <div className="max-w-5xl animate-rise-in pb-20 sm:pb-24">
+        <div className="shell relative flex min-h-[calc(100svh-4rem)] flex-col items-center justify-end py-10 pb-16 text-center sm:min-h-[88svh] sm:py-16 sm:pb-20 lg:pb-24">
+          <div className="max-w-5xl animate-rise-in pb-4 sm:pb-6">
+            <p className="mb-5 font-data text-[0.65rem] uppercase tracking-[0.2em] text-[color:var(--vds-brand-secondary)] sm:mb-6">
+              {hero.eyebrow}
+            </p>
+
             <h1 className="mt-0 max-w-5xl font-display text-hero">{hero.headline}</h1>
 
-            <div className="mt-8 flex w-full flex-col items-stretch justify-center gap-2.5 sm:mt-9 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
+            <p className="mx-auto mt-5 max-w-2xl font-sans text-base leading-relaxed text-[color:var(--vds-text-muted)] sm:mt-6 sm:text-lg">
+              {hero.sub}
+            </p>
+
+            <div className="mt-8 flex w-full flex-col items-stretch justify-center gap-3 sm:mt-9 sm:w-auto sm:flex-row sm:items-center">
               <Link
                 href={hero.primaryCta.href}
-                className="bg-volt px-7 py-4 font-data text-eyebrow uppercase text-surface transition-colors hover:bg-[color:var(--vds-brand-secondary)]"
+                className="group inline-flex items-center justify-center gap-3 bg-volt px-7 py-4 font-data text-eyebrow uppercase tracking-[0.08em] text-surface transition-all duration-300 hover:bg-[color:var(--vds-brand-secondary)]"
               >
                 {hero.primaryCta.label}
+                <ArrowRight
+                  className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"
+                  aria-hidden="true"
+                />
+              </Link>
+
+              <Link
+                href={hero.secondaryCta.href}
+                className="inline-flex items-center justify-center border border-[color:var(--vds-text)]/40 px-7 py-4 font-data text-eyebrow uppercase tracking-[0.08em] text-[color:var(--vds-text)] transition-all duration-300 hover:border-[color:var(--vds-text)] hover:bg-[color:var(--vds-text)] hover:text-[color:var(--vds-bg)]"
+              >
+                {hero.secondaryCta.label}
               </Link>
             </div>
           </div>
 
+        </div>
+      </section>
+
+      {/* 02 — MARKETPLACE SEARCH -------------------------------------------- */}
+      <section className="border-y border-hairline bg-surface">
+        <div className="shell py-10 sm:py-14 lg:py-16">
+          <div className="grid gap-8 lg:grid-cols-[0.8fr_1.6fr] lg:items-end lg:gap-16">
+            <div>
+              <p className="font-data text-eyebrow uppercase tracking-[0.16em] text-volt">
+                Find your next vehicle
+              </p>
+              <h2 className="mt-3 max-w-md text-3xl sm:text-4xl lg:text-5xl">
+                Start with what you want to drive
+              </h2>
+            </div>
+
+            <UniversalSearch />
+          </div>
         </div>
       </section>
 
@@ -101,10 +139,10 @@ export default async function HomePage() {
                 <div className="flex flex-col gap-6 border-b border-[color:var(--vds-border)] pb-7 sm:flex-row sm:items-end sm:justify-between sm:gap-10">
                   <div>
                     <p className="font-data text-[0.62rem] uppercase tracking-[0.2em] text-[color:var(--vds-brand-secondary)]">
-                      Live showroom
+                      Live inventory
                     </p>
                     <p className="mt-3 max-w-md font-display text-xl leading-tight text-[color:var(--vds-text)] sm:text-2xl">
-                      Vehicles worth looking at twice.
+                      Electric and hybrid vehicles currently available on Voltaris
                     </p>
                   </div>
 
@@ -112,7 +150,7 @@ export default async function HomePage() {
                     href="/cars"
                     className="group inline-flex w-fit items-center gap-3 border-b border-[color:var(--vds-border)] pb-2 font-data text-[0.65rem] uppercase tracking-[0.16em] text-[color:var(--vds-text)] transition-colors hover:border-volt hover:text-[color:var(--vds-brand-secondary)]"
                   >
-                    View all
+                    Explore all vehicles
                     <ArrowRight
                       className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1"
                       aria-hidden="true"

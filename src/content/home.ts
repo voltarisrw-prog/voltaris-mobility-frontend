@@ -34,21 +34,20 @@ export const nav = {
 };
 
 export const hero = {
-  eyebrow: 'Born in Kigali',
-  headline: 'Find your next drive',
-  sub: 'Buy. Rent. Sell. Explore.',
-  primaryCta: { label: 'Explore cars', href: '/cars' },
-  secondaryCta: { label: 'Sell your car', href: '/sell' },
+  eyebrow: 'Electric + Hybrid mobility',
+  headline: 'Move differently',
+  sub: 'Electric and hybrid vehicles for the way you live, work, and move',
+  primaryCta: { label: 'Buy a vehicle', href: '/buy' },
+  secondaryCta: { label: 'Rent a vehicle', href: '/rent' },
   searchPlaceholder: 'What are you looking for?',
-  searchHint: 'Try a make, a model, a budget, or a body type',
+  searchHint: 'Search by make, model, budget, or body type',
   chips: [
     { label: 'Electric', href: '/cars?fuel=electric' },
+    { label: 'Hybrid', href: '/cars?fuel=hybrid' },
     { label: 'SUVs', href: '/cars?body=suv' },
     { label: 'Sedans', href: '/cars?body=sedan' },
     { label: 'Under RWF 30M', href: '/cars?maxPrice=30000000' },
-    { label: 'Used', href: '/cars?condition=used' },
     { label: 'Rentals', href: '/rent' },
-    { label: 'New arrivals', href: '/cars?sort=newest' },
   ],
 };
 
