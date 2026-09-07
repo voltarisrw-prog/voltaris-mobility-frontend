@@ -2,120 +2,47 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { ArrowUpRight } from 'lucide-react';
+import { useState } from 'react';
+import { DEMO_LIBRARY_IMAGES } from '@/lib/mock/demoLibraryImages';
 
 const MOVES = [
   {
     number: '01',
     title: 'Kigali',
-    description: 'Efficient electric and hybrid vehicles for everyday city driving',
+    description:
+      'Efficient electric and hybrid vehicles for everyday city driving',
     href: '/cars?location=kigali',
+    image: DEMO_LIBRARY_IMAGES[4]!,
   },
   {
     number: '02',
     title: 'Across Rwanda',
-    description: 'Comfortable choices for longer journeys between cities and districts',
+    description:
+      'Comfortable choices for longer journeys between cities and districts',
     href: '/cars',
+    image: DEMO_LIBRARY_IMAGES[31]!,
   },
   {
     number: '03',
     title: 'Electric future',
-    description: 'Explore a new generation of vehicles built for cleaner everyday movement',
+    description:
+      'Explore a new generation of vehicles built for cleaner everyday movement',
     href: '/cars?fuel=electric',
+    image: DEMO_LIBRARY_IMAGES[45]!,
   },
 ] as const;
 
 export function RwandaInMotion() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const frameRef = useRef<number | null>(null);
-  const [progress, setProgress] = useState(0.5);
-
-  useEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return;
-
-    const reducedMotion = window.matchMedia(
-      '(prefers-reduced-motion: reduce)',
-    ).matches;
-
-    if (reducedMotion) {
-      return;
-    }
-
-    const update = () => {
-      frameRef.current = null;
-
-      const rect = section.getBoundingClientRect();
-      const viewport = window.innerHeight;
-      const total = viewport + rect.height;
-      const travelled = viewport - rect.top;
-
-      setProgress(Math.min(1, Math.max(0, travelled / total)));
-    };
-
-    const onScroll = () => {
-      if (frameRef.current === null) {
-        frameRef.current = window.requestAnimationFrame(update);
-      }
-    };
-
-    update();
-
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', update);
-
-    return () => {
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', update);
-
-      if (frameRef.current !== null) {
-        window.cancelAnimationFrame(frameRef.current);
-      }
-    };
-  }, []);
-
-  const imageScale = 1.02 + progress * 0.05;
-  const imageY = (progress - 0.5) * -18;
+  const [active, setActive] = useState(0);
 
   return (
     <section
-      ref={sectionRef}
       aria-labelledby="rwanda-in-motion-title"
       className="relative isolate overflow-hidden border-y border-[color:var(--vds-border)] bg-[#0c0906]"
     >
-      <div
-        className="absolute inset-0"
-        style={{
-          transform: `translate3d(0, ${imageY}px, 0) scale(${imageScale})`,
-        }}
-      >
-        <Image
-          src="/demo/lifestyle/villa-sunset-charging.jpg"
-          alt=""
-          fill
-          sizes="100vw"
-          className="object-cover object-center"
-        />
-      </div>
-
-      <div
-        className="absolute inset-0 bg-[#0c0906]/55"
-        aria-hidden="true"
-      />
-
-      <div
-        className="absolute inset-0 bg-gradient-to-b from-[#0c0906]/85 via-[#0c0906]/30 to-[#0c0906]/95"
-        aria-hidden="true"
-      />
-
-      <div
-        className="absolute inset-0 bg-[radial-gradient(ellipse_70%_70%_at_55%_45%,transparent_10%,rgba(5,10,22,0.35)_68%,rgba(5,10,22,0.8)_100%)]"
-        aria-hidden="true"
-      />
-
-      <div className="shell relative py-20 sm:py-24 lg:py-32">
-        <div className="max-w-5xl">
+      <div className="shell py-16 sm:py-20 lg:py-28">
+        <header className="max-w-5xl">
           <p className="font-data text-[0.62rem] uppercase tracking-[0.2em] text-[color:var(--vds-brand-secondary)]">
             Rwanda
           </p>
@@ -129,49 +56,105 @@ export function RwandaInMotion() {
             Rwanda moves
           </h2>
 
-          <p className="mt-7 max-w-xl font-sans text-base leading-relaxed text-[color:var(--vds-text-secondary)] sm:text-lg">
+          <p className="mt-7 max-w-2xl font-sans text-base leading-relaxed text-[color:var(--vds-text-secondary)] sm:text-lg">
             Discover electric and hybrid vehicles around the places you go,
             the journeys you make and the way you want to move
           </p>
-        </div>
+        </header>
 
-        <div className="mt-14 grid gap-px overflow-hidden border border-[color:var(--vds-border)] bg-[color:var(--vds-border)] md:grid-cols-3 lg:mt-20">
-          {MOVES.map((move) => (
-            <Link
-              key={move.title}
-              href={move.href}
-              className="group relative min-h-[16rem] bg-[#0c0906]/75 p-6 backdrop-blur-sm transition-colors duration-500 hover:bg-[#15110d]/90 sm:min-h-[18rem] sm:p-8"
-            >
-              <div className="flex h-full flex-col justify-between">
-                <div className="flex items-start justify-between gap-4">
-                  <span className="font-data text-[0.58rem] tracking-[0.16em] text-[color:var(--vds-text-muted)]">
+        <div className="mt-14 grid gap-4 md:grid-cols-3 lg:mt-20">
+          {MOVES.map((move, index) => {
+            const isActive = active === index;
+
+            return (
+              <Link
+                key={move.title}
+                href={move.href}
+                onMouseEnter={() => setActive(index)}
+                onFocus={() => setActive(index)}
+                className="group relative min-h-[30rem] overflow-hidden border border-white/10 bg-[#0f0c09] outline-none sm:min-h-[34rem] lg:min-h-[40rem]"
+              >
+                <Image
+                  src={move.image}
+                  alt={`${move.title} vehicle selection`}
+                  fill
+                  priority={index === 0}
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                  className="object-cover object-center transition-transform duration-[1400ms] ease-out group-hover:scale-[1.07] group-focus-visible:scale-[1.07]"
+                />
+
+                <div
+                  className="absolute inset-0 transition-opacity duration-700"
+                  aria-hidden="true"
+                  style={{
+                    background:
+                      'linear-gradient(180deg, rgba(8,6,4,0.2) 0%, rgba(8,6,4,0.02) 35%, rgba(8,6,4,0.92) 100%)',
+                  }}
+                />
+
+                <div
+                  className={[
+                    'absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent transition-opacity duration-700',
+                    isActive ? 'opacity-100' : 'opacity-0',
+                  ].join(' ')}
+                  aria-hidden="true"
+                />
+
+                <div className="absolute inset-x-0 top-0 z-10 flex items-start justify-between p-5 sm:p-7">
+                  <span className="font-data text-[0.58rem] tracking-[0.18em] text-white/75">
                     {move.number}
                   </span>
 
-                  <span className="flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--vds-border)] transition-all duration-300 group-hover:border-[color:var(--vds-brand-secondary)] group-hover:bg-[color:var(--vds-brand-secondary)] group-hover:text-[#0c0906]">
-                    <ArrowRight
-                      className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"
+                  <span
+                    className={[
+                      'flex h-11 w-11 items-center justify-center rounded-full border backdrop-blur-sm transition-all duration-500 sm:h-12 sm:w-12',
+                      isActive
+                        ? 'border-[color:var(--vds-brand-secondary)] bg-[color:var(--vds-brand-secondary)] text-[#0c0906]'
+                        : 'border-white/25 bg-black/10 text-white group-hover:border-white',
+                    ].join(' ')}
+                  >
+                    <ArrowUpRight
+                      className={[
+                        'h-4 w-4 transition-transform duration-500',
+                        isActive
+                          ? 'rotate-0'
+                          : '-rotate-45 group-hover:rotate-0 group-focus-visible:rotate-0',
+                      ].join(' ')}
                       aria-hidden="true"
                     />
                   </span>
                 </div>
 
-                <div>
-                  <h3 className="font-display text-4xl leading-none tracking-[-0.03em] sm:text-5xl">
+                <div className="absolute inset-x-0 bottom-0 z-10 p-6 sm:p-8 lg:p-9">
+                  <p className="mb-3 font-data text-[0.56rem] uppercase tracking-[0.18em] text-white/55">
+                    Rwanda in motion
+                  </p>
+
+                  <h3 className="font-display text-5xl leading-[0.86] tracking-[-0.045em] text-white sm:text-6xl lg:text-7xl">
                     {move.title}
                   </h3>
 
-                  <p className="mt-4 max-w-sm font-sans text-sm leading-relaxed text-[color:var(--vds-text-secondary)]">
+                  <p className="mt-4 max-w-md font-sans text-sm leading-relaxed text-white/70 sm:text-base">
                     {move.description}
                   </p>
 
-                  <span className="mt-5 inline-flex border-b border-white/20 pb-1.5 font-data text-[0.56rem] uppercase tracking-[0.16em] text-[color:var(--vds-text-secondary)] transition-colors group-hover:border-[color:var(--vds-brand-secondary)] group-hover:text-[color:var(--vds-brand-secondary)]">
-                    Explore vehicles
-                  </span>
+                  <div className="mt-6 flex items-center justify-between border-t border-white/20 pt-4">
+                    <span className="font-data text-[0.56rem] uppercase tracking-[0.16em] text-white/55">
+                      {move.number} / 03
+                    </span>
+
+                    <span className="inline-flex items-center gap-2 font-data text-[0.58rem] uppercase tracking-[0.16em] text-white transition-colors group-hover:text-[color:var(--vds-brand-secondary)]">
+                      Explore vehicles
+                      <ArrowUpRight
+                        className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                        aria-hidden="true"
+                      />
+                    </span>
+                  </div>
                 </div>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            );
+          })}
         </div>
       </div>
     </section>
