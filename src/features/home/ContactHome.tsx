@@ -50,10 +50,10 @@ export function ContactHome() {
   });
 
   return (
-    <section className="border-t border-[color:var(--vds-border)] bg-[#f3eee7] py-20 text-[color:var(--vds-text)] sm:py-28 lg:py-36">
+    <section className="border-t border-[color:var(--vds-border)] bg-[#0c0906] py-20 text-[color:var(--vds-text)] sm:py-28 lg:py-36">
       <div className="mx-auto grid max-w-shell gap-10 px-5 sm:px-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-start lg:gap-16">
         <div className="max-w-xl lg:sticky lg:top-24">
-          <p className="font-data text-[0.68rem] uppercase tracking-[0.22em] text-[color:var(--vds-muted)]">
+          <p className="font-data text-[0.68rem] uppercase tracking-[0.22em] text-[#716a61]">
             Talk to Voltaris
           </p>
 
@@ -80,14 +80,14 @@ export function ContactHome() {
             aria-hidden="true"
           />
 
-          <div className="relative rounded-[1.75rem] border border-white/[0.10] bg-[#171411] p-5 shadow-[0_30px_90px_-28px_rgba(0,0,0,0.55)] sm:p-8 lg:p-10">
+          <div className="relative rounded-[1.75rem] border border-black/[0.08] bg-white p-5 shadow-[0_30px_90px_-28px_rgba(0,0,0,0.38)] sm:p-8 lg:p-10">
             {reference ? (
               <div className="flex min-h-[32rem] flex-col justify-center">
                 <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#171411] text-white">
                   <Check size={24} strokeWidth={2} />
                 </div>
 
-                <p className="mt-7 font-data text-[0.68rem] uppercase tracking-[0.2em] text-[color:var(--vds-muted)]">
+                <p className="mt-7 font-data text-[0.68rem] uppercase tracking-[0.2em] text-[#716a61]">
                   Enquiry received
                 </p>
 
@@ -95,20 +95,20 @@ export function ContactHome() {
                   We&apos;ll take it from here
                 </h3>
 
-                <p className="mt-5 max-w-md text-base leading-relaxed text-[color:var(--vds-steel)]">
+                <p className="mt-5 max-w-md text-base leading-relaxed text-[#5e5851]">
                   Thanks for reaching out. Our team has your enquiry and will get back to you
                   using the contact details you provided
                 </p>
 
-                <div className="mt-7 inline-flex w-fit items-center gap-3 rounded-xl border border-white/[0.10] bg-white/[0.05] px-4 py-3 text-sm">
-                  <span className="text-[color:var(--vds-muted)]">Reference</span>
+                <div className="mt-7 inline-flex w-fit items-center gap-3 rounded-xl border border-black/[0.08] bg-[#f6f3ef] px-4 py-3 text-sm">
+                  <span className="text-[#716a61]">Reference</span>
                   <span className="font-data text-[color:var(--vds-text)]">{reference}</span>
                 </div>
 
                 <button
                   type="button"
                   onClick={() => setReference(null)}
-                  className="mt-8 flex w-fit items-center gap-2 text-sm font-semibold text-[color:var(--vds-text)] underline decoration-black/20 underline-offset-4 transition hover:decoration-black"
+                  className="mt-8 flex w-fit items-center gap-2 text-sm font-semibold text-[#171411] underline decoration-black/20 underline-offset-4 transition hover:decoration-black"
                 >
                   Send another enquiry
                   <ArrowUpRight size={15} />
@@ -116,9 +116,9 @@ export function ContactHome() {
               </div>
             ) : (
               <>
-                <div className="mb-8 border-b border-white/[0.10] pb-6">
-                  <p className="text-sm font-medium text-[color:var(--vds-text)]">Start with a simple question</p>
-                  <p className="mt-1 text-sm text-[color:var(--vds-muted)]">
+                <div className="mb-8 border-b border-black/[0.08] pb-6">
+                  <p className="text-sm font-medium text-[#171411]">Start with a simple question</p>
+                  <p className="mt-1 text-sm text-[#716a61]">
                     You don&apos;t need to know exactly what you want yet
                   </p>
                 </div>
@@ -130,7 +130,7 @@ export function ContactHome() {
                         {...props}
                         {...register('full_name')}
                         autoComplete="name"
-                        className={inputClass}
+                        className={`${inputClass} !bg-white !text-black !caret-black placeholder:!text-[#8a837a]`}
                       />
                     )}
                   </Field>
@@ -143,7 +143,7 @@ export function ContactHome() {
                           {...register('email')}
                           type="email"
                           autoComplete="email"
-                          className={inputClass}
+                          className={`${inputClass} !bg-white !text-black !caret-black placeholder:!text-[#8a837a]`}
                         />
                       )}
                     </Field>
@@ -160,7 +160,7 @@ export function ContactHome() {
                           {...register('phone')}
                           type="tel"
                           autoComplete="tel"
-                          className={inputClass}
+                          className={`${inputClass} !bg-white !text-black !caret-black placeholder:!text-[#8a837a]`}
                         />
                       )}
                     </Field>
@@ -168,7 +168,7 @@ export function ContactHome() {
 
                   <Field label="What can we help with?" error={errors.topic?.message} required>
                     {(props) => (
-                      <select {...props} {...register('topic')} className={selectClass}>
+                      <select {...props} {...register('topic')} className={`${selectClass} !bg-white !text-[#171411]`}>
                         <option value="buying">I want to buy</option>
                         <option value="renting">I want to rent</option>
                         <option value="selling">I want to sell</option>
@@ -190,14 +190,14 @@ export function ContactHome() {
                         {...register('message')}
                         rows={6}
                         placeholder="For example, I'm looking for an affordable hybrid for daily driving in Kigali..."
-                        className={inputClass}
+                        className={`${inputClass} !bg-white !text-black !caret-black placeholder:!text-[#8a837a]`}
                       />
                     )}
                   </Field>
 
                   <Field label="" error={errors.consent?.message}>
                     {(props) => (
-                      <label className="flex items-start gap-3 text-sm leading-relaxed text-[color:var(--vds-muted)]">
+                      <label className="flex items-start gap-3 text-sm leading-relaxed text-[#716a61]">
                         <input
                           {...props}
                           {...register('consent')}
