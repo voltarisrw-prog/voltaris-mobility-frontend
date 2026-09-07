@@ -3,31 +3,63 @@ import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { MOCK_VEHICLES } from '@/lib/mock/fixtures';
 
-const fallbackVehicle = MOCK_VEHICLES.find(
-  (vehicle) => vehicle.status === 'available' && vehicle.primary_image,
-) ?? MOCK_VEHICLES[0]!;
+const availableStock = MOCK_VEHICLES.filter(
+  (vehicle) =>
+    vehicle.status === 'available' &&
+    vehicle.primary_image?.card,
+);
 
 function vehicleText(vehicle: (typeof MOCK_VEHICLES)[number]) {
   return `${vehicle.make} ${vehicle.model} ${vehicle.variant ?? ''}`.toLowerCase();
 }
 
 function isHybrid(vehicle: (typeof MOCK_VEHICLES)[number]) {
-  return /hybrid|recharge|\b500h\b|\b450h\b|\b300h\b/.test(vehicleText(vehicle));
+  return /hybrid|recharge|\\b500h\\b|\\b450h\\b|\\b300h\\b/.test(
+    vehicleText(vehicle),
+  );
 }
 
-function isAvailable(vehicle: (typeof MOCK_VEHICLES)[number]) {
-  return vehicle.status === 'available' && Boolean(vehicle.primary_image);
+function requireVehicle(
+  vehicle: (typeof MOCK_VEHICLES)[number] | undefined,
+  powertrain: 'electric' | 'hybrid',
+) {
+  if (!vehicle) {
+    throw new Error(
+      `PowertrainShowcase requires available ${powertrain} stock`,
+    );
+  }
+
+  return vehicle;
 }
 
-const electricVehicle =
-  MOCK_VEHICLES.find(
-    (vehicle) => isAvailable(vehicle) && !isHybrid(vehicle),
-  ) ?? fallbackVehicle;
+const hybridVehicle = requireVehicle(
+  availableStock.find((vehicle) => isHybrid(vehicle)),
+  'hybrid',
+);
 
-const hybridVehicle =
-  MOCK_VEHICLES.find(
-    (vehicle) => isAvailable(vehicle) && isHybrid(vehicle),
-  ) ?? fallbackVehicle;
+const electricVehicle = requireVehicle(
+  availableStock.find(
+    (vehicle) =>
+      !isHybrid(vehicle) &&
+      vehicle.purchase_enabled === true &&
+      vehicle.rental_enabled === true,
+  ) ?? availableStock.find((vehicle) => !isHybrid(vehicle)),
+  'electric',
+);
+
+const electric = {
+  make: electricVehicle.make,
+  model: `${electricVehicle.model}${electricVehicle.variant ? ` ${electricVehicle.variant}` : ''}`,
+  image: electricVehicle.primary_image!.card,
+  href: '/cars?fuel=electric',
+};
+
+const hybrid = {
+  make: hybridVehicle.make,
+  model: `${hybridVehicle.model}${hybridVehicle.variant ? ` ${hybridVehicle.variant}` : ''}`,
+  image: hybridVehicle.primary_image!.card,
+  href: '/cars?fuel=hybrid',
+};
 
 export function PowertrainShowcase() {
   const electric = {
