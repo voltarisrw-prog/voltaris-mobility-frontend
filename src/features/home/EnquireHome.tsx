@@ -1,5 +1,32 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowUpRight, CarFront, KeyRound, Tag } from 'lucide-react';
+import { MOCK_VEHICLES } from '@/lib/mock/fixtures';
+
+const fallbackVehicle = MOCK_VEHICLES[0]!;
+
+const buyVehicle =
+  MOCK_VEHICLES.find(
+    (vehicle) =>
+      vehicle.status === 'available' &&
+      vehicle.purchase_enabled &&
+      vehicle.primary_image,
+  ) ?? fallbackVehicle;
+
+const rentVehicle =
+  MOCK_VEHICLES.find(
+    (vehicle) =>
+      vehicle.status === 'available' &&
+      vehicle.rental_enabled &&
+      vehicle.primary_image,
+  ) ?? fallbackVehicle;
+
+const sellVehicle =
+  MOCK_VEHICLES.find(
+    (vehicle) =>
+      vehicle.status === 'available' &&
+      vehicle.primary_image,
+  ) ?? fallbackVehicle;
 
 const DIRECTIONS = [
   {
@@ -10,6 +37,9 @@ const DIRECTIONS = [
       'Find an electric or hybrid vehicle that fits your life, your budget and the way you move',
     href: '/buy',
     action: 'Find a vehicle',
+    image: buyVehicle.primary_image!.card,
+    imageAlt: buyVehicle.primary_image!.alt,
+    vehicle: `${buyVehicle.make} ${buyVehicle.model}`,
   },
   {
     number: '02',
@@ -19,6 +49,9 @@ const DIRECTIONS = [
       'Choose a vehicle for the journey you have in mind without making a long-term commitment',
     href: '/rent',
     action: 'Find a rental',
+    image: rentVehicle.primary_image!.card,
+    imageAlt: rentVehicle.primary_image!.alt,
+    vehicle: `${rentVehicle.make} ${rentVehicle.model}`,
   },
   {
     number: '03',
@@ -28,6 +61,9 @@ const DIRECTIONS = [
       'Put your EV or hybrid in front of people who are already looking for their next vehicle',
     href: '/sell',
     action: 'Sell your vehicle',
+    image: sellVehicle.primary_image!.card,
+    imageAlt: sellVehicle.primary_image!.alt,
+    vehicle: `${sellVehicle.make} ${sellVehicle.model}`,
   },
 ] as const;
 
@@ -66,14 +102,26 @@ export function EnquireHome() {
               <Link
                 key={direction.title}
                 href={direction.href}
-                className="group relative flex min-h-[24rem] flex-col justify-between overflow-hidden bg-[#0f0c09] p-6 transition-colors duration-500 hover:bg-[#17120e] focus-visible:bg-[#17120e] sm:min-h-[28rem] sm:p-8 lg:min-h-[31rem] lg:p-9"
+                className="group relative flex min-h-[30rem] flex-col justify-between overflow-hidden bg-[#0f0c09] transition-colors duration-500 hover:bg-[#17120e] focus-visible:bg-[#17120e] sm:min-h-[34rem] lg:min-h-[38rem]"
               >
-                <div className="flex items-start justify-between gap-4">
-                  <span className="font-data text-[0.58rem] tracking-[0.16em] text-[color:var(--vds-text-muted)]">
+                <Image
+                  src={direction.image}
+                  alt={direction.imageAlt}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                  className="object-cover object-center opacity-65 transition-all duration-[1200ms] ease-out group-hover:scale-[1.06] group-hover:opacity-85"
+                />
+
+                <div className="absolute inset-0 bg-gradient-to-b from-black/65 via-black/20 to-[#080604]/95" />
+
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent" />
+
+                <div className="relative z-10 flex items-start justify-between gap-4 p-6 sm:p-8 lg:p-9">
+                  <span className="font-data text-[0.58rem] tracking-[0.16em] text-white/60">
                     {direction.number}
                   </span>
 
-                  <span className="flex h-11 w-11 items-center justify-center rounded-full border border-[color:var(--vds-border)] transition-all duration-300 group-hover:border-[color:var(--vds-brand-secondary)] group-hover:bg-[color:var(--vds-brand-secondary)] group-hover:text-[#0c0906]">
+                  <span className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-black/20 backdrop-blur-md transition-all duration-300 group-hover:border-[color:var(--vds-brand-secondary)] group-hover:bg-[color:var(--vds-brand-secondary)] group-hover:text-[#0c0906]">
                     <Icon
                       className="h-4 w-4"
                       strokeWidth={1.5}
@@ -82,16 +130,20 @@ export function EnquireHome() {
                   </span>
                 </div>
 
-                <div>
-                  <h3 className="font-display text-5xl leading-[0.82] tracking-[-0.04em] sm:text-6xl">
+                <div className="relative z-10 p-6 sm:p-8 lg:p-9">
+                  <p className="font-data text-[0.56rem] uppercase tracking-[0.18em] text-[color:var(--vds-brand-secondary)]">
+                    {direction.vehicle}
+                  </p>
+
+                  <h3 className="mt-3 font-display text-5xl leading-[0.82] tracking-[-0.04em] text-white sm:text-6xl">
                     {direction.title}
                   </h3>
 
-                  <p className="mt-5 max-w-sm font-sans text-sm leading-relaxed text-[color:var(--vds-text-secondary)]">
+                  <p className="mt-5 max-w-sm font-sans text-sm leading-relaxed text-white/70">
                     {direction.description}
                   </p>
 
-                  <span className="mt-7 inline-flex items-center gap-2 border-b border-white/20 pb-1.5 font-data text-[0.58rem] uppercase tracking-[0.16em] text-[color:var(--vds-text-secondary)] transition-colors group-hover:border-[color:var(--vds-brand-secondary)] group-hover:text-[color:var(--vds-brand-secondary)]">
+                  <span className="mt-7 inline-flex items-center gap-2 border-b border-white/25 pb-1.5 font-data text-[0.58rem] uppercase tracking-[0.16em] text-white/75 transition-colors group-hover:border-[color:var(--vds-brand-secondary)] group-hover:text-[color:var(--vds-brand-secondary)]">
                     {direction.action}
 
                     <ArrowUpRight
@@ -102,7 +154,7 @@ export function EnquireHome() {
                 </div>
 
                 <div
-                  className="pointer-events-none absolute -bottom-24 -right-16 h-56 w-56 rounded-full bg-[color:var(--vds-brand-secondary)]/5 blur-3xl transition-opacity duration-500 group-hover:opacity-100"
+                  className="pointer-events-none absolute -bottom-24 -right-16 z-10 h-56 w-56 rounded-full bg-[color:var(--vds-brand-secondary)]/10 blur-3xl transition-opacity duration-500 group-hover:opacity-100"
                   aria-hidden="true"
                 />
               </Link>
