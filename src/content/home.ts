@@ -9,8 +9,8 @@
 
 export const nav = {
   primary: [
-    { href: '/cars?mode=sale', label: 'Buy' },
-    { href: '/cars?mode=rental', label: 'Rent' },
+    { href: '/buy', label: 'Buy' },
+    { href: '/rent', label: 'Rent' },
     { href: '/compare', label: 'Compare' },
     { href: '/sell', label: 'Sell' },
   ],
@@ -44,7 +44,7 @@ export const hero = {
     { label: 'Sedans', href: '/cars?body=sedan' },
     { label: 'Under RWF 30M', href: '/cars?maxPrice=30000000' },
     { label: 'Used', href: '/cars?condition=used' },
-    { label: 'Rentals', href: '/cars?mode=rental' },
+    { label: 'Rentals', href: '/rent' },
     { label: 'New arrivals', href: '/cars?sort=newest' },
   ],
 };
@@ -55,8 +55,8 @@ export const entrance = {
   headline: 'Choose your drive.',
   sub: 'Eight ways in. Every one leads somewhere organised.',
   categories: [
-    { label: 'Buy', line: 'Own it outright', href: '/cars?mode=sale', span: 'lg:col-span-2' },
-    { label: 'Rent', line: 'By the day or the month', href: '/cars?mode=rental' },
+    { label: 'Buy', line: 'Own it outright', href: '/buy', span: 'lg:col-span-2' },
+    { label: 'Rent', line: 'By the day or the month', href: '/rent' },
     { label: 'Sell', line: 'Reach real buyers', href: '/sell' },
     { label: 'Electric', line: 'Fully charged', href: '/electric-cars-rwanda', span: 'lg:col-span-2' },
     { label: 'SUV', line: 'Room and clearance', href: '/electric-suvs-rwanda' },
@@ -249,8 +249,8 @@ export const footerColumns = [
   {
     heading: 'Explore',
     links: [
-      { href: '/cars', label: 'Buy' },
-      { href: '/cars?mode=rental', label: 'Rent' },
+      { href: '/buy', label: 'Buy' },
+      { href: '/rent', label: 'Rent' },
       { href: '/sell', label: 'Sell' },
       { href: '/compare', label: 'Compare' },
       { href: '/cars?sort=newest', label: 'New arrivals' },
