@@ -40,7 +40,7 @@ const config: Config = {
       fontFamily: {
         display: ['var(--font-display)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
         sans: ['var(--font-body)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        data: ['var(--font-data)', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+        data: ['var(--font-body)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
       fontSize: {
         eyebrow: ['0.6875rem', { lineHeight: '1', letterSpacing: '0.18em' }],
