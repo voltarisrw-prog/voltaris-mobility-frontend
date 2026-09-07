@@ -4,10 +4,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { CoverflowShowcase } from '@/components/CoverflowShowcase';
+import { formatPrice } from '@/lib/format';
 import type { VehicleSummary } from '@/types/vehicle';
 
 const CENTER_SIZE =
-  'h-[30rem] w-[min(88vw,27rem)] sm:h-[40rem] sm:w-[28rem] md:h-[46rem] md:w-[32rem] lg:h-[52rem] lg:w-[38rem]';
+  'h-[26rem] w-[min(88vw,27rem)] sm:h-[40rem] sm:w-[28rem] md:h-[46rem] md:w-[32rem] lg:h-[52rem] lg:w-[38rem]';
 
 const PEEK_SIZE =
   'h-[15rem] w-[calc(100vw-5rem)] max-w-[15rem] sm:h-[22rem] sm:w-[18rem] md:h-[25rem] md:w-[20rem] lg:h-[28rem] lg:w-[23rem]';
@@ -48,7 +49,7 @@ export function ShowcaseSlider({
                 fill
                 priority
                 sizes="(min-width: 1024px) 38rem, (min-width: 768px) 32rem, (min-width: 640px) 28rem, 88vw"
-                className="object-contain p-1 sm:p-2 lg:p-3"
+                className="object-contain p-2 sm:p-2 lg:p-3"
               />
             ) : (
               <div className="flex h-full items-center justify-center font-data text-[0.62rem] uppercase tracking-[0.14em] text-[color:var(--vds-text-muted)]">
@@ -71,12 +72,32 @@ export function ShowcaseSlider({
               </h3>
             </div>
 
+            <div className="absolute inset-x-0 bottom-0 z-10 flex items-end justify-between gap-4 p-4 sm:p-5 lg:p-6">
+              <div className="min-w-0">
+                <p className="font-data text-[0.56rem] uppercase tracking-[0.16em] text-white/60">
+                  {vehicle.location.city}
+                </p>
+
+                <p className="mt-1 font-display text-lg font-semibold leading-none tracking-[-0.02em] text-white sm:text-xl">
+                  {vehicle.price === null
+                    ? 'Price on request'
+                    : formatPrice(vehicle.price, vehicle.currency)}
+                </p>
+              </div>
+
+              {vehicle.verified && (
+                <span className="shrink-0 border border-white/30 bg-black/20 px-2.5 py-1.5 font-data text-[0.52rem] font-bold uppercase tracking-[0.14em] text-white backdrop-blur-sm">
+                  Verified
+                </span>
+              )}
+            </div>
+
             <div className="absolute inset-y-0 inset-x-0 z-10 pointer-events-none">
               <Link
                 href={`/cars/${vehicle.slug}`}
-                className="group pointer-events-auto absolute left-3 top-1/2 -translate-y-1/2 inline-flex min-h-12 items-center gap-2 rounded-full vds-link-outline px-3 py-3 font-data text-[0.56rem] font-bold uppercase tracking-[0.14em] text-black shadow-[0_12px_35px_-12px_rgba(0,0,0,0.55)] transition-all duration-300 hover:-translate-y-1/2 hover:bg-white/90 hover:shadow-[0_16px_45px_-12px_rgba(0,0,0,0.7)] sm:left-5 sm:px-4 lg:left-6"
+                className="group pointer-events-auto absolute left-2 top-1/2 -translate-y-1/2 inline-flex min-h-11 items-center gap-1.5 rounded-full vds-link-outline px-2.5 py-2.5 font-data text-[0.52rem] font-bold uppercase tracking-[0.12em] text-black shadow-[0_12px_35px_-12px_rgba(0,0,0,0.55)] transition-all duration-300 hover:-translate-y-1/2 hover:bg-white/90 hover:shadow-[0_16px_45px_-12px_rgba(0,0,0,0.7)] sm:left-5 sm:min-h-12 sm:gap-2 sm:px-4 sm:py-3 sm:text-[0.56rem] sm:tracking-[0.14em] lg:left-6"
               >
-                <span>Book a Ride</span>
+                <span>View vehicle</span>
                 <ArrowRight
                   className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1"
                   aria-hidden="true"
@@ -84,10 +105,20 @@ export function ShowcaseSlider({
               </Link>
 
               <Link
-                href={`/cars/${vehicle.slug}`}
-                className="group pointer-events-auto absolute right-3 top-1/2 -translate-y-1/2 inline-flex min-h-12 items-center gap-2 rounded-full vds-link-outline px-3 py-3 font-data text-[0.56rem] font-bold uppercase tracking-[0.14em] text-black shadow-[0_12px_35px_-12px_rgba(0,0,0,0.55)] transition-all duration-300 hover:-translate-y-1/2 hover:bg-white/90 hover:shadow-[0_16px_45px_-12px_rgba(0,0,0,0.7)] sm:right-5 sm:px-4 lg:right-6"
+                href={
+                  vehicle.listing_mode === 'rental'
+                    ? `/cars/${vehicle.slug}?mode=rental`
+                    : `/cars/${vehicle.slug}`
+                }
+                className="group pointer-events-auto absolute right-2 top-1/2 -translate-y-1/2 inline-flex min-h-11 items-center gap-1.5 rounded-full vds-link-outline px-2.5 py-2.5 font-data text-[0.52rem] font-bold uppercase tracking-[0.12em] text-black shadow-[0_12px_35px_-12px_rgba(0,0,0,0.55)] transition-all duration-300 hover:-translate-y-1/2 hover:bg-white/90 hover:shadow-[0_16px_45px_-12px_rgba(0,0,0,0.7)] sm:right-5 sm:min-h-12 sm:gap-2 sm:px-4 sm:py-3 sm:text-[0.56rem] sm:tracking-[0.14em] lg:right-6"
               >
-                <span>Buy</span>
+                <span>
+                  {vehicle.listing_mode === 'rental'
+                    ? 'Rent'
+                    : vehicle.listing_mode === 'sale_and_rental'
+                      ? 'Buy or Rent'
+                      : 'Buy'}
+                </span>
                 <ArrowRight
                   className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1"
                   aria-hidden="true"
