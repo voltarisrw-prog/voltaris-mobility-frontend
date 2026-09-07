@@ -12,6 +12,7 @@ import { EnquireHome } from '@/features/home/EnquireHome';
 import { ContactHome } from '@/features/home/ContactHome';
 import { NetworkHome } from '@/features/home/NetworkHome';
 import { PowertrainShowcase } from '@/features/home/PowertrainShowcase';
+import { HomeImageSections } from '@/features/home/HomeImageSections';
 import { JsonLd } from '@/components/JsonLd';
 import { listVehicles } from '@/lib/api/vehicles';
 import { buildMetadata, absoluteUrl } from '@/lib/seo/metadata';
@@ -175,27 +176,8 @@ export default async function HomePage() {
       {/* 03 — CHOOSE YOUR POWERTRAIN ------------------------------------ */}
       <PowertrainShowcase />
 
-      {/* 04 — FIND YOUR WAY IN ----------------------------------------- */}
-      <WayIn />
-
-      {/* 06 — RWANDA IN MOTION --------------------------------------- */}
-      <RwandaInMotion />
-
-      {/* 07 — FINAL STATEMENT ---------------------------------------- */}
-      <FinalStatement />
-
-      {/* 08 — PARTNERS ----------------------------------------------- */}
-      <PartnersHome />
-
-      {/* 09 — ENQUIRE ----------------------------------------------- */}
-      <EnquireHome />
-
-      {/* 10 — TALK TO VOLTARIS --------------------------------------- */}
-      <ContactHome />
-
-      {/* 11 — OUR NETWORK --------------------------------------------- */}
-      <NetworkHome />
-
+      {/* 04–11 — IMAGE-LED HOMEPAGE EXPERIENCE */}
+      <HomeImageSections />
     </>
   );
 }
