@@ -130,7 +130,7 @@ export function ContactHome() {
                         {...props}
                         {...register('full_name')}
                         autoComplete="name"
-                        className={inputClass}
+                        className={`${inputClass} !bg-white !text-[#171411] placeholder:!text-[#8a837a]`}
                       />
                     )}
                   </Field>
@@ -143,7 +143,7 @@ export function ContactHome() {
                           {...register('email')}
                           type="email"
                           autoComplete="email"
-                          className={inputClass}
+                          className={`${inputClass} !bg-white !text-[#171411] placeholder:!text-[#8a837a]`}
                         />
                       )}
                     </Field>
@@ -160,7 +160,7 @@ export function ContactHome() {
                           {...register('phone')}
                           type="tel"
                           autoComplete="tel"
-                          className={inputClass}
+                          className={`${inputClass} !bg-white !text-[#171411] placeholder:!text-[#8a837a]`}
                         />
                       )}
                     </Field>
@@ -168,7 +168,7 @@ export function ContactHome() {
 
                   <Field label="What can we help with?" error={errors.topic?.message} required>
                     {(props) => (
-                      <select {...props} {...register('topic')} className={selectClass}>
+                      <select {...props} {...register('topic')} className={`${selectClass} !bg-white !text-[#171411]`}>
                         <option value="buying">I want to buy</option>
                         <option value="renting">I want to rent</option>
                         <option value="selling">I want to sell</option>
@@ -190,7 +190,7 @@ export function ContactHome() {
                         {...register('message')}
                         rows={6}
                         placeholder="For example, I'm looking for an affordable hybrid for daily driving in Kigali..."
-                        className={inputClass}
+                        className={`${inputClass} !bg-white !text-[#171411] placeholder:!text-[#8a837a]`}
                       />
                     )}
                   </Field>
