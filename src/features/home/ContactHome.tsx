@@ -130,7 +130,7 @@ export function ContactHome() {
                         {...props}
                         {...register('full_name')}
                         autoComplete="name"
-                        className={`${inputClass} !bg-white !text-[#171411] placeholder:!text-[#8a837a]`}
+                        className={`${inputClass} !bg-white !text-black !caret-black placeholder:!text-[#8a837a]`}
                       />
                     )}
                   </Field>
@@ -143,7 +143,7 @@ export function ContactHome() {
                           {...register('email')}
                           type="email"
                           autoComplete="email"
-                          className={`${inputClass} !bg-white !text-[#171411] placeholder:!text-[#8a837a]`}
+                          className={`${inputClass} !bg-white !text-black !caret-black placeholder:!text-[#8a837a]`}
                         />
                       )}
                     </Field>
@@ -160,7 +160,7 @@ export function ContactHome() {
                           {...register('phone')}
                           type="tel"
                           autoComplete="tel"
-                          className={`${inputClass} !bg-white !text-[#171411] placeholder:!text-[#8a837a]`}
+                          className={`${inputClass} !bg-white !text-black !caret-black placeholder:!text-[#8a837a]`}
                         />
                       )}
                     </Field>
@@ -190,7 +190,7 @@ export function ContactHome() {
                         {...register('message')}
                         rows={6}
                         placeholder="For example, I'm looking for an affordable hybrid for daily driving in Kigali..."
-                        className={`${inputClass} !bg-white !text-[#171411] placeholder:!text-[#8a837a]`}
+                        className={`${inputClass} !bg-white !text-black !caret-black placeholder:!text-[#8a837a]`}
                       />
                     )}
                   </Field>
