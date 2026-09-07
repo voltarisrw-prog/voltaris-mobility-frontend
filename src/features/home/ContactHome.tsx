@@ -50,7 +50,7 @@ export function ContactHome() {
   });
 
   return (
-    <section className="border-t border-[color:var(--vds-border)] bg-[#0c0906] py-20 text-[#171411] sm:py-28 lg:py-36">
+    <section className="border-t border-[color:var(--vds-border)] bg-[#0c0906] py-20 text-[color:var(--vds-text)] sm:py-28 lg:py-36">
       <div className="mx-auto grid max-w-shell gap-10 px-5 sm:px-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-start lg:gap-16">
         <div className="max-w-xl lg:sticky lg:top-24">
           <p className="font-data text-[0.68rem] uppercase tracking-[0.22em] text-[#716a61]">
@@ -61,12 +61,12 @@ export function ContactHome() {
             Tell us what you need
           </h2>
 
-          <p className="mt-6 max-w-md text-base leading-relaxed text-[#5e5851] sm:text-lg">
+          <p className="mt-6 max-w-md text-base leading-relaxed text-[color:var(--vds-steel)] sm:text-lg">
             Not sure where to start? Tell us what you&apos;re looking for and we&apos;ll help you
             find the right next move
           </p>
 
-          <div className="mt-8 flex items-center gap-3 text-sm text-[#5e5851]">
+          <div className="mt-8 flex items-center gap-3 text-sm text-[color:var(--vds-steel)]">
             <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#171411] text-[#f3eee7]">
               <MessageCircle size={17} strokeWidth={1.7} />
             </span>
@@ -102,7 +102,7 @@ export function ContactHome() {
 
                 <div className="mt-7 inline-flex w-fit items-center gap-3 rounded-xl border border-black/[0.08] bg-[#f6f3ef] px-4 py-3 text-sm">
                   <span className="text-[#716a61]">Reference</span>
-                  <span className="font-data text-[#171411]">{reference}</span>
+                  <span className="font-data text-[color:var(--vds-text)]">{reference}</span>
                 </div>
 
                 <button
