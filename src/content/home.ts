@@ -16,6 +16,7 @@ export const nav = {
     { href: '/sell', label: 'Sell' },
     { href: '/about', label: 'About Us' },
     { href: '/blog', label: 'Blog' },
+    { href: '/activities', label: 'Activities' },
   ],
   /**
    * Mobile bottom bar. Six items, tightened to a 2.75rem icon column so the row
