@@ -5,6 +5,7 @@ import { HeroMedia } from '@/features/home/HeroMedia';
 import { ShowcaseSlider } from '@/features/home/ShowcaseSlider';
 import { UniversalSearch } from '@/features/vehicles/UniversalSearch';
 import { WayIn } from '@/features/home/WayIn';
+import { PowertrainShowcase } from '@/features/home/PowertrainShowcase';
 import { RwandaInMotion } from '@/features/home/RwandaInMotion';
 import { FinalStatement } from '@/features/home/FinalStatement';
 import { PartnersHome } from '@/features/home/PartnersHome';
@@ -254,6 +255,7 @@ export default async function HomePage() {
 
       {/* 04 — FIND YOUR WAY IN ----------------------------------------- */}
       <WayIn />
+      <PowertrainShowcase />
 
       {/* 06 — RWANDA IN MOTION --------------------------------------- */}
       <RwandaInMotion />

@@ -384,6 +384,19 @@ function listVehicles(query: Record<string, unknown>): Page<VehicleSummary> {
   if (mode === 'rental') items = items.filter((v) => v.listing_mode !== 'sale');
   if (mode === 'sale') items = items.filter((v) => v.listing_mode !== 'rental');
 
+  const fuel = str(query.fuel)?.toLowerCase();
+  if (fuel === 'electric') {
+    items = items.filter((v) => v.range_km > 50 && v.battery_kwh >= 20);
+  }
+
+  if (fuel === 'hybrid') {
+    items = items.filter((v) =>
+      /hybrid|recharge|\b500h\b|\b450h\b|\b300h\b/i.test(
+        `${v.make} ${v.model} ${v.variant ?? ''}`,
+      ),
+    );
+  }
+
   // Demo rental search: only return vehicles that are rentable and
   // available for the requested pickup location and date window.
   const rentalLocation = str(query.rentalLocation);

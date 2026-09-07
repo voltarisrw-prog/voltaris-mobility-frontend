@@ -32,6 +32,32 @@ describe('resolveMock — vehicles', () => {
     expect(page!.items.every((v) => v.range_km >= 350)).toBe(true);
   });
 
+  it('filters by electric fuel', async () => {
+    const page = await resolveMock<Page<VehicleSummary>>('/vehicles', {
+      query: { fuel: 'electric' },
+    });
+
+    expect(page!.items.length).toBeGreaterThan(0);
+    expect(
+      page!.items.every((v) => v.range_km > 50 && v.battery_kwh >= 20),
+    ).toBe(true);
+  });
+
+  it('filters by hybrid fuel', async () => {
+    const page = await resolveMock<Page<VehicleSummary>>('/vehicles', {
+      query: { fuel: 'hybrid' },
+    });
+
+    expect(page!.items.length).toBeGreaterThan(0);
+    expect(
+      page!.items.every((v) =>
+        /hybrid|recharge|\b500h\b|\b450h\b|\b300h\b/i.test(
+          `${v.make} ${v.model} ${v.variant ?? ''}`,
+        ),
+      ),
+    ).toBe(true);
+  });
+
   it('sorts by price_desc', async () => {
     const page = await resolveMock<Page<VehicleSummary>>('/vehicles', {
       query: { sort: 'price_desc' },
@@ -60,12 +86,13 @@ describe('resolveMock — vehicles', () => {
     }
   });
 
-  it('still resolves a sold vehicle by slug even though it is excluded from listings', async () => {
+  it('resolves an available rental vehicle by slug', async () => {
     const vehicle = await resolveMock<VehicleDetail>(
       '/vehicles/by-slug/toyota-land-cruiser-2021-rubavu',
       {},
     );
-    expect(vehicle?.status).toBe('sold');
+    expect(vehicle?.status).toBe('available');
+    expect(vehicle?.rental_enabled).toBe(true);
   });
 });
 

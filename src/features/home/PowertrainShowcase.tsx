@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { MOCK_VEHICLES } from '@/lib/mock/fixtures';
@@ -115,25 +114,17 @@ export function PowertrainShowcase() {
               href={vehicle.href}
               className="group relative min-h-[30rem] overflow-hidden border border-white/10 bg-[#15110d] sm:min-h-[38rem] lg:min-h-[46rem]"
             >
-              <Image
-                src={vehicle.image}
-                alt={`${vehicle.make} ${vehicle.model}`}
-                fill
-                priority={number === '01'}
-                sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-cover object-center transition-transform duration-[1400ms] ease-out group-hover:scale-[1.07]"
-              />
+              <div className="absolute inset-0 z-0">
+                <img
+                  src={vehicle.image}
+                  alt={`${vehicle.make} ${vehicle.model}`}
+                  width={1536}
+                  height={1024}
+                  className="absolute inset-0 block h-full w-full object-cover object-center"
+                />
+              </div>
 
-              <div
-                className="absolute inset-0 opacity-80 mix-blend-screen transition-opacity duration-1000 group-hover:opacity-100"
-                style={{
-                  background: `radial-gradient(circle at 50% 38%, ${glow}, transparent 58%)`,
-                }}
-              />
-
-              <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-transparent to-[#080604]/95" />
-
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-70" />
+              <div className="absolute inset-0 z-[1] bg-gradient-to-b from-black/20 via-transparent to-[#080604]/90" />
 
               {/* Top information */}
               <div className="absolute inset-x-0 top-0 z-10 flex items-start justify-between p-5 sm:p-7">

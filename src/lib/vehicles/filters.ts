@@ -41,6 +41,7 @@ export const vehicleFiltersSchema = z.object({
   condition: z.enum(['new', 'used', 'certified']).optional().catch(undefined),
   location: z.string().trim().toLowerCase().max(40).optional().catch(undefined),
   mode: z.enum(['sale', 'rental']).optional().catch(undefined),
+  fuel: z.enum(['electric', 'hybrid']).optional().catch(undefined),
   // Only meaningful alongside mode: 'rental'. A native <input type="date"> already
   // constrains the format at the source; this just refuses anything that slipped in
   // some other way (a hand-edited URL) rather than passing it to the backend.
