@@ -14,8 +14,23 @@
   }
   body {
     /* Keep the page foundation aligned with the site's chocolate surface. */
-    @apply bg-surface font-sans text-chrome antialiased;
+    @apply bg-surface text-chrome antialiased;
+    font-family: var(--font-body), sans-serif;
+    font-weight: 400;
     text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display), serif;
+    font-style: italic;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
   }
   ::selection {
     @apply bg-volt text-surface;

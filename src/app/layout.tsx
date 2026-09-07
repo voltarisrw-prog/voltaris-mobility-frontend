@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Archivo, Inter, IBM_Plex_Mono } from 'next/font/google';
+import { Instrument_Serif, Instrument_Sans, IBM_Plex_Mono } from 'next/font/google';
 import './globals.css';
 import { site } from '@/config/site';
 import { SiteHeader } from '@/components/SiteHeader';
@@ -9,13 +9,19 @@ import { organizationJsonLd } from '@/lib/seo/jsonld';
 import { AnalyticsBootstrap } from '@/components/AnalyticsBootstrap';
 import { ToastProvider } from '@/components/ui';
 
-const display = Archivo({
+const display = Instrument_Serif({
   subsets: ['latin'],
-  weight: ['600', '700'],
+  weight: '400',
+  style: 'italic',
   variable: '--font-display',
   display: 'swap',
 });
-const body = Inter({ subsets: ['latin'], variable: '--font-body', display: 'swap' });
+const body = Instrument_Sans({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  variable: '--font-body',
+  display: 'swap',
+});
 const data = IBM_Plex_Mono({
   subsets: ['latin'],
   weight: ['400', '500'],
