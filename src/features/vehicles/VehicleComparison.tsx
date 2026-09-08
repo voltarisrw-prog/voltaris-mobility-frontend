@@ -205,7 +205,7 @@ export function VehicleComparison() {
           href="/cars"
           className="mt-6 inline-block bg-volt px-5 py-2.5 font-data text-eyebrow uppercase text-surface hover:bg-volt-bright"
         >
-          Browse electric vehicles
+          Browse electric and hybrid cars
         </Link>
       </div>
     );
@@ -227,49 +227,78 @@ export function VehicleComparison() {
   const groups = [...new Set(ROWS.map((row) => row.group))];
 
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full min-w-[44rem] border-collapse text-sm">
-        <caption className="sr-only">
-          Side-by-side comparison of {vehicles.length} electric vehicles
-        </caption>
-        <thead>
-          <tr>
-            <th scope="col" className="w-44 py-4 text-left align-bottom">
-              <span className="eyebrow">Comparing</span>
-            </th>
-            {vehicles.map((vehicle) => (
-              <th
-                key={vehicle.id}
-                scope="col"
-                className="min-w-[13rem] border-b border-chrome p-4 text-left align-bottom"
-              >
-                <Link
-                  href={`/cars/${vehicle.slug}`}
-                  className="font-display text-base font-semibold tracking-tight hover:text-volt"
-                >
-                  {vehicle.year} {vehicle.make} {vehicle.model}
-                </Link>
-                <div className="mt-3">
-                  <RangeMeter rangeKm={vehicle.range_km} showLabel={false} />
-                </div>
-                <button
-                  type="button"
-                  onClick={() => remove(vehicle.id)}
-                  className="mt-3 font-data text-eyebrow uppercase text-steel-muted underline underline-offset-4 hover:text-danger"
-                >
-                  Remove
-                </button>
-              </th>
-            ))}
-          </tr>
-        </thead>
+    <div className="voltaris-comparison">
+      <div className="voltaris-comparison-stage">
+        <div className="voltaris-comparison-stage-kicker">
+          <span className="eyebrow">YOUR SHORTLIST</span>
+          <span className="font-data text-[0.6rem] uppercase tracking-[0.16em] text-steel-muted">
+            {vehicles.length} {vehicles.length === 1 ? 'vehicle' : 'vehicles'}
+          </span>
+        </div>
 
-        {groups.map((group) => {
-          const rows = ROWS.filter((row) => row.group === group);
-          return (
-            <tbody key={group}>
+        <div className="overflow-x-auto">
+          <table className="voltaris-comparison-table w-full min-w-[44rem] border-collapse text-sm">
+            <caption className="sr-only">
+              Side-by-side comparison of {vehicles.length} electric and hybrid vehicles
+            </caption>
+            <thead>
               <tr>
-                <th colSpan={vehicles.length + 1} scope="colgroup" className="pt-8 text-left">
+                <th scope="col" className="voltaris-comparison-label-head">
+                  <span className="eyebrow">COMPARE</span>
+                </th>
+                {vehicles.map((vehicle, index) => (
+                  <th
+                    key={vehicle.id}
+                    scope="col"
+                    className="voltaris-comparison-vehicle-head"
+                  >
+                    <div className="voltaris-comparison-index">
+                      0{index + 1}
+                    </div>
+
+                    <Link
+                      href={`/cars/${vehicle.slug}`}
+                      className="voltaris-comparison-vehicle-name"
+                    >
+                      {vehicle.year} {vehicle.make} {vehicle.model}
+                    </Link>
+
+                    <div className="voltaris-comparison-range">
+                      <span className="font-data text-[0.58rem] uppercase tracking-[0.16em] text-steel-muted">
+                        RANGE
+                      </span>
+                      <span className="font-data text-sm tabular-nums text-chrome">
+                        {vehicle.range_km} km
+                      </span>
+                    </div>
+
+                    <RangeMeter rangeKm={vehicle.range_km} showLabel={false} />
+
+                    <button
+                      type="button"
+                      onClick={() => remove(vehicle.id)}
+                      className="voltaris-comparison-remove"
+                    >
+                      Remove vehicle
+                    </button>
+                  </th>
+                ))}
+              </tr>
+            </thead>
+
+            {groups.map((group) => {
+              const rows = ROWS.filter((row) => row.group === group);
+              return (
+            <tbody key={group} className="voltaris-comparison-group">
+              <tr>
+                <th
+                  colSpan={vehicles.length + 1}
+                  scope="colgroup"
+                  className="voltaris-comparison-group-head"
+                >
+                  <span className="voltaris-comparison-group-number">
+                    {String(groups.indexOf(group) + 1).padStart(2, '0')}
+                  </span>
                   <span className="eyebrow">{group}</span>
                 </th>
               </tr>
@@ -284,28 +313,30 @@ export function VehicleComparison() {
                     : null;
 
                 return (
-                  <tr key={row.label} className="border-b border-hairline/60">
-                    <th scope="row" className="py-3 pr-4 text-left align-top font-normal">
+                  <tr key={row.label} className="voltaris-comparison-row">
+                    <th scope="row" className="voltaris-comparison-row-label">
                       <span className="text-steel">{row.label}</span>
                       {row.note && (
-                        <span className="mt-1 block text-xs text-steel-muted">{row.note}</span>
+                        <span className="voltaris-comparison-row-note">{row.note}</span>
                       )}
                     </th>
                     {vehicles.map((vehicle, index) => {
                       const isBest = best !== null && numbers[index] === best;
                       return (
-                        <td key={vehicle.id} className="p-3 align-top">
-                          <span
-                            className={
-                              isBest
-                                ? 'bg-volt-wash px-2 py-1 font-data text-sm tabular-nums text-volt'
-                                : 'font-data text-sm tabular-nums text-chrome'
-                            }
-                          >
+                        <td
+                          key={vehicle.id}
+                          className={isBest ? 'voltaris-comparison-value is-best' : 'voltaris-comparison-value'}
+                        >
+                          <span className="font-data text-sm tabular-nums">
                             {row.value(vehicle)}
                           </span>
                           {isBest && (
-                            <span className="sr-only"> (best of the compared vehicles)</span>
+                            <>
+                              <span className="voltaris-comparison-best-mark" aria-hidden="true">
+                                BEST
+                              </span>
+                              <span className="sr-only"> (best of the compared vehicles)</span>
+                            </>
                           )}
                         </td>
                       );
@@ -315,8 +346,10 @@ export function VehicleComparison() {
               })}
             </tbody>
           );
-        })}
-      </table>
+            })}
+          </table>
+        </div>
+      </div>
 
       <p className="mt-8 max-w-prose text-xs leading-relaxed text-steel-muted">
         Charging times are calculated from battery size and the vehicle’s stated charge rate, so

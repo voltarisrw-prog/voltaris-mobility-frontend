@@ -978,3 +978,266 @@
     min-height: 68px;
   }
 }
+
+/* =========================================================
+   VOLTARIS COMPARISON — EDITORIAL ART DIRECTION
+   ========================================================= */
+
+.voltaris-comparison {
+  width: 100%;
+}
+
+.voltaris-comparison-stage {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgb(232 234 237 / 0.18);
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.025), transparent 22%),
+    #0b1220;
+  box-shadow:
+    0 28px 80px rgb(0 0 0 / 0.42),
+    0 8px 24px rgb(0 0 0 / 0.24);
+}
+
+.voltaris-comparison-stage::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, transparent 0, rgb(92 200 255 / 0.035) 50%, transparent 100%);
+}
+
+.voltaris-comparison-stage-kicker {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid rgb(232 234 237 / 0.12);
+  background: rgb(12 9 6 / 0.38);
+}
+
+.voltaris-comparison-label-head {
+  width: 11rem;
+  padding: 1.25rem;
+  text-align: left;
+  vertical-align: bottom;
+  border-bottom: 1px solid rgb(232 234 237 / 0.18);
+}
+
+.voltaris-comparison-vehicle-head {
+  position: relative;
+  min-width: 14rem;
+  padding: 1.25rem;
+  text-align: left;
+  vertical-align: bottom;
+  border-bottom: 1px solid rgb(232 234 237 / 0.18);
+  border-left: 1px solid rgb(232 234 237 / 0.08);
+  background:
+    linear-gradient(145deg, rgb(92 200 255 / 0.055), transparent 42%),
+    rgb(12 9 6 / 0.22);
+  clip-path: polygon(
+    0 0,
+    calc(100% - 16px) 0,
+    100% 16px,
+    100% 100%,
+    0 100%
+  );
+}
+
+.voltaris-comparison-vehicle-head::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 16px;
+  width: 1px;
+  height: 28px;
+  background: rgb(92 200 255 / 0.35);
+  transform: rotate(45deg);
+  transform-origin: top;
+}
+
+.voltaris-comparison-index {
+  margin-bottom: 0.75rem;
+  color: #5cc8ff;
+  font-family: var(--font-data, monospace);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+}
+
+.voltaris-comparison-vehicle-name {
+  display: block;
+  max-width: 15rem;
+  color: #e8eaed;
+  font-family: var(--font-display, sans-serif);
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+  transition: color 160ms ease;
+}
+
+.voltaris-comparison-vehicle-name:hover {
+  color: #5cc8ff;
+}
+
+.voltaris-comparison-range {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1.25rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgb(232 234 237 / 0.12);
+}
+
+.voltaris-comparison-vehicle-head .range-meter {
+  margin-top: 0.7rem;
+}
+
+.voltaris-comparison-remove {
+  display: inline-flex;
+  margin-top: 0.9rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #6c727c;
+  font-family: var(--font-data, monospace);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: underline;
+  text-underline-offset: 0.25rem;
+  cursor: pointer;
+  transition:
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+.voltaris-comparison-remove:hover {
+  color: #e8eaed;
+  transform: translateX(2px);
+}
+
+.voltaris-comparison-group-head {
+  position: relative;
+  padding: 2rem 1.25rem 0.7rem;
+  text-align: left;
+  border-bottom: 1px solid rgb(232 234 237 / 0.1);
+  background: linear-gradient(90deg, rgb(92 200 255 / 0.035), transparent 60%);
+}
+
+.voltaris-comparison-group-number {
+  display: inline-block;
+  margin-right: 0.65rem;
+  color: #5cc8ff;
+  font-family: var(--font-data, monospace);
+  font-size: 0.58rem;
+  letter-spacing: 0.12em;
+}
+
+.voltaris-comparison-row {
+  transition: background-color 160ms ease;
+}
+
+.voltaris-comparison-row:hover {
+  background: rgb(255 255 255 / 0.018);
+}
+
+.voltaris-comparison-row-label {
+  width: 11rem;
+  padding: 0.9rem 1.25rem;
+  text-align: left;
+  vertical-align: top;
+  font-weight: 400;
+}
+
+.voltaris-comparison-row-note {
+  display: block;
+  max-width: 14rem;
+  margin-top: 0.3rem;
+  color: #6c727c;
+  font-size: 0.68rem;
+  line-height: 1.45;
+}
+
+.voltaris-comparison-value {
+  position: relative;
+  padding: 0.9rem 1.25rem;
+  vertical-align: top;
+  color: #e8eaed;
+  border-left: 1px solid rgb(232 234 237 / 0.055);
+}
+
+.voltaris-comparison-value.is-best {
+  background:
+    linear-gradient(90deg, rgb(92 200 255 / 0.09), rgb(92 200 255 / 0.025));
+  color: #9ee4ff;
+}
+
+.voltaris-comparison-best-mark {
+  display: inline-block;
+  margin-left: 0.55rem;
+  padding: 0.16rem 0.3rem;
+  color: #0c0906;
+  background: #5cc8ff;
+  font-family: var(--font-data, monospace);
+  font-size: 0.5rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  vertical-align: middle;
+}
+
+.voltaris-comparison-group + .voltaris-comparison-group .voltaris-comparison-group-head {
+  padding-top: 2.5rem;
+}
+
+.voltaris-comparison > p {
+  max-width: 52rem;
+  margin-left: 0;
+}
+
+@media (max-width: 700px) {
+  .voltaris-comparison-stage-kicker {
+    padding: 0.85rem 1rem;
+  }
+
+  .voltaris-comparison-label-head,
+  .voltaris-comparison-row-label {
+    width: 9rem;
+  }
+
+  .voltaris-comparison-vehicle-head {
+    min-width: 12.5rem;
+    padding: 1rem;
+  }
+
+  .voltaris-comparison-label-head {
+    padding: 1rem;
+  }
+
+  .voltaris-comparison-row-label,
+  .voltaris-comparison-value {
+    padding: 0.8rem 1rem;
+  }
+
+  .voltaris-comparison-group-head {
+    padding: 1.7rem 1rem 0.65rem;
+  }
+
+  .voltaris-comparison-row-note {
+    max-width: 10rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .voltaris-comparison-vehicle-name,
+  .voltaris-comparison-remove,
+  .voltaris-comparison-row {
+    transition: none;
+  }
+}
