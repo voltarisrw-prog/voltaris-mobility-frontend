@@ -18,7 +18,7 @@ const editorialLines = [
 ];
 
 const AUTO_ADVANCE_MS = 11000;
-const SCROLL_SETTLE_MS = 1800;
+const RESUME_AFTER_INTERACTION_MS = 15000;
 
 export function MarketplaceEditorialMotion({
   vehicles,
@@ -29,92 +29,57 @@ export function MarketplaceEditorialMotion({
     [vehicles],
   );
 
-  const sectionRef = useRef<HTMLElement | null>(null);
-  const autoTimerRef = useRef<number | null>(null);
-  const resumeTimerRef = useRef<number | null>(null);
-
-  const [progress, setProgress] = useState(0);
+  const [virtualIndex, setVirtualIndex] = useState(0);
   const [line, setLine] = useState(0);
   const [autoPlaying, setAutoPlaying] = useState(true);
+
+  const resumeTimerRef = useRef<number | null>(null);
 
   const reducedMotion =
     typeof window !== 'undefined' &&
     window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  const vehiclePosition =
-    progress * Math.max(sourceVehicles.length - 1, 0);
+  const stockCount = sourceVehicles.length;
 
-  const activeIndex = Math.min(
-    Math.max(Math.round(vehiclePosition), 0),
-    Math.max(sourceVehicles.length - 1, 0),
+  const activeIndex =
+    stockCount > 0
+      ? ((virtualIndex % stockCount) + stockCount) % stockCount
+      : 0;
+
+  const scheduleResume = useCallback(() => {
+    setAutoPlaying(false);
+
+    if (resumeTimerRef.current) {
+      window.clearTimeout(resumeTimerRef.current);
+    }
+
+    resumeTimerRef.current = window.setTimeout(() => {
+      setAutoPlaying(true);
+    }, RESUME_AFTER_INTERACTION_MS);
+  }, []);
+
+  const moveBy = useCallback(
+    (delta: number) => {
+      if (stockCount < 2) return;
+
+      scheduleResume();
+
+      setVirtualIndex((current) => current + delta);
+    },
+    [scheduleResume, stockCount],
   );
 
   useEffect(() => {
-    if (reducedMotion) return;
+    if (reducedMotion || !autoPlaying || stockCount < 2) {
+      return;
+    }
 
-    let frame = 0;
+    const timer = window.setInterval(() => {
+      setVirtualIndex((current) => current + 1);
+    }, AUTO_ADVANCE_MS);
 
-    const update = () => {
-      frame = 0;
-
-      const section = sectionRef.current;
-
-      if (!section) return;
-
-      const rect = section.getBoundingClientRect();
-
-      const scrollDistance = Math.max(
-        section.offsetHeight - window.innerHeight,
-        1,
-      );
-
-      const nextProgress = Math.min(
-        Math.max(-rect.top / scrollDistance, 0),
-        1,
-      );
-
-      setProgress(nextProgress);
-    };
-
-    const onScroll = () => {
-      setAutoPlaying(false);
-
-      if (resumeTimerRef.current) {
-        window.clearTimeout(resumeTimerRef.current);
-      }
-
-      resumeTimerRef.current = window.setTimeout(() => {
-        setAutoPlaying(true);
-      }, SCROLL_SETTLE_MS);
-
-      if (!frame) {
-        frame = window.requestAnimationFrame(update);
-      }
-    };
-
-    const onResize = () => update();
-
-    update();
-
-    window.addEventListener('scroll', onScroll, {
-      passive: true,
-    });
-
-    window.addEventListener('resize', onResize);
-
-    return () => {
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onResize);
-
-      if (frame) {
-        window.cancelAnimationFrame(frame);
-      }
-
-      if (resumeTimerRef.current) {
-        window.clearTimeout(resumeTimerRef.current);
-      }
-    };
-  }, [reducedMotion]);
+    return () => window.clearInterval(timer);
+  }, [autoPlaying, reducedMotion, stockCount]);
 
   useEffect(() => {
     if (reducedMotion) return;
@@ -126,103 +91,33 @@ export function MarketplaceEditorialMotion({
     return () => window.clearInterval(timer);
   }, [reducedMotion]);
 
-  const moveToVehicle = useCallback(
-    (index: number) => {
-      const section = sectionRef.current;
-
-      if (!section || sourceVehicles.length < 2) return;
-
-      const safeIndex = Math.min(
-        Math.max(index, 0),
-        sourceVehicles.length - 1,
-      );
-
-      const scrollDistance = Math.max(
-        section.offsetHeight - window.innerHeight,
-        1,
-      );
-
-      const targetTop =
-        section.getBoundingClientRect().top +
-        window.scrollY +
-        scrollDistance *
-          (safeIndex / (sourceVehicles.length - 1));
-
-      setAutoPlaying(false);
-
+  useEffect(() => {
+    return () => {
       if (resumeTimerRef.current) {
         window.clearTimeout(resumeTimerRef.current);
       }
-
-      resumeTimerRef.current = window.setTimeout(() => {
-        setAutoPlaying(true);
-      }, AUTO_ADVANCE_MS);
-
-      window.scrollTo({
-        top: targetTop,
-        behavior: reducedMotion ? 'auto' : 'smooth',
-      });
-    },
-    [reducedMotion, sourceVehicles.length],
-  );
-
-  useEffect(() => {
-    if (
-      reducedMotion ||
-      !autoPlaying ||
-      sourceVehicles.length < 2
-    ) {
-      return;
-    }
-
-    autoTimerRef.current = window.setInterval(() => {
-      const currentIndex = Math.min(
-        Math.round(
-          progress * (sourceVehicles.length - 1),
-        ),
-        sourceVehicles.length - 1,
-      );
-
-      const nextIndex =
-        currentIndex >= sourceVehicles.length - 1
-          ? 0
-          : currentIndex + 1;
-
-      moveToVehicle(nextIndex);
-    }, AUTO_ADVANCE_MS);
-
-    return () => {
-      if (autoTimerRef.current) {
-        window.clearInterval(autoTimerRef.current);
-      }
     };
-  }, [
-    autoPlaying,
-    reducedMotion,
-    sourceVehicles.length,
-    progress,
-    moveToVehicle,
-  ]);
+  }, []);
 
   if (!sourceVehicles.length) return null;
 
   return (
     <section
-      ref={sectionRef}
-      className="marketplace-editorial-showroom"
+      className="marketplace-infinite-showroom"
       aria-label={
         mode === 'rental'
           ? 'Featured rental vehicles'
           : 'Featured vehicles'
       }
-      style={{
-        ['--marketplace-stock-count' as string]:
-          sourceVehicles.length,
+      onWheel={(event) => {
+        if (Math.abs(event.deltaY) < 12) return;
+
+        moveBy(event.deltaY > 0 ? 1 : -1);
       }}
     >
-      <div className="marketplace-editorial-showroom-sticky">
-        <div className="mb-6 flex items-end justify-between gap-6">
-          <div className="min-w-0">
+      <div className="marketplace-infinite-showroom-sticky">
+        <div className="marketplace-infinite-showroom-heading">
+          <div>
             <p className="font-data text-[0.6rem] uppercase tracking-[0.2em] text-volt">
               {mode === 'rental'
                 ? 'The rental edit'
@@ -240,66 +135,77 @@ export function MarketplaceEditorialMotion({
           </div>
         </div>
 
-        <div className="marketplace-editorial-stage">
+        <div className="marketplace-infinite-showroom-stage">
           {sourceVehicles.map((vehicle, index) => {
-            const distance = index - vehiclePosition;
-            const absoluteDistance = Math.abs(distance);
+            let relative = index - activeIndex;
 
-            const isActive = absoluteDistance < 0.5;
-            const isPrevious = distance < -0.5;
-            const isNext = distance > 0.5;
+            if (relative > stockCount / 2) {
+              relative -= stockCount;
+            }
+
+            if (relative < -stockCount / 2) {
+              relative += stockCount;
+            }
+
+            const distance = Math.abs(relative);
+            const isActive = relative === 0;
+            const isNext = relative > 0;
+            const isPrevious = relative < 0;
 
             const scale = isActive
               ? 1
               : Math.max(
-                  0.7,
-                  1 - absoluteDistance * 0.16,
+                  0.68,
+                  0.94 - distance * 0.12,
                 );
 
             const opacity = isActive
               ? 1
               : Math.max(
-                  0.16,
-                  0.78 - absoluteDistance * 0.16,
+                  0.12,
+                  0.72 - distance * 0.16,
                 );
 
             const blur = isActive
               ? 0
               : Math.min(
-                  3.5,
-                  absoluteDistance * 1.15,
+                  4,
+                  distance * 1.1,
                 );
 
             const translateY = isActive
               ? 0
-              : isNext
-                ? 66 + absoluteDistance * 18
-                : -66 - absoluteDistance * 18;
+              : relative > 0
+                ? 64 + distance * 22
+                : -64 - distance * 22;
 
             const translateX = isActive
               ? 0
               : isNext
-                ? 1.5
-                : -1.5;
+                ? 1.2
+                : -1.2;
 
             const zIndex = isActive
               ? 100
-              : isNext
-                ? 70 - Math.round(absoluteDistance * 5)
-                : 60 - Math.round(absoluteDistance * 5);
+              : Math.max(
+                  10,
+                  80 - distance * 10,
+                );
 
             return (
               <article
                 key={vehicle.id}
                 className={[
-                  'marketplace-editorial-showroom-card',
+                  'marketplace-infinite-showroom-card',
                   isActive
-                    ? 'marketplace-editorial-showroom-card-active'
-                    : isNext
-                      ? 'marketplace-editorial-showroom-card-next'
-                      : isPrevious
-                        ? 'marketplace-editorial-showroom-card-previous'
-                        : '',
+                    ? 'marketplace-infinite-showroom-card-active'
+                    : '',
+                  isNext
+                    ? 'marketplace-infinite-showroom-card-next'
+                    : '',
+                  isPrevious
+                    ? 'marketplace-infinite-showroom-card-previous'
+                    : '',
                 ].join(' ')}
                 aria-hidden={!isActive}
                 style={{
@@ -312,47 +218,37 @@ export function MarketplaceEditorialMotion({
               >
                 <MarketplaceVehicleCard
                   vehicle={vehicle}
-                  priority={index < 2}
+                  priority={distance <= 1}
                   featured
                   mode={mode}
                 />
               </article>
             );
           })}
-
         </div>
 
-        {sourceVehicles.length > 1 ? (
-          <div className="marketplace-editorial-showroom-controls">
+        {stockCount > 1 ? (
+          <div className="marketplace-infinite-showroom-controls">
             <button
               type="button"
-              onClick={() => moveToVehicle(activeIndex - 1)}
-              disabled={activeIndex === 0}
+              onClick={() => moveBy(-1)}
               aria-label="Previous vehicle"
-              className="marketplace-editorial-showroom-control marketplace-editorial-showroom-control-previous"
+              className="marketplace-infinite-showroom-control marketplace-infinite-showroom-control-previous"
             >
               <ArrowUp
                 className="h-4 w-4"
                 aria-hidden="true"
               />
-
               <span>Previous</span>
             </button>
 
             <button
               type="button"
-              onClick={() =>
-                moveToVehicle(
-                  activeIndex >= sourceVehicles.length - 1
-                    ? 0
-                    : activeIndex + 1,
-                )
-              }
+              onClick={() => moveBy(1)}
               aria-label="Next vehicle"
-              className="marketplace-editorial-showroom-control marketplace-editorial-showroom-control-next"
+              className="marketplace-infinite-showroom-control marketplace-infinite-showroom-control-next"
             >
               <span>Next</span>
-
               <ArrowDown
                 className="h-4 w-4"
                 aria-hidden="true"

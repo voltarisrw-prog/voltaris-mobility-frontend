@@ -516,3 +516,144 @@
   }
 }
 
+
+/* Infinite living showroom */
+.marketplace-infinite-showroom {
+  position: relative;
+  height: 108svh;
+  min-height: 720px;
+  margin-top: 2rem;
+}
+
+.marketplace-infinite-showroom-sticky {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  min-height: 720px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.marketplace-infinite-showroom-heading {
+  position: absolute;
+  top: 1.25rem;
+  left: 0;
+  right: 0;
+  z-index: 250;
+  pointer-events: none;
+}
+
+.marketplace-infinite-showroom-stage {
+  position: relative;
+  width: min(100%, 1180px);
+  height: min(70svh, 720px);
+  min-height: 480px;
+  margin: 0 auto;
+  overflow: visible;
+  isolation: isolate;
+}
+
+.marketplace-infinite-showroom-card {
+  position: absolute;
+  inset: 0;
+  transform-origin: center center;
+  will-change: transform, opacity, filter;
+  transition:
+    transform 1100ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 850ms ease,
+    filter 850ms ease;
+}
+
+.marketplace-infinite-showroom-card-active {
+  z-index: 100;
+}
+
+.marketplace-infinite-showroom-card-next,
+.marketplace-infinite-showroom-card-previous {
+  transform-origin: center center;
+}
+
+.marketplace-infinite-showroom-controls {
+  position: absolute;
+  inset: 0;
+  z-index: 300;
+  pointer-events: none;
+}
+
+.marketplace-infinite-showroom-control {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  pointer-events: auto;
+  border: 1px solid rgb(255 255 255 / 0.16);
+  background: rgb(8 10 12 / 0.72);
+  color: rgb(255 255 255 / 0.9);
+  padding: 0.7rem 0.9rem;
+  font-family: var(--font-data, monospace);
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  backdrop-filter: blur(14px);
+  transition:
+    background 220ms ease,
+    border-color 220ms ease,
+    transform 220ms ease;
+}
+
+.marketplace-infinite-showroom-control:hover {
+  background: rgb(255 255 255 / 0.1);
+  border-color: rgb(255 255 255 / 0.3);
+}
+
+.marketplace-infinite-showroom-control-previous {
+  top: 1.25rem;
+  right: 0;
+}
+
+.marketplace-infinite-showroom-control-next {
+  right: 0;
+  bottom: 1.25rem;
+}
+
+@media (max-width: 640px) {
+  .marketplace-infinite-showroom {
+    height: 105svh;
+    min-height: 620px;
+  }
+
+  .marketplace-infinite-showroom-sticky {
+    min-height: 620px;
+  }
+
+  .marketplace-infinite-showroom-heading {
+    top: 0.8rem;
+  }
+
+  .marketplace-infinite-showroom-stage {
+    height: 62svh;
+    min-height: 390px;
+  }
+
+  .marketplace-infinite-showroom-control-previous {
+    top: 0.8rem;
+  }
+
+  .marketplace-infinite-showroom-control-next {
+    bottom: 0.8rem;
+  }
+
+  .marketplace-infinite-showroom-control {
+    padding: 0.58rem 0.72rem;
+    font-size: 0.56rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marketplace-infinite-showroom-card {
+    transition: none;
+  }
+}
