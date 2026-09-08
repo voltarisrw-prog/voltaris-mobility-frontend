@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowDown, ArrowUp } from 'lucide-react';
 import { MarketplaceVehicleCard } from '@/components/MarketplaceVehicleCard';
 import type { VehicleSummary } from '@/types/vehicle';
@@ -126,42 +126,45 @@ export function MarketplaceEditorialMotion({
     return () => window.clearInterval(timer);
   }, [reducedMotion]);
 
-  const moveToVehicle = (index: number) => {
-    const section = sectionRef.current;
+  const moveToVehicle = useCallback(
+    (index: number) => {
+      const section = sectionRef.current;
 
-    if (!section || sourceVehicles.length < 2) return;
+      if (!section || sourceVehicles.length < 2) return;
 
-    const safeIndex = Math.min(
-      Math.max(index, 0),
-      sourceVehicles.length - 1,
-    );
+      const safeIndex = Math.min(
+        Math.max(index, 0),
+        sourceVehicles.length - 1,
+      );
 
-    const scrollDistance = Math.max(
-      section.offsetHeight - window.innerHeight,
-      1,
-    );
+      const scrollDistance = Math.max(
+        section.offsetHeight - window.innerHeight,
+        1,
+      );
 
-    const targetTop =
-      section.getBoundingClientRect().top +
-      window.scrollY +
-      scrollDistance *
-        (safeIndex / (sourceVehicles.length - 1));
+      const targetTop =
+        section.getBoundingClientRect().top +
+        window.scrollY +
+        scrollDistance *
+          (safeIndex / (sourceVehicles.length - 1));
 
-    setAutoPlaying(false);
+      setAutoPlaying(false);
 
-    if (resumeTimerRef.current) {
-      window.clearTimeout(resumeTimerRef.current);
-    }
+      if (resumeTimerRef.current) {
+        window.clearTimeout(resumeTimerRef.current);
+      }
 
-    resumeTimerRef.current = window.setTimeout(() => {
-      setAutoPlaying(true);
-    }, AUTO_ADVANCE_MS);
+      resumeTimerRef.current = window.setTimeout(() => {
+        setAutoPlaying(true);
+      }, AUTO_ADVANCE_MS);
 
-    window.scrollTo({
-      top: targetTop,
-      behavior: reducedMotion ? 'auto' : 'smooth',
-    });
-  };
+      window.scrollTo({
+        top: targetTop,
+        behavior: reducedMotion ? 'auto' : 'smooth',
+      });
+    },
+    [reducedMotion, sourceVehicles.length],
+  );
 
   useEffect(() => {
     if (
@@ -198,6 +201,7 @@ export function MarketplaceEditorialMotion({
     reducedMotion,
     sourceVehicles.length,
     progress,
+    moveToVehicle,
   ]);
 
   if (!sourceVehicles.length) return null;
