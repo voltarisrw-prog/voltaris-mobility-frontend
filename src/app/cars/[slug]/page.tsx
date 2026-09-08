@@ -86,7 +86,7 @@ export default async function VehiclePage({ params }: { params: Params }) {
   const title = vehicleTitle(vehicle);
   const trail = [
     { name: 'Home', path: '/' },
-    { name: 'Electric vehicles', path: '/cars' },
+    { name: 'Electric + hybrid cars', path: '/cars' },
     { name: vehicle.make, path: `/brands/${vehicle.make.toLowerCase()}` },
     { name: title, path: `/cars/${vehicle.slug}` },
   ];
@@ -238,7 +238,8 @@ export default async function VehiclePage({ params }: { params: Params }) {
 
         <aside className="lg:sticky lg:top-24 lg:self-start">
           <div className="border border-hairline p-6">
-            <p className="eyebrow">
+            <p className="eyebrow">ELECTRIC + HYBRID</p>
+            <p className="mt-2 text-xs uppercase tracking-[0.16em] text-steel-muted">
               {vehicle.condition === 'new' ? 'New' : 'Used'} · {vehicle.location.city}
             </p>
             <h1 className="mt-2 font-display text-2xl font-semibold leading-tight tracking-tight">
@@ -363,7 +364,7 @@ export default async function VehiclePage({ params }: { params: Params }) {
       {similar.length > 0 && (
         <section className="mt-20">
           <h2 className="section-heading">
-            Similar electric vehicles
+            More electric + hybrid cars
           </h2>
           <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {similar.slice(0, 3).map((item) => (
