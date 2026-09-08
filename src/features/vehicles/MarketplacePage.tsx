@@ -133,12 +133,12 @@ export async function MarketplacePage({
         </div>
       ) : results ? (
         <>
-          {mode ? (
+          {true ? (
             <>
               <MarketplaceEditorialMotion
                 key={results.items.map((vehicle) => vehicle.id).join('|')}
                 vehicles={results.items}
-                mode={mode}
+                mode={mode ?? 'sale'}
               />
 
               {results.items.length > 8 ? (
