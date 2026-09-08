@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ChevronDown } from 'lucide-react';
@@ -8,6 +7,8 @@ import { CompareToggleButton } from '@/components/CompareToggleButton';
 import { JsonLd } from '@/components/JsonLd';
 import { PriceDisplay } from '@/components/PriceDisplay';
 import { RangeMeter } from '@/components/RangeMeter';
+import { RentalCheckoutPanel } from '@/features/vehicles/RentalCheckoutPanel';
+import { VehicleGallery } from '@/components/VehicleGallery';
 import { TrackVehicleView } from '@/components/TrackVehicleView';
 import { VehicleCard } from '@/components/VehicleCard';
 import { VerificationBadge } from '@/components/VerificationBadge';
@@ -139,7 +140,7 @@ export default async function VehiclePage({ params }: { params: Params }) {
   ];
 
   return (
-    <div className="shell py-8 sm:py-12">
+    <div className="shell py-6 sm:py-10">
       <JsonLd data={breadcrumbJsonLd(trail)} />
       <JsonLd data={vehicleJsonLd(vehicle)} />
       <JsonLd data={faqJsonLd(vehicle.faqs)} />
@@ -153,11 +154,11 @@ export default async function VehiclePage({ params }: { params: Params }) {
 
       <Breadcrumbs trail={trail} />
 
-      <div className="mt-6 grid gap-10 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
+      <div className="mt-5 grid gap-8 lg:grid-cols-[minmax(0,1.7fr)_minmax(0,0.8fr)]">
         <div>
-          <Gallery vehicle={vehicle} title={title} />
+          <VehicleGallery vehicle={vehicle} title={title} />
 
-          <section className="mt-10">
+          <section className="mt-12 border-t border-hairline pt-8">
             <h2 className="eyebrow">About this vehicle</h2>
             <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-steel">
               {vehicle.description}
@@ -261,41 +262,73 @@ export default async function VehiclePage({ params }: { params: Params }) {
               <VerificationBadge verified={vehicle.verified} />
             </div>
 
-            {vehicle.status === 'sold' ? (
-              <p className="mt-6 border border-hairline bg-slab p-4 text-sm text-steel">
-                This vehicle has been sold. Similar listings are below.
+            {vehicle.status === 'sold' || vehicle.status === 'unavailable' ? (
+              <p className="mt-6 border border-hairline bg-slab p-4 text-sm leading-relaxed text-steel">
+                {vehicle.status === 'sold'
+                  ? 'This vehicle has been sold. Similar listings are below.'
+                  : 'This vehicle is currently unavailable. Similar listings are below.'}
               </p>
             ) : (
-              <div className="mt-6 space-y-2">
-                {vehicle.test_drive_available && (
+              <>
+                <div className="mt-6">
+                  {features.checkout && vehicle.purchase_enabled && (
+                    <Link
+                      href={`/checkout/start?vehicle=${vehicle.id}`}
+                      className="flex w-full items-center justify-between bg-volt px-5 py-4 font-data text-eyebrow uppercase text-surface transition-colors hover:bg-volt-bright"
+                    >
+                      <span>Buy this vehicle</span>
+                      <span aria-hidden="true">→</span>
+                    </Link>
+                  )}
+                </div>
+
+                {features.checkout &&
+                  vehicle.rental_enabled &&
+                  vehicle.rental_price_per_day ? (
+                  <div id="rental-details">
+                    <RentalCheckoutPanel vehicleId={vehicle.id} />
+                  </div>
+                ) : null}
+
+                <div className="mt-4 grid gap-2">
+                  {vehicle.test_drive_available && (
+                    <Link
+                      href={`/test-drive?vehicle=${vehicle.id}`}
+                      className="flex items-center justify-center border border-chrome px-5 py-3 font-data text-eyebrow uppercase transition-colors hover:bg-chrome hover:text-surface"
+                    >
+                      Book a free test drive
+                    </Link>
+                  )}
+
                   <Link
-                    href={`/test-drive?vehicle=${vehicle.id}`}
-                    className="block bg-volt px-5 py-3 text-center font-data text-eyebrow uppercase text-surface transition-colors hover:bg-volt-bright"
+                    href={`/cars/${vehicle.slug}/enquire`}
+                    className="flex items-center justify-center border border-hairline px-5 py-3 font-data text-eyebrow uppercase text-steel transition-colors hover:border-chrome hover:text-chrome"
                   >
-                    Book a test drive
+                    Ask for more details
                   </Link>
-                )}
-                <Link
-                  href={`/cars/${vehicle.slug}/enquire`}
-                  className="block border border-chrome px-5 py-3 text-center font-data text-eyebrow uppercase transition-colors hover:bg-chrome hover:text-surface"
-                >
-                  Ask about this vehicle
-                </Link>
-                {features.checkout && vehicle.purchase_enabled && (
-                  <Link
-                    href={`/checkout/start?vehicle=${vehicle.id}`}
-                    className="block border border-hairline px-5 py-3 text-center font-data text-eyebrow uppercase text-steel transition-colors hover:border-chrome hover:text-chrome"
-                  >
-                    Start a purchase
-                  </Link>
-                )}
-              </div>
+                </div>
+              </>
             )}
 
             {/* Available regardless of sold status — comparing against a sold listing's
                 specs is still useful context, even though it can't be the thing you buy. */}
             <div className="mt-2">
               <CompareToggleButton vehicleId={vehicle.id} variant="button" />
+            </div>
+
+            <div className="mt-5 grid grid-cols-3 border-y border-hairline/60 py-4">
+              <div className="pr-3">
+                <p className="eyebrow">Secure</p>
+                <p className="mt-1 text-xs text-steel-muted">Protected checkout</p>
+              </div>
+              <div className="border-l border-hairline/60 px-3">
+                <p className="eyebrow">Payment</p>
+                <p className="mt-1 text-xs text-steel-muted">Mobile or card</p>
+              </div>
+              <div className="border-l border-hairline/60 pl-3">
+                <p className="eyebrow">Support</p>
+                <p className="mt-1 text-xs text-steel-muted">Ask before deciding</p>
+              </div>
             </div>
 
             <div className="mt-6 border-t border-hairline/60 pt-5">
@@ -343,47 +376,3 @@ export default async function VehiclePage({ params }: { params: Params }) {
   );
 }
 
-function Gallery({ vehicle, title }: { vehicle: VehicleDetail; title: string }) {
-  const [lead, ...rest] = vehicle.images;
-  if (!lead) {
-    return (
-      <div className="flex aspect-[16/10] items-center justify-center bg-slab font-data text-eyebrow uppercase text-steel-muted">
-        Photos coming soon
-      </div>
-    );
-  }
-
-  return (
-    <div>
-      <div className="relative aspect-[16/10] overflow-hidden bg-slab">
-        <Image
-          src={lead.detail}
-          alt={lead.alt || title}
-          fill
-          sizes="(min-width: 1024px) 62vw, 100vw"
-          className="object-cover"
-          priority
-          {...(lead.blur_data_url
-            ? { placeholder: 'blur' as const, blurDataURL: lead.blur_data_url }
-            : {})}
-        />
-      </div>
-      {rest.length > 0 && (
-        <ul className="mt-2 grid grid-cols-4 gap-2">
-          {rest.slice(0, 4).map((image) => (
-            <li key={image.thumb} className="relative aspect-[4/3] overflow-hidden bg-slab">
-              <Image
-                src={image.thumb}
-                alt={image.alt || title}
-                fill
-                sizes="(min-width: 1024px) 15vw, 25vw"
-                className="object-cover"
-                loading="lazy"
-              />
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
-  );
-}

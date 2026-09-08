@@ -2,7 +2,7 @@ import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { EmptyState } from '@/components/EmptyState';
 import { JsonLd } from '@/components/JsonLd';
 import { Pagination } from '@/components/Pagination';
-import { VehicleCard } from '@/components/VehicleCard';
+import { MarketplaceVehicleCard } from '@/components/MarketplaceVehicleCard';
 import { VehicleFilters as FilterPanel } from '@/components/VehicleFilters';
 import { RentalSearch } from '@/features/vehicles/RentalSearch';
 import { getFacets, listVehicles, type VehicleFacets } from '@/lib/api/vehicles';
@@ -132,12 +132,13 @@ export async function MarketplacePage({
         </div>
       ) : results ? (
         <>
-          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {results.items.map((vehicle, index) => (
-              <VehicleCard
+              <MarketplaceVehicleCard
                 key={vehicle.id}
                 vehicle={vehicle}
                 priority={index < 3}
+                featured={index === 0}
                 mode={mode}
               />
             ))}
