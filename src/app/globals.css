@@ -369,18 +369,14 @@
 }
 
 .marketplace-editorial-showroom-controls {
-  position: relative;
+  position: absolute;
+  inset: 0;
   z-index: 300;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-top: 1.25rem;
-  padding: 0 0.25rem;
   pointer-events: none;
 }
 
 .marketplace-editorial-showroom-control {
+  position: absolute;
   display: flex;
   min-width: 9.5rem;
   min-height: 3.4rem;
@@ -412,11 +408,13 @@
 }
 
 .marketplace-editorial-showroom-control-previous {
-  margin-right: auto;
+  top: -4.5rem;
+  right: 0;
 }
 
 .marketplace-editorial-showroom-control-next {
-  margin-left: auto;
+  right: 0;
+  bottom: -4.5rem;
 }
 
 .marketplace-editorial-showroom-control:hover:not(:disabled) {
@@ -484,8 +482,7 @@
   }
 
   .marketplace-editorial-showroom-controls {
-    margin-top: 0.9rem;
-    gap: 0.55rem;
+    inset: 0;
   }
 
   .marketplace-editorial-showroom-control {
@@ -494,6 +491,16 @@
     padding: 0.65rem 0.9rem;
     font-size: 0.54rem;
     letter-spacing: 0.14em;
+  }
+
+  .marketplace-editorial-showroom-control-previous {
+    top: -3.8rem;
+    right: 0;
+  }
+
+  .marketplace-editorial-showroom-control-next {
+    right: 0;
+    bottom: -3.8rem;
   }
 }
 

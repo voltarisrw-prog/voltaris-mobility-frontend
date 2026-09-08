@@ -251,25 +251,30 @@ export function MarketplaceEditorialMotion({
 
             const scale = isActive
               ? 1
-              : isNext
-                ? Math.max(0.84, 0.96 - absoluteDistance * 0.045)
-                : Math.max(0.86, 0.95 - absoluteDistance * 0.04);
+              : Math.max(
+                  0.7,
+                  1 - absoluteDistance * 0.16,
+                );
 
             const opacity = isActive
               ? 1
-              : isNext
-                ? Math.max(0.48, 0.82 - absoluteDistance * 0.12)
-                : Math.max(0.38, 0.68 - absoluteDistance * 0.1);
+              : Math.max(
+                  0.16,
+                  0.78 - absoluteDistance * 0.16,
+                );
 
             const blur = isActive
               ? 0
-              : Math.min(2.8, absoluteDistance * 0.9);
+              : Math.min(
+                  3.5,
+                  absoluteDistance * 1.15,
+                );
 
             const translateY = isActive
               ? 0
               : isNext
-                ? 56 + (absoluteDistance - 1) * 9
-                : -56 - (absoluteDistance - 1) * 8;
+                ? 66 + absoluteDistance * 18
+                : -66 - absoluteDistance * 18;
 
             const translateX = isActive
               ? 0
