@@ -133,8 +133,7 @@ export async function MarketplacePage({
         </div>
       ) : results ? (
         <>
-          {true ? (
-            <>
+          <>
               <MarketplaceEditorialMotion
                 key={results.items.map((vehicle) => vehicle.id).join('|')}
                 vehicles={results.items}
@@ -174,8 +173,7 @@ export async function MarketplacePage({
                   </div>
                 </div>
               ) : null}
-            </>
-          )}
+          </>
 
           <div className="mt-10">
             <Pagination
