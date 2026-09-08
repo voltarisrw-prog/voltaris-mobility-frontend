@@ -35,11 +35,21 @@ function describe(filters: ReturnType<typeof parseFilters>): {
     ? filters.location.replace(/\b\w/g, (c: string) => c.toUpperCase())
     : 'Rwanda';
 
-  const title = `${parts.join(' ')} for sale in ${where}`;
+  const hasFilters =
+    filters.condition ||
+    filters.make?.[0] ||
+    filters.body?.[0] ||
+    filters.location;
+
+  const title = hasFilters
+    ? `${parts.join(' ')} for sale in ${where}`
+    : 'Find what moves you';
 
   return {
-    title: title.charAt(0).toUpperCase() + title.slice(1),
-    description: `Explore electric and hybrid cars available through Voltaris. Compare range, battery, price, and condition, then book a test drive.`, 
+    title,
+    description: hasFilters
+      ? 'Explore electric and hybrid cars available through Voltaris.'
+      : 'Explore electric and hybrid cars through Voltaris',
   };
 }
 

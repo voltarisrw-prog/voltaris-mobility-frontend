@@ -60,7 +60,7 @@ export async function MarketplacePage({
       ? 'Electric and hybrid cars, ready when you are'
       : mode === 'sale'
         ? 'Electric and hybrid cars, ready for the road'
-        : 'Electric and hybrid cars');
+        : 'Find what moves you');
 
   const resolvedDescription =
     description ??
@@ -68,7 +68,7 @@ export async function MarketplacePage({
       ? 'Explore electric and hybrid cars available to rent through Voltaris.'
       : mode === 'sale'
         ? 'Explore electric and hybrid cars available through Voltaris.'
-        : 'Explore electric and hybrid cars through Voltaris.');
+        : 'Explore electric and hybrid cars through Voltaris');
 
   const trail = [
     { name: 'Home', path: '/' },
