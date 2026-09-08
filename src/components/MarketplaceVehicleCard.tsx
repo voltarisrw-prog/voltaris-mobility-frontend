@@ -85,10 +85,7 @@ export function MarketplaceVehicleCard({
             </span>
           )}
 
-          <div
-            className="absolute right-4 top-4 z-10"
-            onClick={(event) => event.stopPropagation()}
-          >
+          <div className="absolute right-4 top-4 z-10">
             <CompareToggleButton
               vehicleId={vehicle.id}
               variant="icon"
