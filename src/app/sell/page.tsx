@@ -6,9 +6,9 @@ import { features } from '@/config/features';
 import { buildMetadata } from '@/lib/seo/metadata';
 
 export const metadata: Metadata = buildMetadata({
-  title: 'Sell your electric vehicle in Rwanda',
+  title: 'Sell your electric or hybrid car in Rwanda',
   description:
-    'List your EV on Voltaris. Submit the vehicle, photos, and documents; we verify what we can and put it in front of buyers already searching for it.',
+    'Sell your electric or hybrid car through Voltaris. Submit your vehicle details, photos, and documents for review.',
   path: '/sell',
 });
 
@@ -18,15 +18,16 @@ export default function SellPage() {
       <Breadcrumbs
         trail={[
           { name: 'Home', path: '/' },
-          { name: 'List your EV', path: '/sell' },
+          { name: 'Sell your car', path: '/sell' },
         ]}
       />
 
       <div className="mt-6 grid gap-12 lg:grid-cols-[minmax(0,1fr)_18rem]">
         <div>
-          <h1 className="font-display text-headline">List your EV</h1>
+          <p className="eyebrow">ELECTRIC + HYBRID</p>
+          <h1 className="mt-2 font-display text-headline">Put your car on the market</h1>
           <p className="mt-3 max-w-prose text-sm leading-relaxed text-steel">
-            Four steps, about ten minutes. Nothing goes live until a reviewer has checked it.
+            Sell your electric or hybrid car through Voltaris.
           </p>
           <div className="mt-10">
             {features.sellerListings ? <SellerListingFlow /> : <SellWaitingList />}
