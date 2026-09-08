@@ -246,28 +246,42 @@ export function MarketplaceEditorialMotion({
             const absoluteDistance = Math.abs(distance);
 
             const isActive = absoluteDistance < 0.5;
+            const isPrevious = distance < -0.5;
+            const isNext = distance > 0.5;
 
-            const scale = Math.max(
-              0.9,
-              1 - absoluteDistance * 0.055,
-            );
+            const scale = isActive
+              ? 1
+              : isNext
+                ? Math.max(0.84, 0.96 - absoluteDistance * 0.045)
+                : Math.max(0.86, 0.95 - absoluteDistance * 0.04);
 
-            const opacity = Math.max(
-              0.22,
-              1 - absoluteDistance * 0.42,
-            );
+            const opacity = isActive
+              ? 1
+              : isNext
+                ? Math.max(0.48, 0.82 - absoluteDistance * 0.12)
+                : Math.max(0.38, 0.68 - absoluteDistance * 0.1);
 
-            const blur = Math.min(
-              5,
-              absoluteDistance * 2.2,
-            );
+            const blur = isActive
+              ? 0
+              : Math.min(2.8, absoluteDistance * 0.9);
 
-            const translateY =
-              distance * 30 +
-              (distance > 0 ? 18 : 0);
+            const translateY = isActive
+              ? 0
+              : isNext
+                ? 56 + (absoluteDistance - 1) * 9
+                : -56 - (absoluteDistance - 1) * 8;
 
-            const zIndex =
-              100 - Math.round(absoluteDistance * 10);
+            const translateX = isActive
+              ? 0
+              : isNext
+                ? 1.5
+                : -1.5;
+
+            const zIndex = isActive
+              ? 100
+              : isNext
+                ? 70 - Math.round(absoluteDistance * 5)
+                : 60 - Math.round(absoluteDistance * 5);
 
             return (
               <article
@@ -276,14 +290,19 @@ export function MarketplaceEditorialMotion({
                   'marketplace-editorial-showroom-card',
                   isActive
                     ? 'marketplace-editorial-showroom-card-active'
-                    : '',
+                    : isNext
+                      ? 'marketplace-editorial-showroom-card-next'
+                      : isPrevious
+                        ? 'marketplace-editorial-showroom-card-previous'
+                        : '',
                 ].join(' ')}
                 aria-hidden={!isActive}
                 style={{
-                  transform: `translate3d(0, ${translateY}%, 0) scale(${scale})`,
+                  transform: `translate3d(${translateX}%, ${translateY}%, 0) scale(${scale})`,
                   opacity,
                   filter: `blur(${blur}px)`,
                   zIndex,
+                  pointerEvents: isActive ? 'auto' : 'none',
                 }}
               >
                 <MarketplaceVehicleCard
@@ -296,45 +315,46 @@ export function MarketplaceEditorialMotion({
             );
           })}
 
-          {sourceVehicles.length > 1 ? (
-            <div className="marketplace-editorial-showroom-controls">
-              <button
-                type="button"
-                onClick={() => moveToVehicle(activeIndex - 1)}
-                disabled={activeIndex === 0}
-                aria-label="Previous vehicle"
-                className="marketplace-editorial-showroom-control"
-              >
-                <ArrowUp
-                  className="h-4 w-4"
-                  aria-hidden="true"
-                />
-
-                <span>Previous</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() =>
-                  moveToVehicle(
-                    activeIndex >= sourceVehicles.length - 1
-                      ? 0
-                      : activeIndex + 1,
-                  )
-                }
-                aria-label="Next vehicle"
-                className="marketplace-editorial-showroom-control"
-              >
-                <ArrowDown
-                  className="h-4 w-4"
-                  aria-hidden="true"
-                />
-
-                <span>Next</span>
-              </button>
-            </div>
-          ) : null}
         </div>
+
+        {sourceVehicles.length > 1 ? (
+          <div className="marketplace-editorial-showroom-controls">
+            <button
+              type="button"
+              onClick={() => moveToVehicle(activeIndex - 1)}
+              disabled={activeIndex === 0}
+              aria-label="Previous vehicle"
+              className="marketplace-editorial-showroom-control marketplace-editorial-showroom-control-previous"
+            >
+              <ArrowUp
+                className="h-4 w-4"
+                aria-hidden="true"
+              />
+
+              <span>Previous</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() =>
+                moveToVehicle(
+                  activeIndex >= sourceVehicles.length - 1
+                    ? 0
+                    : activeIndex + 1,
+                )
+              }
+              aria-label="Next vehicle"
+              className="marketplace-editorial-showroom-control marketplace-editorial-showroom-control-next"
+            >
+              <span>Next</span>
+
+              <ArrowDown
+                className="h-4 w-4"
+                aria-hidden="true"
+              />
+            </button>
+          </div>
+        ) : null}
       </div>
     </section>
   );
