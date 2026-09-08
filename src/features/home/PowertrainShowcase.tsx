@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { MOCK_VEHICLES } from '@/lib/mock/fixtures';
@@ -96,12 +97,12 @@ export function PowertrainShowcase() {
                 className="group relative isolate min-h-[34rem] overflow-hidden bg-[#15110d] sm:min-h-[42rem] lg:min-h-[50rem]"
               >
                 <div className="absolute inset-0 z-0 overflow-hidden">
-                  <img
+                  <Image
                     src={vehicle.primary_image!.card}
                     alt={`${vehicle.make} ${vehicle.model}`}
-                    width={1536}
-                    height={1024}
-                    className="h-full w-full object-cover object-center transition-transform duration-[1600ms] ease-out group-hover:scale-[1.045]"
+                    fill
+                    sizes="(min-width: 768px) 50vw, 100vw"
+                    className="object-cover object-center transition-transform duration-[1600ms] ease-out group-hover:scale-[1.045]"
                   />
                 </div>
 
