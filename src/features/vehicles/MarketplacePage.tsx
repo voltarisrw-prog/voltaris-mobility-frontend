@@ -72,7 +72,10 @@ export async function MarketplacePage({
 
   const trail = [
     { name: 'Home', path: '/' },
-    { name: resolvedTitle, path: basePath },
+    {
+      name: mode === 'rental' ? 'Rent' : mode === 'sale' ? 'Buy' : 'Cars',
+      path: basePath,
+    },
   ];
 
   return (
