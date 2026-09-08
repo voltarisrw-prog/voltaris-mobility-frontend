@@ -81,11 +81,8 @@ export function TestDriveForm({
   const today = new Date().toISOString().slice(0, 10);
 
   return (
-    <form
-      onSubmit={onSubmit}
-      noValidate
-      className="space-y-5 border border-hairline bg-slab/70 p-6 shadow-[0_18px_50px_rgba(0,0,0,0.42)] sm:p-8"
-    >
+    <div className="border border-hairline bg-slab p-6 shadow-[0_24px_70px_rgba(0,0,0,0.5)] sm:p-8">
+      <form onSubmit={onSubmit} noValidate className="space-y-5">
       {vehicleId ? (
         <input type="hidden" {...register('vehicle_id')} />
       ) : (
@@ -193,6 +190,7 @@ export function TestDriveForm({
       <Button type="submit" loading={isSubmitting}>
         Request this test drive
       </Button>
-    </form>
+      </form>
+    </div>
   );
 }
