@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowUpRight, BatteryCharging, GitCompareArrows, Zap } from 'lucide-react';
+import { ArrowUpRight, BatteryCharging, Zap } from 'lucide-react';
 import { CompareToggleButton } from './CompareToggleButton';
 import { formatPrice } from '@/lib/format';
 import type { VehicleSummary } from '@/types/vehicle';
@@ -156,11 +156,11 @@ export function MarketplaceVehicleCard({
               </p>
             </Link>
 
-            <div className="flex flex-wrap items-center gap-2">
+            <div className="flex flex-wrap items-center justify-end gap-2">
               {mode ? (
                 <Link
                   href={actionHref}
-                  className="inline-flex min-h-10 items-center gap-2 bg-volt px-4 py-2.5 font-data text-[0.625rem] uppercase tracking-[0.14em] text-surface transition-colors hover:bg-volt-bright"
+                  className="inline-flex min-h-9 items-center gap-2 bg-volt px-3.5 py-2 font-data text-[0.58rem] uppercase tracking-[0.14em] text-surface transition-colors hover:bg-volt-bright sm:min-h-10 sm:px-4 sm:py-2.5 sm:text-[0.625rem]"
                 >
                   {actionLabel}
                   <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
@@ -169,7 +169,7 @@ export function MarketplaceVehicleCard({
                 <>
                   <Link
                     href={`/checkout/start?vehicle=${encodeURIComponent(vehicle.id)}`}
-                    className="inline-flex min-h-10 items-center gap-2 bg-volt px-4 py-2.5 font-data text-[0.625rem] uppercase tracking-[0.14em] text-surface transition-colors hover:bg-volt-bright"
+                    className="inline-flex min-h-9 items-center gap-2 bg-volt px-3.5 py-2 font-data text-[0.58rem] uppercase tracking-[0.14em] text-surface transition-colors hover:bg-volt-bright sm:min-h-10 sm:px-4 sm:py-2.5 sm:text-[0.625rem]"
                   >
                     Order
                     <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
@@ -177,7 +177,7 @@ export function MarketplaceVehicleCard({
 
                   <Link
                     href={`/cars/${vehicle.slug}#rental-details`}
-                    className="inline-flex min-h-10 items-center gap-2 border border-white/35 bg-black/25 px-4 py-2.5 font-data text-[0.625rem] uppercase tracking-[0.14em] text-white backdrop-blur-md transition-colors hover:border-white"
+                    className="inline-flex min-h-9 items-center gap-2 border border-white/35 bg-black/25 px-3.5 py-2 font-data text-[0.58rem] uppercase tracking-[0.14em] text-white backdrop-blur-md transition-colors hover:border-white sm:min-h-10 sm:px-4 sm:py-2.5 sm:text-[0.625rem]"
                   >
                     Rent
                   </Link>
@@ -186,10 +186,9 @@ export function MarketplaceVehicleCard({
 
               <Link
                 href={`/cars/${vehicle.slug}`}
-                className="inline-flex min-h-10 items-center gap-2 border border-white/35 bg-black/25 px-4 py-2.5 font-data text-[0.625rem] uppercase tracking-[0.14em] text-white backdrop-blur-md transition-colors hover:border-white"
+                className="inline-flex min-h-9 items-center gap-2 border border-white/35 bg-black/25 px-3.5 py-2 font-data text-[0.58rem] uppercase tracking-[0.14em] text-white backdrop-blur-md transition-colors hover:border-white sm:min-h-10 sm:px-4 sm:py-2.5 sm:text-[0.625rem]"
               >
                 View details
-                <GitCompareArrows className="hidden h-3.5 w-3.5" aria-hidden="true" />
                 <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
               </Link>
             </div>
