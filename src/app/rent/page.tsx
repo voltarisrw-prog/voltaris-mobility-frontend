@@ -3,9 +3,9 @@ import { MarketplacePage } from '@/features/vehicles/MarketplacePage';
 import { buildMetadata } from '@/lib/seo/metadata';
 
 export const metadata: Metadata = buildMetadata({
-  title: 'Electric Vehicles for Rent in Rwanda',
+  title: 'Drive what fits your journey',
   description:
-    'Browse electric vehicles available for rental in Rwanda. Compare range, battery, rental pricing, and availability, then reserve your vehicle through Voltaris.',
+    'Rent electric and hybrid cars through Voltaris.',
   path: '/rent',
 });
 
@@ -23,8 +23,8 @@ export default function RentPage({
       searchParams={searchParams}
       mode="rental"
       basePath="/rent"
-      title="Electric Vehicles for Rent in Rwanda"
-      description="Browse electric vehicles available for rental in Rwanda. Compare range, battery, rental pricing, and availability, then reserve your vehicle through Voltaris."
+      title="Drive what fits your journey"
+      description="Rent electric and hybrid cars through Voltaris."
     />
   );
 }
