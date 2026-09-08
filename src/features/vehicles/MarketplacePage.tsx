@@ -57,18 +57,18 @@ export async function MarketplacePage({
   const resolvedTitle =
     title ??
     (mode === 'rental'
-      ? 'Electric vehicles for rent in Rwanda'
+      ? 'Electric and hybrid cars, ready when you are'
       : mode === 'sale'
-        ? 'Electric vehicles for sale in Rwanda'
-        : 'Electric vehicles');
+        ? 'Electric and hybrid cars, ready for the road'
+        : 'Electric and hybrid cars');
 
   const resolvedDescription =
     description ??
     (mode === 'rental'
-      ? 'Browse electric vehicles available for rental in Rwanda. Compare range, battery, price, and availability, then reserve your vehicle through Voltaris.'
+      ? 'Explore electric and hybrid cars available to rent through Voltaris.'
       : mode === 'sale'
-        ? 'Browse electric vehicles for sale in Rwanda from verified dealers and private owners. Compare range, battery, price, and condition, then book a test drive through Voltaris.'
-        : 'Browse electric vehicles in Rwanda. Compare range, battery, price, condition, and location.');
+        ? 'Explore electric and hybrid cars available through Voltaris.'
+        : 'Explore electric and hybrid cars through Voltaris.');
 
   const trail = [
     { name: 'Home', path: '/' },
@@ -81,7 +81,10 @@ export async function MarketplacePage({
       <Breadcrumbs trail={trail} />
 
       <header className="mt-6 max-w-2xl">
-        <h1 className="font-display text-headline">{resolvedTitle}</h1>
+        <p className="font-data text-[0.6rem] uppercase tracking-[0.2em] text-steel-muted">
+          ELECTRIC + HYBRID
+        </p>
+        <h1 className="mt-2 font-display text-headline">{resolvedTitle}</h1>
         <p className="mt-3 text-sm leading-relaxed text-steel">
           {resolvedDescription}
         </p>
