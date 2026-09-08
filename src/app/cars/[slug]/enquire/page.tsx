@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const { slug } = await params;
   return buildMetadata({
     title: 'Ask about this vehicle',
-    description: 'Send a question to the seller through Voltaris.',
+    description: 'Ask about an electric or hybrid car through Voltaris.',
     path: `/cars/${slug}/enquire`,
     // A form has nothing to offer a search result; the listing itself is the page.
     noindex: true,
@@ -36,12 +36,13 @@ export default async function EnquirePage({ params }: { params: Params }) {
       <Breadcrumbs
         trail={[
           { name: 'Home', path: '/' },
-          { name: 'Electric vehicles', path: '/cars' },
+          { name: 'Electric + hybrid cars', path: '/cars' },
           { name: title, path: `/cars/${vehicle.slug}` },
           { name: 'Enquire', path: `/cars/${vehicle.slug}/enquire` },
         ]}
       />
-      <h1 className="mt-6 font-display text-headline">Ask about the {title}</h1>
+      <p className="mt-6 eyebrow">ELECTRIC + HYBRID</p>
+      <h1 className="mt-2 font-display text-headline">Ask about the {title}</h1>
       <p className="mt-3 text-sm text-steel">
         Your message goes to {vehicle.seller.display_name} through Voltaris. We keep a copy so we
         can follow up if you do not hear back.
