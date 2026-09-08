@@ -27,8 +27,8 @@ function describe(filters: ReturnType<typeof parseFilters>): {
 
   parts.push(
     filters.body?.[0]
-      ? `electric ${filters.body[0]}s`
-      : 'electric vehicles',
+      ? `electric and hybrid ${filters.body[0]}s`
+      : 'electric and hybrid cars',
   );
 
   const where = filters.location
@@ -39,7 +39,7 @@ function describe(filters: ReturnType<typeof parseFilters>): {
 
   return {
     title: title.charAt(0).toUpperCase() + title.slice(1),
-    description: `Browse ${title.toLowerCase()} from verified dealers and private owners. Compare range, battery, price, and condition, then book a test drive through Voltaris.`,
+    description: `Explore electric and hybrid cars available through Voltaris. Compare range, battery, price, and condition, then book a test drive.`, 
   };
 }
 
