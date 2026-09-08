@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { ArrowDown, ArrowUp } from 'lucide-react';
 import { MarketplaceVehicleCard } from '@/components/MarketplaceVehicleCard';
 import type { VehicleSummary } from '@/types/vehicle';
 
@@ -16,6 +17,9 @@ const editorialLines = [
   'Find the vehicle that fits your next move',
 ];
 
+const AUTO_ADVANCE_MS = 11000;
+const SCROLL_SETTLE_MS = 1800;
+
 export function MarketplaceEditorialMotion({
   vehicles,
   mode,
@@ -26,12 +30,24 @@ export function MarketplaceEditorialMotion({
   );
 
   const sectionRef = useRef<HTMLElement | null>(null);
+  const autoTimerRef = useRef<number | null>(null);
+  const resumeTimerRef = useRef<number | null>(null);
+
   const [progress, setProgress] = useState(0);
   const [line, setLine] = useState(0);
+  const [autoPlaying, setAutoPlaying] = useState(true);
 
   const reducedMotion =
     typeof window !== 'undefined' &&
     window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const vehiclePosition =
+    progress * Math.max(sourceVehicles.length - 1, 0);
+
+  const activeIndex = Math.min(
+    Math.max(Math.round(vehiclePosition), 0),
+    Math.max(sourceVehicles.length - 1, 0),
+  );
 
   useEffect(() => {
     if (reducedMotion) return;
@@ -46,6 +62,7 @@ export function MarketplaceEditorialMotion({
       if (!section) return;
 
       const rect = section.getBoundingClientRect();
+
       const scrollDistance = Math.max(
         section.offsetHeight - window.innerHeight,
         1,
@@ -60,6 +77,16 @@ export function MarketplaceEditorialMotion({
     };
 
     const onScroll = () => {
+      setAutoPlaying(false);
+
+      if (resumeTimerRef.current) {
+        window.clearTimeout(resumeTimerRef.current);
+      }
+
+      resumeTimerRef.current = window.setTimeout(() => {
+        setAutoPlaying(true);
+      }, SCROLL_SETTLE_MS);
+
       if (!frame) {
         frame = window.requestAnimationFrame(update);
       }
@@ -82,6 +109,10 @@ export function MarketplaceEditorialMotion({
       if (frame) {
         window.cancelAnimationFrame(frame);
       }
+
+      if (resumeTimerRef.current) {
+        window.clearTimeout(resumeTimerRef.current);
+      }
     };
   }, [reducedMotion]);
 
@@ -95,10 +126,81 @@ export function MarketplaceEditorialMotion({
     return () => window.clearInterval(timer);
   }, [reducedMotion]);
 
-  if (!sourceVehicles.length) return null;
+  const moveToVehicle = (index: number) => {
+    const section = sectionRef.current;
 
-  const vehiclePosition =
-    progress * Math.max(sourceVehicles.length - 1, 0);
+    if (!section || sourceVehicles.length < 2) return;
+
+    const safeIndex = Math.min(
+      Math.max(index, 0),
+      sourceVehicles.length - 1,
+    );
+
+    const scrollDistance = Math.max(
+      section.offsetHeight - window.innerHeight,
+      1,
+    );
+
+    const targetTop =
+      section.getBoundingClientRect().top +
+      window.scrollY +
+      scrollDistance *
+        (safeIndex / (sourceVehicles.length - 1));
+
+    setAutoPlaying(false);
+
+    if (resumeTimerRef.current) {
+      window.clearTimeout(resumeTimerRef.current);
+    }
+
+    resumeTimerRef.current = window.setTimeout(() => {
+      setAutoPlaying(true);
+    }, AUTO_ADVANCE_MS);
+
+    window.scrollTo({
+      top: targetTop,
+      behavior: reducedMotion ? 'auto' : 'smooth',
+    });
+  };
+
+  useEffect(() => {
+    if (
+      reducedMotion ||
+      !autoPlaying ||
+      sourceVehicles.length < 2
+    ) {
+      return;
+    }
+
+    autoTimerRef.current = window.setInterval(() => {
+      const currentIndex = Math.min(
+        Math.round(
+          progress * (sourceVehicles.length - 1),
+        ),
+        sourceVehicles.length - 1,
+      );
+
+      const nextIndex =
+        currentIndex >= sourceVehicles.length - 1
+          ? 0
+          : currentIndex + 1;
+
+      moveToVehicle(nextIndex);
+    }, AUTO_ADVANCE_MS);
+
+    return () => {
+      if (autoTimerRef.current) {
+        window.clearInterval(autoTimerRef.current);
+      }
+    };
+  }, [
+    autoPlaying,
+    reducedMotion,
+    sourceVehicles.length,
+    progress,
+  ]);
+
+  if (!sourceVehicles.length) return null;
 
   return (
     <section
@@ -110,7 +212,8 @@ export function MarketplaceEditorialMotion({
           : 'Featured vehicles'
       }
       style={{
-        ['--marketplace-stock-count' as string]: sourceVehicles.length,
+        ['--marketplace-stock-count' as string]:
+          sourceVehicles.length,
       }}
     >
       <div className="marketplace-editorial-showroom-sticky">
@@ -138,7 +241,7 @@ export function MarketplaceEditorialMotion({
             const distance = index - vehiclePosition;
             const absoluteDistance = Math.abs(distance);
 
-            const isActive = Math.abs(distance) < 0.5;
+            const isActive = absoluteDistance < 0.5;
 
             const scale = Math.max(
               0.9,
@@ -188,6 +291,45 @@ export function MarketplaceEditorialMotion({
               </article>
             );
           })}
+
+          {sourceVehicles.length > 1 ? (
+            <div className="marketplace-editorial-showroom-controls">
+              <button
+                type="button"
+                onClick={() => moveToVehicle(activeIndex - 1)}
+                disabled={activeIndex === 0}
+                aria-label="Previous vehicle"
+                className="marketplace-editorial-showroom-control"
+              >
+                <ArrowUp
+                  className="h-4 w-4"
+                  aria-hidden="true"
+                />
+
+                <span>Previous</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() =>
+                  moveToVehicle(
+                    activeIndex >= sourceVehicles.length - 1
+                      ? 0
+                      : activeIndex + 1,
+                  )
+                }
+                aria-label="Next vehicle"
+                className="marketplace-editorial-showroom-control"
+              >
+                <ArrowDown
+                  className="h-4 w-4"
+                  aria-hidden="true"
+                />
+
+                <span>Next</span>
+              </button>
+            </div>
+          ) : null}
         </div>
       </div>
     </section>

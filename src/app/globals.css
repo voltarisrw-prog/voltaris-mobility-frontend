@@ -326,9 +326,9 @@
   transform-origin: center center;
   will-change: transform, opacity, filter;
   transition:
-    transform 180ms cubic-bezier(.22,.61,.36,1),
-    opacity 220ms ease,
-    filter 220ms ease;
+    transform 1600ms cubic-bezier(.16,1,.3,1),
+    opacity 1400ms ease,
+    filter 1400ms ease;
 }
 
 .marketplace-editorial-showroom-card > div {
@@ -337,6 +337,61 @@
 
 .marketplace-editorial-showroom-card-active {
   will-change: transform;
+}
+
+.marketplace-editorial-showroom-controls {
+  position: absolute;
+  z-index: 200;
+  top: 1.25rem;
+  right: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.marketplace-editorial-showroom-control {
+  display: flex;
+  min-width: 9rem;
+  min-height: 3.1rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  border: 1px solid rgb(255 255 255 / 0.28);
+  border-radius: 9999px;
+  background: rgb(10 10 10 / 0.72);
+  padding: 0.75rem 1.15rem;
+  color: white;
+  box-shadow:
+    0 12px 30px rgb(0 0 0 / 0.24),
+    inset 0 1px 0 rgb(255 255 255 / 0.08);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  font-family: var(--font-data, inherit);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  transition:
+    transform 220ms ease,
+    background 220ms ease,
+    border-color 220ms ease,
+    opacity 220ms ease;
+}
+
+.marketplace-editorial-showroom-control:hover:not(:disabled) {
+  transform: translateY(-2px);
+  border-color: rgb(255 255 255 / 0.52);
+  background: rgb(10 10 10 / 0.88);
+}
+
+.marketplace-editorial-showroom-control:focus-visible {
+  outline: 2px solid var(--color-volt, currentColor);
+  outline-offset: 3px;
+}
+
+.marketplace-editorial-showroom-control:disabled {
+  cursor: not-allowed;
+  opacity: 0.38;
 }
 
 @media (max-width: 639px) {
@@ -354,6 +409,19 @@
 
   .marketplace-editorial-stage {
     height: 62svh;
+  }
+
+  .marketplace-editorial-showroom-controls {
+    top: 0.75rem;
+    right: 0.75rem;
+    gap: 0.45rem;
+  }
+
+  .marketplace-editorial-showroom-control {
+    min-width: 7.5rem;
+    min-height: 2.8rem;
+    padding: 0.65rem 0.9rem;
+    font-size: 0.55rem;
   }
 }
 
