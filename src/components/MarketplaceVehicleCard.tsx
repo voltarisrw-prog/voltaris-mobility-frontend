@@ -160,7 +160,7 @@ export function MarketplaceVehicleCard({
               {mode ? (
                 <Link
                   href={actionHref}
-                  className="inline-flex min-h-9 items-center gap-2 bg-volt px-3.5 py-2 font-data text-[0.58rem] uppercase tracking-[0.14em] text-surface transition-colors hover:bg-volt-bright sm:min-h-10 sm:px-4 sm:py-2.5 sm:text-[0.625rem]"
+                  className="inline-flex min-h-9 items-center gap-2 rounded-full bg-volt px-3.5 py-2 font-data shadow-lg shadow-black/25 text-[0.58rem] uppercase tracking-[0.14em] text-surface transition-colors hover:bg-volt-bright sm:min-h-10 sm:px-4 sm:py-2.5 sm:text-[0.625rem]"
                 >
                   {actionLabel}
                   <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
@@ -169,7 +169,7 @@ export function MarketplaceVehicleCard({
                 <>
                   <Link
                     href={`/checkout/start?vehicle=${encodeURIComponent(vehicle.id)}`}
-                    className="inline-flex min-h-9 items-center gap-2 bg-volt px-3.5 py-2 font-data text-[0.58rem] uppercase tracking-[0.14em] text-surface transition-colors hover:bg-volt-bright sm:min-h-10 sm:px-4 sm:py-2.5 sm:text-[0.625rem]"
+                    className="inline-flex min-h-9 items-center gap-2 rounded-full bg-volt px-3.5 py-2 font-data shadow-lg shadow-black/25 text-[0.58rem] uppercase tracking-[0.14em] text-surface transition-colors hover:bg-volt-bright sm:min-h-10 sm:px-4 sm:py-2.5 sm:text-[0.625rem]"
                   >
                     Order
                     <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
@@ -177,14 +177,14 @@ export function MarketplaceVehicleCard({
 
                   <Link
                     href={`/cars/${vehicle.slug}#rental-details`}
-                    className="inline-flex min-h-9 items-center gap-2 border border-white/35 bg-black/25 px-3.5 py-2 font-data text-[0.58rem] uppercase tracking-[0.14em] text-white backdrop-blur-md transition-colors hover:border-white sm:min-h-10 sm:px-4 sm:py-2.5 sm:text-[0.625rem]"
+                    className="inline-flex min-h-9 items-center gap-2 rounded-full border border-white/35 bg-black/25 px-3.5 py-2 font-data shadow-lg shadow-black/25 text-[0.58rem] uppercase tracking-[0.14em] text-white backdrop-blur-md transition-colors hover:border-white sm:min-h-10 sm:px-4 sm:py-2.5 sm:text-[0.625rem]"
                   >
                     Rent
                   </Link>
 
                   <Link
                     href={`/test-drive?vehicle=${encodeURIComponent(vehicle.id)}`}
-                    className="inline-flex min-h-9 items-center gap-2 border border-white/35 bg-black/25 px-3.5 py-2 font-data text-[0.58rem] uppercase tracking-[0.14em] text-white backdrop-blur-md transition-colors hover:border-white sm:min-h-10 sm:px-4 sm:py-2.5 sm:text-[0.625rem]"
+                    className="inline-flex min-h-9 items-center gap-2 rounded-full border border-white/35 bg-black/25 px-3.5 py-2 font-data shadow-lg shadow-black/25 text-[0.58rem] uppercase tracking-[0.14em] text-white backdrop-blur-md transition-colors hover:border-white sm:min-h-10 sm:px-4 sm:py-2.5 sm:text-[0.625rem]"
                   >
                     Book free demo drive
                     <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
@@ -194,7 +194,7 @@ export function MarketplaceVehicleCard({
 
               <Link
                 href={`/cars/${vehicle.slug}`}
-                className="inline-flex min-h-9 items-center gap-2 border border-white/35 bg-black/25 px-3.5 py-2 font-data text-[0.58rem] uppercase tracking-[0.14em] text-white backdrop-blur-md transition-colors hover:border-white sm:min-h-10 sm:px-4 sm:py-2.5 sm:text-[0.625rem]"
+                className="inline-flex min-h-9 items-center gap-2 rounded-full border border-white/35 bg-black/25 px-3.5 py-2 font-data shadow-lg shadow-black/25 text-[0.58rem] uppercase tracking-[0.14em] text-white backdrop-blur-md transition-colors hover:border-white sm:min-h-10 sm:px-4 sm:py-2.5 sm:text-[0.625rem]"
               >
                 View details
                 <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
