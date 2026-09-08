@@ -157,7 +157,7 @@ export function MarketplaceVehicleCard({
             </Link>
 
             <div className="flex flex-wrap items-center justify-end gap-2">
-              {mode ? (
+              {mode === 'rental' ? (
                 <Link
                   href={actionHref}
                   className="inline-flex min-h-9 items-center gap-2 rounded-full bg-volt px-3.5 py-2 font-data shadow-lg shadow-black/25 text-[0.58rem] uppercase tracking-[0.14em] text-surface transition-colors hover:bg-volt-bright sm:min-h-10 sm:px-4 sm:py-2.5 sm:text-[0.625rem]"
