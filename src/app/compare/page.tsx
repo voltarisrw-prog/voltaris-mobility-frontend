@@ -6,9 +6,9 @@ import { VehicleComparison } from '@/features/vehicles/VehicleComparison';
 import { buildMetadata } from '@/lib/seo/metadata';
 
 export const metadata: Metadata = buildMetadata({
-  title: 'Compare electric vehicles',
+  title: 'Compare electric and hybrid cars',
   description:
-    'Put up to four EVs side by side. Voltaris works out cost per kilometre of range, efficiency, and real charging times so the comparison means something.',
+    'Compare electric and hybrid cars side by side with range, efficiency, charging times, and running costs.',
   path: '/compare',
 });
 
@@ -21,10 +21,10 @@ export default function ComparePage() {
           { name: 'Compare', path: '/compare' },
         ]}
       />
-      <h1 className="mt-6 font-display text-headline">Compare electric vehicles</h1>
+      <p className="mt-6 eyebrow">ELECTRIC + HYBRID</p>
+      <h1 className="mt-2 font-display text-headline">Compare before you choose</h1>
       <p className="mt-3 max-w-prose text-sm leading-relaxed text-steel">
-        Specifications on their own do not tell you much. This table works out what each kilometre
-        of range costs, how long a full charge takes on a home socket, and which car wins each row.
+        See how electric and hybrid cars stack up across the details that matter.
       </p>
       <div className="mt-10">
         <Suspense fallback={<LoadingSkeleton lines={10} />}>
