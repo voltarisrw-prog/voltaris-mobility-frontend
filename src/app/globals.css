@@ -286,3 +286,48 @@
     animation: none !important;
   }
 }
+
+
+/* =========================================================
+   MARKETPLACE EDITORIAL STOCK FLOW
+   Buy + Rent marketplace only
+   ========================================================= */
+
+.marketplace-editorial-stock {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  will-change: transform;
+}
+
+.marketplace-editorial-stock-item {
+  width: 100%;
+  height: min(68svh, 760px);
+  flex: 0 0 min(68svh, 760px);
+}
+
+.marketplace-editorial-stock-item > div {
+  height: 100%;
+}
+
+.marketplace-editorial-stock-item > div > * {
+  height: 100%;
+}
+
+@media (max-width: 639px) {
+  .marketplace-editorial-stock-item {
+    height: 62svh;
+    flex-basis: 62svh;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marketplace-editorial-stock {
+    transition: none !important;
+  }
+
+  .marketplace-editorial-text,
+  .marketplace-editorial-enter {
+    animation: none !important;
+  }
+}

@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { ArrowDown, ArrowUp } from 'lucide-react';
 import { MarketplaceVehicleCard } from '@/components/MarketplaceVehicleCard';
 import type { VehicleSummary } from '@/types/vehicle';
 
@@ -17,31 +17,50 @@ const editorialLines = [
   'Find the vehicle that fits your next move',
 ];
 
-export function MarketplaceEditorialMotion({ vehicles, mode }: Props) {
-  const featuredVehicles = useMemo(
-    () => vehicles.slice(0, Math.min(5, vehicles.length)),
+const AUTO_ADVANCE_MS = 6500;
+const TRANSITION_MS = 1000;
+
+export function MarketplaceEditorialMotion({
+  vehicles,
+  mode,
+}: Props) {
+  const sourceVehicles = useMemo(
+    () => vehicles.slice(0, Math.min(8, vehicles.length)),
     [vehicles],
   );
 
+  const loopVehicles = useMemo(
+    () => [...sourceVehicles, ...sourceVehicles.slice(0, 2)],
+    [sourceVehicles],
+  );
+
   const [active, setActive] = useState(0);
-  const [paused, setPaused] = useState(false);
   const [line, setLine] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const [transitioning, setTransitioning] = useState(true);
+  const resetTimer = useRef<number | null>(null);
+
+  const reducedMotion =
+    typeof window !== 'undefined' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   useEffect(() => {
-    if (featuredVehicles.length < 2 || paused) return;
+    if (
+      sourceVehicles.length < 2 ||
+      paused ||
+      reducedMotion
+    ) {
+      return;
+    }
 
     const timer = window.setInterval(() => {
-      setActive((current) => (current + 1) % featuredVehicles.length);
-    }, 6500);
+      setActive((current) => current + 1);
+    }, AUTO_ADVANCE_MS);
 
     return () => window.clearInterval(timer);
-  }, [featuredVehicles.length, paused]);
+  }, [sourceVehicles.length, paused, reducedMotion]);
 
   useEffect(() => {
-    const reducedMotion = window.matchMedia(
-      '(prefers-reduced-motion: reduce)',
-    ).matches;
-
     if (reducedMotion) return;
 
     const timer = window.setInterval(() => {
@@ -49,25 +68,69 @@ export function MarketplaceEditorialMotion({ vehicles, mode }: Props) {
     }, 4200);
 
     return () => window.clearInterval(timer);
-  }, []);
+  }, [reducedMotion]);
 
-  if (!featuredVehicles.length) return null;
+  useEffect(() => {
+    if (active !== sourceVehicles.length) return;
+
+    resetTimer.current = window.setTimeout(() => {
+      setTransitioning(false);
+      setActive(0);
+
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setTransitioning(true);
+        });
+      });
+    }, TRANSITION_MS);
+
+    return () => {
+      if (resetTimer.current) {
+        window.clearTimeout(resetTimer.current);
+      }
+    };
+  }, [active, sourceVehicles.length]);
+
+  if (!sourceVehicles.length) return null;
 
   const previous = () => {
-    setActive(
-      (current) =>
-        (current - 1 + featuredVehicles.length) % featuredVehicles.length,
-    );
+    setTransitioning(true);
+
+    if (active === 0) {
+      setTransitioning(false);
+      setActive(sourceVehicles.length);
+
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setTransitioning(true);
+          setActive(sourceVehicles.length - 1);
+        });
+      });
+
+      return;
+    }
+
+    setActive((current) => current - 1);
   };
 
   const next = () => {
-    setActive((current) => (current + 1) % featuredVehicles.length);
+    setTransitioning(true);
+    setActive((current) => current + 1);
   };
+
+  const visibleActiveIndex =
+    active >= sourceVehicles.length
+      ? 0
+      : active;
 
   return (
     <section
       className="mt-10"
-      aria-label="Featured vehicles"
+      aria-label={
+        mode === 'rental'
+          ? 'Featured rental vehicles'
+          : 'Featured vehicles'
+      }
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onFocus={() => setPaused(true)}
@@ -77,41 +140,48 @@ export function MarketplaceEditorialMotion({ vehicles, mode }: Props) {
         }
       }}
     >
-      <div className="mb-5 flex items-end justify-between gap-6">
-        <div>
+      <div className="mb-6 flex items-end justify-between gap-6">
+        <div className="min-w-0">
           <p className="font-data text-[0.6rem] uppercase tracking-[0.2em] text-volt">
-            {mode === 'rental' ? 'The rental edit' : 'The electric edit'}
+            {mode === 'rental'
+              ? 'The rental edit'
+              : 'The electric edit'}
           </p>
 
-          <div className="mt-2 min-h-[2rem] overflow-hidden">
+          <div className="mt-2 min-h-[2.2rem] overflow-hidden">
             <p
               key={editorialLines[line]}
               className="marketplace-editorial-text font-display text-xl tracking-tight text-chrome sm:text-2xl"
-              aria-live="polite"
             >
               {editorialLines[line]}
             </p>
           </div>
         </div>
 
-        {featuredVehicles.length > 1 ? (
+        {sourceVehicles.length > 1 ? (
           <div className="flex shrink-0 items-center gap-2">
             <button
               type="button"
               onClick={previous}
-              aria-label="Previous featured vehicle"
+              aria-label="Previous vehicle"
               className="flex h-10 w-10 items-center justify-center rounded-full border border-hairline bg-surface text-chrome shadow-lg shadow-black/10 transition-transform hover:-translate-y-0.5 hover:border-volt hover:text-volt focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-volt"
             >
-              <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+              <ArrowUp
+                className="h-4 w-4"
+                aria-hidden="true"
+              />
             </button>
 
             <button
               type="button"
               onClick={next}
-              aria-label="Next featured vehicle"
+              aria-label="Next vehicle"
               className="flex h-10 w-10 items-center justify-center rounded-full border border-hairline bg-surface text-chrome shadow-lg shadow-black/10 transition-transform hover:-translate-y-0.5 hover:border-volt hover:text-volt focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-volt"
             >
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              <ArrowDown
+                className="h-4 w-4"
+                aria-hidden="true"
+              />
             </button>
           </div>
         ) : null}
@@ -119,50 +189,64 @@ export function MarketplaceEditorialMotion({ vehicles, mode }: Props) {
 
       <div className="relative overflow-hidden">
         <div
-          className="flex transition-transform duration-1000 ease-[cubic-bezier(.22,.61,.36,1)]"
+          className={[
+            'marketplace-editorial-stock',
+            transitioning && !reducedMotion
+              ? 'transition-transform duration-1000 ease-[cubic-bezier(.22,.61,.36,1)]'
+              : '',
+          ].join(' ')}
           style={{
-            transform: `translateX(-${active * 100}%)`,
+            transform: `translateY(calc(-${active} * (min(68svh, 760px) + 24px)))`,
           }}
         >
-          {featuredVehicles.map((vehicle, index) => (
-            <div
-              key={vehicle.id}
-              className="w-full shrink-0"
-              aria-hidden={index !== active}
+          {loopVehicles.map((vehicle, index) => (
+            <article
+              key={`${vehicle.id}-${index}`}
+              className="marketplace-editorial-stock-item"
+              aria-hidden={
+                index !== active &&
+                index !== active + 1
+              }
             >
-              <MarketplaceVehicleCard
-                vehicle={vehicle}
-                priority={index === 0}
-                featured
-                mode={mode}
-              />
-            </div>
+              <div className="relative">
+                <MarketplaceVehicleCard
+                  vehicle={vehicle}
+                  priority={index < 2}
+                  featured
+                  mode={mode}
+                />
+
+                {index === active &&
+                sourceVehicles.length > 1 ? (
+                  <div className="pointer-events-none absolute bottom-4 left-4 z-20 flex items-center gap-2 rounded-full border border-white/20 bg-black/45 px-3 py-1.5 backdrop-blur-md">
+                    <span className="h-1.5 w-1.5 rounded-full bg-volt" />
+                    <span className="font-data text-[0.55rem] uppercase tracking-[0.16em] text-white/80">
+                      Next below
+                    </span>
+                  </div>
+                ) : null}
+              </div>
+            </article>
           ))}
         </div>
+
+        {sourceVehicles.length > 1 ? (
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-surface via-surface/80 to-transparent" />
+        ) : null}
       </div>
 
-      {featuredVehicles.length > 1 ? (
-        <div className="mt-4 flex items-center justify-between">
-          <div className="flex items-center gap-1.5" aria-label="Featured vehicle position">
-            {featuredVehicles.map((vehicle, index) => (
-              <button
-                key={vehicle.id}
-                type="button"
-                onClick={() => setActive(index)}
-                aria-label={`Show featured vehicle ${index + 1}`}
-                aria-current={index === active ? 'true' : undefined}
-                className={`h-1 rounded-full transition-all duration-500 ${
-                  index === active
-                    ? 'w-8 bg-volt'
-                    : 'w-2 bg-hairline hover:bg-steel-muted'
-                }`}
-              />
-            ))}
+      {sourceVehicles.length > 1 ? (
+        <div className="mt-5 flex items-center justify-between gap-6">
+          <div className="flex min-w-0 items-center gap-3">
+            <span className="h-px w-10 shrink-0 bg-volt" />
+
+            <span className="truncate font-data text-[0.58rem] uppercase tracking-[0.16em] text-steel-muted">
+              More vehicles below
+            </span>
           </div>
 
-          <span className="font-data text-[0.58rem] uppercase tracking-[0.16em] text-steel-muted">
-            {String(active + 1).padStart(2, '0')} /{' '}
-            {String(featuredVehicles.length).padStart(2, '0')}
+          <span className="shrink-0 font-data text-[0.58rem] uppercase tracking-[0.16em] text-steel-muted">
+            {String(visibleActiveIndex + 1).padStart(2, '0')}
           </span>
         </div>
       ) : null}

@@ -136,11 +136,12 @@ export async function MarketplacePage({
           {mode ? (
             <>
               <MarketplaceEditorialMotion
+                key={results.items.map((vehicle) => vehicle.id).join('|')}
                 vehicles={results.items}
                 mode={mode}
               />
 
-              {results.items.length > 5 ? (
+              {results.items.length > 8 ? (
                 <div className="mt-16">
                   <div className="mb-6 flex items-end justify-between gap-6 border-b border-hairline pb-4">
                     <div>
@@ -154,7 +155,7 @@ export async function MarketplacePage({
                   </div>
 
                   <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                    {results.items.slice(5).map((vehicle, index) => (
+                    {results.items.slice(8).map((vehicle, index) => (
                       <div
                         key={vehicle.id}
                         className="marketplace-editorial-enter"
