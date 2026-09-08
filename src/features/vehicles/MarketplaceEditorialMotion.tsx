@@ -216,15 +216,6 @@ export function MarketplaceEditorialMotion({
                   mode={mode}
                 />
 
-                {index === active &&
-                sourceVehicles.length > 1 ? (
-                  <div className="pointer-events-none absolute bottom-4 left-4 z-20 flex items-center gap-2 rounded-full border border-white/20 bg-black/45 px-3 py-1.5 backdrop-blur-md">
-                    <span className="h-1.5 w-1.5 rounded-full bg-volt" />
-                    <span className="font-data text-[0.55rem] uppercase tracking-[0.16em] text-white/80">
-                      Next below
-                    </span>
-                  </div>
-                ) : null}
               </div>
             </article>
           ))}
