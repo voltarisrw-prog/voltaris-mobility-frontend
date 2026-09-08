@@ -158,7 +158,11 @@ export function TestDriveForm({
 
       <Field label="Where" error={errors.location_slug?.message} required>
         {(props) => (
-          <select {...props} {...register('location_slug')} className={selectClass}>
+          <select
+            {...props}
+            {...register('location_slug')}
+            className={`${selectClass} bg-white text-surface`}
+          >
             <option value="">Choose a location</option>
             {LOCATIONS.map((location) => (
               <option key={location.value} value={location.value}>
