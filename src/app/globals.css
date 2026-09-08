@@ -159,3 +159,74 @@
     @apply border-b border-hairline/60 py-2 pr-4 text-left;
   }
 }
+
+
+/* =========================================================
+   VOLTARIS MOTION LANGUAGE
+   ========================================================= */
+
+@keyframes vds-auto-text-in {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0.45em, 0);
+    filter: blur(4px);
+  }
+
+  18%,
+  78% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    filter: blur(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate3d(0, -0.35em, 0);
+    filter: blur(3px);
+  }
+}
+
+.vds-auto-text {
+  animation: vds-auto-text-in 4.2s cubic-bezier(.22, .61, .36, 1) both;
+  will-change: opacity, transform, filter;
+}
+
+@keyframes vds-editorial-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.vds-editorial-rise {
+  animation: vds-editorial-rise 900ms cubic-bezier(.22, .61, .36, 1) both;
+}
+
+@keyframes vds-soft-pulse {
+  0%,
+  100% {
+    opacity: .72;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+.vds-soft-pulse {
+  animation: vds-soft-pulse 3.8s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vds-auto-text,
+  .vds-editorial-rise,
+  .vds-soft-pulse {
+    animation: none !important;
+    transition: none !important;
+  }
+}
