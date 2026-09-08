@@ -616,125 +616,7 @@
 }
 
 /* =========================================================
-   VOLTARIS — DISTINCTIVE DISCOVERY CONTROL GEOMETRY
-   Search / Sort / Filter / Date only
-   ========================================================= */
-
-:root {
-  --volt-control-border: rgb(255 255 255 / 0.16);
-  --volt-control-border-hover: rgb(255 255 255 / 0.34);
-  --volt-control-bg: rgb(10 12 14 / 0.88);
-  --volt-control-fg: rgb(245 247 248);
-}
-
-/* SEARCH — asymmetric cutline */
-input[placeholder*="Search"],
-input[placeholder*="search"] {
-  min-height: 54px;
-  border: 1px solid var(--volt-control-border);
-  border-radius: 2px 18px 2px 18px;
-  background: var(--volt-control-bg);
-  color: var(--volt-control-fg);
-  padding-inline: 1.15rem;
-  outline: none;
-  box-shadow: none;
-  transition:
-    border-color 220ms ease,
-    background 220ms ease,
-    transform 220ms ease;
-}
-
-input[placeholder*="Search"]:focus,
-input[placeholder*="search"]:focus {
-  border-color: var(--volt-control-border-hover);
-  background: rgb(16 18 20 / 0.96);
-}
-
-/* FILTER — architectural notched shape */
-[class*="filter"] button,
-[class*="Filter"] button,
-button[aria-label*="Filter"],
-button[aria-label*="filter"] {
-  border-radius: 2px 14px 2px 2px;
-  border: 1px solid var(--volt-control-border);
-  background: var(--volt-control-bg);
-  box-shadow: none;
-  transition:
-    border-color 220ms ease,
-    background 220ms ease,
-    transform 220ms ease;
-}
-
-[class*="filter"] button:hover,
-[class*="Filter"] button:hover,
-button[aria-label*="Filter"]:hover,
-button[aria-label*="filter"]:hover {
-  border-color: var(--volt-control-border-hover);
-  background: rgb(18 20 22 / 0.96);
-}
-
-/* SORT — stepped instrument */
-[class*="sort"] button,
-[class*="Sort"] button,
-button[aria-label*="Sort"],
-button[aria-label*="sort"] {
-  border-radius: 2px 2px 14px 2px;
-  border: 1px solid var(--volt-control-border);
-  background: var(--volt-control-bg);
-  box-shadow: none;
-  transition:
-    border-color 220ms ease,
-    background 220ms ease,
-    transform 220ms ease;
-}
-
-[class*="sort"] button:hover,
-[class*="Sort"] button:hover,
-button[aria-label*="Sort"]:hover,
-button[aria-label*="sort"]:hover {
-  border-color: var(--volt-control-border-hover);
-  background: rgb(18 20 22 / 0.96);
-}
-
-/* DATE — split journey geometry */
-input[type="date"] {
-  min-height: 54px;
-  border: 1px solid var(--volt-control-border);
-  border-radius: 16px 2px 16px 2px;
-  background: var(--volt-control-bg);
-  color: var(--volt-control-fg);
-  padding-inline: 1rem;
-  box-shadow: none;
-  outline: none;
-  transition:
-    border-color 220ms ease,
-    background 220ms ease;
-}
-
-input[type="date"]:focus {
-  border-color: var(--volt-control-border-hover);
-  background: rgb(16 18 20 / 0.96);
-}
-
-/* Shared discovery-control rhythm */
-[class*="filter"],
-[class*="Filter"],
-[class*="sort"],
-[class*="Sort"] {
-  box-shadow: none;
-}
-
-@media (max-width: 640px) {
-  input[placeholder*="Search"],
-  input[placeholder*="search"],
-  input[type="date"] {
-    min-height: 50px;
-  }
-}
-
-
-/* =========================================================
-   VOLTARIS — DISCOVERY CONTROL SYSTEM V2
+   VOLTARIS — DISCOVERY CONTROL SYSTEM
    Search / Sort / Filter / Rental Journey
    ========================================================= */
 
@@ -753,8 +635,8 @@ input[type="date"]:focus {
   min-width: 0;
   min-height: 58px;
   overflow: hidden;
-  border: 1px solid rgb(255 255 255 / 0.16);
-  background: rgb(10 12 14 / 0.92);
+  border: 1px solid rgb(232 234 237 / 0.28);
+  background: #17100b;
   clip-path: polygon(
     0 0,
     calc(100% - 22px) 0,
@@ -763,13 +645,17 @@ input[type="date"]:focus {
     0 100%
   );
   transition:
-    border-color 220ms ease,
-    background 220ms ease;
+    border-color 180ms ease,
+    background-color 180ms ease;
+}
+
+.voltaris-discovery-search:hover {
+  border-color: rgb(232 234 237 / 0.48);
 }
 
 .voltaris-discovery-search:focus-within {
-  border-color: rgb(255 255 255 / 0.38);
-  background: rgb(15 17 19 / 0.98);
+  border-color: #b8ff3d;
+  background: #1d150f;
 }
 
 .voltaris-discovery-search-mark {
@@ -778,9 +664,10 @@ input[type="date"]:focus {
   justify-content: center;
   width: 48px;
   flex: 0 0 48px;
-  color: var(--volt, #b8ff3d);
+  color: #b8ff3d;
   font-family: var(--font-data, monospace);
   font-size: 1.2rem;
+  font-weight: 700;
   transform: rotate(-18deg);
 }
 
@@ -790,20 +677,27 @@ input[type="date"]:focus {
   border: 0 !important;
   outline: 0 !important;
   background: transparent !important;
-  color: var(--volt-control-fg);
+  color: #e8eaed !important;
+  caret-color: #b8ff3d;
   padding: 0.9rem 0.5rem;
   box-shadow: none !important;
 }
 
 .voltaris-discovery-search-input::placeholder {
-  color: rgb(255 255 255 / 0.34);
+  color: #a8aeb8 !important;
+  opacity: 1;
+}
+
+.voltaris-discovery-search-input:focus::placeholder {
+  color: #6c727c !important;
 }
 
 .voltaris-discovery-search-index {
   padding: 0 1.25rem 0 0.75rem;
-  color: rgb(255 255 255 / 0.34);
+  color: #a8aeb8;
   font-family: var(--font-data, monospace);
   font-size: 0.58rem;
+  font-weight: 600;
   letter-spacing: 0.18em;
 }
 
@@ -818,8 +712,13 @@ input[type="date"]:focus {
   position: relative;
   min-width: 142px;
   min-height: 58px;
-  border: 1px solid rgb(255 255 255 / 0.16);
-  background: rgb(10 12 14 / 0.92);
+  border: 1px solid rgb(232 234 237 / 0.28);
+  background: #17100b;
+}
+
+.voltaris-discovery-sort:hover,
+.voltaris-discovery-filter:hover {
+  border-color: rgb(232 234 237 / 0.48);
 }
 
 .voltaris-discovery-sort {
@@ -838,10 +737,12 @@ input[type="date"]:focus {
 
 .voltaris-discovery-control-label {
   display: block;
-  color: rgb(255 255 255 / 0.38);
+  color: #a8aeb8;
   font-family: var(--font-data, monospace);
   font-size: 0.55rem;
+  font-weight: 600;
   letter-spacing: 0.18em;
+  line-height: 1;
   text-transform: uppercase;
 }
 
@@ -850,12 +751,19 @@ input[type="date"]:focus {
   border: 0 !important;
   outline: 0 !important;
   background: transparent !important;
-  color: var(--volt-control-fg);
-  padding: 0.15rem 1.5rem 0 0;
+  color: #e8eaed !important;
+  padding: 0.3rem 1.5rem 0 0;
   font-family: var(--font-data, monospace);
   font-size: 0.62rem;
+  font-weight: 600;
   text-transform: uppercase;
   box-shadow: none !important;
+  cursor: pointer;
+}
+
+.voltaris-discovery-sort:focus-within {
+  border-color: #b8ff3d;
+  background: #1d150f;
 }
 
 .voltaris-discovery-filter {
@@ -864,7 +772,7 @@ input[type="date"]:focus {
   justify-content: space-between;
   gap: 1rem;
   padding: 0.75rem 0.9rem;
-  color: var(--volt-control-fg);
+  color: #e8eaed;
   text-align: left;
   cursor: pointer;
   clip-path: polygon(
@@ -875,18 +783,17 @@ input[type="date"]:focus {
     0 100%
   );
   transition:
-    border-color 220ms ease,
-    background 220ms ease;
+    border-color 180ms ease,
+    background-color 180ms ease;
 }
 
-.voltaris-discovery-filter:hover,
 .voltaris-discovery-filter-active {
-  border-color: rgb(255 255 255 / 0.38);
-  background: rgb(18 20 22 / 0.98);
+  border-color: #b8ff3d;
+  background: #1d150f;
 }
 
 .voltaris-discovery-filter-active .voltaris-discovery-control-label {
-  color: var(--volt, #b8ff3d);
+  color: #b8ff3d;
 }
 
 .voltaris-discovery-filter-count {
@@ -895,10 +802,12 @@ input[type="date"]:focus {
   justify-content: center;
   min-width: 28px;
   height: 28px;
-  border: 1px solid rgb(255 255 255 / 0.14);
-  color: rgb(255 255 255 / 0.68);
+  border: 1px solid rgb(232 234 237 / 0.36);
+  background: rgb(232 234 237 / 0.06);
+  color: #e8eaed;
   font-family: var(--font-data, monospace);
   font-size: 0.58rem;
+  font-weight: 700;
 }
 
 .voltaris-rental-journey {
@@ -912,9 +821,17 @@ input[type="date"]:focus {
 .voltaris-rental-location,
 .voltaris-rental-date {
   min-height: 72px;
-  border: 1px solid rgb(255 255 255 / 0.16);
-  background: rgb(10 12 14 / 0.92);
+  border: 1px solid rgb(232 234 237 / 0.28);
+  background: #17100b;
   padding: 0.65rem 0.85rem;
+  transition:
+    border-color 180ms ease,
+    background-color 180ms ease;
+}
+
+.voltaris-rental-location:hover,
+.voltaris-rental-date:hover {
+  border-color: rgb(232 234 237 / 0.48);
 }
 
 .voltaris-rental-location {
@@ -948,10 +865,11 @@ input[type="date"]:focus {
 
 .voltaris-rental-label {
   display: block;
-  margin-bottom: 0.25rem;
-  color: rgb(255 255 255 / 0.38);
+  margin-bottom: 0.35rem;
+  color: #a8aeb8;
   font-family: var(--font-data, monospace);
   font-size: 0.55rem;
+  font-weight: 600;
   letter-spacing: 0.18em;
 }
 
@@ -962,45 +880,58 @@ input[type="date"]:focus {
   border: 0 !important;
   outline: 0 !important;
   background: transparent !important;
-  color: var(--volt-control-fg);
-  padding: 0.15rem 0;
+  color: #e8eaed !important;
+  padding: 0;
   box-shadow: none !important;
+  color-scheme: dark;
+}
+
+.voltaris-rental-location-input::placeholder {
+  color: #a8aeb8 !important;
+  opacity: 1;
+}
+
+.voltaris-rental-location:focus-within,
+.voltaris-rental-date:focus-within {
+  border-color: #b8ff3d;
+  background: #1d150f;
+}
+
+.voltaris-rental-date-input::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  opacity: 0.82;
+  cursor: pointer;
 }
 
 .voltaris-rental-route {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.3rem;
-  background: rgb(10 12 14 / 0.92);
-  border-top: 1px solid rgb(255 255 255 / 0.16);
-  border-bottom: 1px solid rgb(255 255 255 / 0.16);
+  gap: 0.35rem;
+  background: #17100b;
 }
 
 .voltaris-rental-route span {
-  display: block;
-  width: 12px;
+  width: 16px;
   height: 1px;
-  background: rgb(255 255 255 / 0.24);
+  background: rgb(232 234 237 / 0.28);
 }
 
 .voltaris-rental-route-arrow {
-  width: auto !important;
-  height: auto !important;
-  background: transparent !important;
-  color: var(--volt, #b8ff3d);
+  color: #b8ff3d;
   font-family: var(--font-data, monospace);
-  font-size: 0.9rem;
+  font-size: 1rem;
+  font-weight: 700;
 }
 
-@media (max-width: 760px) {
+@media (max-width: 900px) {
   .voltaris-discovery-controls {
     flex-direction: column;
   }
 
   .voltaris-discovery-actions {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   }
 
   .voltaris-discovery-sort,
@@ -1017,12 +948,33 @@ input[type="date"]:focus {
   .voltaris-rental-location,
   .voltaris-rental-date,
   .voltaris-rental-date-return {
-    border: 1px solid rgb(255 255 255 / 0.16);
+    border-left: 1px solid rgb(232 234 237 / 0.28);
     clip-path: none;
   }
 
   .voltaris-rental-route {
-    min-height: 34px;
-    border: 1px solid rgb(255 255 255 / 0.16);
+    min-height: 38px;
+  }
+}
+
+@media (max-width: 640px) {
+  .voltaris-discovery-search,
+  .voltaris-discovery-sort,
+  .voltaris-discovery-filter {
+    min-height: 54px;
+  }
+
+  .voltaris-discovery-search-index {
+    display: none;
+  }
+
+  .voltaris-discovery-actions {
+    gap: 0.5rem;
+  }
+
+  .voltaris-rental-location,
+  .voltaris-rental-date,
+  .voltaris-rental-date-return {
+    min-height: 68px;
   }
 }
