@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -252,6 +253,39 @@ export function VehicleComparison() {
                     scope="col"
                     className="voltaris-comparison-vehicle-head"
                   >
+                    <Link
+                      href={`/cars/${vehicle.slug}`}
+                      className="voltaris-comparison-vehicle-image"
+                      aria-label={`View details for ${vehicle.year} ${vehicle.make} ${vehicle.model}`}
+                    >
+                      {vehicle.primary_image ? (
+                        <Image
+                          src={
+                            vehicle.primary_image.detail ??
+                            vehicle.primary_image.card
+                          }
+                          alt={
+                            vehicle.primary_image.alt ||
+                            `${vehicle.year} ${vehicle.make} ${vehicle.model}`
+                          }
+                          fill
+                          sizes="(min-width: 1024px) 14rem, 12.5rem"
+                          className="object-cover transition-transform duration-700 ease-out hover:scale-[1.035]"
+                          {...(vehicle.primary_image.blur_data_url
+                            ? {
+                                placeholder: 'blur' as const,
+                                blurDataURL:
+                                  vehicle.primary_image.blur_data_url,
+                              }
+                            : {})}
+                        />
+                      ) : (
+                        <span className="font-data text-[0.58rem] uppercase tracking-[0.16em] text-steel-muted">
+                          Photos coming soon
+                        </span>
+                      )}
+                    </Link>
+
                     <div className="voltaris-comparison-index">
                       0{index + 1}
                     </div>
