@@ -38,45 +38,54 @@ export function RentalSearch() {
       onSubmit={submit}
       className="border border-hairline bg-slab/60 p-4 sm:p-5"
     >
-      <div className="grid gap-4 sm:grid-cols-3">
-        <div>
-          <label htmlFor="rental-location" className="eyebrow mb-2 block">
-            Pickup location
+      <div className="voltaris-rental-journey">
+        <div className="voltaris-rental-location">
+          <label htmlFor="rental-location" className="voltaris-rental-label">
+            PICKUP
           </label>
+
           <input
             id="rental-location"
             type="text"
             name="rentalLocation"
             defaultValue={filters.rentalLocation ?? ''}
             placeholder="Kigali"
-            className="w-full border border-hairline panel-field px-3 py-3 text-sm focus:border-volt"
+            className="voltaris-rental-location-input"
           />
         </div>
 
-        <div>
-          <label htmlFor="rental-start" className="eyebrow mb-2 block">
-            Start date
+        <div className="voltaris-rental-date">
+          <label htmlFor="rental-start" className="voltaris-rental-label">
+            FROM
           </label>
+
           <input
             id="rental-start"
             type="date"
             name="rentalStart"
             defaultValue={filters.rentalStart ?? ''}
-            className="w-full border border-hairline panel-field px-3 py-3 text-sm focus:border-volt"
+            className="voltaris-rental-date-input"
           />
         </div>
 
-        <div>
-          <label htmlFor="rental-end" className="eyebrow mb-2 block">
-            End date
+        <div className="voltaris-rental-route" aria-hidden="true">
+          <span />
+          <span className="voltaris-rental-route-arrow">→</span>
+          <span />
+        </div>
+
+        <div className="voltaris-rental-date voltaris-rental-date-return">
+          <label htmlFor="rental-end" className="voltaris-rental-label">
+            RETURN
           </label>
+
           <input
             id="rental-end"
             type="date"
             name="rentalEnd"
             defaultValue={filters.rentalEnd ?? ''}
             min={filters.rentalStart ?? undefined}
-            className="w-full border border-hairline panel-field px-3 py-3 text-sm focus:border-volt"
+            className="voltaris-rental-date-input"
           />
         </div>
       </div>

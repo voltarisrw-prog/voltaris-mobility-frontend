@@ -111,37 +111,56 @@ export function VehicleFilters({
 
   return (
     <section aria-label="Filter vehicles" className="space-y-4">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-        <div className="flex-1">
+      <div className="voltaris-discovery-controls">
+        <div className="voltaris-discovery-search">
           <label htmlFor="vehicle-search" className="sr-only">
             Search by make, model, or keyword
           </label>
+
+          <span className="voltaris-discovery-search-mark" aria-hidden="true">
+            /
+          </span>
+
           <input
             id="vehicle-search"
             type="search"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Search BYD, Nissan Leaf, SUV…"
-            className="w-full border border-hairline panel-field px-4 py-3 text-sm placeholder:text-steel-muted focus:border-volt"
+            className="voltaris-discovery-search-input"
           />
+
+          <span className="voltaris-discovery-search-index" aria-hidden="true">
+            FIND
+          </span>
         </div>
 
-        <div className="flex items-center gap-3">
-          <label htmlFor="vehicle-sort" className="sr-only">
-            Sort results
-          </label>
-          <select
-            id="vehicle-sort"
-            value={filters.sort ?? 'relevance'}
-            onChange={(event) => apply({ sort: event.target.value as Filters['sort'] })}
-            className="border border-hairline panel-field px-3 py-3 font-data text-xs uppercase focus:border-volt"
-          >
-            {SORT_OPTIONS.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
+        <div className="voltaris-discovery-actions">
+          <div className="voltaris-discovery-sort">
+            <label htmlFor="vehicle-sort" className="sr-only">
+              Sort results
+            </label>
+
+            <span className="voltaris-discovery-control-label" aria-hidden="true">
+              ORDER
+            </span>
+
+            <select
+              id="vehicle-sort"
+              value={filters.sort ?? 'relevance'}
+              onChange={(event) =>
+                apply({ sort: event.target.value as Filters['sort'] })
+              }
+              className="voltaris-discovery-sort-select"
+              aria-label="Sort results"
+            >
+              {SORT_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
 
           <button
             ref={triggerRef}
@@ -149,9 +168,17 @@ export function VehicleFilters({
             onClick={() => setOpen((value) => !value)}
             aria-expanded={open}
             aria-controls="filter-panel-mobile filter-panel-desktop"
-            className="border border-chrome px-4 py-3 font-data text-eyebrow uppercase transition-colors hover:bg-chrome hover:text-surface"
+            className={[
+              'voltaris-discovery-filter',
+              open ? 'voltaris-discovery-filter-active' : '',
+            ].join(' ')}
           >
-            Filters{count > 0 ? ` (${count})` : ''}
+            <span className="voltaris-discovery-control-label">
+              FILTER
+            </span>
+            <span className="voltaris-discovery-filter-count">
+              {count > 0 ? String(count).padStart(2, '0') : '—'}
+            </span>
           </button>
         </div>
       </div>
