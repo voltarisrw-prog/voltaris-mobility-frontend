@@ -230,3 +230,59 @@
     transition: none !important;
   }
 }
+
+
+/* =========================================================
+   MARKETPLACE EDITORIAL MOTION
+   Buy + Rent marketplace only
+   ========================================================= */
+
+@keyframes marketplace-editorial-text-in {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0);
+    filter: blur(5px);
+  }
+
+  18%,
+  82% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    filter: blur(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate3d(0, -8px, 0);
+    filter: blur(3px);
+  }
+}
+
+.marketplace-editorial-text {
+  animation: marketplace-editorial-text-in 4.2s
+    cubic-bezier(.22,.61,.36,1) both;
+}
+
+@keyframes marketplace-editorial-enter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 24px, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.marketplace-editorial-enter {
+  animation: marketplace-editorial-enter 900ms
+    cubic-bezier(.22,.61,.36,1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marketplace-editorial-text,
+  .marketplace-editorial-enter {
+    animation: none !important;
+  }
+}

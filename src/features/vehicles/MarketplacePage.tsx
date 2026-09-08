@@ -5,6 +5,7 @@ import { Pagination } from '@/components/Pagination';
 import { MarketplaceVehicleCard } from '@/components/MarketplaceVehicleCard';
 import { VehicleFilters as FilterPanel } from '@/components/VehicleFilters';
 import { RentalSearch } from '@/features/vehicles/RentalSearch';
+import { MarketplaceEditorialMotion } from '@/features/vehicles/MarketplaceEditorialMotion';
 import { getFacets, listVehicles, type VehicleFacets } from '@/lib/api/vehicles';
 import { ApiError, displayMessage } from '@/lib/api/errors';
 import { breadcrumbJsonLd } from '@/lib/seo/jsonld';
@@ -132,17 +133,60 @@ export async function MarketplacePage({
         </div>
       ) : results ? (
         <>
-          <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {results.items.map((vehicle, index) => (
-              <MarketplaceVehicleCard
-                key={vehicle.id}
-                vehicle={vehicle}
-                priority={index < 3}
-                featured={index === 0}
+          {mode ? (
+            <>
+              <MarketplaceEditorialMotion
+                vehicles={results.items}
                 mode={mode}
               />
-            ))}
-          </div>
+
+              {results.items.length > 5 ? (
+                <div className="mt-16">
+                  <div className="mb-6 flex items-end justify-between gap-6 border-b border-hairline pb-4">
+                    <div>
+                      <p className="font-data text-[0.6rem] uppercase tracking-[0.2em] text-steel-muted">
+                        More from the collection
+                      </p>
+                      <h2 className="mt-2 font-display text-2xl tracking-tight text-chrome sm:text-3xl">
+                        Explore the full edit
+                      </h2>
+                    </div>
+                  </div>
+
+                  <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    {results.items.slice(5).map((vehicle, index) => (
+                      <div
+                        key={vehicle.id}
+                        className="marketplace-editorial-enter"
+                        style={{
+                          animationDelay: `${Math.min(index, 5) * 90}ms`,
+                        }}
+                      >
+                        <MarketplaceVehicleCard
+                          vehicle={vehicle}
+                          priority={false}
+                          featured={false}
+                          mode={mode}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
+            </>
+          ) : (
+            <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {results.items.map((vehicle, index) => (
+                <MarketplaceVehicleCard
+                  key={vehicle.id}
+                  vehicle={vehicle}
+                  priority={index < 3}
+                  featured={index === 0}
+                  mode={mode}
+                />
+              ))}
+            </div>
+          )}
 
           <div className="mt-10">
             <Pagination
