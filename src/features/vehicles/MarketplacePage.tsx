@@ -175,18 +175,6 @@ export async function MarketplacePage({
                 </div>
               ) : null}
             </>
-          ) : (
-            <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {results.items.map((vehicle, index) => (
-                <MarketplaceVehicleCard
-                  key={vehicle.id}
-                  vehicle={vehicle}
-                  priority={index < 3}
-                  featured={index === 0}
-                  mode={mode}
-                />
-              ))}
-            </div>
           )}
 
           <div className="mt-10">
