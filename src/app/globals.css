@@ -614,3 +614,120 @@
     transition: none;
   }
 }
+
+/* =========================================================
+   VOLTARIS — DISTINCTIVE DISCOVERY CONTROL GEOMETRY
+   Search / Sort / Filter / Date only
+   ========================================================= */
+
+:root {
+  --volt-control-border: rgb(255 255 255 / 0.16);
+  --volt-control-border-hover: rgb(255 255 255 / 0.34);
+  --volt-control-bg: rgb(10 12 14 / 0.88);
+  --volt-control-fg: rgb(245 247 248);
+}
+
+/* SEARCH — asymmetric cutline */
+input[placeholder*="Search"],
+input[placeholder*="search"] {
+  min-height: 54px;
+  border: 1px solid var(--volt-control-border);
+  border-radius: 2px 18px 2px 18px;
+  background: var(--volt-control-bg);
+  color: var(--volt-control-fg);
+  padding-inline: 1.15rem;
+  outline: none;
+  box-shadow: none;
+  transition:
+    border-color 220ms ease,
+    background 220ms ease,
+    transform 220ms ease;
+}
+
+input[placeholder*="Search"]:focus,
+input[placeholder*="search"]:focus {
+  border-color: var(--volt-control-border-hover);
+  background: rgb(16 18 20 / 0.96);
+}
+
+/* FILTER — architectural notched shape */
+[class*="filter"] button,
+[class*="Filter"] button,
+button[aria-label*="Filter"],
+button[aria-label*="filter"] {
+  border-radius: 2px 14px 2px 2px;
+  border: 1px solid var(--volt-control-border);
+  background: var(--volt-control-bg);
+  box-shadow: none;
+  transition:
+    border-color 220ms ease,
+    background 220ms ease,
+    transform 220ms ease;
+}
+
+[class*="filter"] button:hover,
+[class*="Filter"] button:hover,
+button[aria-label*="Filter"]:hover,
+button[aria-label*="filter"]:hover {
+  border-color: var(--volt-control-border-hover);
+  background: rgb(18 20 22 / 0.96);
+}
+
+/* SORT — stepped instrument */
+[class*="sort"] button,
+[class*="Sort"] button,
+button[aria-label*="Sort"],
+button[aria-label*="sort"] {
+  border-radius: 2px 2px 14px 2px;
+  border: 1px solid var(--volt-control-border);
+  background: var(--volt-control-bg);
+  box-shadow: none;
+  transition:
+    border-color 220ms ease,
+    background 220ms ease,
+    transform 220ms ease;
+}
+
+[class*="sort"] button:hover,
+[class*="Sort"] button:hover,
+button[aria-label*="Sort"]:hover,
+button[aria-label*="sort"]:hover {
+  border-color: var(--volt-control-border-hover);
+  background: rgb(18 20 22 / 0.96);
+}
+
+/* DATE — split journey geometry */
+input[type="date"] {
+  min-height: 54px;
+  border: 1px solid var(--volt-control-border);
+  border-radius: 16px 2px 16px 2px;
+  background: var(--volt-control-bg);
+  color: var(--volt-control-fg);
+  padding-inline: 1rem;
+  box-shadow: none;
+  outline: none;
+  transition:
+    border-color 220ms ease,
+    background 220ms ease;
+}
+
+input[type="date"]:focus {
+  border-color: var(--volt-control-border-hover);
+  background: rgb(16 18 20 / 0.96);
+}
+
+/* Shared discovery-control rhythm */
+[class*="filter"],
+[class*="Filter"],
+[class*="sort"],
+[class*="Sort"] {
+  box-shadow: none;
+}
+
+@media (max-width: 640px) {
+  input[placeholder*="Search"],
+  input[placeholder*="search"],
+  input[type="date"] {
+    min-height: 50px;
+  }
+}
