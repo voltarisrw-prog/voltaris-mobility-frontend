@@ -385,6 +385,55 @@ export function VehicleComparison() {
         </div>
       </div>
 
+      <section className="voltaris-comparison-actions" aria-label="Choose your next step">
+        <div className="voltaris-comparison-actions-head">
+          <div>
+            <p className="eyebrow">READY TO MOVE</p>
+            <h2 className="mt-2 font-display text-2xl tracking-tight text-chrome sm:text-3xl">
+              Choose what happens next
+            </h2>
+          </div>
+          <p className="max-w-md text-sm leading-relaxed text-steel">
+            Compare the numbers, then order your preferred car or book a free demo drive before you decide.
+          </p>
+        </div>
+
+        <div className="voltaris-comparison-action-grid">
+          {vehicles.map((vehicle) => {
+            const vehicleTitle = `${vehicle.year} ${vehicle.make} ${vehicle.model}`;
+
+            return (
+              <article key={vehicle.id} className="voltaris-comparison-action-card">
+                <div>
+                  <p className="font-data text-[0.58rem] uppercase tracking-[0.16em] text-volt">
+                    {vehicle.make}
+                  </p>
+                  <h3 className="mt-1 font-display text-lg font-semibold tracking-tight text-chrome">
+                    {vehicleTitle}
+                  </h3>
+                </div>
+
+                <div className="mt-5 flex flex-col gap-2 sm:flex-row">
+                  <Link
+                    href={`/checkout/start?vehicle=${encodeURIComponent(vehicle.id)}`}
+                    className="inline-flex min-h-11 items-center justify-center border border-volt bg-volt px-4 py-2.5 font-data text-[0.6rem] uppercase tracking-[0.14em] text-surface transition-colors hover:bg-volt-bright"
+                  >
+                    Order this car
+                  </Link>
+
+                  <Link
+                    href={`/test-drive?vehicle=${encodeURIComponent(vehicle.id)}`}
+                    className="inline-flex min-h-11 items-center justify-center border border-chrome/30 px-4 py-2.5 font-data text-[0.6rem] uppercase tracking-[0.14em] text-chrome transition-colors hover:border-volt hover:text-volt"
+                  >
+                    Free Demo Drive
+                  </Link>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      </section>
+
       <p className="mt-8 max-w-prose text-xs leading-relaxed text-steel-muted">
         Charging times are calculated from battery size and the vehicle’s stated charge rate, so
         they are an upper bound — real sessions taper near full. Range figures are manufacturer
