@@ -576,49 +576,6 @@
   transform-origin: center center;
 }
 
-.marketplace-infinite-showroom-controls {
-  position: absolute;
-  inset: 0;
-  z-index: 300;
-  pointer-events: none;
-}
-
-.marketplace-infinite-showroom-control {
-  position: absolute;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
-  pointer-events: auto;
-  border: 1px solid rgb(255 255 255 / 0.16);
-  background: rgb(8 10 12 / 0.72);
-  color: rgb(255 255 255 / 0.9);
-  padding: 0.7rem 0.9rem;
-  font-family: var(--font-data, monospace);
-  font-size: 0.62rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  backdrop-filter: blur(14px);
-  transition:
-    background 220ms ease,
-    border-color 220ms ease,
-    transform 220ms ease;
-}
-
-.marketplace-infinite-showroom-control:hover {
-  background: rgb(255 255 255 / 0.1);
-  border-color: rgb(255 255 255 / 0.3);
-}
-
-.marketplace-infinite-showroom-control-previous {
-  top: 1.25rem;
-  right: 0;
-}
-
-.marketplace-infinite-showroom-control-next {
-  right: 0;
-  bottom: 1.25rem;
-}
-
 @media (max-width: 640px) {
   .marketplace-infinite-showroom {
     height: 105svh;

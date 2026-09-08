@@ -1,7 +1,6 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowDown, ArrowUp } from 'lucide-react';
 import { MarketplaceVehicleCard } from '@/components/MarketplaceVehicleCard';
 import type { VehicleSummary } from '@/types/vehicle';
 
@@ -227,35 +226,6 @@ export function MarketplaceEditorialMotion({
           })}
         </div>
 
-        {stockCount > 1 ? (
-          <div className="marketplace-infinite-showroom-controls">
-            <button
-              type="button"
-              onClick={() => moveBy(-1)}
-              aria-label="Previous vehicle"
-              className="marketplace-infinite-showroom-control marketplace-infinite-showroom-control-previous"
-            >
-              <ArrowUp
-                className="h-4 w-4"
-                aria-hidden="true"
-              />
-              <span>Previous</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => moveBy(1)}
-              aria-label="Next vehicle"
-              className="marketplace-infinite-showroom-control marketplace-infinite-showroom-control-next"
-            >
-              <span>Next</span>
-              <ArrowDown
-                className="h-4 w-4"
-                aria-hidden="true"
-              />
-            </button>
-          </div>
-        ) : null}
       </div>
     </section>
   );
