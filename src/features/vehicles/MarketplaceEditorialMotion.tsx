@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowDown, ArrowUp } from 'lucide-react';
 import { MarketplaceVehicleCard } from '@/components/MarketplaceVehicleCard';
 import type { VehicleSummary } from '@/types/vehicle';
 
@@ -17,9 +16,6 @@ const editorialLines = [
   'Find the vehicle that fits your next move',
 ];
 
-const AUTO_ADVANCE_MS = 6500;
-const TRANSITION_MS = 1000;
-
 export function MarketplaceEditorialMotion({
   vehicles,
   mode,
@@ -29,218 +25,171 @@ export function MarketplaceEditorialMotion({
     [vehicles],
   );
 
-  const loopVehicles = useMemo(
-    () => [...sourceVehicles, ...sourceVehicles.slice(0, 2)],
-    [sourceVehicles],
-  );
-
-  const [active, setActive] = useState(0);
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const [progress, setProgress] = useState(0);
   const [line, setLine] = useState(0);
-  const [paused, setPaused] = useState(false);
-  const [transitioning, setTransitioning] = useState(true);
-  const resetTimer = useRef<number | null>(null);
 
   const reducedMotion =
     typeof window !== 'undefined' &&
     window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   useEffect(() => {
-    if (
-      sourceVehicles.length < 2 ||
-      paused ||
-      reducedMotion
-    ) {
-      return;
-    }
+    if (reducedMotion) return;
 
-    const timer = window.setInterval(() => {
-      setActive((current) => current + 1);
-    }, AUTO_ADVANCE_MS);
+    let frame = 0;
 
-    return () => window.clearInterval(timer);
-  }, [sourceVehicles.length, paused, reducedMotion]);
+    const update = () => {
+      frame = 0;
+
+      const section = sectionRef.current;
+
+      if (!section) return;
+
+      const rect = section.getBoundingClientRect();
+      const scrollDistance = Math.max(
+        section.offsetHeight - window.innerHeight,
+        1,
+      );
+
+      const nextProgress = Math.min(
+        Math.max(-rect.top / scrollDistance, 0),
+        1,
+      );
+
+      setProgress(nextProgress);
+    };
+
+    const onScroll = () => {
+      if (!frame) {
+        frame = window.requestAnimationFrame(update);
+      }
+    };
+
+    const onResize = () => update();
+
+    update();
+
+    window.addEventListener('scroll', onScroll, {
+      passive: true,
+    });
+
+    window.addEventListener('resize', onResize);
+
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onResize);
+
+      if (frame) {
+        window.cancelAnimationFrame(frame);
+      }
+    };
+  }, [reducedMotion]);
 
   useEffect(() => {
     if (reducedMotion) return;
 
     const timer = window.setInterval(() => {
       setLine((current) => (current + 1) % editorialLines.length);
-    }, 4200);
+    }, 5000);
 
     return () => window.clearInterval(timer);
   }, [reducedMotion]);
 
-  useEffect(() => {
-    if (active !== sourceVehicles.length) return;
-
-    resetTimer.current = window.setTimeout(() => {
-      setTransitioning(false);
-      setActive(0);
-
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          setTransitioning(true);
-        });
-      });
-    }, TRANSITION_MS);
-
-    return () => {
-      if (resetTimer.current) {
-        window.clearTimeout(resetTimer.current);
-      }
-    };
-  }, [active, sourceVehicles.length]);
-
   if (!sourceVehicles.length) return null;
 
-  const previous = () => {
-    setTransitioning(true);
-
-    if (active === 0) {
-      setTransitioning(false);
-      setActive(sourceVehicles.length);
-
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          setTransitioning(true);
-          setActive(sourceVehicles.length - 1);
-        });
-      });
-
-      return;
-    }
-
-    setActive((current) => current - 1);
-  };
-
-  const next = () => {
-    setTransitioning(true);
-    setActive((current) => current + 1);
-  };
-
-  const visibleActiveIndex =
-    active >= sourceVehicles.length
-      ? 0
-      : active;
+  const vehiclePosition =
+    progress * Math.max(sourceVehicles.length - 1, 0);
 
   return (
     <section
-      className="mt-10"
+      ref={sectionRef}
+      className="marketplace-editorial-showroom"
       aria-label={
         mode === 'rental'
           ? 'Featured rental vehicles'
           : 'Featured vehicles'
       }
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onFocus={() => setPaused(true)}
-      onBlur={(event) => {
-        if (!event.currentTarget.contains(event.relatedTarget)) {
-          setPaused(false);
-        }
+      style={{
+        ['--marketplace-stock-count' as string]: sourceVehicles.length,
       }}
     >
-      <div className="mb-6 flex items-end justify-between gap-6">
-        <div className="min-w-0">
-          <p className="font-data text-[0.6rem] uppercase tracking-[0.2em] text-volt">
-            {mode === 'rental'
-              ? 'The rental edit'
-              : 'The electric edit'}
-          </p>
-
-          <div className="mt-2 min-h-[2.2rem] overflow-hidden">
-            <p
-              key={editorialLines[line]}
-              className="marketplace-editorial-text font-display text-xl tracking-tight text-chrome sm:text-2xl"
-            >
-              {editorialLines[line]}
+      <div className="marketplace-editorial-showroom-sticky">
+        <div className="mb-6 flex items-end justify-between gap-6">
+          <div className="min-w-0">
+            <p className="font-data text-[0.6rem] uppercase tracking-[0.2em] text-volt">
+              {mode === 'rental'
+                ? 'The rental edit'
+                : 'The electric edit'}
             </p>
+
+            <div className="mt-2 min-h-[2.2rem] overflow-hidden">
+              <p
+                key={editorialLines[line]}
+                className="marketplace-editorial-text font-display text-xl tracking-tight text-chrome sm:text-2xl"
+              >
+                {editorialLines[line]}
+              </p>
+            </div>
           </div>
         </div>
 
-        {sourceVehicles.length > 1 ? (
-          <div className="flex shrink-0 items-center gap-2">
-            <button
-              type="button"
-              onClick={previous}
-              aria-label="Previous vehicle"
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-hairline bg-surface text-chrome shadow-lg shadow-black/10 transition-transform hover:-translate-y-0.5 hover:border-volt hover:text-volt focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-volt"
-            >
-              <ArrowUp
-                className="h-4 w-4"
-                aria-hidden="true"
-              />
-            </button>
+        <div className="marketplace-editorial-stage">
+          {sourceVehicles.map((vehicle, index) => {
+            const distance = index - vehiclePosition;
+            const absoluteDistance = Math.abs(distance);
 
-            <button
-              type="button"
-              onClick={next}
-              aria-label="Next vehicle"
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-hairline bg-surface text-chrome shadow-lg shadow-black/10 transition-transform hover:-translate-y-0.5 hover:border-volt hover:text-volt focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-volt"
-            >
-              <ArrowDown
-                className="h-4 w-4"
-                aria-hidden="true"
-              />
-            </button>
-          </div>
-        ) : null}
-      </div>
+            const isActive = Math.abs(distance) < 0.5;
 
-      <div className="relative overflow-hidden">
-        <div
-          className={[
-            'marketplace-editorial-stock',
-            transitioning && !reducedMotion
-              ? 'transition-transform duration-1000 ease-[cubic-bezier(.22,.61,.36,1)]'
-              : '',
-          ].join(' ')}
-          style={{
-            transform: `translateY(calc(-${active} * (min(68svh, 760px) + 24px)))`,
-          }}
-        >
-          {loopVehicles.map((vehicle, index) => (
-            <article
-              key={`${vehicle.id}-${index}`}
-              className="marketplace-editorial-stock-item"
-              aria-hidden={
-                index !== active &&
-                index !== active + 1
-              }
-            >
-              <div className="relative">
+            const scale = Math.max(
+              0.9,
+              1 - absoluteDistance * 0.055,
+            );
+
+            const opacity = Math.max(
+              0.22,
+              1 - absoluteDistance * 0.42,
+            );
+
+            const blur = Math.min(
+              5,
+              absoluteDistance * 2.2,
+            );
+
+            const translateY =
+              distance * 30 +
+              (distance > 0 ? 18 : 0);
+
+            const zIndex =
+              100 - Math.round(absoluteDistance * 10);
+
+            return (
+              <article
+                key={vehicle.id}
+                className={[
+                  'marketplace-editorial-showroom-card',
+                  isActive
+                    ? 'marketplace-editorial-showroom-card-active'
+                    : '',
+                ].join(' ')}
+                aria-hidden={!isActive}
+                style={{
+                  transform: `translate3d(0, ${translateY}%, 0) scale(${scale})`,
+                  opacity,
+                  filter: `blur(${blur}px)`,
+                  zIndex,
+                }}
+              >
                 <MarketplaceVehicleCard
                   vehicle={vehicle}
                   priority={index < 2}
                   featured
                   mode={mode}
                 />
-
-              </div>
-            </article>
-          ))}
+              </article>
+            );
+          })}
         </div>
-
-        {sourceVehicles.length > 1 ? (
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-surface via-surface/80 to-transparent" />
-        ) : null}
       </div>
-
-      {sourceVehicles.length > 1 ? (
-        <div className="mt-5 flex items-center justify-between gap-6">
-          <div className="flex min-w-0 items-center gap-3">
-            <span className="h-px w-10 shrink-0 bg-volt" />
-
-            <span className="truncate font-data text-[0.58rem] uppercase tracking-[0.16em] text-steel-muted">
-              More vehicles below
-            </span>
-          </div>
-
-          <span className="shrink-0 font-data text-[0.58rem] uppercase tracking-[0.16em] text-steel-muted">
-            {String(visibleActiveIndex + 1).padStart(2, '0')}
-          </span>
-        </div>
-      ) : null}
     </section>
   );
 }
