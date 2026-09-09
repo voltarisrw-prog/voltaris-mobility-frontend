@@ -54,84 +54,83 @@ export function VehicleGallery({
 
   return (
     <>
-      <div className="space-y-2">
+      <div className="relative h-full min-h-[72svh] sm:min-h-[78svh] lg:min-h-[82svh] bg-slab">
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="group relative block w-full overflow-hidden bg-slab text-left"
+          className="group absolute inset-0 block h-full w-full overflow-hidden bg-slab text-left"
           aria-label={`Open photo ${active + 1} of ${images.length}`}
         >
-          <div className="relative aspect-[16/10] sm:aspect-[16/9]">
-            <Image
-              src={current.detail}
-              alt={current.alt || title}
-              fill
-              sizes="(min-width: 1024px) 66vw, 100vw"
-              className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.015]"
-              priority
-              {...(current.blur_data_url
-                ? {
-                    placeholder: 'blur' as const,
-                    blurDataURL: current.blur_data_url,
-                  }
-                : {})}
-            />
+          <Image
+            src={current.detail}
+            alt={current.alt || title}
+            fill
+            sizes="100vw"
+            className="object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.012]"
+            priority
+            {...(current.blur_data_url
+              ? {
+                  placeholder: 'blur' as const,
+                  blurDataURL: current.blur_data_url,
+                }
+              : {})}
+          />
 
-            <div
-              className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"
-              aria-hidden="true"
-            />
+          <div
+            className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/5 to-transparent"
+            aria-hidden="true"
+          />
 
-            <span className="absolute bottom-5 right-5 border border-white/30 bg-black/25 px-3 py-2 font-data text-[0.6875rem] uppercase tracking-[0.14em] text-white backdrop-blur-md">
-              Explore photos
-            </span>
-          </div>
+          <span className="absolute right-5 top-5 border border-white/25 bg-black/20 px-3 py-2 font-data text-[0.6875rem] uppercase tracking-[0.14em] text-white/90 backdrop-blur-md transition-colors group-hover:border-white/60">
+            Explore photos
+          </span>
         </button>
 
         {visibleImages.length > 1 && (
-          <div className="grid grid-cols-3 gap-2 sm:grid-cols-6">
-            {visibleImages.map((image, index) => (
-              <button
-                key={`${image.gallery}-${index}`}
-                type="button"
-                onClick={() => {
-                  setActive(index);
-                  setOpen(true);
-                }}
-                className={`relative aspect-[4/3] overflow-hidden bg-slab ${
-                  index === active
-                    ? 'ring-1 ring-chrome'
-                    : 'opacity-70 transition-opacity hover:opacity-100'
-                }`}
-                aria-label={`View photo ${index + 1} of ${images.length}`}
-                aria-current={index === active ? 'true' : undefined}
-              >
-                <Image
-                  src={image.thumb}
-                  alt={image.alt || title}
-                  fill
-                  sizes="(min-width: 640px) 12vw, 30vw"
-                  className="object-cover"
-                  loading="lazy"
-                />
-              </button>
-            ))}
-          </div>
-        )}
+          <div className="absolute inset-x-0 bottom-0 z-20 px-5 pb-5 sm:px-8 sm:pb-8">
+            <div className="flex items-end justify-between gap-5">
+              <div className="flex max-w-[70vw] gap-2 overflow-x-auto pb-1">
+                {visibleImages.map((image, index) => (
+                  <button
+                    key={`${image.gallery}-${index}`}
+                    type="button"
+                    onClick={() => {
+                      setActive(index);
+                      setOpen(true);
+                    }}
+                    className={`relative h-14 w-20 shrink-0 overflow-hidden bg-black/30 backdrop-blur-md sm:h-16 sm:w-24 ${
+                      index === active
+                        ? 'ring-1 ring-white'
+                        : 'opacity-60 transition-opacity hover:opacity-100'
+                    }`}
+                    aria-label={`View photo ${index + 1} of ${images.length}`}
+                    aria-current={index === active ? 'true' : undefined}
+                  >
+                    <Image
+                      src={image.thumb}
+                      alt={image.alt || title}
+                      fill
+                      sizes="96px"
+                      className="object-cover"
+                      loading="lazy"
+                    />
+                  </button>
+                ))}
+              </div>
 
-        {images.length > 1 && (
-          <div className="flex items-center justify-between pt-2">
-            <span className="font-data text-[0.6875rem] uppercase tracking-[0.14em] text-steel-muted">
-              {active + 1} / {images.length} photos
-            </span>
-
-            <button
-              type="button"
-              onClick={() => setOpen(true)}
-              className="font-data text-[0.6875rem] uppercase tracking-[0.14em] text-chrome transition-colors hover:text-volt"
-            >
-              View gallery
-            </button>
+              <div className="shrink-0 text-right">
+                <p className="font-data text-[0.6875rem] uppercase tracking-[0.14em] text-white/70">
+                  {active + 1} / {images.length}
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setOpen(true)}
+                  className="mt-1 font-data text-[0.6875rem] uppercase tracking-[0.14em] text-white transition-colors hover:text-volt"
+                >
+                  View gallery
+                </button>
+              </div>
+            </div>
           </div>
         )}
       </div>

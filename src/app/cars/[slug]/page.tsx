@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ChevronDown } from 'lucide-react';
-import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { CompareToggleButton } from '@/components/CompareToggleButton';
 import { JsonLd } from '@/components/JsonLd';
 import { PriceDisplay } from '@/components/PriceDisplay';
@@ -161,11 +160,49 @@ export default async function VehiclePage({
         price={vehicle.price}
       />
 
-      <Breadcrumbs trail={trail} />
-
-      <div className="mt-5 grid gap-8 lg:grid-cols-[minmax(0,1.7fr)_minmax(0,0.8fr)]">
-        <div>
+      <div className="relative mt-4 overflow-hidden bg-abyss">
+        <div className="relative min-h-[72svh] sm:min-h-[78svh] lg:min-h-[82svh]">
           <VehicleGallery vehicle={vehicle} title={title} />
+
+          <div
+            className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/90 via-black/15 to-transparent"
+            aria-hidden="true"
+          />
+
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 p-6 sm:p-10 lg:p-14">
+            <div className="max-w-5xl">
+              <p className="font-data text-[0.6875rem] uppercase tracking-[0.22em] text-white/65">
+                {mode === 'rental' ? 'Available for rental' : 'Available for purchase'}
+                <span className="mx-2 text-white/30">/</span>
+                {vehicle.condition === 'new' ? 'New' : 'Used'}
+                <span className="mx-2 text-white/30">/</span>
+                {vehicle.location.city}
+              </p>
+
+              <h1 className="mt-3 max-w-4xl font-display text-4xl font-semibold leading-[0.94] tracking-[-0.035em] text-white sm:text-6xl lg:text-8xl">
+                {title}
+              </h1>
+
+              <div className="mt-6 flex flex-wrap items-center gap-x-8 gap-y-3 text-white/75">
+                <span className="font-data text-xs uppercase tracking-[0.16em]">
+                  {vehicle.range_km} km range
+                </span>
+                <span className="h-1 w-1 rounded-full bg-white/40" aria-hidden="true" />
+                <span className="font-data text-xs uppercase tracking-[0.16em]">
+                  {formatKwh(vehicle.battery_kwh)} battery
+                </span>
+                <span className="h-1 w-1 rounded-full bg-white/40" aria-hidden="true" />
+                <span className="font-data text-xs uppercase tracking-[0.16em]">
+                  {vehicle.power_kw} kW
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1.7fr)_minmax(0,0.8fr)]">
+        <div>
 
           <section className="mt-12 border-t border-hairline pt-8">
             <h2 className="eyebrow">About this vehicle</h2>
@@ -260,6 +297,7 @@ export default async function VehiclePage({
                 amount={vehicle.price}
                 currency={vehicle.currency}
                 perDay={vehicle.rental_price_per_day}
+                mode={mode}
                 size="lg"
               />
             </div>

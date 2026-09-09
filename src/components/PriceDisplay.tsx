@@ -9,11 +9,13 @@ export function PriceDisplay({
   currency,
   perDay,
   size = 'md',
+  mode = 'sale',
 }: {
   amount: number | null;
   currency: string;
   perDay?: number | null;
   size?: 'md' | 'lg';
+  mode?: 'sale' | 'rental';
 }) {
   return (
     <div>
@@ -23,9 +25,19 @@ export function PriceDisplay({
           size === 'lg' ? 'text-3xl sm:text-4xl' : 'text-lg',
         )}
       >
-        {formatPrice(amount, currency)}
+        {formatPrice(mode === 'rental' ? perDay ?? null : amount, currency)}
       </p>
-      {perDay ? (
+      {mode === 'rental' ? (
+        perDay ? (
+          <p className="mt-1 font-data text-xs uppercase tracking-[0.14em] text-steel">
+            per day
+          </p>
+        ) : (
+          <p className="mt-1 font-data text-xs uppercase tracking-[0.14em] text-steel">
+            Rental price on request
+          </p>
+        )
+      ) : perDay ? (
         <p className="mt-0.5 font-data text-xs text-steel">
           or {formatPrice(perDay, currency)} / day
         </p>
