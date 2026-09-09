@@ -17,7 +17,7 @@ function Steps({ steps }: { steps: { n: string; title: string; body: string }[] 
       {steps.map((step) => (
         <li
           key={step.n}
-          className="group relative min-h-[260px] overflow-hidden border border-hairline bg-slab p-7 shadow-[0_24px_70px_rgba(0,0,0,0.5)] transition-all duration-500 hover:-translate-y-1 hover:border-white/20 sm:p-8 lg:min-h-[280px] lg:p-9"
+          className="group relative min-h-[260px] overflow-hidden border border-black/10 rounded-[2rem] bg-white p-7 shadow-[0_18px_50px_rgba(0,0,0,0.12)] transition-all duration-500 hover:-translate-y-1 hover:border-black/20 sm:p-8 lg:min-h-[280px] lg:p-9"
         >
           <div className="flex items-start justify-between gap-6">
             <span className="font-data text-[10px] uppercase tracking-[0.18em] text-black/50">
@@ -62,12 +62,12 @@ export default function HowItWorksPage() {
         <div className="flex items-end justify-between gap-6 border-b border-hairline pb-5">
           <div>
             <p className="eyebrow text-volt">01 / Buying</p>
-            <h2 className="mt-2 font-display text-3xl font-semibold tracking-tight text-chrome sm:text-4xl">
+            <h2 className="mt-2 font-display text-3xl font-semibold tracking-tight text-black sm:text-4xl">
               Find the right car.
             </h2>
           </div>
 
-          <span className="hidden font-data text-[9px] uppercase tracking-[0.18em] text-steel-muted sm:block">
+          <span className="hidden font-data text-[9px] uppercase tracking-[0.18em] text-black/45 sm:block">
             From search to keys
           </span>
         </div>
@@ -81,12 +81,12 @@ export default function HowItWorksPage() {
         <div className="flex items-end justify-between gap-6 border-b border-hairline pb-5">
           <div>
             <p className="eyebrow text-volt">02 / Selling</p>
-            <h2 className="mt-2 font-display text-3xl font-semibold tracking-tight text-chrome sm:text-4xl">
+            <h2 className="mt-2 font-display text-3xl font-semibold tracking-tight text-black sm:text-4xl">
               Turn your car into a listing.
             </h2>
           </div>
 
-          <span className="hidden font-data text-[9px] uppercase tracking-[0.18em] text-steel-muted sm:block">
+          <span className="hidden font-data text-[9px] uppercase tracking-[0.18em] text-black/45 sm:block">
             From listing to sale
           </span>
         </div>

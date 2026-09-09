@@ -44,10 +44,10 @@ export function ProsePage({
                 staying out of the way until someone asks for it. */}
             <details className="group mb-8 border border-hairline lg:hidden">
               <summary className="flex cursor-pointer list-none items-center justify-between px-4 py-3 marker:hidden">
-                <span className="font-data text-eyebrow uppercase text-chrome">On this page</span>
+                <span className="font-data text-eyebrow uppercase text-black">On this page</span>
                 <span
                   aria-hidden="true"
-                  className="font-data text-xs text-steel-muted transition-transform duration-200 group-open:rotate-180"
+                  className="font-data text-xs text-black/45 transition-transform duration-200 group-open:rotate-180"
                 >
                   ▾
                 </span>
@@ -56,7 +56,7 @@ export function ProsePage({
                 <ul className="space-y-2">
                   {toc.map((section) => (
                     <li key={section.id}>
-                      <a href={`#${section.id}`} className="text-sm text-steel hover:text-volt">
+                      <a href={`#${section.id}`} className="text-sm text-black/65 hover:text-volt">
                         {section.heading}
                       </a>
                     </li>
@@ -72,13 +72,13 @@ export function ProsePage({
               aria-label={`Sections in ${title}`}
               className="hidden lg:sticky lg:top-24 lg:block lg:self-start"
             >
-              <p className="font-data text-eyebrow uppercase text-steel-muted">On this page</p>
+              <p className="font-data text-eyebrow uppercase text-black/45">On this page</p>
               <ul className="mt-3 space-y-2.5 border-l border-hairline pl-4">
                 {toc.map((section) => (
                   <li key={section.id}>
                     <a
                       href={`#${section.id}`}
-                      className="block text-sm text-steel transition-colors hover:text-chrome"
+                      className="block text-sm text-black/65 transition-colors hover:text-black"
                     >
                       {section.heading}
                     </a>
@@ -92,21 +92,21 @@ export function ProsePage({
         <article className={showToc ? 'mx-auto max-w-2xl lg:mx-0' : 'mx-auto mt-8 max-w-2xl'}>
           <h1 className="font-display text-headline">{title}</h1>
           {updated && (
-            <p className="mt-3 font-data text-xs text-steel-muted">
+            <p className="mt-3 font-data text-xs text-black/45">
               Last updated{' '}
               <time dateTime={updated}>
                 {new Date(updated).toLocaleDateString('en-RW', { dateStyle: 'long' })}
               </time>
             </p>
           )}
-          <p className="mt-6 text-base leading-relaxed text-steel">{intro}</p>
+          <p className="mt-6 text-base leading-relaxed text-black/65">{intro}</p>
 
           <div className="mt-12 space-y-4">
             {toc.map((section, index) => (
               <section
                 key={section.id}
                 id={section.id}
-                className="group relative scroll-mt-24 overflow-hidden border border-hairline bg-slab p-6 shadow-[0_24px_70px_rgba(0,0,0,0.5)] transition-all duration-500 hover:-translate-y-0.5 hover:border-white/20 sm:p-7 lg:p-8"
+                className="group relative scroll-mt-24 overflow-hidden border border-black/10 rounded-[2rem] bg-white p-6 shadow-[0_18px_50px_rgba(0,0,0,0.12)] transition-all duration-500 hover:-translate-y-0.5 hover:border-black/20 sm:p-7 lg:p-8"
               >
                 <div className="flex items-start justify-between gap-6">
                   <span className="font-data text-[9px] uppercase tracking-[0.18em] text-volt">
@@ -118,11 +118,11 @@ export function ProsePage({
                   </span>
                 </div>
 
-                <h2 className="mt-8 font-display text-xl font-semibold leading-tight tracking-tight text-chrome sm:text-2xl">
+                <h2 className="mt-8 font-display text-xl font-semibold leading-tight tracking-tight text-black sm:text-2xl">
                   {section.heading}
                 </h2>
 
-                <p className="mt-3 max-w-prose text-sm leading-6 text-steel">
+                <p className="mt-3 max-w-prose text-sm leading-6 text-black/65">
                   {section.body}
                 </p>
 

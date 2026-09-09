@@ -33,7 +33,7 @@ export default function HelpPage() {
 
       <header className="mt-8 max-w-2xl">
         <h1 className="font-display text-display">{help.title}</h1>
-        <p className="mt-5 text-base leading-relaxed text-steel">{help.intro}</p>
+        <p className="mt-5 text-base leading-relaxed text-black/65">{help.intro}</p>
       </header>
 
       <div className="mt-14 space-y-14">
@@ -44,7 +44,7 @@ export default function HelpPage() {
               {section.faqs.map((faq, index) => (
                 <details
                   key={faq.q}
-                  className="group relative overflow-hidden border border-hairline bg-slab p-6 shadow-[0_24px_70px_rgba(0,0,0,0.5)] transition-all duration-500 hover:-translate-y-1 hover:border-white/20 sm:p-7"
+                  className="group relative overflow-hidden border border-black/10 rounded-[2rem] bg-white p-6 shadow-[0_18px_50px_rgba(0,0,0,0.12)] transition-all duration-500 hover:-translate-y-1 hover:border-black/20 sm:p-7"
                 >
                   <summary className="cursor-pointer list-none">
                     <div className="flex items-start justify-between gap-5">
@@ -57,12 +57,12 @@ export default function HelpPage() {
                       </span>
                     </div>
 
-                    <h3 className="mt-10 max-w-md font-display text-xl font-semibold leading-tight tracking-tight text-chrome">
+                    <h3 className="mt-10 max-w-md font-display text-xl font-semibold leading-tight tracking-tight text-black">
                       {faq.q}
                     </h3>
                   </summary>
 
-                  <p className="mt-4 max-w-prose text-sm leading-6 text-steel">
+                  <p className="mt-4 max-w-prose text-sm leading-6 text-black/65">
                     {faq.a}
                   </p>
 
@@ -74,18 +74,18 @@ export default function HelpPage() {
         ))}
       </div>
 
-      <div className="group relative mt-16 overflow-hidden border border-hairline bg-slab p-7 shadow-[0_24px_70px_rgba(0,0,0,0.5)] transition-all duration-500 hover:border-white/20 sm:p-9 lg:p-10">
+      <div className="group relative mt-16 overflow-hidden border border-black/10 rounded-[2rem] bg-white p-7 shadow-[0_18px_50px_rgba(0,0,0,0.12)] transition-all duration-500 hover:border-black/20 sm:p-9 lg:p-10">
         <div className="flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="font-data text-[9px] uppercase tracking-[0.18em] text-volt">
               Need a hand?
             </p>
 
-            <h2 className="mt-3 font-display text-2xl font-semibold tracking-tight text-chrome sm:text-3xl">
+            <h2 className="mt-3 font-display text-2xl font-semibold tracking-tight text-black sm:text-3xl">
               Still stuck?
             </h2>
 
-            <p className="mt-3 max-w-lg text-sm leading-6 text-steel">
+            <p className="mt-3 max-w-lg text-sm leading-6 text-black/65">
               A person reads every message and replies within a working day.
             </p>
           </div>

@@ -39,10 +39,10 @@ export function TestDriveForm({
 
   if (result) {
     return (
-      <div className="border border-volt/25 bg-volt-wash p-6">
+      <div className="rounded-[2rem] border border-volt/30 bg-white p-6 text-black shadow-[0_18px_50px_rgba(0,0,0,0.12)]">
         <h2 className="font-display text-xl tracking-tight">Test drive requested</h2>
-        <p className="mt-3 text-sm text-steel">
-          Reference <span className="font-data text-chrome">{result.reference}</span>. This is a
+        <p className="mt-3 text-sm text-black/65">
+          Reference <span className="font-data text-black">{result.reference}</span>. This is a
           request, not a confirmed booking — Voltaris confirms the slot with the seller and comes
           back to you.
         </p>
@@ -81,7 +81,7 @@ export function TestDriveForm({
   const today = new Date().toISOString().slice(0, 10);
 
   return (
-    <div className="border border-hairline bg-slab p-6 shadow-[0_24px_70px_rgba(0,0,0,0.5)] sm:p-8">
+    <div className="border border-black/10 rounded-[2rem] bg-white p-6 text-black shadow-[0_18px_50px_rgba(0,0,0,0.12)] transition-all duration-500 hover:border-black/20 sm:p-8">
       <form onSubmit={onSubmit} noValidate className="space-y-5">
       {vehicleId ? (
         <input type="hidden" {...register('vehicle_id')} />
@@ -97,7 +97,7 @@ export function TestDriveForm({
       )}
 
       {vehicleTitle && (
-        <p className="border border-hairline bg-slab/60 px-4 py-3 text-sm">
+        <p className="rounded-[1.5rem] border border-black/10 bg-black/[0.025] px-4 py-3 text-sm text-black">
           Driving the <span className="font-medium">{vehicleTitle}</span>
         </p>
       )}
@@ -179,7 +179,7 @@ export function TestDriveForm({
 
       <Field label="" error={errors.consent?.message}>
         {(props) => (
-          <label className="flex items-start gap-3 text-sm text-steel">
+          <label className="flex items-start gap-3 text-sm text-black/65">
             <input
               {...props}
               {...register('consent')}

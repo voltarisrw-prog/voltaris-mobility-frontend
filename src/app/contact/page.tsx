@@ -18,43 +18,43 @@ export default function ContactPage() {
       <div className="mt-8 grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:gap-20">
         <header>
           <h1 className="font-display text-display">Talk to us</h1>
-          <p className="mt-5 max-w-md text-base leading-relaxed text-steel">
+          <p className="mt-5 max-w-md text-base leading-relaxed text-black/65">
             A person reads every message and replies within a working day. You do not need to
             have picked a vehicle first — most people who write to us have not.
           </p>
 
           <dl className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
-            <div className="border border-hairline bg-slab p-6 shadow-[0_24px_70px_rgba(0,0,0,0.5)]">
+            <div className="border border-black/10 rounded-[2rem] bg-white p-6 shadow-[0_18px_50px_rgba(0,0,0,0.12)]">
               <dt className="font-data text-[9px] uppercase tracking-[0.18em] text-volt">
                 Email
               </dt>
               <dd className="mt-4 text-sm">
-                <a href={`mailto:${company.email}`} className="text-chrome transition-colors hover:text-volt">
+                <a href={`mailto:${company.email}`} className="text-black transition-colors hover:text-volt">
                   {company.email}
                 </a>
               </dd>
             </div>
 
-            <div className="border border-hairline bg-slab p-6 shadow-[0_24px_70px_rgba(0,0,0,0.5)]">
+            <div className="border border-black/10 rounded-[2rem] bg-white p-6 shadow-[0_18px_50px_rgba(0,0,0,0.12)]">
               <dt className="font-data text-[9px] uppercase tracking-[0.18em] text-volt">
                 Phone
               </dt>
-              <dd className="mt-4 text-sm text-steel">{company.phone}</dd>
+              <dd className="mt-4 text-sm text-black/65">{company.phone}</dd>
             </div>
 
-            <div className="border border-hairline bg-slab p-6 shadow-[0_24px_70px_rgba(0,0,0,0.5)]">
+            <div className="border border-black/10 rounded-[2rem] bg-white p-6 shadow-[0_18px_50px_rgba(0,0,0,0.12)]">
               <dt className="font-data text-[9px] uppercase tracking-[0.18em] text-volt">
                 Where we are
               </dt>
-              <dd className="mt-4 text-sm leading-6 text-steel">{company.address}</dd>
+              <dd className="mt-4 text-sm leading-6 text-black/65">{company.address}</dd>
             </div>
 
-            <div className="border border-hairline bg-slab p-6 shadow-[0_24px_70px_rgba(0,0,0,0.5)]">
+            <div className="border border-black/10 rounded-[2rem] bg-white p-6 shadow-[0_18px_50px_rgba(0,0,0,0.12)]">
               <dt className="font-data text-[9px] uppercase tracking-[0.18em] text-volt">
                 Data and privacy
               </dt>
               <dd className="mt-4 text-sm">
-                <a href={`mailto:${company.privacyEmail}`} className="text-chrome transition-colors hover:text-volt">
+                <a href={`mailto:${company.privacyEmail}`} className="text-black transition-colors hover:text-volt">
                   {company.privacyEmail}
                 </a>
               </dd>
@@ -62,12 +62,12 @@ export default function ContactPage() {
           </dl>
         </header>
 
-        <div className="border border-hairline bg-slab p-6 shadow-[0_24px_70px_rgba(0,0,0,0.5)] sm:p-8 lg:p-10">
+        <div className="border border-black/10 rounded-[2rem] bg-white p-6 shadow-[0_18px_50px_rgba(0,0,0,0.12)] sm:p-8 lg:p-10">
           <div className="mb-8 border-b border-hairline pb-5">
             <p className="font-data text-[9px] uppercase tracking-[0.18em] text-volt">
               Send a message
             </p>
-            <p className="mt-2 text-sm leading-6 text-steel">
+            <p className="mt-2 text-sm leading-6 text-black/65">
               Tell us what you need and the Voltaris team will get back to you.
             </p>
           </div>
