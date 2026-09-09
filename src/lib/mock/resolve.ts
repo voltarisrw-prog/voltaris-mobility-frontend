@@ -138,7 +138,7 @@ export async function resolveMock<T>(
       { id: 'kigali-kacyiru', name: 'Kigali — Kacyiru', city: 'Kigali' },
       { id: 'kigali-kiyovu', name: 'Kigali — Kiyovu', city: 'Kigali' },
       { id: 'kigali-kimihurura', name: 'Kigali — Kimihurura', city: 'Kigali' },
-      { id: 'kigali-kanombe-airport', name: 'Kigali — Kanombe (Airport)', city: 'Kigali' },
+      { id: 'kigali-kanombe', name: 'Kigali — Kanombe (Airport)', city: 'Kigali' },
     ] as T;
   }
 
