@@ -15,9 +15,9 @@ const csv = (schema: z.ZodTypeAny) =>
 const int = (min: number, max: number) =>
   z.coerce.number().int().min(min).max(max).optional().catch(undefined);
 
-const isoDate = z
+const rentalDateTime = z
   .string()
-  .regex(/^\d{4}-\d{2}-\d{2}$/)
+  .regex(/^\d{4}-\d{2}-\d{2}(?:T(?:[01]\d|2[0-3]):[0-5]\d)?$/)
   .optional()
   .catch(undefined);
 
@@ -46,8 +46,8 @@ export const vehicleFiltersSchema = z.object({
   // constrains the format at the source; this just refuses anything that slipped in
   // some other way (a hand-edited URL) rather than passing it to the backend.
   rentalLocation: z.string().trim().toLowerCase().max(60).optional().catch(undefined),
-  rentalStart: isoDate,
-  rentalEnd: isoDate,
+  rentalStart: rentalDateTime,
+  rentalEnd: rentalDateTime,
   minPrice: int(0, 5_000_000_000),
   maxPrice: int(0, 5_000_000_000),
   minYear: int(1990, 2100),
@@ -87,6 +87,49 @@ export interface RentalWindow {
  * use this instead of checking the three fields individually so "what counts as a
  * complete rental search" is defined in exactly one place.
  */
+
+const RENTAL_DATE_TIME_PATTERN =
+  /^\d{4}-\d{2}-\d{2}T(?:[01]\d|2[0-3]):[0-5]\d$/;
+
+function getKigaliDateTime() {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Africa/Kigali',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hourCycle: 'h23',
+  }).formatToParts(new Date());
+
+  const values = Object.fromEntries(
+    parts
+      .filter((part) => part.type !== 'literal')
+      .map((part) => [part.type, part.value]),
+  );
+
+  return `${values.year}-${values.month}-${values.day}T${values.hour}:${values.minute}`;
+}
+
+export function validateRentalWindow(
+  start: string,
+  end: string,
+): string | null {
+  if (!RENTAL_DATE_TIME_PATTERN.test(start) || !RENTAL_DATE_TIME_PATTERN.test(end)) {
+    return 'Rental pickup and return must include a valid date and time.';
+  }
+
+  if (start < getKigaliDateTime()) {
+    return 'Pickup date and time cannot be in the past.';
+  }
+
+  if (end <= start) {
+    return 'Return must be after the pickup date and time.';
+  }
+
+  return null;
+}
+
 export function rentalWindow(filters: VehicleFilters): RentalWindow | null {
   if (!filters.rentalLocation || !filters.rentalStart || !filters.rentalEnd) return null;
   return { location: filters.rentalLocation, start: filters.rentalStart, end: filters.rentalEnd };

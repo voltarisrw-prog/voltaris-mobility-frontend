@@ -3,6 +3,7 @@ import { notFound, redirect } from 'next/navigation';
 import { ApiError } from '@/lib/api/errors';
 import { createOrder } from '@/lib/api/orders';
 import { buildMetadata } from '@/lib/seo/metadata';
+import { validateRentalWindow } from '@/lib/vehicles/filters';
 
 export const metadata: Metadata = buildMetadata({
   title: 'Starting checkout',
@@ -48,6 +49,14 @@ export default async function StartCheckoutPage({
   // with an opaque error deeper in the flow.
   if (orderKind === 'rental' && !rental) {
     redirect(`/cars/${encodeURIComponent(vehicle)}`);
+  }
+
+  if (orderKind === 'rental' && rental) {
+    const rentalError = validateRentalWindow(rental.start_date, rental.end_date);
+
+    if (rentalError) {
+      redirect(`/cars/${encodeURIComponent(vehicle)}?rentalError=invalid-window`);
+    }
   }
 
   let order;

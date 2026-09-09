@@ -1,22 +1,100 @@
 'use client';
 
-import { useState } from 'react';
-import { ArrowRight, CalendarDays, MapPin } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { ArrowRight, CalendarDays, Clock3, MapPin } from 'lucide-react';
+
+const pad = (value: number) => String(value).padStart(2, '0');
+
+const getLocalDateTime = () => {
+  const now = new Date();
+
+  return {
+    date: `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`,
+    time: `${pad(now.getHours())}:${pad(now.getMinutes())}`,
+  };
+};
 
 export function RentalCheckoutPanel({
   vehicleId,
 }: {
   vehicleId: string;
 }) {
-  const [start, setStart] = useState('');
-  const [end, setEnd] = useState('');
+  const [startDate, setStartDate] = useState('');
+  const [startTime, setStartTime] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [endTime, setEndTime] = useState('');
+  const [error, setError] = useState('');
 
-  const today = new Date().toISOString().slice(0, 10);
+  const [today, setToday] = useState('');
+  const [currentTime, setCurrentTime] = useState('');
+
+  useEffect(() => {
+    const updateClock = () => {
+      const now = getLocalDateTime();
+      setToday(now.date);
+      setCurrentTime(now.time);
+    };
+
+    updateClock();
+
+    const interval = window.setInterval(updateClock, 30_000);
+
+    return () => window.clearInterval(interval);
+  }, []);
+
+  const startTimeMin = startDate === today ? currentTime : undefined;
+  const endTimeMin = endDate === startDate ? startTime || undefined : undefined;
+
+  const submit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setError('');
+
+    if (!startDate || !startTime || !endDate || !endTime) {
+      setError('Choose a pickup date and time, and a return date and time.');
+      return;
+    }
+
+    if (startDate < today) {
+      setError('Pickup date cannot be in the past.');
+      return;
+    }
+
+    if (startDate === today && startTime < currentTime) {
+      setError('Pickup time cannot be in the past.');
+      return;
+    }
+
+    const start = `${startDate}T${startTime}`;
+    const end = `${endDate}T${endTime}`;
+
+    if (end <= start) {
+      setError('Return must be after the pickup date and time.');
+      return;
+    }
+
+    const form = event.currentTarget;
+
+    const location = form.elements.namedItem('rentalLocation');
+
+    if (!(location instanceof HTMLInputElement) || !location.value.trim()) {
+      setError('Enter a pickup location.');
+      return;
+    }
+
+    const params = new URLSearchParams({
+      vehicle: vehicleId,
+      kind: 'rental',
+      rentalLocation: location.value.trim(),
+      rentalStart: start,
+      rentalEnd: end,
+    });
+
+    window.location.assign(`/checkout/start?${params.toString()}`);
+  };
 
   return (
     <form
-      action="/checkout/start"
-      method="get"
+      onSubmit={submit}
       className="mt-4 border border-hairline bg-slab/40 p-4"
     >
       <input type="hidden" name="vehicle" value={vehicleId} />
@@ -49,33 +127,96 @@ export function RentalCheckoutPanel({
           <label className="block">
             <span className="eyebrow mb-2 flex items-center gap-2">
               <CalendarDays aria-hidden="true" className="h-3.5 w-3.5" />
-              Start
+              Pickup date
             </span>
             <input
               required
-              min={today}
+              min={today || undefined}
               type="date"
-              name="rentalStart"
-              value={start}
-              onChange={(event) => setStart(event.target.value)}
+              value={startDate}
+              onChange={(event) => {
+                const value = event.target.value;
+                setStartDate(value);
+
+                if (value === today) {
+                  const now = getLocalDateTime();
+                  setCurrentTime(now.time);
+
+                  if (startTime && startTime < now.time) {
+                    setStartTime('');
+                  }
+                }
+              }}
               className="w-full border border-hairline bg-surface px-3 py-3 text-sm text-chrome outline-none transition-colors focus:border-volt"
             />
           </label>
 
           <label className="block">
-            <span className="eyebrow mb-2 block">End</span>
+            <span className="eyebrow mb-2 flex items-center gap-2">
+              <Clock3 aria-hidden="true" className="h-3.5 w-3.5" />
+              Pickup time
+            </span>
             <input
               required
-              min={start || today}
+              type="time"
+              min={startTimeMin}
+              value={startTime}
+              onChange={(event) => setStartTime(event.target.value)}
+              className="w-full border border-hairline bg-surface px-3 py-3 text-sm text-chrome outline-none transition-colors focus:border-volt"
+            />
+          </label>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3">
+          <label className="block">
+            <span className="eyebrow mb-2 flex items-center gap-2">
+              <CalendarDays aria-hidden="true" className="h-3.5 w-3.5" />
+              Return date
+            </span>
+            <input
+              required
+              min={startDate || today || undefined}
               type="date"
-              name="rentalEnd"
-              value={end}
-              onChange={(event) => setEnd(event.target.value)}
+              value={endDate}
+              onChange={(event) => {
+                const value = event.target.value;
+                setEndDate(value);
+
+                if (value !== startDate) {
+                  setEndTime('');
+                } else if (startTime && endTime && endTime <= startTime) {
+                  setEndTime('');
+                }
+              }}
+              className="w-full border border-hairline bg-surface px-3 py-3 text-sm text-chrome outline-none transition-colors focus:border-volt"
+            />
+          </label>
+
+          <label className="block">
+            <span className="eyebrow mb-2 flex items-center gap-2">
+              <Clock3 aria-hidden="true" className="h-3.5 w-3.5" />
+              Return time
+            </span>
+            <input
+              required
+              type="time"
+              min={endTimeMin}
+              value={endTime}
+              onChange={(event) => setEndTime(event.target.value)}
               className="w-full border border-hairline bg-surface px-3 py-3 text-sm text-chrome outline-none transition-colors focus:border-volt"
             />
           </label>
         </div>
       </div>
+
+      {error ? (
+        <p
+          role="alert"
+          className="mt-4 font-data text-xs uppercase tracking-wide text-red-600"
+        >
+          {error}
+        </p>
+      ) : null}
 
       <button
         type="submit"
