@@ -78,6 +78,7 @@ function ensureInitialized(): void {
   if (initialized || typeof window === 'undefined') return;
 
   snapshot = readStorage();
+  snapshotIds = snapshot.map((item) => item.id);
   initialized = true;
 }
 

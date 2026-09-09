@@ -170,3 +170,34 @@ export const profileSchema = z.object({
   preferred_language: z.enum(['en', 'fr', 'rw']),
   marketing_opt_in: z.boolean(),
 });
+
+
+export const jobApplicationSchema = z.object({
+  job_slug: z.string().min(1, 'Job role is required.'),
+  full_name: z.string().trim().min(2, 'Enter your full name.').max(120, 'Name is too long.'),
+  email: z.string().trim().email('Enter a valid email address.'),
+  phone: z.string().trim().min(7, 'Enter a valid phone number.').max(30, 'Phone number is too long.'),
+  linkedin_url: z
+    .string()
+    .trim()
+    .url('Enter a valid LinkedIn URL.')
+    .optional()
+    .or(z.literal('')),
+  portfolio_url: z
+    .string()
+    .trim()
+    .url('Enter a valid portfolio or GitHub URL.')
+    .optional()
+    .or(z.literal('')),
+  cover_letter: z
+    .string()
+    .trim()
+    .min(80, 'Your cover letter should be at least 80 characters.')
+    .max(5000, 'Your cover letter is too long.'),
+  cv_file_name: z.string().min(1, 'A CV is required.'),
+  consent: z.literal(true, {
+    errorMap: () => ({ message: 'You must agree before submitting your application.' }),
+  }),
+});
+
+export type JobApplicationForm = z.infer<typeof jobApplicationSchema>;
