@@ -2,9 +2,14 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FileText, Upload, X } from 'lucide-react';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Button, Field, inputClass, useToast } from '@/components/ui';
+import {
+  createCVUploadIntent,
+  submitJobApplication,
+  uploadCV,
+} from '@/lib/api/careers';
 import {
   jobApplicationSchema,
   type JobApplicationForm as Values,
@@ -32,6 +37,7 @@ export function JobApplicationForm({
   const {
     register,
     handleSubmit,
+    reset,
     setValue,
     formState: { errors, isSubmitting },
   } = useForm<Values>({
@@ -75,24 +81,60 @@ export function JobApplicationForm({
       shouldDirty: true,
       shouldValidate: true,
     });
-
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
   }
 
-  const onSubmit = handleSubmit(async () => {
-    /*
-     * Submission is intentionally not faked here.
-     *
-     * The next step will connect this form to the Voltaris application
-     * endpoint and CV storage flow. Keeping the UI separate from the
-     * transport layer prevents applicants from seeing a false success.
-     */
-    toast.push(
-      'error',
-      `Application submission for ${jobTitle} is not connected to the backend yet.`,
-    );
+  useEffect(() => {
+    if (cvFile === null && fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  }, [cvFile]);
+
+  const onSubmit = handleSubmit(async (values) => {
+    if (!cvFile) {
+      toast.push('error', 'Please attach your CV before submitting.');
+      return;
+    }
+
+    try {
+      const intent = await createCVUploadIntent(cvFile);
+
+      if (cvFile.size > intent.max_bytes) {
+        toast.push(
+          'error',
+          `Your CV is larger than the allowed ${Math.round(intent.max_bytes / 1024 / 1024)} MB.`,
+        );
+        return;
+      }
+
+      await uploadCV(intent.upload_url, cvFile);
+
+      const result = await submitJobApplication({
+        job_slug: values.job_slug,
+        full_name: values.full_name,
+        email: values.email,
+        phone: values.phone,
+        linkedin_url: values.linkedin_url || undefined,
+        portfolio_url: values.portfolio_url || undefined,
+        cover_letter: values.cover_letter,
+        cv_file_name: values.cv_file_name,
+        cv_storage_key: intent.storage_key,
+      });
+
+      toast.push(
+        'success',
+        `Application submitted. Reference: ${result.reference}`,
+      );
+
+      reset();
+      setCvFile(null);
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : 'We could not submit your application. Please try again.';
+
+      toast.push('error', message);
+    }
   });
 
   return (

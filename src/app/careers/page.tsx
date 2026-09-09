@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowUpRight, BriefcaseBusiness, MapPin } from 'lucide-react';
+import { ArrowUpRight, MapPin } from 'lucide-react';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { jobPostings } from '@/content/careers';
 import { buildMetadata } from '@/lib/seo/metadata';
@@ -17,127 +18,178 @@ export default function CareersPage() {
     <div className="shell py-10">
       <Breadcrumbs trail={[{ name: 'Home', path: '/' }, { name: 'Careers', path: '/careers' }]} />
 
-      <header className="mt-10 border-b border-hairline pb-10 lg:mt-14 lg:pb-12">
-        <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between lg:gap-16">
-          <div className="max-w-4xl">
-            <p className="font-data text-[9px] uppercase tracking-[0.2em] text-volt">
-              Careers / Voltaris
-            </p>
+      <header className="relative mt-6 overflow-hidden rounded-[2.5rem] bg-black text-white lg:mt-8">
+        <div className="absolute inset-0">
+          <Image
+            src="/demo/lifestyle/dealership-handshake.jpg"
+            alt="Voltaris automotive partnership"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-center opacity-55"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-black via-black/75 to-black/20" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/10" />
+        </div>
 
-            <h1 className="mt-4 font-display text-display tracking-[-0.04em] text-black">
-              Build the future of movement.
-            </h1>
+        <div className="relative flex min-h-[620px] flex-col justify-between p-7 sm:min-h-[680px] sm:p-10 lg:min-h-[700px] lg:p-14">
+          <div className="flex items-start justify-between gap-6">
+            <div className="inline-flex rounded-2xl bg-white px-4 py-3">
+              <Image
+                src="/brand/voltaris-logo-full.jpeg"
+                alt="Voltaris Mobility"
+                width={220}
+                height={72}
+                className="h-auto w-[150px] sm:w-[180px]"
+              />
+            </div>
+
+            <span className="rounded-full border border-white/20 bg-black/20 px-4 py-2 font-data text-[9px] uppercase tracking-[0.18em] text-white/70 backdrop-blur-sm">
+              {jobPostings.length} open roles
+            </span>
           </div>
 
-          <div className="max-w-md lg:pb-1">
-            <p className="text-sm leading-6 text-black/65">
-              We are building a better way to buy, sell, rent and understand vehicles in Rwanda.
-              If you want to work on something real, come build it with us.
+          <div className="max-w-5xl">
+            <p className="font-data text-[10px] uppercase tracking-[0.22em] text-volt">
+              Careers at Voltaris
             </p>
 
-            <div className="mt-6 flex items-center gap-3 font-data text-[9px] uppercase tracking-[0.18em] text-black/45">
-              <BriefcaseBusiness className="h-4 w-4 text-volt" />
-              {jobPostings.length} open positions
-            </div>
+            <h1 className="mt-5 max-w-5xl font-display text-5xl font-semibold leading-[0.9] tracking-[-0.05em] sm:text-7xl lg:text-[6.5rem]">
+              Build the future
+              <br />
+              of movement.
+            </h1>
+
+            <p className="mt-7 max-w-xl text-sm leading-7 text-white/70 sm:text-base">
+              We are building a better way to buy, sell, rent and understand
+              vehicles in Rwanda. If you want to work on something real, come
+              build it with us.
+            </p>
           </div>
         </div>
       </header>
 
-      <section className="mt-14">
-        <div className="flex items-end justify-between gap-6 border-b border-hairline pb-5">
+      <section className="mt-8 sm:mt-10">
+        <div className="flex flex-col gap-5 border-b border-black/10 pb-6 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="font-data text-[9px] uppercase tracking-[0.18em] text-volt">
+            <p className="font-data text-[9px] uppercase tracking-[0.2em] text-volt">
               01 / Open positions
             </p>
-            <h2 className="mt-2 font-display text-3xl font-semibold tracking-tight text-black sm:text-4xl">
+
+            <h2 className="mt-3 max-w-2xl font-display text-4xl font-semibold leading-[0.95] tracking-[-0.04em] text-black sm:text-5xl">
               Find your place here.
             </h2>
           </div>
 
-          <span className="hidden font-data text-[9px] uppercase tracking-[0.18em] text-black/45 sm:block">
-            {jobPostings.length} roles
-          </span>
+          <p className="max-w-xs text-sm leading-6 text-black/55 sm:text-right">
+            Small team. Real problems. Work that changes how Rwanda moves.
+          </p>
         </div>
 
-        <div className="mt-8 grid gap-4 lg:grid-cols-2">
+        <div className="mt-6 grid gap-4 lg:grid-cols-2">
           {jobPostings.map((job, index) => (
-            <article
+            <Link
               key={job.slug}
-              className="group relative overflow-hidden rounded-[2rem] border border-black/10 bg-white p-7 text-black shadow-[0_18px_50px_rgba(0,0,0,0.12)] transition-all duration-500 hover:-translate-y-1 hover:border-black/20 sm:p-8"
+              href={`/careers/${job.slug}`}
+              className="group relative overflow-hidden rounded-[2rem] bg-white p-7 text-black shadow-[0_18px_50px_rgba(0,0,0,0.10)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_24px_65px_rgba(0,0,0,0.16)] sm:p-8"
             >
               <div className="flex items-start justify-between gap-6">
-                <p className="font-data text-[9px] uppercase tracking-[0.18em] text-volt">
-                  {job.department}
-                </p>
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+                  <span className="font-data text-[9px] uppercase tracking-[0.18em] text-volt">
+                    {job.department}
+                  </span>
 
-                <span className="font-display text-5xl font-semibold leading-none tracking-[-0.06em] text-black/[0.07] transition-colors duration-500 group-hover:text-black/[0.14]">
+                  <span className="h-1 w-1 rounded-full bg-black/20" />
+
+                  <span className="font-data text-[9px] uppercase tracking-[0.16em] text-black/40">
+                    {job.type}
+                  </span>
+                </div>
+
+                <span className="font-display text-5xl font-semibold leading-none tracking-[-0.06em] text-black/[0.06] transition-colors duration-500 group-hover:text-volt/20">
                   {String(index + 1).padStart(2, '0')}
                 </span>
               </div>
 
-              <div className="mt-12 max-w-xl">
-                <h3 className="font-display text-2xl font-semibold leading-tight tracking-tight sm:text-3xl">
+              <div className="mt-14 max-w-2xl">
+                <h3 className="font-display text-3xl font-semibold leading-[0.98] tracking-[-0.03em] sm:text-4xl">
                   {job.title}
                 </h3>
 
-                <p className="mt-3 max-w-lg text-sm leading-6 text-black/65">
+                <p className="mt-4 max-w-xl text-sm leading-7 text-black/60">
                   {job.summary}
                 </p>
               </div>
 
-              <div className="mt-8 flex flex-wrap gap-x-5 gap-y-3 border-t border-black/10 pt-5">
-                <span className="inline-flex items-center gap-2 font-data text-[9px] uppercase tracking-[0.14em] text-black/50">
-                  <MapPin className="h-3.5 w-3.5 text-volt" />
-                  {job.location}
-                </span>
+              <div className="mt-8 flex flex-col gap-4 border-t border-black/10 pt-5 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex flex-wrap gap-x-5 gap-y-2">
+                  <span className="inline-flex items-center gap-2 font-data text-[9px] uppercase tracking-[0.14em] text-black/45">
+                    <MapPin className="h-3.5 w-3.5 text-volt" />
+                    {job.location}
+                  </span>
 
-                <span className="font-data text-[9px] uppercase tracking-[0.14em] text-black/50">
-                  {job.type}
-                </span>
+                  <span className="font-data text-[9px] uppercase tracking-[0.14em] text-black/45">
+                    {job.level}
+                  </span>
+                </div>
 
-                <span className="font-data text-[9px] uppercase tracking-[0.14em] text-black/50">
-                  {job.level}
+                <span className="inline-flex items-center gap-2 font-data text-[9px] uppercase tracking-[0.16em] text-black transition-colors group-hover:text-volt">
+                  View role
+                  <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" />
                 </span>
               </div>
 
-              <Link
-                href={`/careers/${job.slug}`}
-                className="mt-8 inline-flex items-center gap-3 border border-black/10 px-5 py-3.5 font-data text-[9px] uppercase tracking-[0.16em] text-black transition-colors hover:border-black hover:bg-black hover:text-white"
-              >
-                View role
-                <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-              </Link>
-
-              <div className="absolute inset-x-0 bottom-0 h-px origin-left scale-x-0 bg-volt transition-transform duration-500 group-hover:scale-x-100" />
-            </article>
+              <div className="absolute inset-x-0 bottom-0 h-1 origin-left scale-x-0 bg-volt transition-transform duration-500 group-hover:scale-x-100" />
+            </Link>
           ))}
         </div>
       </section>
 
-      <section className="mt-16 rounded-[2rem] border border-black/10 bg-white p-7 text-black shadow-[0_18px_50px_rgba(0,0,0,0.12)] sm:p-9 lg:p-10">
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-          <div className="max-w-2xl">
-            <p className="font-data text-[9px] uppercase tracking-[0.18em] text-volt">
-              02 / Not seeing your role?
+      <section className="mt-8 overflow-hidden rounded-[2.5rem] bg-black text-white">
+        <div className="grid gap-10 p-7 sm:p-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.8fr)] lg:p-14">
+          <div>
+            <div className="inline-flex rounded-2xl bg-white px-4 py-3">
+              <Image
+                src="/brand/voltaris-logo-full.jpeg"
+                alt="Voltaris Mobility"
+                width={220}
+                height={72}
+                className="h-auto w-[150px] sm:w-[180px]"
+              />
+            </div>
+
+            <p className="mt-10 font-data text-[10px] uppercase tracking-[0.22em] text-volt">
+              02 / Your next move
             </p>
 
-            <h2 className="mt-3 font-display text-3xl font-semibold tracking-tight sm:text-4xl">
-              We are always interested in exceptional people.
+            <h2 className="mt-4 max-w-2xl font-display text-4xl font-semibold leading-[0.95] tracking-[-0.04em] sm:text-5xl lg:text-6xl">
+              Don't see your role?
             </h2>
 
-            <p className="mt-4 max-w-xl text-sm leading-6 text-black/65">
-              Tell us what you would build, improve or bring to Voltaris. We care more about
-              useful work and clear thinking than a perfect CV.
+            <p className="mt-5 max-w-xl text-sm leading-7 text-white/65 sm:text-base">
+              We are always interested in exceptional people who want to help
+              shape the future of mobility in Rwanda.
             </p>
           </div>
 
-          <a
-            href="mailto:hello@voltaris.rw"
-            className="inline-flex w-fit items-center gap-3 border border-black/10 px-5 py-3.5 font-data text-[9px] uppercase tracking-[0.16em] transition-colors hover:border-black hover:bg-black hover:text-white"
-          >
-            Introduce yourself
-            <ArrowUpRight className="h-4 w-4" />
-          </a>
+          <div className="flex flex-col justify-end">
+            <a
+              href="mailto:hello@voltaris.rw?subject=General%20careers%20application"
+              className="group flex items-center justify-between border-t border-white/15 py-5 transition-colors hover:text-volt"
+            >
+              <span className="font-display text-2xl font-semibold tracking-tight sm:text-3xl">
+                Introduce yourself
+              </span>
+
+              <ArrowUpRight className="h-6 w-6 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" />
+            </a>
+
+            <div className="border-t border-white/10 pt-5">
+              <p className="font-data text-[9px] uppercase tracking-[0.16em] text-white/35">
+                Send your CV and a short introduction
+              </p>
+            </div>
+          </div>
         </div>
       </section>
     </div>
