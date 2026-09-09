@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
+import { ChargingMap } from '@/features/charging/ChargingMap';
 import { EmptyState } from '@/components/EmptyState';
 import { JsonLd } from '@/components/JsonLd';
 import { listChargingLocations, type ChargingLocation } from '@/lib/api/charging';
@@ -95,6 +96,10 @@ export default async function ChargingPage({
       )}
 
       <div className="mt-10">
+        {!failed && locations.length > 0 && (
+          <ChargingMap locations={locations} />
+        )}
+
         {failed || locations.length === 0 ? (
           <EmptyState
             title="The charging directory is still being built"
