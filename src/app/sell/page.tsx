@@ -1,227 +1,199 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowDown, ArrowRight, ShieldCheck, Sparkles, Users } from 'lucide-react';
-import { Breadcrumbs } from '@/components/Breadcrumbs';
-import { SellerListingFlow } from '@/features/sellers/SellerListingFlow';
-import { SellWaitingList } from '@/features/sellers/SellWaitingList';
-import { features } from '@/config/features';
+import { ArrowRight, ShieldCheck, Sparkles, Users } from 'lucide-react';
 import { buildMetadata } from '@/lib/seo/metadata';
 
 export const metadata: Metadata = buildMetadata({
   title: 'Sell your electric or hybrid car in Rwanda',
   description:
-    'Sell your electric or hybrid car through Voltaris. Create a considered listing, reach serious buyers, and get support through the selling process.',
+    'List your electric or hybrid vehicle with Voltaris and reach buyers across Rwanda.',
   path: '/sell',
 });
 
-const benefits = [
-  {
-    icon: Sparkles,
-    eyebrow: '01 / PRESENTATION',
-    title: 'Make it look right.',
-    body: 'Give your vehicle the space and detail it deserves with a cleaner, more considered listing experience.',
-  },
-  {
-    icon: Users,
-    eyebrow: '02 / AUDIENCE',
-    title: 'Reach serious buyers.',
-    body: 'Put your electric or hybrid vehicle in front of people actively looking for their next car.',
-  },
-  {
-    icon: ShieldCheck,
-    eyebrow: '03 / SUPPORT',
-    title: 'Sell with confidence.',
-    body: 'We review the information you provide and help buyers understand what makes your vehicle worth considering.',
-  },
-];
+const gallery = Array.from({ length: 8 }, (_, index) => ({
+  src: `/hero/gallery/car${index + 1}.jpeg`,
+  alt: `Vehicle available through Voltaris`,
+}));
 
 export default function SellPage() {
   return (
-    <main>
-      <section className="relative overflow-hidden border-b border-hairline bg-surface">
-        <div className="shell">
-          <div className="py-6">
-            <Breadcrumbs
-              trail={[
-                { name: 'Home', path: '/' },
-                { name: 'Sell your car', path: '/sell' },
-              ]}
+    <main className="bg-surface text-chrome">
+      {/* CINEMATIC SELL HERO */}
+      <section className="relative min-h-[100svh] overflow-hidden bg-black">
+        {/* Car image gallery background */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-0"
+        >
+          {gallery.map((image, index) => (
+            <Image
+              key={image.src}
+              src={image.src}
+              alt=""
+              fill
+              priority={index === 0}
+              sizes="100vw"
+              className={`sell-bg-frame sell-bg-frame-${index + 1} object-cover`}
             />
+          ))}
+
+          <div className="absolute inset-0 bg-black/55" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/55 to-black/35" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-black/45" />
+        </div>
+
+        {/* Hero content */}
+        <div className="relative z-10 mx-auto flex min-h-[100svh] w-full max-w-[1600px] flex-col px-5 pb-8 pt-28 sm:px-8 sm:pb-12 lg:px-12">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="font-data text-[10px] uppercase tracking-[0.24em] text-white/60">
+                Voltaris / Sell
+              </p>
+              <p className="mt-2 font-data text-[9px] uppercase tracking-[0.18em] text-white/40">
+                Private owners welcome
+              </p>
+            </div>
+
+            <Link
+              href="/cars"
+              className="hidden items-center gap-2 border border-white/20 bg-black/20 px-4 py-2 font-data text-[10px] uppercase tracking-[0.16em] text-white backdrop-blur-md transition hover:bg-white hover:text-black sm:flex"
+            >
+              Browse cars
+              <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
           </div>
 
-          <div className="grid min-h-[78svh] items-end gap-10 pb-16 pt-16 sm:pb-20 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-16 lg:pb-24">
-            <div>
-              <p className="eyebrow">VOLTARIS / SELL</p>
-
-              <h1 className="mt-5 max-w-5xl font-display text-[clamp(3.5rem,10vw,8.5rem)] font-semibold leading-[0.84] tracking-[-0.065em] text-chrome">
-                Sell your car.
-                <br />
-                <span className="text-steel">The right way.</span>
-              </h1>
-
-              <p className="mt-8 max-w-xl text-base leading-relaxed text-steel sm:text-lg">
-                Put your electric or hybrid vehicle in front of serious buyers with a cleaner,
-                more considered selling experience.
+          <div className="grid flex-1 items-end gap-10 pb-4 pt-16 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
+            {/* Editorial copy */}
+            <div className="max-w-2xl text-white">
+              <p className="mb-5 flex items-center gap-3 font-data text-[10px] uppercase tracking-[0.2em] text-volt">
+                <span className="h-px w-8 bg-volt" />
+                Sell with confidence
               </p>
 
-              <div className="mt-10 flex flex-wrap gap-3">
-                <a
-                  href="#start-listing"
-                  className="group inline-flex items-center gap-8 bg-volt px-6 py-4 font-data text-eyebrow uppercase text-surface transition-transform duration-300 hover:-translate-y-0.5"
-                >
-                  <span>Start a listing</span>
-                  <ArrowRight
-                    aria-hidden="true"
-                    className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"
-                  />
-                </a>
+              <h1 className="max-w-xl font-display text-5xl font-semibold leading-[0.94] tracking-[-0.045em] sm:text-6xl lg:text-8xl">
+                Your car.
+                <br />
+                Your terms.
+                <br />
+                <span className="text-white/55">A better sale.</span>
+              </h1>
 
-                <a
-                  href="#how-it-works"
-                  className="inline-flex items-center gap-3 border border-chrome px-6 py-4 font-data text-eyebrow uppercase text-chrome transition-colors hover:bg-chrome hover:text-surface"
+              <p className="mt-7 max-w-lg text-sm leading-7 text-white/70 sm:text-base">
+                List your electric or hybrid vehicle directly with Voltaris.
+                You do not need to be a dealer. Private owners can list too.
+              </p>
+
+              <div className="mt-8 flex flex-col items-start gap-4">
+                <Link
+                  href="/login"
+                  className="group inline-flex items-center gap-4 bg-white px-6 py-4 font-data text-[10px] uppercase tracking-[0.16em] text-black transition hover:bg-volt"
                 >
-                  <span>How it works</span>
-                  <ArrowDown aria-hidden="true" className="h-4 w-4" />
-                </a>
+                  Start listing
+                  <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                </Link>
+
+                <p className="font-data text-[9px] uppercase tracking-[0.16em] text-white/45">
+                  Sign in to create your listing
+                </p>
               </div>
             </div>
 
-            <div className="border-l border-hairline pl-6 lg:mb-3">
-              <p className="eyebrow">A BETTER WAY TO SELL</p>
-              <p className="mt-5 font-display text-2xl font-medium leading-tight tracking-tight text-chrome sm:text-3xl">
-                Your vehicle deserves more than a basic listing form.
-              </p>
-              <p className="mt-5 text-sm leading-relaxed text-steel">
-                Tell us about the car, show us what makes it special, and let Voltaris handle the
-                presentation.
-              </p>
+            {/* Listing access */}
+            <div className="flex items-end">
+              <div className="w-full max-w-xl border border-white/15 bg-black/25 p-6 shadow-2xl backdrop-blur-md sm:p-8 lg:p-10">
+                <p className="font-data text-[9px] uppercase tracking-[0.2em] text-white/45">
+                  Sell through Voltaris
+                </p>
+
+                <h2 className="mt-3 max-w-lg font-display text-3xl font-semibold leading-tight tracking-tight text-white sm:text-4xl">
+                  Ready to put your car on the market?
+                </h2>
+
+                <p className="mt-4 max-w-lg text-sm leading-6 text-white/60">
+                  Sign in to your Voltaris account to create a listing.
+                  Private owners, dealers and businesses are welcome.
+                </p>
+
+                <Link
+                  href="/login"
+                  className="group mt-7 inline-flex items-center gap-3 border border-white/25 bg-white px-5 py-3.5 font-data text-[10px] uppercase tracking-[0.16em] text-black transition hover:bg-volt"
+                >
+                  Sign in to list your car
+                  <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                </Link>
+              </div>
             </div>
           </div>
         </div>
+      </section>
 
-        <div className="border-t border-hairline">
-          <div className="shell flex items-center justify-between py-4">
-            <p className="font-data text-[10px] uppercase tracking-[0.18em] text-steel-muted">
-              Electric + hybrid marketplace
+      {/* TRUST STRIP */}
+      <section className="border-b border-hairline bg-surface">
+        <div className="mx-auto grid max-w-[1500px] md:grid-cols-3">
+          <div className="border-b border-hairline px-6 py-10 md:border-b-0 md:border-r">
+            <Sparkles className="mb-5 h-5 w-5 text-volt" />
+            <p className="font-data text-[9px] uppercase tracking-[0.18em] text-steel-muted">
+              01 / Presentation
             </p>
-            <a
-              href="#start-listing"
-              className="font-data text-[10px] uppercase tracking-[0.18em] text-steel transition-colors hover:text-chrome"
-            >
-              Begin ↓
-            </a>
-          </div>
-        </div>
-      </section>
-
-      <section id="how-it-works" className="shell py-20 sm:py-28">
-        <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
-          <div>
-            <p className="eyebrow">WHY VOLTARIS</p>
-            <h2 className="mt-4 max-w-lg font-display text-section-heading tracking-tight text-chrome">
-              A more considered way to move your car on.
-            </h2>
-          </div>
-
-          <div className="grid gap-px border border-hairline bg-hairline sm:grid-cols-3">
-            {benefits.map(({ icon: Icon, eyebrow, title, body }) => (
-              <article key={eyebrow} className="bg-surface p-6 sm:p-7">
-                <Icon aria-hidden="true" className="h-5 w-5 text-volt" />
-                <p className="mt-8 eyebrow text-steel-muted">{eyebrow}</p>
-                <h3 className="mt-3 font-display text-xl font-semibold tracking-tight text-chrome">
-                  {title}
-                </h3>
-                <p className="mt-4 text-sm leading-relaxed text-steel">{body}</p>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section id="start-listing" className="border-y border-hairline bg-slab">
-        <div className="shell py-20 sm:py-28">
-          <div className="mb-12 max-w-2xl">
-            <p className="eyebrow">LIST YOUR VEHICLE</p>
-            <h2 className="mt-4 font-display text-section-heading tracking-tight text-chrome">
-              Let&apos;s get it moving.
-            </h2>
-            <p className="mt-4 text-sm leading-relaxed text-steel sm:text-base">
-              Add the details buyers need, upload your vehicle information, and submit your listing
-              for review.
+            <h3 className="mt-2 font-display text-xl font-semibold">
+              Make the car stand out.
+            </h3>
+            <p className="mt-3 text-sm leading-6 text-steel">
+              Add clear photos and the details buyers actually need.
             </p>
           </div>
 
-          {features.sellerListings ? <SellerListingFlow /> : <SellWaitingList />}
+          <div className="border-b border-hairline px-6 py-10 md:border-b-0 md:border-r">
+            <Users className="mb-5 h-5 w-5 text-volt" />
+            <p className="font-data text-[9px] uppercase tracking-[0.18em] text-steel-muted">
+              02 / Everyone
+            </p>
+            <h3 className="mt-2 font-display text-xl font-semibold">
+              Private owners welcome.
+            </h3>
+            <p className="mt-3 text-sm leading-6 text-steel">
+              You do not need a dealership to list your vehicle.
+            </p>
+          </div>
+
+          <div className="px-6 py-10">
+            <ShieldCheck className="mb-5 h-5 w-5 text-volt" />
+            <p className="font-data text-[9px] uppercase tracking-[0.18em] text-steel-muted">
+              03 / Review
+            </p>
+            <h3 className="mt-2 font-display text-xl font-semibold">
+              Reviewed before publication.
+            </h3>
+            <p className="mt-3 text-sm leading-6 text-steel">
+              Voltaris reviews submitted listings before they go live.
+            </p>
+          </div>
         </div>
       </section>
 
-      <section className="shell py-20 sm:py-28">
-        <div className="grid gap-10 border-t border-hairline pt-8 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20">
+      {/* FINAL CTA */}
+      <section className="bg-surface-inverse px-5 py-24 text-white sm:px-8 lg:px-12">
+        <div className="mx-auto flex max-w-[1400px] flex-col justify-between gap-12 lg:flex-row lg:items-end">
           <div>
-            <p className="eyebrow">AFTER YOU SUBMIT</p>
-          </div>
-
-          <div className="grid gap-8 sm:grid-cols-2">
-            <div>
-              <p className="font-display text-xl font-semibold tracking-tight text-chrome">
-                Review
-              </p>
-              <p className="mt-3 text-sm leading-relaxed text-steel">
-                A Voltaris reviewer checks your vehicle details, photos, and supporting information.
-              </p>
-            </div>
-
-            <div>
-              <p className="font-display text-xl font-semibold tracking-tight text-chrome">
-                Verification
-              </p>
-              <p className="mt-3 text-sm leading-relaxed text-steel">
-                Where possible, we confirm important details such as ownership, import status, and
-                battery information.
-              </p>
-            </div>
-
-            <div>
-              <p className="font-display text-xl font-semibold tracking-tight text-chrome">
-                Go live
-              </p>
-              <p className="mt-3 text-sm leading-relaxed text-steel">
-                Once approved, your vehicle can be presented to buyers across the Voltaris
-                marketplace.
-              </p>
-            </div>
-
-            <div>
-              <p className="font-display text-xl font-semibold tracking-tight text-chrome">
-                Meet the market
-              </p>
-              <p className="mt-3 text-sm leading-relaxed text-steel">
-                Interested buyers can enquire and arrange the next step through Voltaris.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="border-t border-hairline bg-chrome text-surface">
-        <div className="shell py-20 sm:py-28">
-          <p className="eyebrow text-surface/60">READY TO MOVE IT?</p>
-          <div className="mt-5 flex flex-col justify-between gap-8 sm:flex-row sm:items-end">
-            <h2 className="max-w-3xl font-display text-[clamp(3rem,8vw,7rem)] font-semibold leading-[0.86] tracking-[-0.055em]">
-              Put your vehicle in the right hands.
+            <p className="font-data text-[10px] uppercase tracking-[0.2em] text-white/40">
+              Voltaris / Marketplace
+            </p>
+            <h2 className="mt-4 max-w-3xl font-display text-4xl font-semibold leading-tight tracking-tight sm:text-6xl">
+              When you are ready,
+              <br />
+              put your car in the room.
             </h2>
-
-            <Link
-              href="#start-listing"
-              className="group inline-flex shrink-0 items-center gap-8 border border-surface/40 px-6 py-4 font-data text-eyebrow uppercase transition-colors hover:bg-surface hover:text-chrome"
-            >
-              <span>Start a listing</span>
-              <ArrowRight
-                aria-hidden="true"
-                className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"
-              />
-            </Link>
           </div>
+
+          <Link
+            href="/login"
+            className="inline-flex w-fit items-center gap-3 border border-white/20 px-6 py-4 font-data text-[10px] uppercase tracking-[0.16em] transition hover:bg-white hover:text-black"
+          >
+            Start listing
+            <ArrowRight className="h-4 w-4" />
+          </Link>
         </div>
       </section>
     </main>

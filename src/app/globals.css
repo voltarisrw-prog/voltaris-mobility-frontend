@@ -1347,3 +1347,52 @@
     grid-template-columns: 1fr;
   }
 }
+
+
+/* Voltaris sell page cinematic gallery */
+@keyframes sell-fade {
+  0%,
+  8% {
+    opacity: 1;
+  }
+
+  16%,
+  92% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.sell-bg-frame {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  animation: sell-fade 32s infinite;
+  transform: scale(1.03);
+}
+
+.sell-bg-frame-1 { animation-delay: 0s; }
+.sell-bg-frame-2 { animation-delay: 4s; }
+.sell-bg-frame-3 { animation-delay: 8s; }
+.sell-bg-frame-4 { animation-delay: 12s; }
+.sell-bg-frame-5 { animation-delay: 16s; }
+.sell-bg-frame-6 { animation-delay: 20s; }
+.sell-bg-frame-7 { animation-delay: 24s; }
+.sell-bg-frame-8 { animation-delay: 28s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .sell-bg-frame {
+    animation: none;
+  }
+
+  .sell-bg-frame:not(.sell-bg-frame-1) {
+    display: none;
+  }
+
+  .sell-bg-frame-1 {
+    opacity: 1;
+  }
+}
