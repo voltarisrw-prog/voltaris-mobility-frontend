@@ -69,7 +69,7 @@ export function MarketplaceVehicleCard({
       >
         {vehicle.primary_image ? (
           <Link
-            href={`/cars/${vehicle.slug}`}
+            href={`/cars/${vehicle.slug}?mode=${mode ?? 'sale'}`}
             className="absolute inset-0 z-0 block"
             aria-label={`View details for ${title}`}
           >
@@ -119,6 +119,7 @@ export function MarketplaceVehicleCard({
         <div className="absolute right-4 top-4 z-10 sm:right-5 sm:top-5">
           <CompareToggleButton
             vehicleId={vehicle.id}
+            mode={mode ?? 'sale'}
             variant="icon"
             className="border-white/30 bg-black/30 text-white backdrop-blur-md hover:border-white"
           />
@@ -133,7 +134,7 @@ export function MarketplaceVehicleCard({
         <div className="absolute inset-x-0 bottom-0 z-10 p-5 sm:p-6 lg:p-7">
           <div className="flex flex-col gap-5">
             <Link
-              href={`/cars/${vehicle.slug}`}
+              href={`/cars/${vehicle.slug}?mode=${mode ?? 'sale'}`}
               className="block text-white"
               aria-label={`Explore ${title}`}
             >
@@ -186,7 +187,7 @@ export function MarketplaceVehicleCard({
               )}
 
               <Link
-                href={`/cars/${vehicle.slug}`}
+                href={`/cars/${vehicle.slug}?mode=${mode ?? 'sale'}`}
                 className="inline-flex min-h-9 items-center gap-2 rounded-full border border-white/35 bg-black/25 px-3.5 py-2 font-data shadow-lg shadow-black/25 text-[0.58rem] uppercase tracking-[0.14em] text-white backdrop-blur-md transition-colors hover:border-white sm:min-h-10 sm:px-4 sm:py-2.5 sm:text-[0.625rem]"
               >
                 View details

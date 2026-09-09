@@ -7,18 +7,22 @@ import { Menu, User, X } from 'lucide-react';
 import { VoltarisLogo } from './VoltarisLogo';
 import { nav } from '@/content/home';
 import { cn } from '@/lib/format';
-import { useCompareIds } from '@/lib/compare/useCompare';
+import { useCompareIds, useCompareMode } from '@/lib/compare/useCompare';
 
 export function SiteHeader() {
   const pathname = usePathname();
   const [compact, setCompact] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const compareIds = useCompareIds();
+  const compareMode = useCompareMode();
   const isHome = pathname === '/';
   // The nav's own Compare entry is the only static thing about it: the moment a
   // vehicle is queued, it should lead straight into that comparison rather than to
   // the empty state — that's the whole point of making this a real on-ramp.
-  const compareHref = compareIds.length > 0 ? `/compare?ids=${compareIds.join(',')}` : '/compare';
+  const compareHref =
+    compareIds.length > 0
+      ? `/compare?ids=${compareIds.join(',')}&mode=${compareMode ?? 'sale'}`
+      : '/compare';
 
   useEffect(() => {
     // Passive listener behind a rAF gate — scroll handlers are a classic INP regression.

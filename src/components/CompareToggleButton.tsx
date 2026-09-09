@@ -15,10 +15,12 @@ import { cn } from '@/lib/format';
  */
 export function CompareToggleButton({
   vehicleId,
+  mode = 'sale',
   variant = 'icon',
   className,
 }: {
   vehicleId: string;
+  mode?: 'sale' | 'rental';
   variant?: 'icon' | 'button';
   className?: string;
 }) {
@@ -32,7 +34,17 @@ export function CompareToggleButton({
     event.preventDefault();
     event.stopPropagation();
 
-    const result = toggleCompare(vehicleId);
+    const result = toggleCompare(vehicleId, mode);
+    if (result.modeMismatch) {
+      toast.push(
+        'error',
+        mode === 'rental'
+          ? 'Rental vehicles can only be compared with other rental vehicles.'
+          : 'Vehicles for sale can only be compared with other vehicles for sale.',
+      );
+      return;
+    }
+
     if (result.capped) {
       toast.push(
         'error',
@@ -40,6 +52,7 @@ export function CompareToggleButton({
       );
       return;
     }
+
     if (result.ids.includes(vehicleId)) {
       track('compare_add', { vehicle_id: vehicleId, count: result.ids.length });
     } else {

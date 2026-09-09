@@ -10,7 +10,7 @@ import { compareVehicles } from '@/lib/api/vehicles';
 import { displayMessage } from '@/lib/api/errors';
 import { formatKm, formatKwh, formatPrice } from '@/lib/format';
 import { track } from '@/lib/analytics';
-import { syncCompareFromUrl } from '@/lib/compare/store';
+import { getCompareMode, syncCompareFromUrl } from '@/lib/compare/store';
 import type { VehicleDetail } from '@/types/vehicle';
 
 const MAX = 4;
@@ -143,6 +143,10 @@ export function VehicleComparison() {
   const searchParams = useSearchParams();
   const toast = useToast();
   const ids = (searchParams.get('ids') ?? '').split(',').filter(Boolean).slice(0, MAX);
+  const modeParam = searchParams.get('mode');
+  const mode = modeParam === 'rental' ? 'rental' : 'sale';
+  const storedMode = ids[0] ? getCompareMode(ids[0]) : null;
+  const modeMismatch = storedMode !== null && storedMode !== mode;
 
   const key = ids.join(',');
 
@@ -151,7 +155,7 @@ export function VehicleComparison() {
   // someone removes a vehicle below. Folding it back keeps the two from disagreeing
   // if the person browses back to the marketplace afterwards.
   useEffect(() => {
-    syncCompareFromUrl(ids);
+    syncCompareFromUrl(ids, mode);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key]);
 
@@ -191,7 +195,30 @@ export function VehicleComparison() {
 
   function remove(id: string) {
     const next = ids.filter((value) => value !== id);
-    router.replace(next.length > 0 ? `/compare?ids=${next.join(',')}` : '/compare');
+    router.replace(
+      next.length > 0
+        ? `/compare?ids=${next.join(',')}&mode=${mode}`
+        : '/compare',
+    );
+  }
+
+  if (modeMismatch) {
+    return (
+      <div className="border border-dashed border-hairline px-6 py-16 text-center">
+        <h2 className="font-display text-headline">Comparison mode mismatch</h2>
+        <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-steel">
+          Buy vehicles can only be compared with other vehicles for sale, and rental vehicles can
+          only be compared with other rental vehicles. Return to the marketplace and start a new
+          comparison.
+        </p>
+        <Link
+          href={mode === 'rental' ? '/cars?mode=rental' : '/cars'}
+          className="mt-6 inline-block bg-volt px-5 py-2.5 font-data text-eyebrow uppercase text-surface hover:bg-volt-bright"
+        >
+          Browse {mode === 'rental' ? 'rental' : 'vehicles for sale'}
+        </Link>
+      </div>
+    );
   }
 
   if (ids.length === 0) {

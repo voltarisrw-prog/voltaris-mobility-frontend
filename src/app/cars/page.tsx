@@ -77,10 +77,12 @@ export default async function CarsPage({
 }) {
   const filters = parseFilters(await searchParams);
   const { title, description } = describe(filters);
+  const mode = filters.mode === 'rental' ? 'rental' : 'sale';
 
   return (
     <MarketplacePage
       searchParams={searchParams}
+      mode={mode}
       basePath="/cars"
       title={title}
       description={description}

@@ -1,7 +1,7 @@
 'use client';
 
 import { useSyncExternalStore } from 'react';
-import { getCompareIds, subscribeCompare } from './store';
+import { getCompareIds, getCompareItems, subscribeCompare } from './store';
 
 const EMPTY: string[] = [];
 
@@ -11,6 +11,14 @@ const EMPTY: string[] = [];
     before mount that would visibly flip. */
 export function useCompareIds(): string[] {
   return useSyncExternalStore(subscribeCompare, getCompareIds, () => EMPTY);
+}
+
+export function useCompareMode(): 'sale' | 'rental' | null {
+  return useSyncExternalStore(
+    subscribeCompare,
+    () => getCompareItems()[0]?.mode ?? null,
+    () => null,
+  );
 }
 
 export { COMPARE_MAX, toggleCompare, removeFromCompare, syncCompareFromUrl, clearCompare } from './store';

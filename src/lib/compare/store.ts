@@ -4,8 +4,8 @@
  * The compare selection is a small basket that survives across pagination,
  * listing pages, homepage aisles, and vehicle-detail pages.
  *
- * localStorage remains the persistence layer, while `snapshot` is the stable
- * in-memory value consumed by useSyncExternalStore.
+ * Each item now keeps its marketplace context so Buy vehicles can only be
+ * compared with Buy vehicles, and Rent vehicles only with Rent vehicles.
  */
 
 export const COMPARE_MAX = 4;
@@ -13,19 +13,19 @@ export const COMPARE_MAX = 4;
 const STORAGE_KEY = 'voltaris:compare';
 const CHANGE_EVENT = 'voltaris:compare-change';
 
-const EMPTY: string[] = [];
+export type CompareMode = 'sale' | 'rental';
 
-/**
- * Stable in-memory snapshot.
- *
- * IMPORTANT:
- * getCompareIds() must return the same array reference until the store changes.
- * This is required by React's useSyncExternalStore.
- */
-let snapshot: string[] = EMPTY;
+export interface CompareItem {
+  id: string;
+  mode: CompareMode;
+}
+
+const EMPTY: CompareItem[] = [];
+
+let snapshot: CompareItem[] = EMPTY;
 let initialized = false;
 
-function readStorage(): string[] {
+function readStorage(): CompareItem[] {
   if (typeof window === 'undefined') return EMPTY;
 
   try {
@@ -36,11 +36,37 @@ function readStorage(): string[] {
 
     if (!Array.isArray(parsed)) return EMPTY;
 
-    const ids = parsed
-      .filter((id): id is string => typeof id === 'string')
+    const items = parsed
+      .map((item): CompareItem | null => {
+        // Backward compatibility with the old storage format:
+        // ["vehicle-1", "vehicle-2"]
+        if (typeof item === 'string') {
+          return {
+            id: item,
+            mode: 'sale',
+          };
+        }
+
+        if (
+          typeof item === 'object' &&
+          item !== null &&
+          'id' in item &&
+          'mode' in item &&
+          typeof item.id === 'string' &&
+          (item.mode === 'sale' || item.mode === 'rental')
+        ) {
+          return {
+            id: item.id,
+            mode: item.mode,
+          };
+        }
+
+        return null;
+      })
+      .filter((item): item is CompareItem => item !== null)
       .slice(0, COMPARE_MAX);
 
-    return ids;
+    return items;
   } catch {
     // Corrupt or inaccessible storage degrades to an empty basket.
     return EMPTY;
@@ -54,10 +80,10 @@ function ensureInitialized(): void {
   initialized = true;
 }
 
-function write(ids: string[]): void {
+function write(items: CompareItem[]): void {
   if (typeof window === 'undefined') return;
 
-  const next = ids.slice(0, COMPARE_MAX);
+  const next = items.slice(0, COMPARE_MAX);
 
   // Update the stable snapshot BEFORE notifying subscribers.
   snapshot = next;
@@ -72,9 +98,17 @@ function write(ids: string[]): void {
   window.dispatchEvent(new Event(CHANGE_EVENT));
 }
 
-export function getCompareIds(): string[] {
+export function getCompareItems(): CompareItem[] {
   ensureInitialized();
   return snapshot;
+}
+
+export function getCompareIds(): string[] {
+  return getCompareItems().map((item) => item.id);
+}
+
+export function getCompareMode(id: string): CompareMode | null {
+  return getCompareItems().find((item) => item.id === id)?.mode ?? null;
 }
 
 /**
@@ -97,42 +131,95 @@ export function subscribeCompare(callback: () => void): () => void {
 
 export interface ToggleResult {
   ids: string[];
+
   /** True when the add was refused because the basket is full. */
   capped: boolean;
+
+  /** True when the add was refused because Buy/Rent modes differ. */
+  modeMismatch: boolean;
 }
 
-export function toggleCompare(id: string): ToggleResult {
-  const current = getCompareIds();
+export function toggleCompare(
+  id: string,
+  mode: CompareMode = 'sale',
+): ToggleResult {
+  const current = getCompareItems();
 
-  if (current.includes(id)) {
-    const next = current.filter((value) => value !== id);
+  const existing = current.find((item) => item.id === id);
+
+  // Clicking an already-selected vehicle always removes it.
+  if (existing) {
+    const next = current.filter((item) => item.id !== id);
+
     write(next);
-    return { ids: next, capped: false };
+
+    return {
+      ids: next.map((item) => item.id),
+      capped: false,
+      modeMismatch: false,
+    };
+  }
+
+  // Never allow Buy and Rent vehicles in the same comparison basket.
+  if (current.length > 0 && current.some((item) => item.mode !== mode)) {
+    return {
+      ids: current.map((item) => item.id),
+      capped: false,
+      modeMismatch: true,
+    };
   }
 
   if (current.length >= COMPARE_MAX) {
-    return { ids: current, capped: true };
+    return {
+      ids: current.map((item) => item.id),
+      capped: true,
+      modeMismatch: false,
+    };
   }
 
-  const next = [...current, id];
+  const next = [...current, { id, mode }];
+
   write(next);
 
-  return { ids: next, capped: false };
+  return {
+    ids: next.map((item) => item.id),
+    capped: false,
+    modeMismatch: false,
+  };
 }
 
 export function removeFromCompare(id: string): string[] {
-  const next = getCompareIds().filter((value) => value !== id);
+  const next = getCompareItems().filter((item) => item.id !== id);
 
   write(next);
 
-  return next;
+  return next.map((item) => item.id);
 }
 
 /**
  * Called by the /compare page so this store stays synchronized with the URL.
+ *
+ * Existing comparison items keep their known mode. IDs that are not already
+ * in the store inherit the mode represented by the comparison URL.
  */
-export function syncCompareFromUrl(ids: string[]): void {
-  write(ids);
+export function syncCompareFromUrl(
+  ids: string[],
+  mode: CompareMode = 'sale',
+): void {
+  const current = getCompareItems();
+
+  const items = ids.map((id) => {
+    const existing = current.find((item) => item.id === id);
+
+    return (
+      existing ?? {
+        id,
+        mode,
+      }
+    );
+  });
+
+  write(items);
 }
 
 export function clearCompare(): void {

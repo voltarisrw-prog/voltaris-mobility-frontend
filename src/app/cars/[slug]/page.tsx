@@ -21,6 +21,7 @@ import { features } from '@/config/features';
 import type { VehicleDetail, VehicleSummary } from '@/types/vehicle';
 
 type Params = Promise<{ slug: string }>;
+type SearchParams = Promise<{ mode?: string }>;
 
 async function loadVehicle(slug: string): Promise<VehicleDetail> {
   try {
@@ -72,8 +73,16 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   });
 }
 
-export default async function VehiclePage({ params }: { params: Params }) {
+export default async function VehiclePage({
+  params,
+  searchParams,
+}: {
+  params: Params;
+  searchParams: SearchParams;
+}) {
   const { slug } = await params;
+  const { mode: requestedMode } = await searchParams;
+  const mode = requestedMode === 'rental' ? 'rental' : 'sale';
   const vehicle = await loadVehicle(slug);
 
   let similar: VehicleSummary[] = [];
@@ -314,7 +323,11 @@ export default async function VehiclePage({ params }: { params: Params }) {
             {/* Available regardless of sold status — comparing against a sold listing's
                 specs is still useful context, even though it can't be the thing you buy. */}
             <div className="mt-2">
-              <CompareToggleButton vehicleId={vehicle.id} variant="button" />
+              <CompareToggleButton
+                vehicleId={vehicle.id}
+                mode={mode}
+                variant="button"
+              />
             </div>
 
             <div className="mt-5 grid grid-cols-3 border-y border-hairline/60 py-4">
