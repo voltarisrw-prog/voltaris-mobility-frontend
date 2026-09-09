@@ -9,6 +9,7 @@ import type { VehicleDetail, VehicleSummary } from '@/types/vehicle';
 import {
   DEMO_INQUIRIES,
   DEMO_NOTIFICATIONS,
+  DEMO_PASSWORD,
   DEMO_PROFILE,
   DEMO_RESERVATIONS,
   DEMO_SAVED_SEARCHES,
@@ -101,13 +102,21 @@ export async function resolveMock<T>(
   // auth
 
   if (path === '/auth/login' && method === 'POST') {
+    // Real validation, not "anything works" — a wrong password should
+    // actually fail here, the same way it would against a real backend.
+    const body = options.body as { email?: string; password?: string } | undefined;
+    const email = body?.email?.trim().toLowerCase();
+    if (email !== DEMO_USER.email.toLowerCase() || body?.password !== DEMO_PASSWORD) {
+      throw new ApiError('UNAUTHORIZED', 'That email and password combination did not work.', 401);
+    }
     setDemoSession(DEMO_USER.id);
     return authTokenResponse() as T;
   }
 
   if (path === '/auth/register' && method === 'POST') {
     // Matches the real "check your email" flow: the account isn't signed in
-    // yet. Use /login (any email/password) to actually get in.
+    // yet. Use /login with the demo credentials (DEMO_USER / DEMO_PASSWORD
+    // in fixtures.ts, shown on /login itself in demo mode) to actually get in.
     return { verification_required: true } as T;
   }
 

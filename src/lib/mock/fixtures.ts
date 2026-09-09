@@ -1111,11 +1111,18 @@ export const MOCK_ARTICLES: Article[] = [
 export const DEMO_USER: PublicUser = {
   id: 'demo-user-1',
   full_name: 'Aline Uwase',
-  email: 'aline@example.com',
+  email: 'demo@voltaris.rw',
   roles: ['BUYER'],
   email_verified: true,
   mfa_enabled: false,
 };
+
+/**
+ * The only credential /auth/login actually accepts in demo mode — see
+ * resolve.ts. Shown on the /login page itself when NEXT_PUBLIC_DEMO_DATA is
+ * on, so this isn't something anyone has to be told out of band.
+ */
+export const DEMO_PASSWORD = 'VoltarisDemo1';
 
 export const DEMO_PROFILE: Profile = {
   id: DEMO_USER.id,

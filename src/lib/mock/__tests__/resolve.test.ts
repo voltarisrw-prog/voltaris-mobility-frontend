@@ -130,12 +130,19 @@ describe('resolveMock — content', () => {
 });
 
 describe('resolveMock — auth', () => {
-  it('logs in with any credentials and returns the demo user', async () => {
-    const result = await resolveMock<{ user: { email: string } | null }>('/auth/login', {
+  it('logs in with the documented demo credentials and rejects anything else', async () => {
+    const wrong = await resolveMock('/auth/login', {
       method: 'POST',
       body: { email: 'anyone@example.com', password: 'whatever' },
+    }).catch((error) => error);
+    expect(wrong).toBeInstanceOf(ApiError);
+    expect((wrong as ApiError).status).toBe(401);
+
+    const result = await resolveMock<{ user: { email: string } | null }>('/auth/login', {
+      method: 'POST',
+      body: { email: 'demo@voltaris.rw', password: 'VoltarisDemo1' },
     });
-    expect(result?.user?.email).toBeDefined();
+    expect(result?.user?.email).toBe('demo@voltaris.rw');
   });
 
   it('registration reports verification required rather than signing in', async () => {
