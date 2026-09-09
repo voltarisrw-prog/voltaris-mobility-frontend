@@ -153,19 +153,7 @@ export default async function ChargingPage({
         )}
       </div>
 
-      <section className="mt-16 max-w-prose">
-        <h2 className="section-heading vds-editorial-rise">Common questions</h2>
-        <div className="mt-4 divide-y divide-hairline/60 border-y border-hairline/60">
-          {FAQS.map((faq) => (
-            <details key={faq.question} className="py-4">
-              <summary className="cursor-pointer list-none font-display text-sm font-semibold tracking-tight">
-                {faq.question}
-              </summary>
-              <p className="mt-2 text-sm leading-relaxed text-steel">{faq.answer}</p>
-            </details>
-          ))}
-        </div>
-      </section>
+
     </div>
   );
 }
