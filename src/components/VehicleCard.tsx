@@ -131,11 +131,6 @@ export function VehicleCard({
                       / day
                     </span>
                   </p>
-                  {vehicle.price !== null ? (
-                    <p className="mt-0.5 font-data text-xs text-steel-muted">
-                      Purchase: {formatPrice(vehicle.price, vehicle.currency)}
-                    </p>
-                  ) : null}
                 </>
               ) : (
                 <p className="font-data text-xs uppercase tracking-wide text-steel-muted">
