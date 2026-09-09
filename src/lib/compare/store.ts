@@ -23,6 +23,7 @@ export interface CompareItem {
 const EMPTY: CompareItem[] = [];
 
 let snapshot: CompareItem[] = EMPTY;
+let snapshotIds: string[] = [];
 let initialized = false;
 
 function readStorage(): CompareItem[] {
@@ -87,6 +88,7 @@ function write(items: CompareItem[]): void {
 
   // Update the stable snapshot BEFORE notifying subscribers.
   snapshot = next;
+  snapshotIds = next.map((item) => item.id);
   initialized = true;
 
   try {
@@ -104,7 +106,8 @@ export function getCompareItems(): CompareItem[] {
 }
 
 export function getCompareIds(): string[] {
-  return getCompareItems().map((item) => item.id);
+  ensureInitialized();
+  return snapshotIds;
 }
 
 export function getCompareMode(id: string): CompareMode | null {
