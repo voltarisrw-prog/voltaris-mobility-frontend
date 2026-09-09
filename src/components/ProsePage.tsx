@@ -101,13 +101,32 @@ export function ProsePage({
           )}
           <p className="mt-6 text-base leading-relaxed text-steel">{intro}</p>
 
-          <div className="mt-12 space-y-10">
-            {toc.map((section) => (
-              <section key={section.id} id={section.id} className="scroll-mt-24">
-                <h2 className="section-heading">
+          <div className="mt-12 space-y-4">
+            {toc.map((section, index) => (
+              <section
+                key={section.id}
+                id={section.id}
+                className="group relative scroll-mt-24 overflow-hidden border border-hairline bg-slab p-6 shadow-[0_24px_70px_rgba(0,0,0,0.5)] transition-all duration-500 hover:-translate-y-0.5 hover:border-white/20 sm:p-7 lg:p-8"
+              >
+                <div className="flex items-start justify-between gap-6">
+                  <span className="font-data text-[9px] uppercase tracking-[0.18em] text-volt">
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
+
+                  <span className="font-display text-4xl font-semibold leading-none tracking-[-0.06em] text-white/[0.07] transition-colors duration-500 group-hover:text-white/[0.14]">
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
+                </div>
+
+                <h2 className="mt-8 font-display text-xl font-semibold leading-tight tracking-tight text-chrome sm:text-2xl">
                   {section.heading}
                 </h2>
-                <p className="mt-3 text-sm leading-relaxed text-steel">{section.body}</p>
+
+                <p className="mt-3 max-w-prose text-sm leading-6 text-steel">
+                  {section.body}
+                </p>
+
+                <div className="absolute inset-x-0 bottom-0 h-px origin-left scale-x-0 bg-volt transition-transform duration-500 group-hover:scale-x-100" />
               </section>
             ))}
           </div>

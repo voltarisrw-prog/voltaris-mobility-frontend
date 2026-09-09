@@ -23,27 +23,38 @@ export default function ContactPage() {
             have picked a vehicle first — most people who write to us have not.
           </p>
 
-          <dl className="mt-10 space-y-6">
-            <div className="border-t border-hairline pt-4">
-              <dt className="eyebrow">Email</dt>
-              <dd className="mt-2 text-sm">
-                <a href={`mailto:${company.email}`} className="text-volt hover:underline">
+          <dl className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+            <div className="border border-hairline bg-slab p-6 shadow-[0_24px_70px_rgba(0,0,0,0.5)]">
+              <dt className="font-data text-[9px] uppercase tracking-[0.18em] text-volt">
+                Email
+              </dt>
+              <dd className="mt-4 text-sm">
+                <a href={`mailto:${company.email}`} className="text-chrome transition-colors hover:text-volt">
                   {company.email}
                 </a>
               </dd>
             </div>
-            <div className="border-t border-hairline pt-4">
-              <dt className="eyebrow">Phone</dt>
-              <dd className="mt-2 text-sm text-steel">{company.phone}</dd>
+
+            <div className="border border-hairline bg-slab p-6 shadow-[0_24px_70px_rgba(0,0,0,0.5)]">
+              <dt className="font-data text-[9px] uppercase tracking-[0.18em] text-volt">
+                Phone
+              </dt>
+              <dd className="mt-4 text-sm text-steel">{company.phone}</dd>
             </div>
-            <div className="border-t border-hairline pt-4">
-              <dt className="eyebrow">Where we are</dt>
-              <dd className="mt-2 text-sm text-steel">{company.address}</dd>
+
+            <div className="border border-hairline bg-slab p-6 shadow-[0_24px_70px_rgba(0,0,0,0.5)]">
+              <dt className="font-data text-[9px] uppercase tracking-[0.18em] text-volt">
+                Where we are
+              </dt>
+              <dd className="mt-4 text-sm leading-6 text-steel">{company.address}</dd>
             </div>
-            <div className="border-t border-hairline pt-4">
-              <dt className="eyebrow">Data and privacy</dt>
-              <dd className="mt-2 text-sm">
-                <a href={`mailto:${company.privacyEmail}`} className="text-volt hover:underline">
+
+            <div className="border border-hairline bg-slab p-6 shadow-[0_24px_70px_rgba(0,0,0,0.5)]">
+              <dt className="font-data text-[9px] uppercase tracking-[0.18em] text-volt">
+                Data and privacy
+              </dt>
+              <dd className="mt-4 text-sm">
+                <a href={`mailto:${company.privacyEmail}`} className="text-chrome transition-colors hover:text-volt">
                   {company.privacyEmail}
                 </a>
               </dd>
@@ -51,7 +62,16 @@ export default function ContactPage() {
           </dl>
         </header>
 
-        <div className="border border-hairline p-6 sm:p-8">
+        <div className="border border-hairline bg-slab p-6 shadow-[0_24px_70px_rgba(0,0,0,0.5)] sm:p-8 lg:p-10">
+          <div className="mb-8 border-b border-hairline pb-5">
+            <p className="font-data text-[9px] uppercase tracking-[0.18em] text-volt">
+              Send a message
+            </p>
+            <p className="mt-2 text-sm leading-6 text-steel">
+              Tell us what you need and the Voltaris team will get back to you.
+            </p>
+          </div>
+
           <HomeInquiryForm />
         </div>
       </div>

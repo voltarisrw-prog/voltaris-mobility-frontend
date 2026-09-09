@@ -17,7 +17,7 @@ function Steps({ steps }: { steps: { n: string; title: string; body: string }[] 
       {steps.map((step) => (
         <li
           key={step.n}
-          className="group relative min-h-[260px] overflow-hidden rounded-[2.75rem] border border-black/10 bg-white p-7 text-black shadow-[0_18px_50px_rgba(0,0,0,0.16)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_28px_70px_rgba(0,0,0,0.24)] sm:p-8 lg:min-h-[280px] lg:p-9"
+          className="group relative min-h-[260px] overflow-hidden border border-hairline bg-slab p-7 shadow-[0_24px_70px_rgba(0,0,0,0.5)] transition-all duration-500 hover:-translate-y-1 hover:border-white/20 sm:p-8 lg:min-h-[280px] lg:p-9"
         >
           <div className="flex items-start justify-between gap-6">
             <span className="font-data text-[10px] uppercase tracking-[0.18em] text-black/50">
