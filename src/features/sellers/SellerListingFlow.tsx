@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { useEffect, useMemo, useState } from 'react';
@@ -167,21 +168,77 @@ export function SellerListingFlow() {
 
   return (
     <form onSubmit={onSubmit} noValidate>
-      <ol className="mb-10 flex flex-wrap gap-x-6 gap-y-2">
-        {STEPS.map((item) => (
-          <li
-            key={item.id}
-            aria-current={item.id === step ? 'step' : undefined}
-            className={
-              item.id === step
-                ? 'font-data text-eyebrow uppercase text-chrome'
-                : 'font-data text-eyebrow uppercase text-steel-muted'
-            }
-          >
-            {item.id}. {item.label}
-          </li>
-        ))}
-      </ol>
+      <div className="mb-12 border-y border-hairline bg-surface">
+        <div className="flex items-stretch overflow-x-auto">
+          {STEPS.map((item) => {
+            const active = item.id === step;
+            const complete = item.id < step;
+
+            return (
+              <div
+                key={item.id}
+                className="min-w-[9rem] flex-1 border-r border-hairline last:border-r-0"
+              >
+                <div
+                  aria-current={active ? 'step' : undefined}
+                  className={[
+                    'relative flex h-full min-h-[5.5rem] flex-col justify-between p-4 transition-colors sm:p-5',
+                    active ? 'bg-chrome text-surface' : 'bg-surface text-steel',
+                  ].join(' ')}
+                >
+                  <div className="flex items-center justify-between gap-4">
+                    <span
+                      className={[
+                        'font-data text-[10px] uppercase tracking-[0.18em]',
+                        active
+                          ? 'text-surface/60'
+                          : complete
+                            ? 'text-volt'
+                            : 'text-steel-muted',
+                      ].join(' ')}
+                    >
+                      {complete ? 'Complete' : `0${item.id}`}
+                    </span>
+
+                    {active && (
+                      <span className="h-1.5 w-1.5 rounded-full bg-volt" aria-hidden="true" />
+                    )}
+                  </div>
+
+                  <span
+                    className={[
+                      'font-display text-base font-semibold tracking-tight sm:text-lg',
+                      active ? 'text-surface' : 'text-chrome',
+                    ].join(' ')}
+                  >
+                    {item.label}
+                  </span>
+
+                  {active && (
+                    <span
+                      className="absolute inset-x-0 bottom-0 h-0.5 bg-volt"
+                      aria-hidden="true"
+                    />
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="mb-8 flex items-end justify-between gap-6">
+        <div>
+          <p className="eyebrow text-volt">STEP {step} OF {STEPS.length}</p>
+          <h2 className="mt-2 font-display text-2xl font-semibold tracking-tight text-chrome sm:text-3xl">
+            {STEPS[step - 1]?.label}
+          </h2>
+        </div>
+
+        <p className="hidden max-w-xs text-right text-xs leading-relaxed text-steel sm:block">
+          Your progress stays here while you move through the listing.
+        </p>
+      </div>
 
       {step === 1 && (
         <div className="space-y-5">
@@ -316,104 +373,282 @@ export function SellerListingFlow() {
       )}
 
       {step === 3 && (
-        <div>
-          <p className="mb-4 text-sm text-steel">
-            Add up to {MAX_PHOTOS} photos: front three-quarter, rear, interior, dashboard showing
-            the odometer, charge port, and tyres. Listings with a dashboard photo are reviewed
-            faster.
-          </p>
-          <label className="block cursor-pointer border border-dashed border-hairline p-10 text-center transition-colors hover:border-volt">
-            <input
-              type="file"
-              accept="image/jpeg,image/png,image/webp"
-              multiple
-              className="sr-only"
-              onChange={(event) => addPhotos(event.target.files)}
-            />
-            <span className="font-data text-eyebrow uppercase text-volt">Choose photos</span>
-            <span className="mt-2 block text-xs text-steel-muted">
-              JPEG, PNG, or WebP up to 12 MB each
-            </span>
-          </label>
+        <div className="space-y-10">
+          <section>
+            <div className="mb-7 border-b border-hairline pb-5">
+              <p className="font-data text-[10px] uppercase tracking-[0.18em] text-steel-muted">
+                01 / Vehicle photography
+              </p>
+              <h3 className="mt-2 font-display text-2xl font-semibold tracking-tight text-chrome sm:text-3xl">
+                Let the car speak for itself.
+              </h3>
+              <p className="mt-3 max-w-2xl text-sm leading-relaxed text-steel">
+                Strong photography makes a listing feel trustworthy before a
+                buyer reads a single specification. Add up to 12 clear photos.
+              </p>
+            </div>
 
-          {previews.length > 0 && (
-            <ul className="mt-5 grid grid-cols-3 gap-3 sm:grid-cols-4">
-              {previews.map((url, index) => (
-                <li key={url} className="relative">
-                  {/* Local blob previews only — next/image is for remote CDN media. */}
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={url}
-                    alt={`Photo ${index + 1}`}
-                    className="aspect-[4/3] w-full object-cover"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setPhotos((current) => current.filter((_, i) => i !== index))}
-                    className="absolute right-1 top-1 bg-chrome px-2 py-1 font-data text-[0.6rem] uppercase text-surface"
-                  >
-                    Remove
-                  </button>
-                </li>
-              ))}
-            </ul>
+            <label className="group relative flex min-h-64 cursor-pointer flex-col items-center justify-center overflow-hidden border border-dashed border-steel/40 bg-surface-muted px-6 py-10 text-center transition-colors hover:border-chrome hover:bg-surface">
+              <input
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                multiple
+                className="sr-only"
+                onChange={(event) => {
+                  void addPhotos(event.target.files);
+                  event.target.value = '';
+                }}
+              />
+
+              <span className="font-data text-[10px] uppercase tracking-[0.18em] text-volt">
+                {photos.length}/{MAX_PHOTOS} photos added
+              </span>
+
+              <span className="mt-4 font-display text-xl font-semibold tracking-tight text-chrome sm:text-2xl">
+                Add vehicle photos
+              </span>
+
+              <span className="mt-2 max-w-md text-sm leading-relaxed text-steel">
+                Exterior, interior, dashboard, wheels, charging equipment and
+                any details a buyer should see.
+              </span>
+
+              <span className="mt-6 inline-flex items-center border border-chrome px-5 py-2.5 font-data text-[10px] font-semibold uppercase tracking-[0.16em] text-chrome transition-colors group-hover:bg-chrome group-hover:text-surface">
+                Choose files
+              </span>
+
+              <span className="mt-4 font-data text-[9px] uppercase tracking-[0.14em] text-steel-muted">
+                JPG, PNG or WEBP · maximum 12 MB each
+              </span>
+            </label>
+          </section>
+
+          {photos.length > 0 && (
+            <section>
+              <div className="mb-5 flex items-end justify-between gap-4">
+                <div>
+                  <p className="font-data text-[10px] uppercase tracking-[0.18em] text-steel-muted">
+                    Your gallery
+                  </p>
+                  <p className="mt-1 text-sm text-steel">
+                    {photos.length === 1
+                      ? '1 photo ready for review'
+                      : `${photos.length} photos ready for review`}
+                  </p>
+                </div>
+
+                <p className="font-data text-[10px] uppercase tracking-[0.14em] text-steel-muted">
+                  First photo = cover
+                </p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-px bg-hairline sm:grid-cols-3 lg:grid-cols-4">
+                {photos.map((file, index) => (
+                  <div key={`${file.name}-${file.lastModified}`} className="group relative aspect-[4/3] overflow-hidden bg-surface">
+                    <Image
+                      src={URL.createObjectURL(file)}
+                      alt={`Vehicle photo ${index + 1}`}
+                      fill
+                      unoptimized
+                      sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
+                      className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                    />
+
+                    <div className="absolute inset-x-0 bottom-0 flex items-center justify-between bg-chrome/85 px-3 py-2 text-surface">
+                      <span className="font-data text-[9px] uppercase tracking-[0.12em]">
+                        {index === 0 ? 'Cover' : `Photo ${index + 1}`}
+                      </span>
+
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setPhotos((current) =>
+                            current.filter((_, photoIndex) => photoIndex !== index),
+                          )
+                        }
+                        className="font-data text-[9px] uppercase tracking-[0.12em] text-surface/70 transition-colors hover:text-surface"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
           )}
+
+          <div className="grid gap-px bg-hairline sm:grid-cols-3">
+            <div className="bg-surface p-5">
+              <p className="font-data text-[9px] uppercase tracking-[0.16em] text-volt">
+                01
+              </p>
+              <p className="mt-3 font-display font-semibold text-chrome">
+                Exterior
+              </p>
+              <p className="mt-1 text-xs leading-relaxed text-steel">
+                Show the full vehicle from multiple angles.
+              </p>
+            </div>
+
+            <div className="bg-surface p-5">
+              <p className="font-data text-[9px] uppercase tracking-[0.16em] text-volt">
+                02
+              </p>
+              <p className="mt-3 font-display font-semibold text-chrome">
+                Interior
+              </p>
+              <p className="mt-1 text-xs leading-relaxed text-steel">
+                Include seats, dashboard and controls.
+              </p>
+            </div>
+
+            <div className="bg-surface p-5">
+              <p className="font-data text-[9px] uppercase tracking-[0.16em] text-volt">
+                03
+              </p>
+              <p className="mt-3 font-display font-semibold text-chrome">
+                Details
+              </p>
+              <p className="mt-1 text-xs leading-relaxed text-steel">
+                Highlight wheels, charging gear and notable features.
+              </p>
+            </div>
+          </div>
         </div>
       )}
 
       {step === 4 && (
-        <div className="space-y-5">
-          <Field
-            label="What you want for it (RWF)"
-            hint="This is your figure. Voltaris agrees the listed price with you after review."
-            error={errors.expected_price?.message}
-            required
-          >
-            {(p) => (
-              <input
-                {...p}
-                {...register('expected_price')}
-                type="number"
-                inputMode="numeric"
-                className={inputClass}
-              />
-            )}
-          </Field>
+        <div className="space-y-12">
+          <section>
+            <div className="mb-7 border-b border-hairline pb-5">
+              <p className="font-data text-[10px] uppercase tracking-[0.18em] text-steel-muted">
+                01 / Your asking price
+              </p>
+              <h3 className="mt-2 font-display text-2xl font-semibold tracking-tight text-chrome sm:text-3xl">
+                What would make the sale worthwhile?
+              </h3>
+              <p className="mt-3 max-w-2xl text-sm leading-relaxed text-steel">
+                Set the price you expect to receive. Our team can review the
+                listing before it goes live.
+              </p>
+            </div>
 
-          <fieldset className="space-y-3">
-            <legend className="eyebrow mb-2">Documents you have</legend>
-            <label className="flex items-center gap-3 text-sm">
-              <input
-                type="checkbox"
-                {...register('has_registration_document')}
-                className="h-4 w-4 accent-volt"
-              />
-              Registration document (yellow card)
-            </label>
-            <label className="flex items-center gap-3 text-sm">
-              <input
-                type="checkbox"
-                {...register('has_import_documents')}
-                className="h-4 w-4 accent-volt"
-              />
-              Import and duty clearance
-            </label>
-          </fieldset>
+            <div className="max-w-xl">
+              <Field label="Expected price (RWF)" error={errors.expected_price?.message}>
+                {(p) => (
+                  <div className="relative">
+                    <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center border-r border-hairline px-4 font-data text-[10px] uppercase tracking-[0.14em] text-steel-muted">
+                      RWF
+                    </span>
+                    <input
+                      {...p}
+                      {...register('expected_price')}
+                      type="number"
+                      className={`${inputClass} pl-20 text-lg font-semibold tabular-nums`}
+                      placeholder="e.g. 45,000,000"
+                      min="0"
+                    />
+                  </div>
+                )}
+              </Field>
 
-          <Field label="" error={errors.accepts_review?.message}>
-            {(p) => (
-              <label className="flex items-start gap-3 text-sm text-steel">
+              <p className="mt-3 text-xs leading-relaxed text-steel">
+                A realistic asking price helps buyers understand the listing
+                quickly. You can discuss the final price during verification.
+              </p>
+            </div>
+          </section>
+
+          <section>
+            <div className="mb-7 border-b border-hairline pb-5">
+              <p className="font-data text-[10px] uppercase tracking-[0.18em] text-steel-muted">
+                02 / Documentation
+              </p>
+              <h3 className="mt-2 font-display text-2xl font-semibold tracking-tight text-chrome sm:text-3xl">
+                Show that the vehicle is ready.
+              </h3>
+              <p className="mt-3 max-w-2xl text-sm leading-relaxed text-steel">
+                Let us know which documents you already have. This helps the
+                verification team understand what is available.
+              </p>
+            </div>
+
+            <div className="divide-y divide-hairline border-y border-hairline">
+              <label className="flex cursor-pointer items-start gap-4 py-5">
                 <input
-                  {...p}
-                  {...register('accepts_review')}
+                  {...register('has_registration_document')}
                   type="checkbox"
-                  className="mt-0.5 h-4 w-4 shrink-0 accent-volt"
+                  className="mt-1 h-4 w-4 accent-current"
                 />
-                I understand that submitting this listing does not publish it, and that Voltaris
-                reviews the vehicle and documents first.
+                <span>
+                  <span className="block font-display font-semibold text-chrome">
+                    Registration document available
+                  </span>
+                  <span className="mt-1 block text-xs leading-relaxed text-steel">
+                    I have the vehicle registration documentation available for review.
+                  </span>
+                </span>
               </label>
-            )}
-          </Field>
+
+              <label className="flex cursor-pointer items-start gap-4 py-5">
+                <input
+                  {...register('has_import_documents')}
+                  type="checkbox"
+                  className="mt-1 h-4 w-4 accent-current"
+                />
+                <span>
+                  <span className="block font-display font-semibold text-chrome">
+                    Import documents available
+                  </span>
+                  <span className="mt-1 block text-xs leading-relaxed text-steel">
+                    I have relevant import documentation available where applicable.
+                  </span>
+                </span>
+              </label>
+            </div>
+          </section>
+
+          <section>
+            <div className="mb-7 border-b border-hairline pb-5">
+              <p className="font-data text-[10px] uppercase tracking-[0.18em] text-steel-muted">
+                03 / Verification
+              </p>
+              <h3 className="mt-2 font-display text-2xl font-semibold tracking-tight text-chrome sm:text-3xl">
+                One final step.
+              </h3>
+            </div>
+
+            <label className="flex cursor-pointer items-start gap-4 border border-hairline bg-surface-muted p-5 sm:p-6">
+              <input
+                {...register('accepts_review')}
+                type="checkbox"
+                className="mt-1 h-4 w-4 accent-current"
+              />
+              <span>
+                <span className="block font-display font-semibold text-chrome">
+                  I agree to Voltaris reviewing this listing.
+                </span>
+                <span className="mt-2 block max-w-2xl text-xs leading-relaxed text-steel">
+                  Voltaris may review the information and photos submitted to
+                  verify the listing before publication. Additional information
+                  may be requested if something needs clarification.
+                </span>
+              </span>
+            </label>
+
+            <div className="mt-6 flex items-start gap-4 border-l-2 border-volt pl-5">
+              <div>
+                <p className="font-data text-[10px] uppercase tracking-[0.16em] text-volt">
+                  Ready when you are
+                </p>
+                <p className="mt-2 max-w-2xl text-sm leading-relaxed text-steel">
+                  Submit once everything looks right. Your listing is saved
+                  before photo processing begins, so an upload issue will not
+                  erase your submission.
+                </p>
+              </div>
+            </div>
+          </section>
         </div>
       )}
 
