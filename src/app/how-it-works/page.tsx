@@ -17,33 +17,33 @@ function Steps({ steps }: { steps: { n: string; title: string; body: string }[] 
       {steps.map((step) => (
         <li
           key={step.n}
-          className="group relative min-h-[260px] overflow-hidden border border-hairline bg-slab p-6 transition-all duration-500 hover:-translate-y-1 hover:border-white/20 hover:bg-white/[0.025] sm:p-7 lg:min-h-[280px] lg:p-8"
+          className="group relative min-h-[260px] overflow-hidden rounded-[2.75rem] border border-black/10 bg-white p-7 text-black shadow-[0_18px_50px_rgba(0,0,0,0.16)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_28px_70px_rgba(0,0,0,0.24)] sm:p-8 lg:min-h-[280px] lg:p-9"
         >
           <div className="flex items-start justify-between gap-6">
-            <span className="font-data text-[10px] uppercase tracking-[0.18em] text-volt">
+            <span className="font-data text-[10px] uppercase tracking-[0.18em] text-black/50">
               {step.n}
             </span>
 
-            <span className="font-display text-5xl font-semibold leading-none tracking-[-0.06em] text-white/[0.07] transition-all duration-500 group-hover:text-white/[0.14]">
+            <span className="font-display text-5xl font-semibold leading-none tracking-[-0.06em] text-black/[0.07] transition-all duration-500 group-hover:text-black/[0.14]">
               {step.n}
             </span>
           </div>
 
           <div className="mt-16 max-w-md">
-            <h3 className="font-display text-2xl font-semibold leading-tight tracking-tight text-chrome transition-transform duration-500 group-hover:translate-x-1">
+            <h3 className="font-display text-2xl font-semibold leading-tight tracking-tight text-black transition-transform duration-500 group-hover:translate-x-1">
               {step.title}
             </h3>
 
-            <p className="mt-3 max-w-sm text-sm leading-6 text-steel">
+            <p className="mt-3 max-w-sm text-sm leading-6 text-black/55">
               {step.body}
             </p>
           </div>
 
-          <div className="absolute bottom-6 right-6 flex h-9 w-9 items-center justify-center border border-white/10 text-steel-muted transition-all duration-500 group-hover:border-volt group-hover:bg-volt group-hover:text-black">
+          <div className="absolute bottom-7 right-7 flex h-10 w-10 items-center justify-center rounded-full border border-black/10 text-black/45 transition-all duration-500 group-hover:border-black group-hover:bg-black group-hover:text-white">
             <ArrowUpRight className="h-4 w-4 transition-transform duration-500 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
           </div>
 
-          <div className="absolute inset-x-0 bottom-0 h-px origin-left scale-x-0 bg-volt transition-transform duration-500 group-hover:scale-x-100" />
+          <div className="absolute inset-x-0 bottom-0 h-px origin-left scale-x-0 bg-black transition-transform duration-500 group-hover:scale-x-100" />
         </li>
       ))}
     </ol>
