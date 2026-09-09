@@ -161,7 +161,7 @@ export function TestDriveForm({
           <select
             {...props}
             {...register('location_slug')}
-            className={`${selectClass} !bg-black !text-white`}
+            className={`${selectClass} !bg-black !text-black`}
           >
             <option value="">Choose a location</option>
             {LOCATIONS.map((location) => (

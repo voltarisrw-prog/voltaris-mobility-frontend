@@ -114,10 +114,10 @@ export function Field({
 }
 
 export const inputClass =
-  'vds-input text-sm placeholder:text-white/40 aria-[invalid=true]:border-red-400';
+  'vds-input text-sm text-black placeholder:text-black/40 aria-[invalid=true]:border-red-400';
 
 export const selectClass =
-  'vds-select text-sm aria-[invalid=true]:border-red-400';
+  'vds-select text-sm text-black aria-[invalid=true]:border-red-400';
 
 /* ------------------------------------------------------------------- Toast */
 
