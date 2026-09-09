@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 import type { VehicleDetail } from '@/types/vehicle';
 
+const AUTO_SLIDE_MS = 5500;
+
 export function VehicleGallery({
   vehicle,
   title,
@@ -17,6 +19,22 @@ export function VehicleGallery({
   const [open, setOpen] = useState(false);
 
   const current = images[active];
+
+  useEffect(() => {
+    if (images.length <= 1 || open) return;
+
+    const reduceMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)',
+    ).matches;
+
+    if (reduceMotion) return;
+
+    const timer = window.setInterval(() => {
+      setActive((index) => (index + 1) % images.length);
+    }, AUTO_SLIDE_MS);
+
+    return () => window.clearInterval(timer);
+  }, [images.length, open]);
 
   useEffect(() => {
     if (!open) return;
@@ -183,7 +201,7 @@ export function VehicleGallery({
               alt={current.alt || title}
               fill
               sizes="100vw"
-              className="object-contain"
+              className="object-contain object-center transition-opacity duration-1000 ease-out"
               priority
             />
           </div>

@@ -318,28 +318,31 @@ export default async function VehiclePage({
               </p>
             ) : (
               <>
-                <div className="mt-6">
-                  {features.checkout && vehicle.purchase_enabled && (
-                    <Link
-                      href={`/checkout/start?vehicle=${vehicle.id}`}
-                      className="flex w-full items-center justify-between bg-volt px-5 py-4 font-data text-eyebrow uppercase text-surface transition-colors hover:bg-volt-bright"
-                    >
-                      <span>Buy this vehicle</span>
-                      <span aria-hidden="true">→</span>
-                    </Link>
-                  )}
-                </div>
+                {mode === 'sale' && (
+                  <div className="mt-6">
+                    {features.checkout && vehicle.purchase_enabled && (
+                      <Link
+                        href={`/checkout/start?vehicle=${vehicle.id}`}
+                        className="flex w-full items-center justify-between bg-volt px-5 py-4 font-data text-eyebrow uppercase text-surface transition-colors hover:bg-volt-bright"
+                      >
+                        <span>Buy this vehicle</span>
+                        <span aria-hidden="true">→</span>
+                      </Link>
+                    )}
+                  </div>
+                )}
 
-                {features.checkout &&
-                  vehicle.rental_enabled &&
-                  vehicle.rental_price_per_day ? (
-                  <div id="rental-details">
+                {mode === 'rental' &&
+                features.checkout &&
+                vehicle.rental_enabled &&
+                vehicle.rental_price_per_day ? (
+                  <div id="rental-details" className="mt-6">
                     <RentalCheckoutPanel vehicleId={vehicle.id} />
                   </div>
                 ) : null}
 
                 <div className="mt-4 grid gap-2">
-                  {vehicle.test_drive_available && (
+                  {mode === 'sale' && vehicle.test_drive_available && (
                     <Link
                       href={`/test-drive?vehicle=${vehicle.id}`}
                       className="flex items-center justify-center border border-chrome px-5 py-3 font-data text-eyebrow uppercase transition-colors hover:bg-chrome hover:text-surface"
@@ -419,7 +422,7 @@ export default async function VehiclePage({
           </h2>
           <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {similar.slice(0, 3).map((item) => (
-              <VehicleCard key={item.id} vehicle={item} />
+              <VehicleCard key={item.id} vehicle={item} mode={mode} />
             ))}
           </div>
         </section>
