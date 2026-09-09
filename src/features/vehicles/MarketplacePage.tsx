@@ -138,15 +138,18 @@ export async function MarketplacePage({
           />
         </div>
       ) : results ? (
-        <>
-          <>
+        (() => {
+          const loadedResults = results;
+
+          return (
+            <>
               <MarketplaceEditorialMotion
                 key={results.items.map((vehicle) => vehicle.id).join('|')}
-                vehicles={results.items}
+                vehicles={loadedResults.items}
                 mode={mode ?? 'sale'}
               />
 
-              {results.items.length > 8 ? (
+              {loadedResults.items.length > 8 ? (
                 <div className="mt-16">
                   <div className="mb-6 flex items-end justify-between gap-6 border-b border-hairline pb-4">
                     <div>
@@ -160,7 +163,7 @@ export async function MarketplacePage({
                   </div>
 
                   <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                    {results.items.slice(8).map((vehicle, index) => (
+                    {loadedResults.items.slice(8).map((vehicle, index) => (
                       <div
                         key={vehicle.id}
                         className="marketplace-editorial-enter"
@@ -179,17 +182,18 @@ export async function MarketplacePage({
                   </div>
                 </div>
               ) : null}
-          </>
 
-          <div className="mt-10">
-            <Pagination
-              filters={marketplaceFilters}
-              page={page}
-              totalPages={results.total_pages}
-              basePath={basePath}
-            />
-          </div>
-        </>
+              <div className="mt-10">
+                <Pagination
+                  filters={marketplaceFilters}
+                  page={page}
+                  totalPages={loadedResults.total_pages}
+                  basePath={basePath}
+                />
+              </div>
+            </>
+          );
+        })()
       ) : null}
     </div>
   );
