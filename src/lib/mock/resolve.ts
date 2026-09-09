@@ -17,6 +17,7 @@ import {
   DEMO_TEST_DRIVES,
   DEMO_USER,
   MOCK_ARTICLES,
+  MOCK_CHARGING_LOCATIONS,
   MOCK_DEALERS,
   MOCK_VEHICLES,
 } from './fixtures';
@@ -55,6 +56,11 @@ export async function resolveMock<T>(
   if (path === '/vehicles' && method === 'GET') {
     return listVehicles(query) as T;
   }
+
+  if (path === '/charging/locations' && method === 'GET') {
+    return chargingLocations(query) as T;
+  }
+
 
   const bySlug = path.match(/^\/vehicles\/by-slug\/([^/]+)$/);
   if (bySlug?.[1]) {
@@ -500,6 +506,24 @@ function listVehicles(query: Record<string, unknown>): Page<VehicleSummary> {
     per_page: perPage,
     total: items.length,
     total_pages: Math.max(1, Math.ceil(items.length / perPage)),
+  };
+}
+
+function chargingLocations(query: Record<string, unknown>) {
+  const district = str(query.district);
+
+  const items = district
+    ? MOCK_CHARGING_LOCATIONS.filter(
+        (location) => location.district.toLowerCase() === district.toLowerCase(),
+      )
+    : MOCK_CHARGING_LOCATIONS;
+
+  return {
+    items,
+    page: 1,
+    per_page: 24,
+    total: items.length,
+    total_pages: Math.max(1, Math.ceil(items.length / 24)),
   };
 }
 

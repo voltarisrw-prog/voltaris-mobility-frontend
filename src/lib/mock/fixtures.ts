@@ -1,6 +1,7 @@
 import type { VehicleDetail, VehicleImage, VehicleSummary } from '@/types/vehicle';
 import type { DealerDetail } from '@/types/dealer';
 import type { Article } from '@/lib/api/content';
+import type { ChargingLocation } from '@/lib/api/charging';
 import type { PublicUser } from '@/lib/api/auth';
 import type {
   InquiryRecord,
@@ -34,6 +35,73 @@ function image(path: string, alt: string): VehicleImage {
 const DAY = 86_400_000;
 const now = () => new Date();
 const daysAgo = (n: number) => new Date(now().getTime() - n * DAY).toISOString();
+
+export const MOCK_CHARGING_LOCATIONS: ChargingLocation[] = [
+  {
+    id: 'charging-kigali-convention-centre',
+    slug: 'kigali-convention-centre',
+    name: 'Kigali Convention Centre',
+    operator: 'Public charging site',
+    district: 'Gasabo',
+    address: 'Kigali Convention Centre, Kigali',
+    latitude: -1.95543,
+    longitude: 30.09366,
+    connectors: [
+      { type: 'EV charging', power_kw: 22, count: 1 },
+    ],
+    access: 'public',
+    open_hours: 'Check site operator',
+    verified_at: null,
+  },
+  {
+    id: 'charging-kigali-heights',
+    slug: 'kigali-heights',
+    name: 'Kigali Heights',
+    operator: 'Public charging site',
+    district: 'Gasabo',
+    address: 'Kigali Heights, Kigali',
+    latitude: -1.95272,
+    longitude: 30.09296,
+    connectors: [
+      { type: 'EV charging', power_kw: 22, count: 1 },
+    ],
+    access: 'public',
+    open_hours: 'Check site operator',
+    verified_at: null,
+  },
+  {
+    id: 'charging-lemigo-hotel',
+    slug: 'lemigo-hotel',
+    name: 'Lemigo Hotel',
+    operator: 'EVP',
+    district: 'Gasabo',
+    address: 'Lemigo Hotel, Kigali',
+    latitude: -1.95535,
+    longitude: 30.09764,
+    connectors: [
+      { type: 'EV charging', power_kw: 22, count: 1 },
+    ],
+    access: 'public',
+    open_hours: 'Check site operator',
+    verified_at: null,
+  },
+  {
+    id: 'charging-kigali-international-airport',
+    slug: 'kigali-international-airport',
+    name: 'Kigali International Airport',
+    operator: 'Public charging site',
+    district: 'Kicukiro',
+    address: 'Kigali International Airport, Kigali',
+    latitude: -1.96304,
+    longitude: 30.13501,
+    connectors: [
+      { type: 'EV charging', power_kw: 22, count: 1 },
+    ],
+    access: 'public',
+    open_hours: 'Check site operator',
+    verified_at: null,
+  },
+];
 
 export const MOCK_VEHICLES: VehicleDetail[] = [
   {
