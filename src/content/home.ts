@@ -34,9 +34,9 @@ export const nav = {
 };
 
 export const hero = {
-  eyebrow: 'Electric + Hybrid mobility',
-  headline: 'Move differently',
-  sub: 'Electric and hybrid vehicles for the way you live, work, and move',
+  eyebrow: 'Start with what you want to drive',
+  headline: 'Electric or Hybrid',
+  sub: '',
   primaryCta: { label: 'Buy a vehicle', href: '/buy' },
   secondaryCta: { label: 'Rent a vehicle', href: '/rent' },
   searchPlaceholder: 'What are you looking for?',
