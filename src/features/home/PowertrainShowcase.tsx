@@ -51,12 +51,12 @@ export function PowertrainShowcase() {
                 href={href}
                 className="group flex flex-col items-center text-center outline-none"
               >
-                <div className="relative aspect-square w-[min(88vw,36rem)] overflow-hidden rounded-full border border-white/10 bg-[#15110d] shadow-[0_30px_80px_rgba(0,0,0,0.35)] transition-transform duration-700 ease-out group-hover:scale-[1.025] group-focus-visible:scale-[1.025]">
+                <div className="relative aspect-[0.78] w-[min(78vw,30rem)] overflow-hidden rounded-[999px] border border-white/10 bg-[#15110d] shadow-[0_30px_80px_rgba(0,0,0,0.35)] transition-transform duration-700 ease-out group-hover:scale-[1.025] group-focus-visible:scale-[1.025]">
                   <Image
                     src={image}
                     alt={`${title} vehicle powertrain`}
                     fill
-                    sizes="(max-width: 767px) 88vw, (max-width: 1279px) 46vw, 36rem"
+                    sizes="(max-width: 767px) 78vw, (max-width: 1279px) 38vw, 30rem"
                     className="object-cover object-center transition-transform duration-[1600ms] ease-out group-hover:scale-[1.06] group-focus-visible:scale-[1.06]"
                   />
 
