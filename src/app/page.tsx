@@ -62,7 +62,7 @@ export default async function HomePage() {
         <HeroMedia />
         <div className="shell relative flex min-h-[calc(100svh-4rem)] flex-col items-center justify-end py-10 pb-16 text-center sm:min-h-[88svh] sm:py-16 sm:pb-20 lg:pb-24">
           <div className="max-w-5xl animate-rise-in pb-4 sm:pb-6">
-            <p className="mb-5 font-data text-[0.65rem] uppercase tracking-[0.2em] text-[color:var(--vds-brand-secondary)] sm:mb-6">
+            <p className="mb-5 font-sans text-lg font-medium tracking-[0.02em] text-white sm:mb-6 sm:text-xl">
               {hero.eyebrow}
             </p>
 
