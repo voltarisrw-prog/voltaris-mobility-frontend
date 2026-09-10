@@ -68,11 +68,11 @@ export function PowertrainShowcase() {
                   />
 
                   <div className="absolute inset-x-0 top-0 flex items-start justify-between p-6 sm:p-8">
-                    <span className="font-data text-[0.58rem] uppercase tracking-[0.2em] text-white/75">
+                    <span className="font-data text-[0.58rem] font-bold uppercase tracking-[0.2em] text-white">
                       {number} / 02
                     </span>
 
-                    <span className="border border-white/30 bg-black/20 px-3 py-1.5 font-data text-[0.55rem] uppercase tracking-[0.18em] text-white/90 backdrop-blur-md">
+                    <span className="border border-white/30 bg-black/20 px-3 py-1.5 font-data text-[0.55rem] font-bold uppercase tracking-[0.18em] text-white backdrop-blur-md">
                       {type}
                     </span>
                   </div>

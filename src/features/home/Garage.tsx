@@ -89,21 +89,21 @@ export function Garage() {
                     aria-hidden="true"
                   />
 
-                  <span className="absolute right-5 top-5 font-data text-[0.58rem] uppercase tracking-[0.18em] text-[color:var(--vds-text-secondary)] sm:right-7 sm:top-7">
+                  <span className="absolute right-5 top-5 font-data text-[0.58rem] font-bold uppercase tracking-[0.18em] text-white sm:right-7 sm:top-7">
                     0{index + 1}
                   </span>
 
                   <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-6 p-6 sm:p-8 lg:p-10">
                     <div className="max-w-3xl">
-                      <p className="mb-3 font-data text-[0.58rem] uppercase tracking-[0.18em] text-[color:var(--vds-text)]/60 sm:text-[0.64rem]">
+                      <p className="mb-3 font-data text-[0.58rem] font-bold uppercase tracking-[0.18em] text-white sm:text-[0.64rem]">
                         {story.kicker}
                       </p>
 
-                      <h3 className="font-display text-[clamp(2.5rem,7vw,7rem)] font-medium uppercase leading-[0.8] tracking-[-0.045em] text-[color:var(--vds-text)] transition-transform duration-700 group-hover:translate-x-2 group-focus-visible:translate-x-2">
+                      <h3 className="font-display text-[clamp(2.5rem,7vw,7rem)] font-bold uppercase leading-[0.8] tracking-[-0.045em] text-white transition-transform duration-700 group-hover:translate-x-2 group-focus-visible:translate-x-2">
                         {story.title}
                       </h3>
 
-                      <p className="mt-5 max-w-md font-data text-[0.62rem] uppercase leading-[1.55] tracking-[0.14em] text-[color:var(--vds-text-secondary)] sm:text-[0.68rem]">
+                      <p className="mt-5 max-w-md font-data text-[0.62rem] font-semibold uppercase leading-[1.55] tracking-[0.14em] text-white sm:text-[0.68rem]">
                         {story.description}
                       </p>
                     </div>

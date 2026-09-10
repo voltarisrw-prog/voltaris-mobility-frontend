@@ -11,14 +11,32 @@ export const metadata: Metadata = buildMetadata({
   path: '/sell',
 });
 
-const gallery = Array.from({ length: 8 }, (_, index) => ({
-  src: `/hero/gallery/car${index + 1}.jpeg`,
-  alt: `Vehicle available through Voltaris`,
-}));
+const gallery = [
+  {
+    src: '/hero/gallery/hero-01.png',
+    alt: 'Electric vehicle available through Voltaris',
+  },
+  {
+    src: '/hero/gallery/hero-02.png',
+    alt: 'Electric vehicle available through Voltaris',
+  },
+  {
+    src: '/hero/gallery/hero-03.png',
+    alt: 'Electric vehicle available through Voltaris',
+  },
+  {
+    src: '/hero/gallery/hero-04.png',
+    alt: 'Electric vehicle available through Voltaris',
+  },
+  {
+    src: '/hero/gallery/hero-05.jpeg',
+    alt: 'Vehicle available through Voltaris',
+  },
+] as const;
 
 export default function SellPage() {
   return (
-    <main className="bg-surface text-chrome">
+    <main className="bg-white text-[#0a0a0a]">
       {/* CINEMATIC SELL HERO */}
       <section className="relative min-h-[100svh] overflow-hidden bg-black">
         {/* Car image gallery background */}
@@ -47,10 +65,10 @@ export default function SellPage() {
         <div className="relative z-10 mx-auto flex min-h-[100svh] w-full max-w-[1600px] flex-col px-5 pb-8 pt-28 sm:px-8 sm:pb-12 lg:px-12">
           <div className="flex items-center justify-between">
             <div>
-              <p className="font-data text-[10px] uppercase tracking-[0.24em] text-white/60">
+              <p className="font-data text-[10px] uppercase tracking-[0.24em] text-[#4a4a4a]">
                 Voltaris / Sell
               </p>
-              <p className="mt-2 font-data text-[9px] uppercase tracking-[0.18em] text-white/40">
+              <p className="mt-2 font-data text-[9px] uppercase tracking-[0.18em] text-[#6b6b6b]">
                 Private owners welcome
               </p>
             </div>
@@ -80,7 +98,7 @@ export default function SellPage() {
                 <span className="text-white/55">A better sale.</span>
               </h1>
 
-              <p className="mt-7 max-w-lg text-sm leading-7 text-white/70 sm:text-base">
+              <p className="mt-7 max-w-lg text-sm leading-7 text-[#4a4a4a] sm:text-base">
                 List your electric or hybrid vehicle directly with Voltaris.
                 You do not need to be a dealer. Private owners can list too.
               </p>
@@ -94,7 +112,7 @@ export default function SellPage() {
                   <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
                 </Link>
 
-                <p className="font-data text-[9px] uppercase tracking-[0.16em] text-white/45">
+                <p className="font-data text-[9px] uppercase tracking-[0.16em] text-[#6b6b6b]">
                   Sign in to create your listing
                 </p>
               </div>
@@ -103,7 +121,7 @@ export default function SellPage() {
             {/* Listing access */}
             <div className="flex items-end">
               <div className="w-full max-w-xl border border-white/15 bg-black/25 p-6 shadow-2xl backdrop-blur-md sm:p-8 lg:p-10">
-                <p className="font-data text-[9px] uppercase tracking-[0.2em] text-white/45">
+                <p className="font-data text-[9px] uppercase tracking-[0.2em] text-[#6b6b6b]">
                   Sell through Voltaris
                 </p>
 
@@ -111,7 +129,7 @@ export default function SellPage() {
                   Ready to put your car on the market?
                 </h2>
 
-                <p className="mt-4 max-w-lg text-sm leading-6 text-white/60">
+                <p className="mt-4 max-w-lg text-sm leading-6 text-[#4a4a4a]">
                   Sign in to your Voltaris account to create a listing.
                   Private owners, dealers and businesses are welcome.
                 </p>
@@ -130,43 +148,43 @@ export default function SellPage() {
       </section>
 
       {/* TRUST STRIP */}
-      <section className="border-b border-hairline bg-surface">
+      <section className="border-b border-black/10 bg-white">
         <div className="mx-auto grid max-w-[1500px] md:grid-cols-3">
           <div className="border-b border-hairline px-6 py-10 md:border-b-0 md:border-r">
             <Sparkles className="mb-5 h-5 w-5 text-volt" />
-            <p className="font-data text-[9px] uppercase tracking-[0.18em] text-steel-muted">
+            <p className="font-data text-[9px] uppercase tracking-[0.18em] text-[#6b6b6b]">
               01 / Presentation
             </p>
             <h3 className="mt-2 font-display text-xl font-semibold">
               Make the car stand out.
             </h3>
-            <p className="mt-3 text-sm leading-6 text-steel">
+            <p className="mt-3 text-sm leading-6 text-[#4a4a4a]">
               Add clear photos and the details buyers actually need.
             </p>
           </div>
 
           <div className="border-b border-hairline px-6 py-10 md:border-b-0 md:border-r">
             <Users className="mb-5 h-5 w-5 text-volt" />
-            <p className="font-data text-[9px] uppercase tracking-[0.18em] text-steel-muted">
+            <p className="font-data text-[9px] uppercase tracking-[0.18em] text-[#6b6b6b]">
               02 / Everyone
             </p>
             <h3 className="mt-2 font-display text-xl font-semibold">
               Private owners welcome.
             </h3>
-            <p className="mt-3 text-sm leading-6 text-steel">
+            <p className="mt-3 text-sm leading-6 text-[#4a4a4a]">
               You do not need a dealership to list your vehicle.
             </p>
           </div>
 
           <div className="px-6 py-10">
             <ShieldCheck className="mb-5 h-5 w-5 text-volt" />
-            <p className="font-data text-[9px] uppercase tracking-[0.18em] text-steel-muted">
+            <p className="font-data text-[9px] uppercase tracking-[0.18em] text-[#6b6b6b]">
               03 / Review
             </p>
             <h3 className="mt-2 font-display text-xl font-semibold">
               Reviewed before publication.
             </h3>
-            <p className="mt-3 text-sm leading-6 text-steel">
+            <p className="mt-3 text-sm leading-6 text-[#4a4a4a]">
               Voltaris reviews submitted listings before they go live.
             </p>
           </div>
@@ -174,10 +192,10 @@ export default function SellPage() {
       </section>
 
       {/* FINAL CTA */}
-      <section className="bg-surface-inverse px-5 py-24 text-white sm:px-8 lg:px-12">
+      <section className="border-t border-black/10 bg-white px-5 py-24 text-[#0a0a0a] sm:px-8 lg:px-12">
         <div className="mx-auto flex max-w-[1400px] flex-col justify-between gap-12 lg:flex-row lg:items-end">
           <div>
-            <p className="font-data text-[10px] uppercase tracking-[0.2em] text-white/40">
+            <p className="font-data text-[10px] font-bold uppercase tracking-[0.2em] text-[#6b6b6b]">
               Voltaris / Marketplace
             </p>
             <h2 className="mt-4 max-w-3xl font-display text-4xl font-semibold leading-tight tracking-tight sm:text-6xl">
@@ -189,7 +207,7 @@ export default function SellPage() {
 
           <Link
             href="/login"
-            className="inline-flex w-fit items-center gap-3 border border-white/20 px-6 py-4 font-data text-[10px] uppercase tracking-[0.16em] transition hover:bg-white hover:text-black"
+            className="inline-flex w-fit items-center gap-3 border border-black/15 bg-[#0a0a0a] px-6 py-4 font-data text-[10px] font-bold uppercase tracking-[0.16em] text-white transition hover:bg-volt hover:text-[#0a0a0a]"
           >
             Start listing
             <ArrowRight className="h-4 w-4" />

@@ -110,18 +110,18 @@ export function RoadTransition() {
             transform: `translate3d(0, ${contentY}px, 0)`,
           }}
         >
-          <p className="mb-5 max-w-xs font-data text-[0.62rem] uppercase leading-[1.5] tracking-[0.18em] text-[color:var(--vds-text-secondary)] sm:mb-7 sm:text-[0.68rem]">
+          <p className="mb-5 max-w-xs font-data text-[0.62rem] font-bold uppercase leading-[1.5] tracking-[0.18em] text-white sm:mb-7 sm:text-[0.68rem]">
             Beyond the showroom
           </p>
 
-          <h2 className="max-w-4xl font-display text-[clamp(3.5rem,9vw,8.5rem)] font-medium uppercase leading-[0.84] tracking-[-0.045em] text-[color:var(--vds-text)]">
+          <h2 className="max-w-4xl font-display text-[clamp(3.5rem,9vw,8.5rem)] font-bold uppercase leading-[0.84] tracking-[-0.045em] text-white">
             Not just
             <br />
             a car
           </h2>
 
           <div className="mt-7 flex items-end justify-between gap-8 sm:mt-9 lg:mt-10">
-            <p className="max-w-md font-display text-[clamp(1.7rem,3.5vw,3.25rem)] leading-[0.95] tracking-[-0.025em] text-[color:var(--vds-text)]">
+            <p className="max-w-md font-display text-[clamp(1.7rem,3.5vw,3.25rem)] font-bold leading-[0.95] tracking-[-0.025em] text-white">
               A way to move
             </p>
 

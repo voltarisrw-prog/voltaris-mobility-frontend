@@ -50,10 +50,10 @@ export function ContactHome() {
   });
 
   return (
-    <section className="border-t border-[color:var(--vds-border)] bg-[#0c0906] py-20 text-[color:var(--vds-text)] sm:py-28 lg:py-36">
+    <section className="border-t border-[color:var(--vds-border)] bg-white py-20 text-[color:var(--vds-text)] sm:py-28 lg:py-36">
       <div className="mx-auto grid max-w-shell gap-10 px-5 sm:px-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-start lg:gap-16">
         <div className="max-w-xl lg:sticky lg:top-24">
-          <p className="font-data text-[0.68rem] uppercase tracking-[0.22em] text-[#716a61]">
+          <p className="font-data text-[0.68rem] uppercase tracking-[0.22em] text-[#6b6b6b]">
             Talk to Voltaris
           </p>
 
@@ -67,7 +67,7 @@ export function ContactHome() {
           </p>
 
           <div className="mt-8 flex items-center gap-3 text-sm text-[color:var(--vds-steel)]">
-            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#171411] text-[#f3eee7]">
+            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#f2f2f2] text-[#0a0a0a]">
               <MessageCircle size={17} strokeWidth={1.7} />
             </span>
             <span>Real people, practical answers</span>
@@ -80,14 +80,14 @@ export function ContactHome() {
             aria-hidden="true"
           />
 
-          <div className="relative rounded-[1.75rem] border border-black/[0.08] bg-white p-5 text-[#171411] [color-scheme:light] shadow-[0_30px_90px_-28px_rgba(0,0,0,0.38)] sm:p-8 lg:p-10">
+          <div className="relative rounded-[1.75rem] border border-black/[0.08] bg-white p-5 text-[#0a0a0a] [color-scheme:light] shadow-[0_30px_90px_-28px_rgba(0,0,0,0.38)] sm:p-8 lg:p-10">
             {reference ? (
               <div className="flex min-h-[32rem] flex-col justify-center">
-                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#171411] text-white">
+                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#0a0a0a] text-white">
                   <Check size={24} strokeWidth={2} />
                 </div>
 
-                <p className="mt-7 font-data text-[0.68rem] uppercase tracking-[0.2em] text-[#716a61]">
+                <p className="mt-7 font-data text-[0.68rem] uppercase tracking-[0.2em] text-[#6b6b6b]">
                   Enquiry received
                 </p>
 
@@ -95,20 +95,20 @@ export function ContactHome() {
                   We&apos;ll take it from here
                 </h3>
 
-                <p className="mt-5 max-w-md text-base leading-relaxed text-[#5e5851]">
+                <p className="mt-5 max-w-md text-base leading-relaxed text-[#4a4a4a]">
                   Thanks for reaching out. Our team has your enquiry and will get back to you
                   using the contact details you provided
                 </p>
 
-                <div className="mt-7 inline-flex w-fit items-center gap-3 rounded-xl border border-black/[0.08] bg-[#f6f3ef] px-4 py-3 text-sm">
-                  <span className="text-[#716a61]">Reference</span>
+                <div className="mt-7 inline-flex w-fit items-center gap-3 rounded-xl border border-black/[0.08] bg-[#f7f7f7] px-4 py-3 text-sm">
+                  <span className="text-[#6b6b6b]">Reference</span>
                   <span className="font-data text-[color:var(--vds-text)]">{reference}</span>
                 </div>
 
                 <button
                   type="button"
                   onClick={() => setReference(null)}
-                  className="mt-8 flex w-fit items-center gap-2 text-sm font-semibold text-[#171411] underline decoration-black/20 underline-offset-4 transition hover:decoration-black"
+                  className="mt-8 flex w-fit items-center gap-2 text-sm font-semibold text-[#0a0a0a] underline decoration-black/20 underline-offset-4 transition hover:decoration-black"
                 >
                   Send another enquiry
                   <ArrowUpRight size={15} />
@@ -117,8 +117,8 @@ export function ContactHome() {
             ) : (
               <>
                 <div className="mb-8 border-b border-black/[0.08] pb-6">
-                  <p className="text-sm font-medium text-[#171411]">Start with a simple question</p>
-                  <p className="mt-1 text-sm text-[#716a61]">
+                  <p className="text-sm font-medium text-[#0a0a0a]">Start with a simple question</p>
+                  <p className="mt-1 text-sm text-[#6b6b6b]">
                     You don&apos;t need to know exactly what you want yet
                   </p>
                 </div>
@@ -168,7 +168,7 @@ export function ContactHome() {
 
                   <Field label="What can we help with?" error={errors.topic?.message} required>
                     {(props) => (
-                      <select {...props} {...register('topic')} className={`${selectClass} !bg-white !text-[#171411]`}>
+                      <select {...props} {...register('topic')} className={`${selectClass} !bg-white !text-[#0a0a0a]`}>
                         <option value="buying">I want to buy</option>
                         <option value="renting">I want to rent</option>
                         <option value="selling">I want to sell</option>
@@ -197,12 +197,12 @@ export function ContactHome() {
 
                   <Field label="" error={errors.consent?.message}>
                     {(props) => (
-                      <label className="flex items-start gap-3 text-sm leading-relaxed text-[#716a61]">
+                      <label className="flex items-start gap-3 text-sm leading-relaxed text-[#6b6b6b]">
                         <input
                           {...props}
                           {...register('consent')}
                           type="checkbox"
-                          className="mt-1 h-4 w-4 shrink-0 accent-[#171411]"
+                          className="mt-1 h-4 w-4 shrink-0 accent-[#0a0a0a]"
                         />
                         <span>
                           I&apos;m happy for Voltaris to use my contact details to reply to this

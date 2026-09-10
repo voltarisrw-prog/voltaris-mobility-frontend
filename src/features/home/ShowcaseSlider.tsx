@@ -64,7 +64,7 @@ export function ShowcaseSlider({
             />
 
             <div className="absolute inset-x-0 top-0 z-10 p-4 sm:p-5 lg:p-6">
-              <p className="font-data text-[0.58rem] uppercase tracking-[0.18em] text-white/70">
+              <p className="font-data text-[0.58rem] font-bold uppercase tracking-[0.18em] text-white">
                 {vehicle.year}
               </p>
 
@@ -75,7 +75,7 @@ export function ShowcaseSlider({
 
             <div className="absolute inset-x-0 bottom-0 z-10 flex items-end justify-between gap-4 p-4 sm:p-5 lg:p-6">
               <div className="min-w-0">
-                <p className="font-data text-[0.56rem] uppercase tracking-[0.16em] text-white/60">
+                <p className="font-data text-[0.56rem] font-bold uppercase tracking-[0.16em] text-white">
                   {vehicle.location.city}
                 </p>
 

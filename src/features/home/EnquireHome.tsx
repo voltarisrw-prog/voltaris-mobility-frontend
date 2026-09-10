@@ -73,7 +73,7 @@ export function EnquireHome() {
               <Link
                 key={direction.title}
                 href={direction.href}
-                className="group relative flex min-h-[30rem] flex-col justify-between overflow-hidden bg-[#0f0c09] transition-colors duration-500 hover:bg-[#17120e] focus-visible:bg-[#17120e] sm:min-h-[34rem] lg:min-h-[38rem]"
+                className="group relative flex min-h-[30rem] flex-col justify-between overflow-hidden bg-white transition-colors duration-500 hover:bg-[#f7f7f7] focus-visible:bg-[#f7f7f7] sm:min-h-[34rem] lg:min-h-[38rem]"
               >
                 <Image
                   src={direction.image}
@@ -88,11 +88,11 @@ export function EnquireHome() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent" />
 
                 <div className="relative z-10 flex items-start justify-between gap-4 p-6 sm:p-8 lg:p-9">
-                  <span className="font-data text-[0.58rem] tracking-[0.16em] text-white/60">
+                  <span className="font-data text-[0.58rem] font-bold tracking-[0.16em] text-white">
                     {direction.number}
                   </span>
 
-                  <span className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-black/20 backdrop-blur-md transition-all duration-300 group-hover:border-[color:var(--vds-brand-secondary)] group-hover:bg-[color:var(--vds-brand-secondary)] group-hover:text-[#0c0906]">
+                  <span className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-black/20 backdrop-blur-md transition-all duration-300 group-hover:border-[color:var(--vds-brand-secondary)] group-hover:bg-[color:var(--vds-brand-secondary)] group-hover:text-[#0a0a0a]">
                     <Icon
                       className="h-4 w-4"
                       strokeWidth={1.5}
@@ -102,15 +102,15 @@ export function EnquireHome() {
                 </div>
 
                 <div className="relative z-10 p-6 sm:p-8 lg:p-9">
-                  <h3 className="mt-3 font-display text-5xl leading-[0.82] tracking-[-0.04em] text-white sm:text-6xl">
+                  <h3 className="mt-3 font-display text-5xl font-bold leading-[0.82] tracking-[-0.04em] text-white sm:text-6xl">
                     {direction.title}
                   </h3>
 
-                  <p className="mt-5 max-w-sm font-sans text-sm leading-relaxed text-white/70">
+                  <p className="mt-5 max-w-sm font-sans text-sm font-semibold leading-relaxed text-white">
                     {direction.description}
                   </p>
 
-                  <span className="mt-7 inline-flex items-center gap-2 border-b border-white/25 pb-1.5 font-data text-[0.58rem] uppercase tracking-[0.16em] text-white/75 transition-colors group-hover:border-[color:var(--vds-brand-secondary)] group-hover:text-[color:var(--vds-brand-secondary)]">
+                  <span className="mt-7 inline-flex items-center gap-2 border-b border-white/25 pb-1.5 font-data text-[0.58rem] font-bold uppercase tracking-[0.16em] text-white transition-colors group-hover:border-[color:var(--vds-brand-secondary)] group-hover:text-[color:var(--vds-brand-secondary)]">
                     {direction.action}
 
                     <ArrowUpRight

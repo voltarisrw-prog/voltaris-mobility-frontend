@@ -59,7 +59,7 @@ function FooterLink({
   return (
     <Link
       href={href}
-      className="group flex min-h-9 items-center gap-2 py-1 font-display text-[0.95rem] font-medium tracking-[-0.02em] text-white/55 transition-colors duration-200 hover:text-white focus-visible:text-[color:var(--vds-brand-secondary)] focus-visible:outline-none sm:text-base"
+      className="group flex min-h-9 items-center gap-2 py-1 font-display text-[0.95rem] font-medium tracking-[-0.02em] text-black/55 transition-colors duration-200 hover:text-[#0a0a0a] focus-visible:text-[color:var(--vds-brand-secondary)] focus-visible:outline-none sm:text-base"
     >
       <span>{label}</span>
 
@@ -75,7 +75,7 @@ export function SiteFooter() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="relative overflow-hidden border-t border-[color:var(--vds-border)] vds-site-footer text-white">
+    <footer className="relative overflow-hidden border-t border-[color:var(--vds-border)] vds-site-footer text-[#0a0a0a]">
 
       {/* =========================================================
           COMPACT FOOTER
@@ -94,12 +94,12 @@ export function SiteFooter() {
             <Link
               href="/"
               aria-label="Voltaris Mobility home"
-              className="inline-flex rounded-sm text-white transition-opacity duration-200 hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-volt"
+              className="inline-flex rounded-sm text-[#0a0a0a] transition-opacity duration-200 hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-volt"
             >
               <VoltarisLogo className="h-8 sm:h-9" />
             </Link>
 
-            <p className="mt-5 max-w-xs text-sm leading-6 text-white/40">
+            <p className="mt-5 max-w-xs text-sm leading-6 text-[#6b6b6b]">
               Mobility, made simpler.
             </p>
 
@@ -108,7 +108,7 @@ export function SiteFooter() {
             </div>
 
             <div className="mt-8">
-              <span className="font-data text-[0.56rem] uppercase tracking-[0.16em] text-white/25">
+              <span className="font-data text-[0.56rem] uppercase tracking-[0.16em] text-[#6b6b6b]">
                 Kigali · Rwanda
               </span>
             </div>
@@ -126,7 +126,7 @@ export function SiteFooter() {
               {footerGroups.map((group) => (
                 <div key={group.heading} className="min-w-0">
 
-                  <h2 className="font-data text-[0.58rem] font-medium uppercase tracking-[0.18em] text-white/30">
+                  <h2 className="font-data text-[0.58rem] font-medium uppercase tracking-[0.18em] text-[#6b6b6b]">
                     {group.heading}
                   </h2>
 
@@ -153,7 +153,7 @@ export function SiteFooter() {
 
         <div className="mt-12 border-t border-[color:var(--vds-border)] pt-6 sm:mt-14">
 
-          <div className="flex flex-col gap-5 text-[0.56rem] uppercase tracking-[0.11em] text-white/25 lg:flex-row lg:items-center lg:justify-between lg:gap-8">
+          <div className="flex flex-col gap-5 text-[0.56rem] uppercase tracking-[0.11em] text-[#6b6b6b] lg:flex-row lg:items-center lg:justify-between lg:gap-8">
 
             <p>
               © {year} {site.legalName}. All rights reserved.
@@ -161,7 +161,7 @@ export function SiteFooter() {
 
             <p>
               Designed &amp; Developed by{' '}
-              <span className="text-white/60">
+              <span className="text-[#4a4a4a]">
                 <a href="https://www.linkedin.com/in/patrice-iradukunda-74931827a/" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4 hover:opacity-70">Patrice IRADUKUNDA</a>
               </span>
             </p>
@@ -170,14 +170,14 @@ export function SiteFooter() {
 
               <Link
                 href="/legal/privacy"
-                className="transition-colors hover:text-white focus-visible:text-[color:var(--vds-brand-secondary)] focus-visible:outline-none"
+                className="transition-colors hover:text-[#0a0a0a] focus-visible:text-[color:var(--vds-brand-secondary)] focus-visible:outline-none"
               >
                 Privacy
               </Link>
 
               <Link
                 href="/legal/terms"
-                className="transition-colors hover:text-white focus-visible:text-[color:var(--vds-brand-secondary)] focus-visible:outline-none"
+                className="transition-colors hover:text-[#0a0a0a] focus-visible:text-[color:var(--vds-brand-secondary)] focus-visible:outline-none"
               >
                 Terms
               </Link>
