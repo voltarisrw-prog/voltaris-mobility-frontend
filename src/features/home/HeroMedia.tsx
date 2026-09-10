@@ -32,14 +32,11 @@ import { useEffect, useRef, useState } from 'react';
 const VIDEO_URL = process.env.NEXT_PUBLIC_HERO_VIDEO_URL ?? '';
 
 const HERO_IMAGES = [
-  '/hero/gallery/car1.jpeg',
-  '/hero/gallery/car2.jpeg',
-  '/hero/gallery/car3.jpeg',
-  '/hero/gallery/car4.jpeg',
-  '/hero/gallery/car5.jpeg',
-  '/hero/gallery/car6.jpeg',
-  '/hero/gallery/car7.jpeg',
-  '/hero/gallery/car8.jpeg',
+  '/hero/gallery/hero-01.png',
+  '/hero/gallery/hero-02.png',
+  '/hero/gallery/hero-03.png',
+  '/hero/gallery/hero-04.png',
+  '/hero/gallery/hero-05.jpeg',
 ];
 
 interface NetworkInformation {
