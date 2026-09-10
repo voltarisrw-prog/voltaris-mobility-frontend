@@ -1,32 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowUpRight, CarFront, KeyRound, Tag } from 'lucide-react';
-import { MOCK_VEHICLES } from '@/lib/mock/fixtures';
-
-const fallbackVehicle = MOCK_VEHICLES[0]!;
-
-const buyVehicle =
-  MOCK_VEHICLES.find(
-    (vehicle) =>
-      vehicle.status === 'available' &&
-      vehicle.purchase_enabled &&
-      vehicle.primary_image,
-  ) ?? fallbackVehicle;
-
-const rentVehicle =
-  MOCK_VEHICLES.find(
-    (vehicle) =>
-      vehicle.status === 'available' &&
-      vehicle.rental_enabled &&
-      vehicle.primary_image,
-  ) ?? fallbackVehicle;
-
-const sellVehicle =
-  MOCK_VEHICLES.find(
-    (vehicle) =>
-      vehicle.status === 'available' &&
-      vehicle.primary_image,
-  ) ?? fallbackVehicle;
 
 const DIRECTIONS = [
   {
@@ -37,9 +11,8 @@ const DIRECTIONS = [
       'Find an electric or hybrid vehicle that fits your life, your budget and the way you move',
     href: '/buy',
     action: 'Find a vehicle',
-    image: buyVehicle.primary_image!.card,
-    imageAlt: buyVehicle.primary_image!.alt,
-    vehicle: `${buyVehicle.make} ${buyVehicle.model}`,
+    image: '/next/buy.png',
+    imageAlt: 'Buy a vehicle',
   },
   {
     number: '02',
@@ -49,9 +22,8 @@ const DIRECTIONS = [
       'Choose a vehicle for the journey you have in mind without making a long-term commitment',
     href: '/rent',
     action: 'Find a rental',
-    image: rentVehicle.primary_image!.card,
-    imageAlt: rentVehicle.primary_image!.alt,
-    vehicle: `${rentVehicle.make} ${rentVehicle.model}`,
+    image: '/next/rent.png',
+    imageAlt: 'Rent a vehicle',
   },
   {
     number: '03',
@@ -61,9 +33,8 @@ const DIRECTIONS = [
       'Put your EV or hybrid in front of people who are already looking for their next vehicle',
     href: '/sell',
     action: 'Sell your vehicle',
-    image: sellVehicle.primary_image!.card,
-    imageAlt: sellVehicle.primary_image!.alt,
-    vehicle: `${sellVehicle.make} ${sellVehicle.model}`,
+    image: '/next/sell.png',
+    imageAlt: 'Sell your vehicle',
   },
 ] as const;
 
@@ -131,10 +102,6 @@ export function EnquireHome() {
                 </div>
 
                 <div className="relative z-10 p-6 sm:p-8 lg:p-9">
-                  <p className="font-data text-[0.56rem] uppercase tracking-[0.18em] text-[color:var(--vds-brand-secondary)]">
-                    {direction.vehicle}
-                  </p>
-
                   <h3 className="mt-3 font-display text-5xl leading-[0.82] tracking-[-0.04em] text-white sm:text-6xl">
                     {direction.title}
                   </h3>
