@@ -267,33 +267,89 @@ export function HomeImageSections() {
         </div>
       </section>
 
-      {/* 09 — FINAL CTA */}
-      <section className="relative overflow-hidden bg-black">
-        <div className="absolute inset-0">
-          <Image
-            src={imageAt(16)}
-            alt=""
-            fill
-            sizes="100vw"
-            className="object-cover opacity-45"
-          />
-          <div className="absolute inset-0 bg-black/55" />
-        </div>
+      {/* 09 — YOUR NEXT MOVE */}
+      <section className="relative isolate overflow-hidden bg-black">
+        <div className="shell py-24 sm:py-28 lg:py-36">
+          <div className="mb-12 max-w-4xl sm:mb-16 lg:mb-20">
+            <p className="font-data text-[0.62rem] uppercase tracking-[0.2em] text-white/60">
+              Your next move
+            </p>
+            <h2 className="mt-4 max-w-4xl font-display text-[clamp(3.5rem,8vw,7.5rem)] font-medium uppercase leading-[0.84] tracking-[-0.05em] text-white">
+              Where are you going next?
+            </h2>
+            <p className="mt-6 max-w-2xl font-sans text-base leading-relaxed text-white/65 sm:text-lg">
+              Whether you want to buy, rent or sell, Voltaris gives you one place to make your next move.
+            </p>
+          </div>
 
-        <div className="shell relative py-24 sm:py-32 lg:py-44">
-          <p className="font-data text-[0.62rem] uppercase tracking-[0.2em] text-white/60">
-            Your next move
-          </p>
-          <h2 className="mt-4 max-w-4xl text-5xl leading-[0.88] sm:text-7xl lg:text-8xl">
-            Where are you going next?
-          </h2>
-          <Link
-            href="/cars"
-            className="mt-8 inline-flex items-center gap-3 border-b border-white/40 pb-2 font-data text-[0.62rem] uppercase tracking-[0.18em] text-white"
-          >
-            Find your vehicle
-            <ArrowRight className="h-4 w-4" />
-          </Link>
+          <div className="grid gap-5 md:grid-cols-3">
+            {[
+              {
+                label: 'Buy',
+                description: 'Find your next electric or hybrid vehicle.',
+                href: '/buy',
+                image: '/next/buy.png',
+              },
+              {
+                label: 'Rent',
+                description: 'Choose a vehicle for the journey ahead.',
+                href: '/rent',
+                image: '/next/rent.png',
+              },
+              {
+                label: 'Sell',
+                description: 'Put your vehicle in front of ready buyers.',
+                href: '/sell',
+                image: '/next/sell.png',
+              },
+            ].map((item) => (
+              <Link
+                key={item.label}
+                href={item.href}
+                className="group relative block overflow-hidden rounded-[2.5rem] border border-white/10 bg-[#0c0906] outline-none"
+              >
+                <div className="relative aspect-[1.18] overflow-hidden sm:aspect-[1.1]">
+                  <Image
+                    src={item.image}
+                    alt={item.label}
+                    fill
+                    sizes="(max-width: 767px) 100vw, 33vw"
+                    quality={100}
+                    unoptimized
+                    className="object-cover object-center transition-transform duration-[1200ms] ease-out group-hover:scale-[1.045] group-focus-visible:scale-[1.045]"
+                  />
+
+                  <div
+                    className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-black/5"
+                    aria-hidden="true"
+                  />
+
+                  <div className="absolute inset-x-0 bottom-0 p-6 sm:p-7 lg:p-8">
+                    <p className="font-data text-[0.58rem] uppercase tracking-[0.18em] text-white/55">
+                      {item.label}
+                    </p>
+                    <div className="mt-2 flex items-end justify-between gap-5">
+                      <div>
+                        <h3 className="font-display text-[clamp(2.5rem,5vw,4.5rem)] font-medium uppercase leading-[0.82] tracking-[-0.045em] text-white">
+                          {item.label}
+                        </h3>
+                        <p className="mt-4 max-w-xs font-sans text-sm leading-relaxed text-white/70">
+                          {item.description}
+                        </p>
+                      </div>
+
+                      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/30 text-white transition-all duration-500 group-hover:border-white group-hover:bg-white group-hover:text-black group-focus-visible:border-white group-focus-visible:bg-white group-focus-visible:text-black sm:h-12 sm:w-12">
+                        <ArrowRight
+                          className="h-4 w-4 transition-transform duration-500 group-hover:translate-x-1 group-focus-visible:translate-x-1"
+                          aria-hidden="true"
+                        />
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
 
