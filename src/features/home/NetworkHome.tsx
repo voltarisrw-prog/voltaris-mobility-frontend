@@ -66,7 +66,7 @@ export async function NetworkHome() {
             ) : (
               <div className="flex min-h-56 items-center justify-center text-center">
                 <div>
-                  <p className="font-display text-3xl italic text-[#0a0a0a]">
+                  <p className="font-display text-3xl text-[#0a0a0a]">
                     Our network is growing
                   </p>
                   <p className="mt-3 text-sm text-[#4a4a4a]">

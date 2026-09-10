@@ -91,7 +91,7 @@ export function ContactHome() {
                   Enquiry received
                 </p>
 
-                <h3 className="mt-3 font-display text-4xl italic leading-none tracking-[-0.03em] sm:text-5xl">
+                <h3 className="mt-3 font-display text-4xl leading-none tracking-[-0.03em] sm:text-5xl">
                   We&apos;ll take it from here
                 </h3>
 

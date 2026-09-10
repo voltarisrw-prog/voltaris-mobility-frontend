@@ -27,7 +27,6 @@
   h5,
   h6 {
     font-family: var(--font-display), serif;
-    font-style: italic;
     font-weight: 600;
     letter-spacing: -0.02em;
     text-wrap: balance;
@@ -146,7 +145,7 @@
     @apply mb-5 list-decimal space-y-2 pl-5;
   }
   .prose-voltaris blockquote {
-    @apply my-6 border-l-2 border-volt pl-5 italic text-chrome;
+    @apply my-6 border-l-2 border-volt pl-5 text-chrome;
   }
   .prose-voltaris img {
     @apply my-8 w-full;
