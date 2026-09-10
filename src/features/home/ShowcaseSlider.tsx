@@ -8,10 +8,10 @@ import { formatPrice } from '@/lib/format';
 import type { VehicleSummary } from '@/types/vehicle';
 
 const CENTER_SIZE =
-  'h-[26rem] w-[min(88vw,27rem)] sm:h-[40rem] sm:w-[28rem] md:h-[46rem] md:w-[32rem] lg:h-[52rem] lg:w-[38rem]';
+  'h-[30rem] w-[min(92vw,30rem)] sm:h-[44rem] sm:w-[30rem] md:h-[50rem] md:w-[35rem] lg:h-[58rem] lg:w-[42rem]';
 
 const PEEK_SIZE =
-  'h-[15rem] w-[calc(100vw-5rem)] max-w-[15rem] sm:h-[22rem] sm:w-[18rem] md:h-[25rem] md:w-[20rem] lg:h-[28rem] lg:w-[23rem]';
+  'h-[17rem] w-[calc(100vw-4rem)] max-w-[17rem] sm:h-[24rem] sm:w-[19rem] md:h-[28rem] md:w-[22rem] lg:h-[31rem] lg:w-[25rem]';
 
 console.log('SHOWCASE IMAGE DEBUG');
 export function ShowcaseSlider({
@@ -34,7 +34,7 @@ export function ShowcaseSlider({
             alt=""
             fill
             sizes="(min-width: 1024px) 23rem, (min-width: 640px) 18rem, 90vw"
-            className="object-contain p-3 sm:p-4 lg:p-5"
+            className="object-contain p-1 sm:p-2 lg:p-2"
           />
         )
       }
@@ -50,7 +50,7 @@ export function ShowcaseSlider({
                 fill
                 priority
                 sizes="(min-width: 1024px) 38rem, (min-width: 768px) 32rem, (min-width: 640px) 28rem, 88vw"
-                className="object-contain p-2 sm:p-2 lg:p-3"
+                className="object-contain p-0 sm:p-1 lg:p-1"
               />
             ) : (
               <div className="flex h-full items-center justify-center font-data text-[0.62rem] uppercase tracking-[0.14em] text-[color:var(--vds-text-muted)]">
