@@ -65,7 +65,7 @@ export function SiteHeader() {
 
         <div
           className={cn(
-            'shell flex items-center justify-between gap-3 sm:gap-5 xl:gap-8 transition-all duration-300 ease-out',
+            'shell flex items-center justify-between gap-2 sm:gap-4 lg:gap-[clamp(0.5rem,1.5vw,1rem)] xl:gap-5 2xl:gap-6 transition-all duration-300 ease-out',
             compact ? 'h-14' : 'h-20',
           )}
         >
@@ -78,7 +78,7 @@ export function SiteHeader() {
             />
           </Link>
 
-          <nav aria-label="Main" className="hidden items-center gap-3 xl:gap-5 2xl:gap-6 xl:flex">
+          <nav aria-label="Main" className="hidden items-center gap-[clamp(0.65rem,1.25vw,1rem)] xl:gap-5 2xl:gap-6 lg:flex">
             {nav.primary.map((item) => {
               const isCompare = item.href.split('?')[0] === '/compare';
               const href = isCompare ? compareHref : item.href;
@@ -89,7 +89,7 @@ export function SiteHeader() {
                   href={href}
                   aria-current={active ? 'page' : undefined}
                   className={cn(
-                    'relative font-data text-[13px] font-semibold uppercase tracking-[0.08em] transition-colors duration-150 xl:text-[15px]',
+                    'relative font-data text-[clamp(0.68rem,0.72vw,0.8125rem)] font-semibold uppercase tracking-[0.07em] transition-colors duration-150 xl:text-[15px]',
                     active ? 'text-[color:var(--vds-text)]' : 'text-[color:var(--vds-text)] hover:text-[color:var(--vds-brand-secondary)]',
                   )}
                 >
@@ -111,7 +111,7 @@ export function SiteHeader() {
               aria-label={mobileOpen ? 'Close navigation menu' : 'Open navigation menu'}
               aria-expanded={mobileOpen}
               onClick={() => setMobileOpen((value) => !value)}
-              className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-hairline bg-surface/70 text-chrome backdrop-blur-md transition-colors hover:border-volt hover:text-volt xl:hidden"
+              className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-hairline bg-surface/70 text-chrome backdrop-blur-md transition-colors hover:border-volt hover:text-volt lg:hidden"
             >
               {mobileOpen ? (
                 <X className="h-5 w-5" aria-hidden="true" />
@@ -128,7 +128,7 @@ export function SiteHeader() {
             </Link>
             <Link
               href="/sell"
-              className="hidden bg-volt px-4 py-2.5 font-data text-eyebrow uppercase text-surface transition-colors hover:vds-button-primary xl:inline-block"
+              className="hidden bg-volt px-[clamp(0.7rem,1.1vw,1rem)] py-2.5 font-data text-eyebrow uppercase tracking-[0.04em] text-surface transition-colors hover:vds-button-primary lg:inline-block"
             >
               Sell your car
             </Link>
@@ -138,7 +138,7 @@ export function SiteHeader() {
       {mobileOpen && (
         <div
           className={cn(
-            'fixed inset-0 z-[90] bg-abyss xl:hidden transition-[opacity,visibility] duration-500',
+            'fixed inset-0 z-[90] bg-abyss lg:hidden transition-[opacity,visibility] duration-500',
             mobileOpen
               ? 'visible opacity-100'
               : 'invisible pointer-events-none opacity-0',

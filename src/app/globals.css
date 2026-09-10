@@ -36,6 +36,14 @@
     max-width: 100%;
   }
 
+  :where(.flex, .grid) > * {
+    min-width: 0;
+  }
+
+  :where(.flex, .grid) > :where(img, video, canvas, svg) {
+    min-width: 0;
+  }
+
   h1,
   h2,
   h3,
@@ -43,7 +51,15 @@
   h5,
   h6,
   p {
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
+  }
+
+  :where(input, select, textarea, button) {
+    font: inherit;
+  }
+
+  :where(input, select, textarea) {
+    min-width: 0;
   }
 
   h1,
