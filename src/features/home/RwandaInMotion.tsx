@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
 import { useState } from 'react';
+import { DEMO_LIBRARY_IMAGES } from '@/lib/mock/demoLibraryImages';
 
 const MOVES = [
   {
@@ -12,7 +13,7 @@ const MOVES = [
     description:
       'Efficient electric and hybrid vehicles for everyday city driving',
     href: '/cars?location=kigali',
-    image: '/hero/gallery/hero-01.png',
+    image: DEMO_LIBRARY_IMAGES[4]!,
   },
   {
     number: '02',
@@ -20,7 +21,7 @@ const MOVES = [
     description:
       'Comfortable choices for longer journeys between cities and districts',
     href: '/cars',
-    image: '/hero/gallery/hero-02.png',
+    image: DEMO_LIBRARY_IMAGES[31]!,
   },
   {
     number: '03',
@@ -28,7 +29,7 @@ const MOVES = [
     description:
       'Explore a new generation of vehicles built for cleaner everyday movement',
     href: '/cars?fuel=electric',
-    image: '/hero/gallery/hero-03.png',
+    image: DEMO_LIBRARY_IMAGES[45]!,
   },
 ] as const;
 

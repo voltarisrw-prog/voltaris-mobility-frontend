@@ -37,8 +37,8 @@ const DIRECTIONS = [
       'Find an electric or hybrid vehicle that fits your life, your budget and the way you move',
     href: '/buy',
     action: 'Find a vehicle',
-    image: '/hero/gallery/hero-01.png',
-    imageAlt: 'Voltaris vehicle selection',
+    image: buyVehicle.primary_image!.card,
+    imageAlt: buyVehicle.primary_image!.alt,
     vehicle: `${buyVehicle.make} ${buyVehicle.model}`,
   },
   {
@@ -49,8 +49,8 @@ const DIRECTIONS = [
       'Choose a vehicle for the journey you have in mind without making a long-term commitment',
     href: '/rent',
     action: 'Find a rental',
-    image: '/hero/gallery/hero-04.png',
-    imageAlt: 'Voltaris rental vehicle selection',
+    image: rentVehicle.primary_image!.card,
+    imageAlt: rentVehicle.primary_image!.alt,
     vehicle: `${rentVehicle.make} ${rentVehicle.model}`,
   },
   {
@@ -61,8 +61,8 @@ const DIRECTIONS = [
       'Put your EV or hybrid in front of people who are already looking for their next vehicle',
     href: '/sell',
     action: 'Sell your vehicle',
-    image: '/hero/gallery/hero-05.jpeg',
-    imageAlt: 'Voltaris vehicle listing selection',
+    image: sellVehicle.primary_image!.card,
+    imageAlt: sellVehicle.primary_image!.alt,
     vehicle: `${sellVehicle.make} ${sellVehicle.model}`,
   },
 ] as const;

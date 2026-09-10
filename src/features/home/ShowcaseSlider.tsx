@@ -13,16 +13,7 @@ const CENTER_SIZE =
 const PEEK_SIZE =
   'h-[15rem] w-[calc(100vw-5rem)] max-w-[15rem] sm:h-[22rem] sm:w-[18rem] md:h-[25rem] md:w-[20rem] lg:h-[28rem] lg:w-[23rem]';
 
-const SHOWCASE_IMAGES = [
-  '/hero/gallery/hero-01.png',
-  '/hero/gallery/hero-02.png',
-  '/hero/gallery/hero-03.png',
-  '/hero/gallery/hero-04.png',
-  '/hero/gallery/hero-05.jpeg',
-] as const;
-
-const SHOWCASE_FALLBACK_IMAGE = '/hero/gallery/hero-01.png';
-
+console.log('SHOWCASE IMAGE DEBUG');
 export function ShowcaseSlider({
   vehicles,
 }: {
@@ -36,38 +27,36 @@ export function ShowcaseSlider({
       peekLabel={(vehicle) => `View ${vehicle.make} ${vehicle.model}`}
       centerSizeClassName={CENTER_SIZE}
       peekSizeClassName={PEEK_SIZE}
-      renderPeek={(vehicle) => {
-        const index = vehicles.findIndex((item) => item.id === vehicle.id);
-        const image = SHOWCASE_IMAGES[index % SHOWCASE_IMAGES.length] ?? SHOWCASE_FALLBACK_IMAGE;
-
-        return (
+      renderPeek={(vehicle) =>
+        vehicle.primary_image && (
           <Image
-            src={image}
-            alt={`${vehicle.make} ${vehicle.model}`}
+            src={vehicle.primary_image.card}
+            alt=""
             fill
             sizes="(min-width: 1024px) 23rem, (min-width: 640px) 18rem, 90vw"
-            className="object-contain p-2 sm:p-3 lg:p-4"
+            className="object-contain p-3 sm:p-4 lg:p-5"
           />
-        );
-      }}
+        )
+      }
       renderCenter={(vehicle) => {
         const title = `${vehicle.make} ${vehicle.model}`;
 
         return (
           <>
-            <Image
-              src={
-                SHOWCASE_IMAGES[
-                  vehicles.findIndex((item) => item.id === vehicle.id) %
-                    SHOWCASE_IMAGES.length
-                ] ?? SHOWCASE_FALLBACK_IMAGE
-              }
-              alt={title}
-              fill
-              priority
-              sizes="(min-width: 1024px) 38rem, (min-width: 768px) 32rem, (min-width: 640px) 28rem, 88vw"
-              className="object-contain p-1 sm:p-2 lg:p-2"
-            />
+            {vehicle.primary_image ? (
+              <Image
+                src={vehicle.primary_image.detail}
+                alt={vehicle.primary_image.alt || title}
+                fill
+                priority
+                sizes="(min-width: 1024px) 38rem, (min-width: 768px) 32rem, (min-width: 640px) 28rem, 88vw"
+                className="object-contain p-2 sm:p-2 lg:p-3"
+              />
+            ) : (
+              <div className="flex h-full items-center justify-center font-data text-[0.62rem] uppercase tracking-[0.14em] text-[color:var(--vds-text-muted)]">
+                Photo coming
+              </div>
+            )}
 
             <div
               className="absolute inset-0 bg-gradient-to-b from-black/35 via-transparent to-black/75"

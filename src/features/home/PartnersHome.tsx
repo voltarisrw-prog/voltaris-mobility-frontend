@@ -9,6 +9,7 @@ import {
   CircleDollarSign,
 } from 'lucide-react';
 import { useState } from 'react';
+import { DEMO_LIBRARY_IMAGES } from '@/lib/mock/demoLibraryImages';
 
 const SELL_POINTS = [
   {
@@ -17,7 +18,7 @@ const SELL_POINTS = [
     title: 'Show your vehicle',
     description:
       'Create a listing with the photos and details buyers need to understand what you are offering',
-    image: '/hero/gallery/hero-02.png',
+    image: DEMO_LIBRARY_IMAGES[9]!,
   },
   {
     number: '02',
@@ -25,7 +26,7 @@ const SELL_POINTS = [
     title: 'Set your asking price',
     description:
       'Present your vehicle clearly with the price, mileage, condition and other important information',
-    image: '/hero/gallery/hero-03.png',
+    image: DEMO_LIBRARY_IMAGES[24]!,
   },
   {
     number: '03',
@@ -33,7 +34,7 @@ const SELL_POINTS = [
     title: 'Build buyer confidence',
     description:
       'Give interested buyers a clearer picture of the vehicle before they get in touch',
-    image: '/hero/gallery/hero-05.jpeg',
+    image: DEMO_LIBRARY_IMAGES[39]!,
   },
 ] as const;
 
