@@ -18,6 +18,32 @@
     font-family: var(--font-body), sans-serif;
     font-weight: 400;
     text-rendering: optimizeLegibility;
+    overflow-x: clip;
+  }
+
+  img,
+  video,
+  canvas,
+  svg {
+    max-width: 100%;
+  }
+
+  button,
+  a,
+  input,
+  select,
+  textarea {
+    max-width: 100%;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p {
+    overflow-wrap: anywhere;
   }
 
   h1,
@@ -57,7 +83,8 @@
 
 @layer components {
   .shell {
-    @apply mx-auto w-full max-w-shell px-5 sm:px-8;
+    @apply mx-auto w-full max-w-shell;
+    padding-inline: clamp(1rem, 2.8vw, 2rem);
   }
   .eyebrow {
     @apply font-data text-eyebrow uppercase text-steel-muted;

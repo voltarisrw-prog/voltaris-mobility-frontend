@@ -59,22 +59,22 @@ export default async function HomePage() {
       {/* 01 — HERO ------------------------------------------------------- */}
       <section className="relative isolate overflow-hidden">
         <HeroMedia />
-        <div className="shell relative flex min-h-[calc(100svh-4rem)] flex-col items-center justify-end py-10 pb-16 text-center sm:min-h-[88svh] sm:py-16 sm:pb-20 lg:pb-24">
-          <div className="max-w-5xl animate-rise-in pb-4 sm:pb-6">
+        <div className="shell relative flex min-h-[clamp(40rem,88svh,56rem)] flex-col items-center justify-end py-10 pb-16 pt-24 text-center sm:py-16 sm:pb-20 sm:pt-28 lg:pb-24">
+          <div className="w-full max-w-[48rem] animate-rise-in pb-4 sm:max-w-[52rem] sm:pb-6 lg:max-w-5xl">
             <p className="mb-5 font-sans text-lg font-medium tracking-[0.02em] text-white sm:mb-6 sm:text-xl">
               {hero.eyebrow}
             </p>
 
-            <h1 className="mt-0 max-w-5xl font-display text-hero">{hero.headline}</h1>
+            <h1 className="mx-auto mt-0 max-w-[20ch] font-display text-hero sm:max-w-[18ch] lg:max-w-5xl">{hero.headline}</h1>
 
-            <p className="mx-auto mt-5 max-w-2xl font-sans text-base leading-relaxed text-[color:var(--vds-text-muted)] sm:mt-6 sm:text-lg">
+            <p className="mx-auto mt-5 max-w-[34rem] font-sans text-base leading-relaxed text-[color:var(--vds-text-muted)] sm:mt-6 sm:max-w-2xl sm:text-lg">
               {hero.sub}
             </p>
 
-            <div className="mt-8 flex w-full flex-col items-stretch justify-center gap-3 sm:mt-9 sm:w-auto sm:flex-row sm:items-center">
+            <div className="mx-auto mt-8 flex w-full max-w-[22rem] flex-col items-stretch justify-center gap-3 sm:mt-9 sm:w-auto sm:max-w-none sm:flex-row sm:items-center">
               <Link
                 href={hero.primaryCta.href}
-                className="group inline-flex items-center justify-center gap-3 bg-volt px-7 py-4 font-data text-eyebrow uppercase tracking-[0.08em] text-surface transition-all duration-300 hover:bg-[color:var(--vds-brand-secondary)]"
+                className="group inline-flex min-h-12 items-center justify-center gap-3 bg-volt px-5 py-3.5 font-data text-eyebrow uppercase tracking-[0.08em] text-surface transition-all duration-300 hover:bg-[color:var(--vds-brand-secondary)] sm:px-7 sm:py-4"
               >
                 {hero.primaryCta.label}
                 <ArrowRight
@@ -85,7 +85,7 @@ export default async function HomePage() {
 
               <Link
                 href={hero.secondaryCta.href}
-                className="inline-flex items-center justify-center border border-[color:var(--vds-text)]/40 px-7 py-4 font-data text-eyebrow uppercase tracking-[0.08em] text-[color:var(--vds-text)] transition-all duration-300 hover:border-[color:var(--vds-text)] hover:bg-[color:var(--vds-text)] hover:text-[color:var(--vds-bg)]"
+                className="inline-flex min-h-12 items-center justify-center border border-[color:var(--vds-text)]/40 px-5 py-3.5 font-data text-eyebrow uppercase tracking-[0.08em] text-[color:var(--vds-text)] transition-all duration-300 hover:border-[color:var(--vds-text)] hover:bg-[color:var(--vds-text)] hover:text-[color:var(--vds-bg)] sm:px-7 sm:py-4"
               >
                 {hero.secondaryCta.label}
               </Link>

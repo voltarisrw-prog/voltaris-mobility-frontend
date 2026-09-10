@@ -44,7 +44,7 @@ const config: Config = {
       },
       fontSize: {
         eyebrow: ['0.6875rem', { lineHeight: '1', letterSpacing: '0.18em' }],
-        hero: ['clamp(2.75rem, 8vw, 6.5rem)', { lineHeight: '0.92', letterSpacing: '-0.04em' }],
+        hero: ['clamp(2.75rem, 6.5vw, 6.5rem)', { lineHeight: '0.92', letterSpacing: '-0.04em' }],
         display: ['clamp(2rem, 5vw, 3.75rem)', { lineHeight: '0.98', letterSpacing: '-0.035em' }],
         headline: ['clamp(1.5rem, 3vw, 2.25rem)', { lineHeight: '1.05', letterSpacing: '-0.025em' }],
       },

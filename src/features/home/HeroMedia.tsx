@@ -151,8 +151,9 @@ export function HeroMedia() {
           under a conventional landing-page scrim. */}
       <div className="absolute inset-0 bg-gradient-to-br from-volt-deep/35 via-transparent to-surface/20" />
 
-      {/* Local text protection. The image stays dominant everywhere else. */}
-      <div className="absolute inset-y-0 left-0 w-full bg-gradient-to-r from-surface/85 via-surface/35 to-transparent sm:w-[72%]" />
+      {/* Responsive text protection. Centered hero copy needs broader protection on
+          narrow screens; larger screens can return to the editorial left-weighted grade. */}
+      <div className="absolute inset-0 bg-gradient-to-b from-surface/55 via-transparent to-surface/45 sm:bg-gradient-to-r sm:from-surface/80 sm:via-surface/30 sm:to-transparent sm:w-[72%]" />
 
       {/* Soft transition into the next section without flattening the image. */}
       <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-surface/90" />

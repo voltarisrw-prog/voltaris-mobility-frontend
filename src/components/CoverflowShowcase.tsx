@@ -132,7 +132,7 @@ export function CoverflowShowcase<T>({
             setFocused(false);
           }
         }}
-        className="relative mx-auto flex h-[32rem] w-full max-w-shell items-center justify-center overflow-hidden px-0 sm:h-[40rem] sm:px-4 md:h-[48rem] lg:h-[55rem] lg:px-0 [--cylinder-radius:15rem] sm:[--cylinder-radius:25rem] md:[--cylinder-radius:30rem] lg:[--cylinder-radius:36rem]"
+        className="relative mx-auto flex h-[clamp(30rem,92vw,34rem)] w-full max-w-shell items-center justify-center overflow-hidden px-0 sm:h-[clamp(34rem,62vw,40rem)] sm:px-4 md:h-[clamp(38rem,54vw,44rem)] lg:h-[clamp(42rem,48vw,50rem)] lg:px-0 2xl:h-[55rem] [--cylinder-radius:14rem] sm:[--cylinder-radius:20rem] md:[--cylinder-radius:25rem] lg:[--cylinder-radius:30rem] 2xl:[--cylinder-radius:36rem]"
         style={{ perspective: '1600px', transformStyle: 'preserve-3d' }}
       >
         {items.map((item, index) => {

@@ -8,10 +8,10 @@ import { formatPrice } from '@/lib/format';
 import type { VehicleSummary } from '@/types/vehicle';
 
 const CENTER_SIZE =
-  'h-[30rem] w-[min(92vw,30rem)] sm:h-[44rem] sm:w-[30rem] md:h-[50rem] md:w-[35rem] lg:h-[58rem] lg:w-[42rem]';
+  'h-[clamp(24rem,78vw,30rem)] w-[min(88vw,30rem)] sm:h-[clamp(30rem,68vw,38rem)] sm:w-[min(78vw,30rem)] md:h-[clamp(34rem,62vw,44rem)] md:w-[min(70vw,34rem)] lg:h-[clamp(38rem,54vw,52rem)] lg:w-[min(58vw,40rem)] 2xl:h-[58rem] 2xl:w-[42rem]';
 
 const PEEK_SIZE =
-  'h-[17rem] w-[calc(100vw-4rem)] max-w-[17rem] sm:h-[24rem] sm:w-[19rem] md:h-[28rem] md:w-[22rem] lg:h-[31rem] lg:w-[25rem]';
+  'h-[clamp(14rem,48vw,17rem)] w-[min(72vw,17rem)] sm:h-[clamp(18rem,48vw,22rem)] sm:w-[min(58vw,19rem)] md:h-[clamp(20rem,44vw,26rem)] md:w-[min(50vw,22rem)] lg:h-[clamp(23rem,38vw,29rem)] lg:w-[min(42vw,25rem)] 2xl:h-[31rem] 2xl:w-[25rem]';
 
 console.log('SHOWCASE IMAGE DEBUG');
 export function ShowcaseSlider({

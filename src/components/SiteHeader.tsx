@@ -65,7 +65,7 @@ export function SiteHeader() {
 
         <div
           className={cn(
-            'shell flex items-center justify-between gap-8 transition-all duration-300 ease-out',
+            'shell flex items-center justify-between gap-3 sm:gap-5 xl:gap-8 transition-all duration-300 ease-out',
             compact ? 'h-14' : 'h-20',
           )}
         >
@@ -73,12 +73,12 @@ export function SiteHeader() {
             <VoltarisLogo
               className={cn(
                 'transition-all duration-300 ease-out',
-                compact ? 'h-6 sm:h-7' : 'h-7 sm:h-8 lg:h-9',
+                compact ? 'h-6 sm:h-7 xl:h-7' : 'h-7 sm:h-8 xl:h-9',
               )}
             />
           </Link>
 
-          <nav aria-label="Main" className="hidden items-center gap-4 xl:gap-6 lg:flex">
+          <nav aria-label="Main" className="hidden items-center gap-3 xl:gap-5 2xl:gap-6 xl:flex">
             {nav.primary.map((item) => {
               const isCompare = item.href.split('?')[0] === '/compare';
               const href = isCompare ? compareHref : item.href;
@@ -111,7 +111,7 @@ export function SiteHeader() {
               aria-label={mobileOpen ? 'Close navigation menu' : 'Open navigation menu'}
               aria-expanded={mobileOpen}
               onClick={() => setMobileOpen((value) => !value)}
-              className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-hairline bg-surface/70 text-chrome backdrop-blur-md transition-colors hover:border-volt hover:text-volt lg:hidden"
+              className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-hairline bg-surface/70 text-chrome backdrop-blur-md transition-colors hover:border-volt hover:text-volt xl:hidden"
             >
               {mobileOpen ? (
                 <X className="h-5 w-5" aria-hidden="true" />
@@ -128,7 +128,7 @@ export function SiteHeader() {
             </Link>
             <Link
               href="/sell"
-              className="hidden bg-volt px-4 py-2.5 font-data text-eyebrow uppercase text-surface transition-colors hover:vds-button-primary sm:inline-block"
+              className="hidden bg-volt px-4 py-2.5 font-data text-eyebrow uppercase text-surface transition-colors hover:vds-button-primary xl:inline-block"
             >
               Sell your car
             </Link>
@@ -138,7 +138,7 @@ export function SiteHeader() {
       {mobileOpen && (
         <div
           className={cn(
-            'fixed inset-0 z-[90] bg-abyss lg:hidden transition-[opacity,visibility] duration-500',
+            'fixed inset-0 z-[90] bg-abyss xl:hidden transition-[opacity,visibility] duration-500',
             mobileOpen
               ? 'visible opacity-100'
               : 'invisible pointer-events-none opacity-0',
