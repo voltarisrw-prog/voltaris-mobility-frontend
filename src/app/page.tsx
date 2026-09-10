@@ -4,9 +4,8 @@ import { ArrowRight } from 'lucide-react';
 import { HeroMedia } from '@/features/home/HeroMedia';
 import { ShowcaseSlider } from '@/features/home/ShowcaseSlider';
 import { PowertrainShowcase } from '@/features/home/PowertrainShowcase';
-import { RwandaInMotion } from '@/features/home/RwandaInMotion';
-import { FinalStatement } from '@/features/home/FinalStatement';
-import { PartnersHome } from '@/features/home/PartnersHome';
+import { RoadTransition } from '@/features/home/RoadTransition';
+import { Garage } from '@/features/home/Garage';
 import { EnquireHome } from '@/features/home/EnquireHome';
 import { ContactHome } from '@/features/home/ContactHome';
 import { NetworkHome } from '@/features/home/NetworkHome';
@@ -152,14 +151,11 @@ export default async function HomePage() {
 
 
 
+      {/* 06 — BEYOND THE SHOWROOM ------------------------------------- */}
+      <RoadTransition />
 
-      <RwandaInMotion />
-
-      {/* 07 — FINAL STATEMENT ---------------------------------------- */}
-      <FinalStatement />
-
-      {/* 08 — PARTNERS ----------------------------------------------- */}
-      <PartnersHome />
+      {/* 07 — THE GARAGE -------------------------------------------- */}
+      <Garage />
 
       {/* 09 — ENQUIRE ----------------------------------------------- */}
       <EnquireHome />
