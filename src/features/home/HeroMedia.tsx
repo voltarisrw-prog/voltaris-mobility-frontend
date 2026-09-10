@@ -139,7 +139,6 @@ export function HeroMedia() {
 
       {/* Cool the plate toward the brand blue, matching the site-wide grade so
           the hero and the rest of the page read as one room. */}
-      <div className="absolute inset-0 bg-gradient-to-br from-volt-deep/30 via-transparent to-surface/40 mix-blend-color" />
 
       {/*
         Text protection. The copy sits left, so the scrim is weighted left — a
@@ -149,14 +148,11 @@ export function HeroMedia() {
       */}
       {/* Editorial grade: keep the vehicle visible instead of burying it
           under a conventional landing-page scrim. */}
-      <div className="absolute inset-0 bg-gradient-to-br from-volt-deep/35 via-transparent to-surface/20" />
 
       {/* Responsive text protection. Centered hero copy needs broader protection on
           narrow screens; larger screens can return to the editorial left-weighted grade. */}
-      <div className="absolute inset-0 bg-gradient-to-b from-surface/55 via-transparent to-surface/45 sm:bg-gradient-to-r sm:from-surface/80 sm:via-surface/30 sm:to-transparent sm:w-[72%]" />
 
       {/* Soft transition into the next section without flattening the image. */}
-      <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-surface/90" />
     </div>
   );
 }
