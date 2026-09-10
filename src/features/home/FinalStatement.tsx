@@ -4,7 +4,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowUpRight, BadgeCheck, CarFront, GitCompare, SearchCheck } from 'lucide-react';
 import { useState } from 'react';
-import { DEMO_LIBRARY_IMAGES } from '@/lib/mock/demoLibraryImages';
 
 const CONFIDENCE_POINTS = [
   {
@@ -15,7 +14,7 @@ const CONFIDENCE_POINTS = [
       'See the details that matter before you make a decision, from price and mileage to range, battery and condition',
     href: '/cars',
     action: 'Browse vehicles',
-    image: DEMO_LIBRARY_IMAGES[6]!,
+    image: '/hero/gallery/hero-01.png',
   },
   {
     number: '02',
@@ -25,7 +24,7 @@ const CONFIDENCE_POINTS = [
       'Explore verified listings and understand more about the vehicle and the people behind the listing',
     href: '/trust-and-verification',
     action: 'How verification works',
-    image: DEMO_LIBRARY_IMAGES[16]!,
+    image: '/hero/gallery/hero-02.png',
   },
   {
     number: '03',
@@ -35,7 +34,7 @@ const CONFIDENCE_POINTS = [
       'When you find something you like, take the next step and arrange a test drive before committing',
     href: '/test-drive',
     action: 'Book a test drive',
-    image: DEMO_LIBRARY_IMAGES[30]!,
+    image: '/hero/gallery/hero-03.png',
   },
   {
     number: '04',
@@ -45,7 +44,7 @@ const CONFIDENCE_POINTS = [
       'Put your options side by side and find the vehicle that makes the most sense for your needs',
     href: '/compare',
     action: 'Compare vehicles',
-    image: DEMO_LIBRARY_IMAGES[43]!,
+    image: '/hero/gallery/hero-04.png',
   },
 ] as const;
 

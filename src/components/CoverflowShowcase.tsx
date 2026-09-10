@@ -158,7 +158,7 @@ export function CoverflowShowcase<T>({
               <div
                 key={key}
                 style={style}
-                className={`absolute isolate z-[100] shrink-0 overflow-hidden rounded-[1.25rem] border border-white/10 bg-abyss shadow-[0_32px_80px_-24px_rgba(0,0,0,0.82)] sm:rounded-[1.75rem] lg:rounded-[2rem] sm:shadow-[0_40px_100px_-25px_rgba(0,0,0,0.85)] transition-[transform,opacity] duration-500 ease-out motion-reduce:transition-none ${centerSizeClassName}`}
+                className={`absolute isolate z-[100] shrink-0 overflow-hidden border border-white/10 bg-transparent shadow-[0_32px_80px_-28px_rgba(0,0,0,0.72)] sm:shadow-[0_40px_100px_-30px_rgba(0,0,0,0.78)] transition-[transform,opacity] duration-500 ease-out motion-reduce:transition-none ${centerSizeClassName}`}
               >
                 {renderCenter(item)}
               </div>
@@ -173,7 +173,7 @@ export function CoverflowShowcase<T>({
               aria-label={peekLabel(item)}
               tabIndex={hidden ? -1 : 0}
               style={style}
-              className={`absolute shrink-0 overflow-hidden rounded-[1rem] border border-hairline/60 bg-abyss transition-[transform,opacity] duration-500 ease-out motion-reduce:transition-none sm:rounded-none ${peekSizeClassName}`}
+              className={`absolute shrink-0 overflow-hidden border border-hairline/40 bg-transparent transition-[transform,opacity] duration-500 ease-out motion-reduce:transition-none ${peekSizeClassName}`}
             >
               {renderPeek(item)}
               <div className="absolute inset-0 bg-surface/45" aria-hidden="true" />
