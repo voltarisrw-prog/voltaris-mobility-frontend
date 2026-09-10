@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { HeroMedia } from '@/features/home/HeroMedia';
 import { ShowcaseSlider } from '@/features/home/ShowcaseSlider';
-import { UniversalSearch } from '@/features/vehicles/UniversalSearch';
 import { PowertrainShowcase } from '@/features/home/PowertrainShowcase';
 import { RwandaInMotion } from '@/features/home/RwandaInMotion';
 import { FinalStatement } from '@/features/home/FinalStatement';
@@ -94,24 +93,6 @@ export default async function HomePage() {
             </div>
           </div>
 
-        </div>
-      </section>
-
-      {/* 02 — MARKETPLACE SEARCH -------------------------------------------- */}
-      <section className="border-y border-hairline bg-surface">
-        <div className="shell py-10 sm:py-14 lg:py-16">
-          <div className="grid gap-8 lg:grid-cols-[0.8fr_1.6fr] lg:items-end lg:gap-16">
-            <div>
-              <p className="font-data text-eyebrow uppercase tracking-[0.16em] text-volt">
-                Find your next vehicle
-              </p>
-              <h2 className="mt-3 max-w-md text-3xl sm:text-4xl lg:text-5xl">
-                Start with what you want to drive
-              </h2>
-            </div>
-
-            <UniversalSearch />
-          </div>
         </div>
       </section>
 
