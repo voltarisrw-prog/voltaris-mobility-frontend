@@ -138,7 +138,7 @@ export function SiteHeader() {
       {mobileOpen && (
         <div
           className={cn(
-            'fixed inset-0 z-[90] bg-abyss lg:hidden transition-[opacity,visibility] duration-500',
+            'fixed inset-0 z-[90] bg-surface lg:hidden transition-[opacity,visibility] duration-500',
             mobileOpen
               ? 'visible opacity-100'
               : 'invisible pointer-events-none opacity-0',
@@ -178,13 +178,6 @@ export function SiteHeader() {
             </div>
 
             <div className="shell flex flex-1 flex-col justify-start overflow-y-auto py-12 sm:py-16">
-              <div className="mb-10 sm:mb-12">
-                <p className="eyebrow">Voltaris Mobility</p>
-                <p className="mt-2 max-w-xs font-data text-[0.58rem] uppercase tracking-[0.12em] text-steel-muted">
-                  Move with intention.
-                </p>
-              </div>
-
               <nav aria-label="Mobile main">
                 <ul className="divide-y divide-hairline border-y border-hairline">
                   {nav.primary.map((item, index) => {
@@ -212,8 +205,8 @@ export function SiteHeader() {
                           onClick={() => setMobileOpen(false)}
                           aria-current={active ? 'page' : undefined}
                           className={cn(
-                            'group flex min-h-14 items-center justify-between py-3 px-1 sm:min-h-16 sm:py-4',
-                            'font-display text-[1.35rem] font-medium tracking-[-0.025em] sm:text-2xl',
+                            'group flex min-h-12 items-center justify-between py-2 px-1 sm:min-h-14 sm:py-3',
+                            'font-display text-[1.15rem] font-medium tracking-[-0.02em] sm:text-2xl',
                             'transition-colors duration-300',
                             active
                               ? 'text-volt'
@@ -241,7 +234,7 @@ export function SiteHeader() {
                 </ul>
               </nav>
 
-              <div className="mt-12 flex items-end justify-between gap-6 border-t border-hairline pt-6 sm:mt-14">
+              <div className="mt-6 flex items-end justify-between gap-4 border-t border-hairline pt-4 sm:mt-10 sm:pt-6">
                 <p className="max-w-xs font-data text-[0.58rem] uppercase leading-relaxed tracking-[0.14em] text-steel-muted">
                   Mobility, selected with intention.
                 </p>

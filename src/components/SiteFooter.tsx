@@ -81,9 +81,9 @@ export function SiteFooter() {
           COMPACT FOOTER
       ========================================================== */}
 
-      <div className="shell py-12 sm:py-14 lg:py-16">
+      <div className="shell py-7 sm:py-12 lg:py-16">
 
-        <div className="grid gap-12 lg:grid-cols-[minmax(15rem,0.8fr)_minmax(0,2fr)] lg:gap-20 xl:gap-28">
+        <div className="grid gap-7 lg:grid-cols-[minmax(15rem,0.8fr)_minmax(0,2fr)] lg:gap-20 xl:gap-28">
 
           {/* =====================================================
               BRAND
@@ -99,15 +99,15 @@ export function SiteFooter() {
               <VoltarisLogo className="h-8 sm:h-9" />
             </Link>
 
-            <p className="mt-5 max-w-xs text-sm leading-6 text-[#6b6b6b]">
+            <p className="mt-3 max-w-xs text-sm leading-5 text-[#6b6b6b]">
               Mobility, made simpler.
             </p>
 
-            <div className="mt-7">
+            <div className="mt-4">
               <SocialLinks className="flex flex-wrap gap-1" />
             </div>
 
-            <div className="mt-8">
+            <div className="mt-4">
               <span className="font-data text-[0.56rem] uppercase tracking-[0.16em] text-[#6b6b6b]">
                 Kigali · Rwanda
               </span>
@@ -121,29 +121,63 @@ export function SiteFooter() {
 
           <nav aria-label="Footer navigation">
 
-            <div className="grid grid-cols-2 gap-x-8 gap-y-10 sm:grid-cols-4 sm:gap-x-8 lg:gap-x-10 xl:gap-x-14">
+              {/* MOBILE — COMPACT EXPANDABLE NAVIGATION */}
+              <div className="sm:hidden divide-y divide-[color:var(--vds-border)] border-y border-[color:var(--vds-border)]">
 
-              {footerGroups.map((group) => (
-                <div key={group.heading} className="min-w-0">
+                {footerGroups.map((group) => (
+                  <details key={group.heading} className="group">
 
-                  <h2 className="font-data text-[0.58rem] font-medium uppercase tracking-[0.18em] text-[#6b6b6b]">
-                    {group.heading}
-                  </h2>
+                    <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between py-3">
+                      <span className="font-data text-[0.58rem] font-medium uppercase tracking-[0.18em] text-[#6b6b6b]">
+                        {group.heading}
+                      </span>
 
-                  <ul className="mt-4 space-y-0.5">
-                    {group.links.map((link) => (
-                      <li key={link.href}>
-                        <FooterLink {...link} />
-                      </li>
-                    ))}
-                  </ul>
+                      <span
+                        aria-hidden="true"
+                        className="relative flex h-7 w-7 shrink-0 items-center justify-center text-[#6b6b6b]"
+                      >
+                        <span className="absolute h-px w-3 bg-current" />
+                        <span className="absolute h-3 w-px bg-current transition-transform duration-200 group-open:rotate-90" />
+                      </span>
+                    </summary>
 
-                </div>
-              ))}
+                    <ul className="pb-3 pl-0">
+                      {group.links.map((link) => (
+                        <li key={link.href}>
+                          <FooterLink {...link} />
+                        </li>
+                      ))}
+                    </ul>
 
-            </div>
+                  </details>
+                ))}
 
-          </nav>
+              </div>
+
+              {/* DESKTOP / TABLET — FULL NAVIGATION */}
+              <div className="hidden sm:grid sm:grid-cols-2 sm:gap-x-8 sm:gap-y-10 lg:grid-cols-4 lg:gap-x-10 xl:gap-x-14">
+
+                {footerGroups.map((group) => (
+                  <div key={group.heading} className="min-w-0">
+
+                    <h2 className="font-data text-[0.58rem] font-medium uppercase tracking-[0.18em] text-[#6b6b6b]">
+                      {group.heading}
+                    </h2>
+
+                    <ul className="mt-4 space-y-0.5">
+                      {group.links.map((link) => (
+                        <li key={link.href}>
+                          <FooterLink {...link} />
+                        </li>
+                      ))}
+                    </ul>
+
+                  </div>
+                ))}
+
+              </div>
+
+            </nav>
 
         </div>
 
@@ -151,9 +185,9 @@ export function SiteFooter() {
             ACCREDITATION + LEGAL
         ======================================================== */}
 
-        <div className="mt-12 border-t border-[color:var(--vds-border)] pt-6 sm:mt-14">
+        <div className="mt-7 border-t border-[color:var(--vds-border)] pt-4 sm:mt-14 sm:pt-6">
 
-          <div className="flex flex-col gap-5 text-[0.56rem] uppercase tracking-[0.11em] text-[#6b6b6b] lg:flex-row lg:items-center lg:justify-between lg:gap-8">
+          <div className="flex flex-col gap-3 text-[0.52rem] uppercase tracking-[0.1em] text-[#6b6b6b] lg:flex-row lg:items-center lg:justify-between lg:gap-8">
 
             <p>
               © {year} {site.legalName}. All rights reserved.
