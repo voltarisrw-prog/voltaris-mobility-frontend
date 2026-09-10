@@ -57,6 +57,8 @@ export function PowertrainShowcase() {
                     alt={`${title} vehicle powertrain`}
                     fill
                     sizes="(max-width: 767px) 86vw, (max-width: 1279px) 43vw, 34rem"
+                    quality={100}
+                    unoptimized
                     className="object-cover object-center transition-transform duration-[1600ms] ease-out group-hover:scale-[1.06] group-focus-visible:scale-[1.06]"
                   />
 
