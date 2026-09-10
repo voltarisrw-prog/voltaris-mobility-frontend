@@ -56,12 +56,12 @@ export function MarketplaceVehicleCard({
 
   return (
     <article
-      className={`group relative overflow-hidden bg-slab ${
+      className={`marketplace-vehicle-card group relative overflow-hidden bg-slab ${
         featured ? 'lg:col-span-2' : ''
       }`}
     >
       <div
-        className={`relative overflow-hidden bg-abyss ${
+        className={`marketplace-vehicle-card-media relative overflow-hidden bg-abyss ${
           featured
             ? 'aspect-[16/10] sm:aspect-[16/9]'
             : 'aspect-[4/3] sm:aspect-[3/2]'
@@ -99,7 +99,7 @@ export function MarketplaceVehicleCard({
         )}
 
         <div
-          className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-t from-black/80 via-black/10 to-black/20"
+          className="marketplace-vehicle-card-gradient pointer-events-none absolute inset-0 z-[1] bg-gradient-to-t from-black/80 via-black/10 to-black/20"
           aria-hidden="true"
         />
 
@@ -131,7 +131,7 @@ export function MarketplaceVehicleCard({
           </span>
         )}
 
-        <div className="absolute inset-x-0 bottom-0 z-10 p-5 sm:p-6 lg:p-7">
+        <div className="marketplace-vehicle-card-content absolute inset-x-0 bottom-0 z-10 p-5 sm:p-6 lg:p-7">
           <div className="flex flex-col gap-5">
             <Link
               href={`/cars/${vehicle.slug}?mode=${mode ?? 'sale'}`}
@@ -157,7 +157,7 @@ export function MarketplaceVehicleCard({
               </p>
             </Link>
 
-            <div className="flex flex-wrap items-center justify-end gap-2">
+            <div className="marketplace-vehicle-card-actions flex flex-wrap items-center justify-end gap-2">
               {mode === 'rental' ? (
                 <Link
                   href={actionHref}
