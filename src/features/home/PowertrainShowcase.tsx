@@ -1,51 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
-import { MOCK_VEHICLES } from '@/lib/mock/fixtures';
-
-const availableStock = MOCK_VEHICLES.filter(
-  (vehicle) =>
-    vehicle.status === 'available' &&
-    vehicle.primary_image?.card,
-);
-
-function vehicleText(vehicle: (typeof MOCK_VEHICLES)[number]) {
-  return `${vehicle.make} ${vehicle.model} ${vehicle.variant ?? ''}`.toLowerCase();
-}
-
-function isHybrid(vehicle: (typeof MOCK_VEHICLES)[number]) {
-  return /hybrid|recharge|\b500h\b|\b450h\b|\b300h\b/.test(
-    vehicleText(vehicle),
-  );
-}
-
-function requireVehicle(
-  vehicle: (typeof MOCK_VEHICLES)[number] | undefined,
-  powertrain: 'electric' | 'hybrid',
-) {
-  if (!vehicle) {
-    throw new Error(
-      `PowertrainShowcase requires available ${powertrain} stock`,
-    );
-  }
-
-  return vehicle;
-}
-
-const hybridVehicle = requireVehicle(
-  availableStock.find((vehicle) => isHybrid(vehicle)),
-  'hybrid',
-);
-
-const electricVehicle = requireVehicle(
-  availableStock.find(
-    (vehicle) =>
-      !isHybrid(vehicle) &&
-      vehicle.purchase_enabled === true &&
-      vehicle.rental_enabled === true,
-  ) ?? availableStock.find((vehicle) => !isHybrid(vehicle)),
-  'electric',
-);
 
 const powertrains = [
   {
@@ -54,7 +9,7 @@ const powertrains = [
     title: 'Electric',
     description:
       'Quiet, responsive and designed for everyday electric driving',
-    vehicle: electricVehicle,
+    image: '/powertrain/electric.png',
     href: '/cars?fuel=electric',
   },
   {
@@ -63,16 +18,16 @@ const powertrains = [
     title: 'Hybrid',
     description:
       'Flexible power for city driving, longer journeys and everything between',
-    vehicle: hybridVehicle,
+    image: '/powertrain/hybrid.jpeg',
     href: '/cars?fuel=hybrid',
   },
-];
+] as const;
 
 export function PowertrainShowcase() {
   return (
     <section className="border-y border-[color:var(--vds-border)] bg-[#0c0906]">
       <div className="shell py-20 sm:py-24 lg:py-32">
-        <div className="mb-12 grid gap-8 lg:mb-16 lg:grid-cols-[1fr_0.65fr] lg:items-end">
+        <div className="mb-14 grid gap-8 lg:mb-20 lg:grid-cols-[1fr_0.65fr] lg:items-end">
           <div>
             <p className="font-data text-[0.62rem] uppercase tracking-[0.22em] text-[color:var(--vds-brand-secondary)]">
               Find your fit
@@ -88,73 +43,66 @@ export function PowertrainShowcase() {
           </p>
         </div>
 
-        <div className="grid gap-px bg-white/10 md:grid-cols-2">
+        <div className="grid gap-12 md:grid-cols-2 md:gap-8 lg:gap-16">
           {powertrains.map(
-            ({ number, type, title, description, vehicle, href }) => (
+            ({ number, type, title, description, image, href }) => (
               <Link
                 key={title}
                 href={href}
-                className="group relative isolate min-h-[34rem] overflow-hidden bg-[#15110d] sm:min-h-[42rem] lg:min-h-[50rem]"
+                className="group flex flex-col items-center text-center outline-none"
               >
-                <div className="absolute inset-0 z-0 overflow-hidden">
+                <div className="relative aspect-square w-[min(78vw,30rem)] overflow-hidden rounded-full border border-white/10 bg-[#15110d] shadow-[0_30px_80px_rgba(0,0,0,0.35)] transition-transform duration-700 ease-out group-hover:scale-[1.025] group-focus-visible:scale-[1.025]">
                   <Image
-                    src={vehicle.primary_image!.card}
-                    alt={`${vehicle.make} ${vehicle.model}`}
+                    src={image}
+                    alt={`${title} vehicle powertrain`}
                     fill
-                    sizes="(min-width: 768px) 50vw, 100vw"
-                    className="object-cover object-center transition-transform duration-[1600ms] ease-out group-hover:scale-[1.045]"
+                    sizes="(max-width: 767px) 78vw, (max-width: 1279px) 40vw, 30rem"
+                    className="object-cover object-center transition-transform duration-[1600ms] ease-out group-hover:scale-[1.06] group-focus-visible:scale-[1.06]"
                   />
-                </div>
 
-                <div className="absolute inset-0 z-[1] bg-black/10" />
+                  <div
+                    className="absolute inset-0 rounded-full bg-gradient-to-b from-black/10 via-transparent to-black/45"
+                    aria-hidden="true"
+                  />
 
-                <div className="absolute inset-0 z-[2] bg-gradient-to-b from-black/30 via-transparent to-[#080604]" />
+                  <div className="absolute inset-x-0 top-0 flex items-start justify-between p-6 sm:p-8">
+                    <span className="font-data text-[0.58rem] uppercase tracking-[0.2em] text-white/65">
+                      {number} / 02
+                    </span>
 
-                <div className="absolute inset-x-0 bottom-0 z-[3] h-[55%] bg-gradient-to-t from-[#080604] via-[#080604]/65 to-transparent" />
-
-                <div className="absolute inset-x-0 top-0 z-10 flex items-start justify-between p-6 sm:p-8 lg:p-10">
-                  <span className="font-data text-[0.58rem] uppercase tracking-[0.2em] text-white/55">
-                    {number} / 02
-                  </span>
-
-                  <span className="border border-white/20 bg-black/15 px-3 py-1.5 font-data text-[0.55rem] uppercase tracking-[0.18em] text-white/75 backdrop-blur-md">
-                    {type}
-                  </span>
-                </div>
-
-                <div className="absolute inset-x-0 bottom-0 z-10 p-6 sm:p-8 lg:p-10">
-                  <div className="max-w-2xl">
-                    <p className="font-data text-[0.58rem] uppercase tracking-[0.2em] text-[color:var(--vds-brand-secondary)]">
-                      {vehicle.make}
-                    </p>
-
-                    <h3 className="mt-3 font-display text-6xl leading-[0.78] tracking-[-0.055em] text-white sm:text-7xl lg:text-[6.5rem]">
-                      {title}
-                    </h3>
-
-                    <p className="mt-5 max-w-md font-sans text-sm leading-relaxed text-white/65 sm:text-base">
-                      {description}
-                    </p>
-                  </div>
-
-                  <div className="mt-8 flex items-center justify-between border-t border-white/15 pt-5 sm:mt-10">
-                    <div>
-                      <p className="font-data text-[0.55rem] uppercase tracking-[0.18em] text-white/45">
-                        Featured in stock
-                      </p>
-
-                      <p className="mt-2 font-display text-lg leading-none text-white/85 sm:text-xl">
-                        {vehicle.model}
-                      </p>
-                    </div>
-
-                    <span className="flex h-12 w-12 shrink-0 items-center justify-center border border-white/25 text-white transition-all duration-500 group-hover:border-[color:var(--vds-brand-secondary)] group-hover:bg-[color:var(--vds-brand-secondary)] group-hover:text-[#0c0906] sm:h-14 sm:w-14">
-                      <ArrowRight
-                        className="h-5 w-5 transition-transform duration-500 group-hover:translate-x-1"
-                        aria-hidden="true"
-                      />
+                    <span className="border border-white/20 bg-black/15 px-3 py-1.5 font-data text-[0.55rem] uppercase tracking-[0.18em] text-white/80 backdrop-blur-md">
+                      {type}
                     </span>
                   </div>
+
+                  <span className="absolute bottom-6 right-6 flex h-12 w-12 items-center justify-center rounded-full border border-white/25 bg-black/15 text-white backdrop-blur-md transition-all duration-500 group-hover:border-[color:var(--vds-brand-secondary)] group-hover:bg-[color:var(--vds-brand-secondary)] group-hover:text-[#0c0906] sm:bottom-8 sm:right-8 sm:h-14 sm:w-14">
+                    <ArrowRight
+                      className="h-5 w-5 transition-transform duration-500 group-hover:translate-x-1"
+                      aria-hidden="true"
+                    />
+                  </span>
+                </div>
+
+                <div className="mt-8 max-w-xl">
+                  <p className="font-data text-[0.58rem] uppercase tracking-[0.2em] text-[color:var(--vds-brand-secondary)]">
+                    {type}
+                  </p>
+
+                  <h3 className="mt-3 font-display text-5xl leading-[0.86] tracking-[-0.055em] text-white sm:text-6xl lg:text-7xl">
+                    {title}
+                  </h3>
+
+                  <p className="mx-auto mt-4 max-w-md font-sans text-sm leading-relaxed text-white/60 sm:text-base">
+                    {description}
+                  </p>
+
+                  <span className="mt-6 inline-flex items-center gap-2 font-data text-[0.58rem] uppercase tracking-[0.16em] text-white/75 transition-colors duration-300 group-hover:text-[color:var(--vds-brand-secondary)]">
+                    Explore {title}
+                    <ArrowRight
+                      className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1"
+                      aria-hidden="true"
+                    />
+                  </span>
                 </div>
               </Link>
             ),
