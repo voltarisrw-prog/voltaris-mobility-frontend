@@ -12,7 +12,7 @@ import { ToastProvider } from '@/components/ui';
 const display = Instrument_Serif({
   subsets: ['latin'],
   weight: '400',
-  style: 'italic',
+  style: 'normal',
   variable: '--font-display',
   display: 'swap',
 });
