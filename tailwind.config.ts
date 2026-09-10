@@ -19,14 +19,14 @@ const config: Config = {
     extend: {
       colors: {
         // Surfaces, darkest to lightest
-        surface: '#0C0906',
-        abyss: '#070403',
-        slab: '#17100B',
-        hairline: '#30251D',
+        surface: '#FFFFFF',
+        abyss: '#F7F7F7',
+        slab: '#F2F2F2',
+        hairline: '#E5E5E5',
         // Type and metal
-        chrome: '#E8EAED',
-        steel: { DEFAULT: '#A8AEB8', muted: '#6C727C' },
-        bronze: '#2B1A0A',
+        chrome: '#0A0A0A',
+        steel: { DEFAULT: '#4A4A4A', muted: '#6B6B6B' },
+        bronze: '#6B4A2B',
         // The single accent: the road light
         volt: {
           DEFAULT: '#5CC8FF',

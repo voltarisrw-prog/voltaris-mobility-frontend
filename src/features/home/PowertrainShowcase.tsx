@@ -25,7 +25,7 @@ const powertrains = [
 
 export function PowertrainShowcase() {
   return (
-    <section className="border-y border-[color:var(--vds-border)] bg-[#0c0906]">
+    <section className="border-y border-[color:var(--vds-border)] bg-white text-[#0a0a0a]">
       <div className="shell py-20 sm:py-24 lg:py-32">
         <div className="mb-14 grid gap-8 lg:mb-20 lg:grid-cols-[1fr_0.65fr] lg:items-end">
           <div>
@@ -33,12 +33,12 @@ export function PowertrainShowcase() {
               Find your fit
             </p>
 
-            <h2 className="mt-5 max-w-4xl font-display text-5xl leading-[0.86] tracking-[-0.055em] text-white sm:text-7xl lg:text-[7rem]">
+            <h2 className="mt-5 max-w-4xl font-display text-5xl leading-[0.86] tracking-[-0.055em] text-[#0a0a0a] sm:text-7xl lg:text-[7rem]">
               Choose your powertrain
             </h2>
           </div>
 
-          <p className="max-w-md font-sans text-base leading-relaxed text-[color:var(--vds-text-muted)] lg:justify-self-end lg:pb-2 lg:text-lg">
+          <p className="max-w-md font-sans text-base leading-relaxed text-[#6b6b6b] lg:justify-self-end lg:pb-2 lg:text-lg">
             Two ways to move, one place to find the vehicle that fits your life
           </p>
         </div>
@@ -51,7 +51,7 @@ export function PowertrainShowcase() {
                 href={href}
                 className="group flex flex-col items-center text-center outline-none"
               >
-                <div className="relative aspect-[0.92] w-[min(86vw,34rem)] overflow-hidden rounded-[3rem] border border-white/10 bg-[#15110d] shadow-[0_30px_80px_rgba(0,0,0,0.35)] transition-transform duration-700 ease-out group-hover:scale-[1.025] group-focus-visible:scale-[1.025]">
+                <div className="relative aspect-[0.92] w-[min(86vw,34rem)] overflow-hidden rounded-[3rem] border border-black/10 bg-white shadow-[0_24px_70px_rgba(10,10,10,0.10)] transition-transform duration-700 ease-out group-hover:scale-[1.025] group-focus-visible:scale-[1.025]">
                   <Image
                     src={image}
                     alt={`${title} vehicle powertrain`}
@@ -68,16 +68,16 @@ export function PowertrainShowcase() {
                   />
 
                   <div className="absolute inset-x-0 top-0 flex items-start justify-between p-6 sm:p-8">
-                    <span className="font-data text-[0.58rem] uppercase tracking-[0.2em] text-white/65">
+                    <span className="font-data text-[0.58rem] uppercase tracking-[0.2em] text-white/75">
                       {number} / 02
                     </span>
 
-                    <span className="border border-white/20 bg-black/15 px-3 py-1.5 font-data text-[0.55rem] uppercase tracking-[0.18em] text-white/80 backdrop-blur-md">
+                    <span className="border border-white/30 bg-black/20 px-3 py-1.5 font-data text-[0.55rem] uppercase tracking-[0.18em] text-white/90 backdrop-blur-md">
                       {type}
                     </span>
                   </div>
 
-                  <span className="absolute bottom-6 right-6 flex h-12 w-12 items-center justify-center rounded-full border border-white/25 bg-black/15 text-white backdrop-blur-md transition-all duration-500 group-hover:border-[color:var(--vds-brand-secondary)] group-hover:bg-[color:var(--vds-brand-secondary)] group-hover:text-[#0c0906] sm:bottom-8 sm:right-8 sm:h-14 sm:w-14">
+                  <span className="absolute bottom-6 right-6 flex h-12 w-12 items-center justify-center rounded-full border border-white/35 bg-black/20 text-white backdrop-blur-md transition-all duration-500 group-hover:border-[color:var(--vds-brand-secondary)] group-hover:bg-[color:var(--vds-brand-secondary)] group-hover:text-[#0a0a0a] sm:bottom-8 sm:right-8 sm:h-14 sm:w-14">
                     <ArrowRight
                       className="h-5 w-5 transition-transform duration-500 group-hover:translate-x-1"
                       aria-hidden="true"
@@ -90,15 +90,15 @@ export function PowertrainShowcase() {
                     {type}
                   </p>
 
-                  <h3 className="mt-3 font-display text-5xl leading-[0.86] tracking-[-0.055em] text-white sm:text-6xl lg:text-7xl">
+                  <h3 className="mt-3 font-display text-5xl leading-[0.86] tracking-[-0.055em] text-[#0a0a0a] sm:text-6xl lg:text-7xl">
                     {title}
                   </h3>
 
-                  <p className="mx-auto mt-4 max-w-md font-sans text-sm leading-relaxed text-white/60 sm:text-base">
+                  <p className="mx-auto mt-4 max-w-md font-sans text-sm leading-relaxed text-[#4a4a4a] sm:text-base">
                     {description}
                   </p>
 
-                  <span className="mt-6 inline-flex items-center gap-2 font-data text-[0.58rem] uppercase tracking-[0.16em] text-white/75 transition-colors duration-300 group-hover:text-[color:var(--vds-brand-secondary)]">
+                  <span className="mt-6 inline-flex items-center gap-2 font-data text-[0.58rem] uppercase tracking-[0.16em] text-[#4a4a4a] transition-colors duration-300 group-hover:text-[color:var(--vds-brand-secondary)]">
                     Explore {title}
                     <ArrowRight
                       className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1"
