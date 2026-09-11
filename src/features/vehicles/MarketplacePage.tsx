@@ -4,7 +4,6 @@ import { EmptyState } from '@/components/EmptyState';
 import { JsonLd } from '@/components/JsonLd';
 import { Pagination } from '@/components/Pagination';
 import { VehicleFilters as FilterPanel } from '@/components/VehicleFilters';
-import { RentalSearch } from '@/features/vehicles/RentalSearch';
 import { getFacets, listVehicles, type VehicleFacets } from '@/lib/api/vehicles';
 import { ApiError, displayMessage } from '@/lib/api/errors';
 import { breadcrumbJsonLd } from '@/lib/seo/jsonld';
@@ -63,11 +62,9 @@ export async function MarketplacePage({
 
   const resolvedDescription =
     description ??
-    (mode === 'rental'
-      ? 'Explore electric and hybrid cars available to rent through Voltaris.'
-      : mode === 'sale'
-        ? ''
-        : 'Explore electric and hybrid cars through Voltaris');
+    (mode === 'sale'
+      ? ''
+      : '');
 
   const trail = [
     { name: 'Home', path: '/' },
@@ -91,12 +88,6 @@ export async function MarketplacePage({
           {resolvedDescription}
         </p>
       </header>
-
-      {mode === 'rental' ? (
-        <div className="mt-8">
-          <RentalSearch />
-        </div>
-      ) : null}
 
       <div className="mt-8">
         {facets && results ? (
