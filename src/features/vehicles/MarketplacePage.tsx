@@ -67,7 +67,7 @@ export async function MarketplacePage({
     (mode === 'rental'
       ? 'Explore electric and hybrid cars available to rent through Voltaris.'
       : mode === 'sale'
-        ? 'Explore electric and hybrid cars available through Voltaris.'
+        ? ''
         : 'Explore electric and hybrid cars through Voltaris');
 
   const trail = [

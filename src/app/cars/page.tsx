@@ -48,7 +48,7 @@ function describe(filters: ReturnType<typeof parseFilters>): {
   return {
     title,
     description: hasFilters
-      ? 'Explore electric and hybrid cars available through Voltaris.'
+      ? ''
       : 'Explore electric and hybrid cars through Voltaris',
   };
 }

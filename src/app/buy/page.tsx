@@ -5,7 +5,7 @@ import { buildMetadata } from '@/lib/seo/metadata';
 export const metadata: Metadata = buildMetadata({
   title: 'Electric & Hybrid Cars for Sale',
   description:
-    'Explore electric and hybrid cars available through Voltaris',
+    '',
   path: '/buy',
 });
 
@@ -24,7 +24,7 @@ export default function BuyPage({
       mode="sale"
       basePath="/buy"
       title="Electric & Hybrid Cars for Sale"
-      description="Explore electric and hybrid cars available through Voltaris"
+      description=""
     />
   );
 }
