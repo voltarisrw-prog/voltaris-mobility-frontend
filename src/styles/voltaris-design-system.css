@@ -862,3 +862,316 @@
     );
 }
 
+/* MARKETPLACE — RESPONSIVE SHOWROOM PATCH */
+
+/*
+ * Desktop:
+ * Keep the cinematic showroom.
+ *
+ * Tablet/mobile:
+ * Convert the same experience into a touch-first vehicle navigator.
+ */
+
+.marketplace-infinite-showroom-toolbar {
+  position: relative;
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.9rem;
+}
+
+.marketplace-infinite-showroom-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.marketplace-infinite-showroom-control {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: 1px solid rgb(255 255 255 / 0.14);
+  background: rgb(255 255 255 / 0.04);
+  padding: 0.65rem 0.85rem;
+  font-family: var(--font-data, sans-serif);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgb(255 255 255 / 0.82);
+  transition:
+    background 180ms ease,
+    color 180ms ease,
+    border-color 180ms ease,
+    transform 180ms ease;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.marketplace-infinite-showroom-control:hover {
+  border-color: rgb(255 255 255 / 0.3);
+  background: rgb(255 255 255 / 0.1);
+  color: white;
+}
+
+.marketplace-infinite-showroom-control:active {
+  transform: scale(0.96);
+}
+
+.marketplace-infinite-showroom-position {
+  font-family: var(--font-data, sans-serif);
+  font-size: 0.58rem;
+  letter-spacing: 0.12em;
+  color: rgb(255 255 255 / 0.58);
+}
+
+.marketplace-infinite-showroom-dots {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.marketplace-infinite-showroom-dot {
+  width: 0.35rem;
+  height: 0.35rem;
+  border: 0;
+  border-radius: 999px;
+  padding: 0;
+  background: rgb(255 255 255 / 0.25);
+  transition:
+    width 220ms ease,
+    background 220ms ease,
+    transform 220ms ease;
+  touch-action: manipulation;
+}
+
+.marketplace-infinite-showroom-dot-active {
+  width: 1.35rem;
+  background: rgb(255 255 255 / 0.9);
+}
+
+.marketplace-infinite-showroom-hint {
+  margin: 0;
+  font-family: var(--font-data, sans-serif);
+  font-size: 0.56rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgb(255 255 255 / 0.38);
+}
+
+/* TABLET + TOUCH */
+
+@media (max-width: 1199px) {
+  .marketplace-infinite-showroom {
+    height: auto;
+    min-height: 0;
+    margin-top: 1.5rem;
+  }
+
+  .marketplace-infinite-showroom-sticky {
+    position: relative;
+    top: auto;
+    height: auto;
+    min-height: 0;
+    display: block;
+    overflow: visible;
+    padding: 0;
+  }
+
+  .marketplace-infinite-showroom-heading {
+    position: relative;
+    inset: auto;
+    margin-bottom: 0.9rem;
+  }
+
+  .marketplace-infinite-showroom-stage {
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    margin: 0;
+    overflow: hidden;
+    isolation: isolate;
+    border-radius: 1.5rem;
+    touch-action: pan-y;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .marketplace-infinite-showroom-card {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    height: auto;
+    display: none;
+    transform: none !important;
+    opacity: 1 !important;
+    filter: none !important;
+  }
+
+  .marketplace-infinite-showroom-card-active {
+    display: block;
+  }
+
+  .marketplace-infinite-showroom-card-next,
+  .marketplace-infinite-showroom-card-previous {
+    display: none;
+  }
+
+  .marketplace-infinite-showroom-toolbar {
+    margin-top: 0.75rem;
+  }
+}
+
+/* TABLET */
+
+@media (min-width: 768px) and (max-width: 1199px) {
+  .marketplace-infinite-showroom-stage {
+    border-radius: 1.75rem;
+  }
+
+  .marketplace-infinite-showroom-toolbar {
+    margin-top: 1rem;
+  }
+
+  .marketplace-infinite-showroom-control {
+    min-height: 3rem;
+    padding-inline: 1rem;
+  }
+}
+
+/* PHONE */
+
+@media (max-width: 767px) {
+  .marketplace-infinite-showroom {
+    margin-top: 1.25rem;
+  }
+
+  .marketplace-infinite-showroom-heading {
+    margin-bottom: 0.7rem;
+  }
+
+  .marketplace-infinite-showroom-stage {
+    border-radius: 1.25rem;
+  }
+
+  .marketplace-infinite-showroom-toolbar {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.75rem;
+    margin-top: 0.7rem;
+  }
+
+  .marketplace-infinite-showroom-controls {
+    min-width: 0;
+    justify-content: flex-end;
+  }
+
+  .marketplace-infinite-showroom-control {
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    padding: 0.6rem 0.7rem;
+  }
+
+  .marketplace-infinite-showroom-control span:not([aria-hidden='true']) {
+    display: none;
+  }
+
+  .marketplace-infinite-showroom-dots {
+    display: none;
+  }
+
+  .marketplace-infinite-showroom-hint {
+    grid-column: 1 / -1;
+    text-align: center;
+    font-size: 0.5rem;
+  }
+
+  .marketplace-vehicle-card {
+    border: 1px solid rgb(10 10 10 / 0.08);
+  }
+
+  .marketplace-vehicle-card-media {
+    aspect-ratio: 4 / 3;
+  }
+
+  .marketplace-vehicle-card-content {
+    padding: 1rem;
+  }
+
+  .marketplace-vehicle-card-content h2 {
+    max-width: 100%;
+    font-size: 1.25rem;
+    line-height: 1.08;
+  }
+
+  .marketplace-vehicle-card-actions {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.45rem;
+  }
+
+  .marketplace-vehicle-card-actions > a {
+    width: 100%;
+    min-width: 0;
+    min-height: 2.75rem;
+    justify-content: center;
+    padding-inline: 0.65rem;
+    font-size: 0.54rem;
+  }
+
+  .marketplace-vehicle-card-actions > a:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .marketplace-vehicle-card-gradient {
+    background: linear-gradient(
+      to top,
+      rgb(0 0 0 / 0.78),
+      rgb(0 0 0 / 0.12) 62%,
+      transparent
+    );
+  }
+}
+
+/* SMALL PHONES */
+
+@media (max-width: 420px) {
+  .marketplace-infinite-showroom-control {
+    min-height: 2.55rem;
+    min-width: 2.55rem;
+    padding-inline: 0.6rem;
+  }
+
+  .marketplace-vehicle-card-content {
+    padding: 0.85rem;
+  }
+
+  .marketplace-vehicle-card-content h2 {
+    font-size: 1.15rem;
+  }
+
+  .marketplace-vehicle-card-actions {
+    gap: 0.4rem;
+  }
+
+  .marketplace-vehicle-card-actions > a {
+    min-height: 2.6rem;
+    font-size: 0.5rem;
+  }
+}
+
+/* REDUCED MOTION */
+
+@media (prefers-reduced-motion: reduce) {
+  .marketplace-infinite-showroom-card,
+  .marketplace-infinite-showroom-control,
+  .marketplace-infinite-showroom-dot {
+    transition: none !important;
+  }
+}
+
