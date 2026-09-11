@@ -1935,3 +1935,24 @@
     font-size: 0.5rem;
   }
 }
+
+/* Marketplace browsing model:
+   Desktop = familiar vertical inventory
+   Tablet/mobile = responsive showroom experience */
+.marketplace-desktop-vertical-list {
+  display: block;
+}
+
+.marketplace-responsive-showroom {
+  display: none;
+}
+
+@media (max-width: 1199px) {
+  .marketplace-desktop-vertical-list {
+    display: none;
+  }
+
+  .marketplace-responsive-showroom {
+    display: block;
+  }
+}
