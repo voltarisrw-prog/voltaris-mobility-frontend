@@ -5,7 +5,7 @@ import { buildMetadata } from '@/lib/seo/metadata';
 export const metadata: Metadata = buildMetadata({
   title: 'Drive what fits your journey',
   description:
-    'Rent electric and hybrid cars through Voltaris.',
+    '',
   path: '/rent',
 });
 
@@ -24,7 +24,7 @@ export default function RentPage({
       mode="rental"
       basePath="/rent"
       title="Drive what fits your journey"
-      description="Rent electric and hybrid cars through Voltaris."
+      description=""
     />
   );
 }
