@@ -1,3 +1,6 @@
+'use client';
+
+import { useEffect, useRef } from 'react';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { EmptyState } from '@/components/EmptyState';
 import { JsonLd } from '@/components/JsonLd';
@@ -140,9 +143,89 @@ export async function MarketplacePage({
         (() => {
           const loadedResults = results;
 
+
+  const verticalShowcaseRef = useRef<HTMLDivElement | null>(null);
+  const verticalShowcaseTimer = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  useEffect(() => {
+    const container = verticalShowcaseRef.current;
+    if (!container || loadedResults.items.length < 2) return;
+
+    const startAutoSlide = () => {
+      if (verticalShowcaseTimer.current) {
+        clearInterval(verticalShowcaseTimer.current);
+      }
+
+      verticalShowcaseTimer.current = setInterval(() => {
+        const sections = Array.from(
+          container.querySelectorAll<HTMLElement>(
+            '.marketplace-vertical-showcase-item'
+          )
+        );
+
+        if (sections.length < 2) return;
+
+        let currentIndex = 0;
+        let closestDistance = Number.POSITIVE_INFINITY;
+
+        sections.forEach((section, index) => {
+          const distance = Math.abs(
+            section.getBoundingClientRect().top
+          );
+
+          if (distance < closestDistance) {
+            closestDistance = distance;
+            currentIndex = index;
+          }
+        });
+
+        const nextIndex = (currentIndex + 1) % sections.length;
+        const nextSection = sections[nextIndex];
+
+        if (!nextSection) return;
+
+        nextSection.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        });
+      }, 6500);
+    };
+
+    const pauseAutoSlide = () => {
+      if (verticalShowcaseTimer.current) {
+        clearInterval(verticalShowcaseTimer.current);
+        verticalShowcaseTimer.current = null;
+      }
+    };
+
+    const resumeAutoSlide = () => {
+      pauseAutoSlide();
+
+      window.setTimeout(() => {
+        startAutoSlide();
+      }, 1800);
+    };
+
+    startAutoSlide();
+
+    container.addEventListener('mouseenter', pauseAutoSlide);
+    container.addEventListener('mouseleave', resumeAutoSlide);
+    container.addEventListener('touchstart', pauseAutoSlide, { passive: true });
+    container.addEventListener('touchend', resumeAutoSlide, { passive: true });
+
+    return () => {
+      pauseAutoSlide();
+
+      container.removeEventListener('mouseenter', pauseAutoSlide);
+      container.removeEventListener('mouseleave', resumeAutoSlide);
+      container.removeEventListener('touchstart', pauseAutoSlide);
+      container.removeEventListener('touchend', resumeAutoSlide);
+    };
+  }, [loadedResults.items.length]);
+
           return (
             <>
-              <div className="marketplace-vertical-showcase">
+              <div ref={verticalShowcaseRef} className="marketplace-vertical-showcase">
                 {loadedResults.items.map((vehicle, index) => (
                   <section
                     key={vehicle.id}
