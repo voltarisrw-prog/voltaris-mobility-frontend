@@ -125,15 +125,17 @@ export function MarketplaceEditorialMotion({
      * Trackpads/mouse wheels get a deliberate lock so one gesture
      * does not skip several vehicles.
      */
-    if (window.innerWidth < 1200 || wheelLock.current) return;
+    if (wheelLock.current) return;
 
-    const threshold = 22;
+    const isHorizontalGesture = Math.abs(event.deltaX) > Math.abs(event.deltaY);
+    const wheelDelta = isHorizontalGesture ? event.deltaX : event.deltaY;
+    const threshold = window.innerWidth < 768 ? 42 : 22;
 
-    if (Math.abs(event.deltaY) < threshold) return;
+    if (Math.abs(wheelDelta) < threshold) return;
 
     wheelLock.current = true;
 
-    move(event.deltaY > 0 ? 1 : -1);
+    move(wheelDelta > 0 ? 1 : -1);
 
     window.setTimeout(() => {
       wheelLock.current = false;
@@ -175,8 +177,8 @@ export function MarketplaceEditorialMotion({
      * Predominantly vertical gestures remain normal page scrolling.
      */
     if (
-      Math.abs(deltaX) > 48 &&
-      Math.abs(deltaX) > Math.abs(deltaY) * 1.2
+      Math.abs(deltaX) > 36 &&
+      Math.abs(deltaX) > Math.abs(deltaY) * 1.15
     ) {
       move(deltaX < 0 ? 1 : -1);
     }
@@ -196,14 +198,6 @@ export function MarketplaceEditorialMotion({
       onTouchEnd={handleTouchEnd}
     >
       <div className="marketplace-infinite-showroom-sticky">
-        <div className="marketplace-infinite-showroom-heading shell">
-          <div className="flex items-end justify-between gap-4">
-            <div>
-            </div>
-
-          </div>
-        </div>
-
         <div
           className="marketplace-infinite-showroom-stage"
           tabIndex={0}
@@ -297,11 +291,6 @@ export function MarketplaceEditorialMotion({
         </div>
 
         <div className="marketplace-infinite-showroom-toolbar shell">
-          <div className="marketplace-infinite-showroom-position sm:hidden">
-            {String(activeIndex + 1).padStart(2, '0')} /{' '}
-            {String(count).padStart(2, '0')}
-          </div>
-
           <div className="marketplace-infinite-showroom-controls">
             <button
               type="button"

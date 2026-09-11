@@ -559,43 +559,36 @@
 }
 
 
-/* Infinite living showroom */
+/* Infinite adaptive marketplace showroom */
 .marketplace-infinite-showroom {
   position: relative;
-  height: 108svh;
-  min-height: 720px;
-  margin-top: 2rem;
+  width: 100%;
+  min-height: clamp(640px, 92svh, 920px);
+  margin-top: clamp(1rem, 2vw, 2rem);
 }
 
 .marketplace-infinite-showroom-sticky {
   position: sticky;
   top: 0;
+  width: 100%;
   height: 100svh;
-  min-height: 720px;
+  min-height: 640px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   overflow: hidden;
   isolation: isolate;
-}
-
-.marketplace-infinite-showroom-heading {
-  position: absolute;
-  top: 1.25rem;
-  left: 0;
-  right: 0;
-  z-index: 250;
-  pointer-events: none;
+  padding: clamp(1rem, 2vw, 2rem) 0;
 }
 
 .marketplace-infinite-showroom-stage {
   position: relative;
-  width: min(100%, 1180px);
-  height: min(70svh, 720px);
-  min-height: 480px;
+  width: min(94vw, 1240px);
+  height: clamp(390px, 68svh, 720px);
   margin: 0 auto;
   overflow: visible;
   isolation: isolate;
+  touch-action: pan-y;
 }
 
 .marketplace-infinite-showroom-card {
@@ -604,56 +597,237 @@
   transform-origin: center center;
   will-change: transform, opacity, filter;
   transition:
-    transform 1100ms cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 850ms ease,
-    filter 850ms ease;
+    transform 850ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 650ms ease,
+    filter 650ms ease;
+  pointer-events: none;
 }
 
 .marketplace-infinite-showroom-card-active {
   z-index: 100;
+  pointer-events: auto;
 }
 
 .marketplace-infinite-showroom-card-next,
 .marketplace-infinite-showroom-card-previous {
   transform-origin: center center;
+  pointer-events: auto;
 }
 
-@media (max-width: 640px) {
+/*
+ * Tablet / laptop:
+ * Keep neighboring cards visible so users immediately understand
+ * that the showroom contains more vehicles.
+ */
+@media (max-width: 1199px) {
   .marketplace-infinite-showroom {
-    height: 105svh;
-    min-height: 620px;
+    min-height: clamp(570px, 88svh, 820px);
+    margin-top: 1.25rem;
   }
 
   .marketplace-infinite-showroom-sticky {
-    min-height: 620px;
-  }
-
-  .marketplace-infinite-showroom-heading {
-    top: 0.8rem;
+    position: relative;
+    height: auto;
+    min-height: 0;
+    padding: 0.5rem 0 1.25rem;
+    overflow: visible;
   }
 
   .marketplace-infinite-showroom-stage {
-    height: 62svh;
-    min-height: 390px;
+    width: 100%;
+    height: clamp(400px, 64svh, 650px);
+    min-height: 400px;
+    padding-inline: clamp(1rem, 4vw, 3rem);
   }
 
-  .marketplace-infinite-showroom-control-previous {
-    top: 0.8rem;
+  .marketplace-infinite-showroom-card {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    transform-origin: center center;
   }
 
-  .marketplace-infinite-showroom-control-next {
-    bottom: 0.8rem;
+  .marketplace-infinite-showroom-card-active {
+    transform: translate3d(0, 0, 0) scale(1) !important;
+    opacity: 1 !important;
+    filter: none !important;
+  }
+
+  /*
+   * Previous/next cards become discovery previews.
+   * Their inline transforms are intentionally overridden at this breakpoint.
+   */
+  .marketplace-infinite-showroom-card-next {
+    transform: translate3d(74%, 2%, 0) scale(0.82) !important;
+    opacity: 0.32 !important;
+    filter: blur(1px) !important;
+  }
+
+  .marketplace-infinite-showroom-card-previous {
+    transform: translate3d(-74%, 2%, 0) scale(0.82) !important;
+    opacity: 0.32 !important;
+    filter: blur(1px) !important;
+  }
+
+  .marketplace-infinite-showroom-card:not(
+      .marketplace-infinite-showroom-card-active
+    ):not(.marketplace-infinite-showroom-card-next):not(
+      .marketplace-infinite-showroom-card-previous
+    ) {
+    opacity: 0 !important;
+    pointer-events: none;
+  }
+}
+
+/*
+ * Tablet:
+ * Give the neighboring vehicle a stronger visual preview.
+ */
+@media (min-width: 768px) and (max-width: 1199px) {
+  .marketplace-infinite-showroom-stage {
+    width: min(94vw, 1080px);
+    height: clamp(430px, 62svh, 620px);
+    padding-inline: 0;
+  }
+
+  .marketplace-infinite-showroom-card-next {
+    transform: translate3d(68%, 1.5%, 0) scale(0.84) !important;
+    opacity: 0.4 !important;
+  }
+
+  .marketplace-infinite-showroom-card-previous {
+    transform: translate3d(-68%, 1.5%, 0) scale(0.84) !important;
+    opacity: 0.4 !important;
+  }
+}
+
+/*
+ * Phone:
+ * The active vehicle fills the available width while the next/previous
+ * cards visibly peek from the sides.
+ */
+@media (max-width: 767px) {
+  .marketplace-infinite-showroom {
+    min-height: 0;
+    margin-top: 0.75rem;
+  }
+
+  .marketplace-infinite-showroom-sticky {
+    min-height: 0;
+    padding: 0 0 1rem;
+  }
+
+  .marketplace-infinite-showroom-stage {
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    aspect-ratio: 4 / 4.45;
+    padding: 0;
+    overflow: visible;
+  }
+
+  .marketplace-infinite-showroom-card {
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .marketplace-infinite-showroom-card-active {
+    transform: translate3d(0, 0, 0) scale(0.92) !important;
+    opacity: 1 !important;
+    filter: none !important;
+  }
+
+  .marketplace-infinite-showroom-card-next {
+    transform: translate3d(78%, 1%, 0) scale(0.78) !important;
+    opacity: 0.28 !important;
+    filter: blur(1px) !important;
+  }
+
+  .marketplace-infinite-showroom-card-previous {
+    transform: translate3d(-78%, 1%, 0) scale(0.78) !important;
+    opacity: 0.28 !important;
+    filter: blur(1px) !important;
+  }
+
+  .marketplace-infinite-showroom-toolbar {
+    width: 100%;
+    margin-top: 0.35rem;
+    margin-bottom: 0;
+    padding-inline: 1rem;
+  }
+
+  .marketplace-infinite-showroom-controls {
+    width: 100%;
+    justify-content: center;
   }
 
   .marketplace-infinite-showroom-control {
-    padding: 0.58rem 0.72rem;
-    font-size: 0.56rem;
+    min-height: 2.65rem;
+    padding: 0.55rem 0.8rem;
+  }
+
+  .marketplace-infinite-showroom-control span {
+    display: none;
+  }
+
+  .marketplace-infinite-showroom-hint {
+    display: block;
+    width: 100%;
+    margin: 0.5rem 0 0;
+    text-align: center;
+  }
+
+  .marketplace-vehicle-card {
+    border: 1px solid rgb(10 10 10 / 0.08);
+  }
+
+  .marketplace-vehicle-card-media {
+    aspect-ratio: 4 / 3;
+  }
+
+  .marketplace-vehicle-card-content {
+    padding: 0.9rem;
+  }
+
+  .marketplace-vehicle-card-content h2 {
+    max-width: 100%;
+    font-size: clamp(1.1rem, 5vw, 1.35rem);
+    line-height: 1.08;
+  }
+
+  .marketplace-vehicle-card-actions {
+    gap: 0.45rem;
+  }
+
+  .marketplace-vehicle-card-actions > a {
+    min-width: 0;
+  }
+}
+
+@media (max-width: 380px) {
+  .marketplace-infinite-showroom-stage {
+    aspect-ratio: 4 / 4.7;
+  }
+
+  .marketplace-infinite-showroom-card-active {
+    transform: translate3d(0, 0, 0) scale(0.9) !important;
+  }
+
+  .marketplace-infinite-showroom-card-next {
+    transform: translate3d(82%, 1%, 0) scale(0.74) !important;
+  }
+
+  .marketplace-infinite-showroom-card-previous {
+    transform: translate3d(-82%, 1%, 0) scale(0.74) !important;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .marketplace-infinite-showroom-card {
-    transition: none;
+    transition: none !important;
   }
 }
 
