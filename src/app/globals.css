@@ -1956,3 +1956,229 @@
     display: block;
   }
 }
+
+/* VOLTARIS PREMIUM VERTICAL MARKETPLACE SHOWROOM */
+
+/*
+ * One vehicle.
+ * Then another vehicle below it.
+ * Then another.
+ *
+ * No horizontal desktop carousel.
+ * No 3-column desktop grid.
+ */
+
+.marketplace-vertical-showcase {
+  width: 100%;
+  margin-top: clamp(1.5rem, 3vw, 3rem);
+}
+
+.marketplace-vertical-showcase-item {
+  position: relative;
+  width: 100%;
+  min-height: min(88svh, 940px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: clamp(2rem, 5vw, 5rem);
+  scroll-margin-top: 2rem;
+}
+
+.marketplace-vertical-showcase-item:last-child {
+  margin-bottom: 0;
+}
+
+/* ==========================================================
+   LARGE PREMIUM VEHICLE
+   ========================================================== */
+
+.marketplace-vertical-showcase
+.marketplace-vehicle-card {
+  position: relative;
+  width: min(96vw, 1500px);
+  min-height: min(82svh, 880px);
+  margin: 0 auto;
+  overflow: hidden;
+  border-radius: clamp(1.25rem, 2vw, 2rem);
+}
+
+/* Existing card media */
+.marketplace-vertical-showcase
+.marketplace-vehicle-card-media {
+  width: 100%;
+  height: min(82svh, 880px);
+  min-height: 620px;
+}
+
+/* Existing card image */
+.marketplace-vertical-showcase
+.marketplace-vehicle-card-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ==========================================================
+   CINEMATIC OVERLAY
+   ========================================================== */
+
+.marketplace-vertical-showcase
+.marketplace-vehicle-card-gradient {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(0, 0, 0, 0.015) 40%,
+      rgba(0, 0, 0, 0.18) 62%,
+      rgba(0, 0, 0, 0.86) 100%
+    );
+}
+
+/* ==========================================================
+   CARD CONTENT
+   ========================================================== */
+
+.marketplace-vertical-showcase
+.marketplace-vehicle-card-content {
+  position: absolute;
+  left: clamp(1.5rem, 4vw, 4rem);
+  right: clamp(1.5rem, 4vw, 4rem);
+  bottom: clamp(1.5rem, 4vw, 3.5rem);
+  z-index: 3;
+}
+
+/* Premium vehicle name */
+.marketplace-vertical-showcase
+.marketplace-vehicle-card-content h2 {
+  font-size: clamp(2.2rem, 5vw, 5rem);
+  line-height: 0.95;
+  letter-spacing: -0.045em;
+}
+
+/* Touch-friendly actions */
+.marketplace-vertical-showcase
+.marketplace-vehicle-card-actions
+a {
+  min-height: 48px;
+}
+
+/* ==========================================================
+   DESKTOP
+   ========================================================== */
+
+@media (min-width: 1200px) {
+  .marketplace-vertical-showcase-item {
+    min-height: min(90svh, 980px);
+  }
+
+  .marketplace-vertical-showcase
+  .marketplace-vehicle-card {
+    min-height: min(84svh, 900px);
+  }
+
+  .marketplace-vertical-showcase
+  .marketplace-vehicle-card-media {
+    height: min(84svh, 900px);
+  }
+}
+
+/* ==========================================================
+   TABLET
+   ========================================================== */
+
+@media (max-width: 1199px) {
+  .marketplace-vertical-showcase-item {
+    min-height: auto;
+    display: block;
+    margin-bottom: 2.5rem;
+  }
+
+  .marketplace-vertical-showcase
+  .marketplace-vehicle-card {
+    width: 100%;
+    min-height: 700px;
+    border-radius: 1.5rem;
+  }
+
+  .marketplace-vertical-showcase
+  .marketplace-vehicle-card-media {
+    height: 700px;
+    min-height: 0;
+  }
+}
+
+/* ==========================================================
+   MOBILE
+   ========================================================== */
+
+@media (max-width: 767px) {
+  .marketplace-vertical-showcase {
+    margin-top: 1rem;
+  }
+
+  .marketplace-vertical-showcase-item {
+    margin-bottom: 1.25rem;
+  }
+
+  .marketplace-vertical-showcase
+  .marketplace-vehicle-card {
+    width: 100%;
+    min-height: 0;
+    border-radius: 1.1rem;
+  }
+
+  .marketplace-vertical-showcase
+  .marketplace-vehicle-card-media {
+    height: 76svh;
+    min-height: 500px;
+  }
+
+  .marketplace-vertical-showcase
+  .marketplace-vehicle-card-content {
+    left: 1rem;
+    right: 1rem;
+    bottom: 1rem;
+  }
+
+  .marketplace-vertical-showcase
+  .marketplace-vehicle-card-content h2 {
+    font-size: clamp(2rem, 9vw, 3rem);
+  }
+
+  .marketplace-vertical-showcase
+  .marketplace-vehicle-card-actions {
+    gap: 0.5rem;
+  }
+
+  .marketplace-vertical-showcase
+  .marketplace-vehicle-card-actions a {
+    min-height: 46px;
+  }
+}
+
+/* ==========================================================
+   SMALL PHONES
+   ========================================================== */
+
+@media (max-width: 380px) {
+  .marketplace-vertical-showcase
+  .marketplace-vehicle-card-media {
+    height: 70svh;
+    min-height: 460px;
+  }
+}
+
+/* ==========================================================
+   REDUCED MOTION
+   ========================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .marketplace-vertical-showcase-item {
+    scroll-behavior: auto;
+  }
+}
+
