@@ -9,6 +9,7 @@ import { organizationJsonLd } from '@/lib/seo/jsonld';
 import { AnalyticsBootstrap } from '@/components/AnalyticsBootstrap';
 import { ToastProvider } from '@/components/ui';
 
+import VoltarisScrollMotion from "@/components/VoltarisScrollMotion";
 const display = Instrument_Serif({
   subsets: ['latin'],
   weight: '400',
@@ -58,6 +59,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en-RW" className={`${display.variable} ${body.variable} ${data.variable}`}>
       <body>
+        <VoltarisScrollMotion />
         <JsonLd data={organizationJsonLd()} />
         <AnalyticsBootstrap />
         <ToastProvider>

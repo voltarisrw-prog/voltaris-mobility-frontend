@@ -2472,3 +2472,189 @@ a {
     bottom: 14px;
   }
 }
+
+
+/* ================================================================
+   VOLTARIS GLOBAL SCROLL MOTION SYSTEM
+   Cinematic reveal / exit architecture
+   ================================================================ */
+
+.voltaris-motion {
+  --voltaris-motion-y: 42px;
+  --voltaris-motion-scale: 0.985;
+  --voltaris-motion-duration: 900ms;
+  --voltaris-motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  opacity: 0;
+  transform:
+    translate3d(0, var(--voltaris-motion-y), 0)
+    scale(var(--voltaris-motion-scale));
+  filter: blur(5px);
+
+  transition:
+    opacity var(--voltaris-motion-duration) var(--voltaris-motion-ease),
+    transform var(--voltaris-motion-duration) var(--voltaris-motion-ease),
+    filter var(--voltaris-motion-duration) var(--voltaris-motion-ease);
+
+  will-change: opacity, transform, filter;
+}
+
+.voltaris-motion-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+  filter: blur(0);
+}
+
+/* Cinematic exit */
+.voltaris-motion-hidden {
+  opacity: 0.08;
+  transform:
+    translate3d(0, -34px, 0)
+    scale(0.985);
+  filter: blur(3px);
+}
+
+/* ------------------------------------------------
+   Directional entrance variations
+   ------------------------------------------------ */
+
+[data-motion-type="left"] {
+  --voltaris-motion-y: 0px;
+  transform:
+    translate3d(-60px, 0, 0)
+    scale(var(--voltaris-motion-scale));
+}
+
+[data-motion-type="right"] {
+  --voltaris-motion-y: 0px;
+  transform:
+    translate3d(60px, 0, 0)
+    scale(var(--voltaris-motion-scale));
+}
+
+[data-motion-type="up"] {
+  --voltaris-motion-y: 70px;
+}
+
+[data-motion-type="scale"] {
+  --voltaris-motion-y: 0px;
+  --voltaris-motion-scale: 0.92;
+}
+
+/* ------------------------------------------------
+   Large sections get cinematic treatment
+   ------------------------------------------------ */
+
+main > section.voltaris-motion,
+main > div > section.voltaris-motion {
+  --voltaris-motion-y: 70px;
+  --voltaris-motion-duration: 1100ms;
+}
+
+/* ------------------------------------------------
+   Images arrive slightly later / softer
+   ------------------------------------------------ */
+
+.voltaris-motion img,
+.voltaris-motion picture {
+  transition:
+    transform 1200ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 1000ms ease;
+}
+
+.voltaris-motion:not(.voltaris-motion-visible) img {
+  transform: scale(1.035);
+}
+
+/* ------------------------------------------------
+   Cards feel like they are being placed into the scene
+   ------------------------------------------------ */
+
+[class*="card"].voltaris-motion,
+[class*="Card"].voltaris-motion,
+[class*="vehicle"].voltaris-motion,
+[class*="Vehicle"].voltaris-motion {
+  --voltaris-motion-y: 48px;
+  --voltaris-motion-scale: 0.975;
+}
+
+/* ------------------------------------------------
+   Stagger children
+   ------------------------------------------------ */
+
+.voltaris-motion-visible > *:nth-child(1) {
+  transition-delay: 40ms;
+}
+
+.voltaris-motion-visible > *:nth-child(2) {
+  transition-delay: 100ms;
+}
+
+.voltaris-motion-visible > *:nth-child(3) {
+  transition-delay: 160ms;
+}
+
+.voltaris-motion-visible > *:nth-child(4) {
+  transition-delay: 220ms;
+}
+
+.voltaris-motion-visible > *:nth-child(5) {
+  transition-delay: 280ms;
+}
+
+/* ------------------------------------------------
+   Don't interfere with fixed/sticky UI
+   ------------------------------------------------ */
+
+header,
+nav,
+[role="dialog"],
+[data-motion-ignore] {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+/* ------------------------------------------------
+   Reduced motion accessibility
+   ------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+  .voltaris-motion,
+  .voltaris-motion-visible,
+  .voltaris-motion-hidden {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+  }
+
+  .voltaris-motion img {
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* ------------------------------------------------
+   Mobile: shorter, faster, cleaner
+   ------------------------------------------------ */
+
+@media (max-width: 640px) {
+  .voltaris-motion {
+    --voltaris-motion-y: 24px;
+    --voltaris-motion-duration: 650ms;
+    --voltaris-motion-scale: 0.99;
+    filter: blur(3px);
+  }
+
+  .voltaris-motion-hidden {
+    opacity: 0.12;
+    transform: translate3d(0, -18px, 0) scale(0.99);
+    filter: blur(2px);
+  }
+
+  main > section.voltaris-motion,
+  main > div > section.voltaris-motion {
+    --voltaris-motion-y: 32px;
+  }
+}
