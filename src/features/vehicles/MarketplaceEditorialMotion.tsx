@@ -199,22 +199,8 @@ export function MarketplaceEditorialMotion({
         <div className="marketplace-infinite-showroom-heading shell">
           <div className="flex items-end justify-between gap-4">
             <div>
-              <p className="font-data text-[0.6rem] uppercase tracking-[0.2em] text-steel-muted">
-                {mode === 'rental' ? 'READY TO RENT' : 'THE COLLECTION'}
-              </p>
-
-              <h2 className="mt-2 font-display text-2xl tracking-tight text-chrome sm:text-3xl lg:text-4xl">
-                Move differently.
-              </h2>
             </div>
 
-            <div
-              className="hidden font-data text-[0.62rem] uppercase tracking-[0.16em] text-steel-muted sm:block"
-              aria-live="polite"
-            >
-              {String(activeIndex + 1).padStart(2, '0')} /{' '}
-              {String(count).padStart(2, '0')}
-            </div>
           </div>
         </div>
 
