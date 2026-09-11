@@ -41,6 +41,19 @@ export function SiteHeader() {
     };
   }, []);
 
+  useEffect(() => {
+    // A fullscreen mobile menu must own the viewport while it is open.
+    const previousOverflow = document.body.style.overflow;
+
+    if (mobileOpen) {
+      document.body.style.overflow = 'hidden';
+    }
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [mobileOpen]);
+
   return (
     <>
       <header
@@ -137,123 +150,92 @@ export function SiteHeader() {
       
       {mobileOpen && (
         <div
-          className={cn(
-            'fixed inset-0 z-[90] bg-surface lg:hidden transition-[opacity,visibility] duration-500',
-            mobileOpen
-              ? 'visible opacity-100'
-              : 'invisible pointer-events-none opacity-0',
-          )}
+          className="fixed inset-0 z-[90] flex h-[100dvh] flex-col bg-surface lg:hidden"
           role="dialog"
           aria-modal="true"
           aria-label="Mobile navigation"
-          aria-hidden={!mobileOpen}
         >
-          <div
-            className={cn(
-              'flex min-h-dvh flex-col origin-top transition-[transform,opacity] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]',
-              mobileOpen ? 'translate-y-0 scale-100 opacity-100' : '-translate-y-6 scale-[0.985] opacity-0',
-            )}
-          >
-            <div className="shell flex h-20 shrink-0 items-center justify-between border-b border-hairline">
-              <Link
-                href="/"
-                aria-label="Voltaris Mobility home"
-                onClick={() => setMobileOpen(false)}
-                className="group inline-flex items-center rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volt/60"
-              >
-                <VoltarisLogo className="h-7 transition-transform duration-300 group-hover:scale-[1.03]" />
-              </Link>
+          <div className="shell flex h-16 shrink-0 items-center justify-between border-b border-hairline sm:h-20">
+            <Link
+              href="/"
+              aria-label="Voltaris Mobility home"
+              onClick={() => setMobileOpen(false)}
+              className="inline-flex items-center rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volt/60"
+            >
+              <VoltarisLogo className="h-7 sm:h-8" />
+            </Link>
 
-              <button
-                type="button"
-                aria-label="Close navigation menu"
-                onClick={() => setMobileOpen(false)}
-                className="group inline-flex h-11 w-11 items-center justify-center rounded-full border border-hairline text-chrome transition-all duration-300 hover:border-volt hover:text-volt hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volt/60"
-              >
-                <X
-                  className="h-5 w-5 transition-transform duration-300 group-hover:rotate-90"
-                  aria-hidden="true"
-                />
-              </button>
-            </div>
+            <button
+              type="button"
+              aria-label="Close navigation menu"
+              onClick={() => setMobileOpen(false)}
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-hairline text-chrome transition-colors hover:border-volt hover:text-volt focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volt/60 sm:h-11 sm:w-11"
+            >
+              <X className="h-5 w-5" aria-hidden="true" />
+            </button>
+          </div>
 
-            <div className="shell flex flex-1 flex-col justify-start overflow-y-auto py-12 sm:py-16">
-              <nav aria-label="Mobile main">
-                <ul className="divide-y divide-hairline border-y border-hairline">
-                  {nav.primary.map((item, index) => {
-                    const isCompare = item.href.split('?')[0] === '/compare';
-                    const href = isCompare ? compareHref : item.href;
-                    const active = pathname === item.href.split('?')[0];
+          <div className="shell flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain py-5 sm:py-8">
+            <nav aria-label="Mobile main" className="shrink-0">
+              <ul className="border-y border-hairline">
+                {nav.primary.map((item) => {
+                  const isCompare = item.href.split('?')[0] === '/compare';
+                  const href = isCompare ? compareHref : item.href;
+                  const active = pathname === item.href.split('?')[0];
 
-                    return (
-                      <li
-                        key={item.href}
+                  return (
+                    <li key={item.href} className="border-b border-hairline last:border-b-0">
+                      <Link
+                        href={href}
+                        onClick={() => setMobileOpen(false)}
+                        aria-current={active ? 'page' : undefined}
                         className={cn(
-                          'transition-all duration-500',
-                          mobileOpen
-                            ? 'translate-y-0 opacity-100'
-                            : 'translate-y-5 opacity-0',
+                          'group flex min-h-[3.65rem] items-center justify-between px-1 py-2',
+                          'font-display text-[1.08rem] font-semibold leading-none tracking-[-0.025em]',
+                          'transition-colors duration-200 sm:min-h-14 sm:text-xl',
+                          active
+                            ? 'text-volt'
+                            : 'text-chrome hover:text-volt',
                         )}
-                        style={{
-                          transitionDelay: mobileOpen
-                            ? `${140 + index * 45}ms`
-                            : '0ms',
-                        }}
                       >
-                        <Link
-                          href={href}
-                          onClick={() => setMobileOpen(false)}
-                          aria-current={active ? 'page' : undefined}
+                        <span>{item.label}</span>
+
+                        <span
                           className={cn(
-                            'group flex min-h-12 items-center justify-between py-2 px-1 sm:min-h-14 sm:py-3',
-                            'font-display text-[1.15rem] font-medium tracking-[-0.02em] sm:text-2xl',
-                            'transition-colors duration-300',
+                            'font-data text-sm leading-none transition-transform duration-200 sm:text-base',
                             active
-                              ? 'text-volt'
-                              : 'text-chrome hover:text-volt',
+                              ? 'translate-x-0 text-volt'
+                              : 'translate-x-0 text-steel-muted group-hover:translate-x-1 group-hover:text-volt',
                           )}
+                          aria-hidden="true"
                         >
-                          <span>{item.label}</span>
+                          →
+                        </span>
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </nav>
 
-                          <span
-                            className={cn(
-                              'font-data text-base leading-none',
-                              'transition-all duration-300',
-                              active
-                                ? 'translate-x-0 text-volt opacity-100'
-                                : 'translate-x-1 text-steel-muted opacity-50 group-hover:translate-x-0 group-hover:text-volt group-hover:opacity-100',
-                            )}
-                            aria-hidden="true"
-                          >
-                            →
-                          </span>
-                        </Link>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </nav>
+            <div className="mt-auto flex shrink-0 items-center justify-between gap-4 border-t border-hairline pt-4 sm:pt-6">
+              <p className="max-w-[15rem] font-data text-[0.52rem] uppercase leading-relaxed tracking-[0.13em] text-steel-muted sm:text-[0.58rem]">
+                Mobility, selected with intention.
+              </p>
 
-              <div className="mt-6 flex items-end justify-between gap-4 border-t border-hairline pt-4 sm:mt-10 sm:pt-6">
-                <p className="max-w-xs font-data text-[0.58rem] uppercase leading-relaxed tracking-[0.14em] text-steel-muted">
-                  Mobility, selected with intention.
-                </p>
-
-                <Link
-                  href="/cars"
-                  onClick={() => setMobileOpen(false)}
-                  className="shrink-0 font-data text-[0.58rem] uppercase tracking-[0.16em] text-steel-muted transition-colors duration-300 hover:text-volt"
-                >
-                  Explore
-                </Link>
-              </div>
+              <Link
+                href="/cars"
+                onClick={() => setMobileOpen(false)}
+                className="shrink-0 font-data text-[0.56rem] font-semibold uppercase tracking-[0.15em] text-steel-muted transition-colors hover:text-volt sm:text-[0.6rem]"
+              >
+                Explore
+              </Link>
             </div>
           </div>
         </div>
       )}
+
 </header>
-
-
     </>
   );
 }
