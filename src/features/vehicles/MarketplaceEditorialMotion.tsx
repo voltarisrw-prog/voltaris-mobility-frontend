@@ -143,6 +143,11 @@ export function MarketplaceEditorialMotion({
   const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
     const touch = event.changedTouches[0];
 
+    if (!touch) {
+      keepInteractionAlive();
+      return;
+    }
+
     touchStartX.current = touch.clientX;
     touchStartY.current = touch.clientY;
 
@@ -150,17 +155,20 @@ export function MarketplaceEditorialMotion({
   };
 
   const handleTouchEnd = (event: React.TouchEvent<HTMLDivElement>) => {
-    if (touchStartX.current === null || touchStartY.current === null) {
-      return;
-    }
-
+    const startX = touchStartX.current;
+    const startY = touchStartY.current;
     const touch = event.changedTouches[0];
-
-    const deltaX = touch.clientX - touchStartX.current;
-    const deltaY = touch.clientY - touchStartY.current;
 
     touchStartX.current = null;
     touchStartY.current = null;
+
+    if (startX === null || startY === null || !touch) {
+      keepInteractionAlive();
+      return;
+    }
+
+    const deltaX = touch.clientX - startX;
+    const deltaY = touch.clientY - startY;
 
     /*
      * Horizontal gestures navigate the vehicles.
