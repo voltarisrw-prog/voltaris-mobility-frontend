@@ -10,7 +10,7 @@ type VerticalShowcaseProps = {
   mode?: 'sale' | 'rental';
 };
 
-const AUTO_SPEED = 0.35;
+const AUTO_SPEED = 0.32;
 const MAX_DELTA_MS = 32;
 const RESUME_DELAY_MS = 1200;
 
@@ -24,7 +24,6 @@ export function VerticalShowcase({
   const trackRef = useRef<HTMLDivElement | null>(null);
 
   const animationRef = useRef<number | null>(null);
-  const lastTimeRef = useRef<number>(0);
   const offsetRef = useRef(0);
   const pausedRef = useRef(false);
   const resumeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -32,11 +31,11 @@ export function VerticalShowcase({
   const count = vehicles.length;
 
   /*
-   * Continuous vertical carousel.
+   * Continuous autoplay + original 3D positioning.
    *
-   * The track is duplicated so it can travel continuously without
-   * reaching a visual dead-end. Once the first copy has completely
-   * passed, the offset is seamlessly wrapped back to the beginning.
+   * The track moves continuously, while every individual card still
+   * receives the original 3D rotation, depth, scale and opacity based
+   * on its distance from the showcase viewport center.
    */
   useEffect(() => {
     if (count < 2) return;
@@ -47,47 +46,146 @@ export function VerticalShowcase({
     if (!viewport || !track) return;
 
     let running = true;
-    let last = performance.now();
+    let lastTime = performance.now();
 
     const getLoopHeight = () => {
-      const children = Array.from(track.children) as HTMLElement[];
+      const children = Array.from(
+        track.children,
+      ) as HTMLElement[];
 
-      if (children.length < count * 2) return 0;
+      const secondCopy = children[count];
 
-      let height = 0;
+      if (!secondCopy) return 0;
 
-      for (let i = 0; i < count; i += 1) {
-        const child = children[i];
+      /*
+       * offsetTop gives the exact distance from the first copy to the
+       * second copy, including the flex gap. This makes the wrap seamless.
+       */
+      return secondCopy.offsetTop;
+    };
 
-        if (!child) continue;
+    const update3D = () => {
+      const sections = Array.from(
+        track.querySelectorAll<HTMLElement>(
+          '[data-marketplace-showcase-item]',
+        ),
+      );
 
-        const style = window.getComputedStyle(child);
-        const marginBottom = parseFloat(style.marginBottom || '0');
+      if (!sections.length) return;
 
-        height += child.offsetHeight + marginBottom;
-      }
+      const viewportRect = viewport.getBoundingClientRect();
+      const viewportCenter =
+        viewportRect.top + viewportRect.height * 0.5;
 
-      const list = track.parentElement;
+      let closestIndex = 0;
+      let closestDistance = Number.POSITIVE_INFINITY;
 
-      if (list) {
-        const listStyle = window.getComputedStyle(list);
-        const gap = parseFloat(listStyle.rowGap || listStyle.gap || '0');
+      sections.forEach((section, index) => {
+        const rect = section.getBoundingClientRect();
+        const center = rect.top + rect.height * 0.5;
+        const distance = Math.abs(center - viewportCenter);
 
-        height += gap * count;
-      }
+        /*
+         * ORIGINAL 3D SHOWCASE MATH
+         *
+         * This is deliberately kept from the previous 3D implementation.
+         */
+        const sectionHeight = Math.max(rect.height, 1);
 
-      return height;
+        const rawProgress =
+          (viewportCenter - center) / sectionHeight;
+
+        const progress = Math.max(
+          -1.5,
+          Math.min(1.5, rawProgress),
+        );
+
+        const absProgress = Math.min(
+          Math.abs(progress),
+          1,
+        );
+
+        const direction = progress > 0 ? 1 : -1;
+
+        const rotateY = progress * -25;
+        const rotateX = absProgress * 8 * direction;
+        const rotateZ = progress * -2.5;
+        const translateX = progress * -4;
+        const translateY = progress * 18;
+        const translateZ = -absProgress * 110;
+
+        const scale =
+          1 - absProgress * 0.095;
+
+        const opacity =
+          1 -
+          Math.max(0, absProgress - 0.45) *
+            0.55;
+
+        section.style.setProperty(
+          '--showcase-rotate-y',
+          `${rotateY}deg`,
+        );
+
+        section.style.setProperty(
+          '--showcase-rotate-x',
+          `${rotateX}deg`,
+        );
+
+        section.style.setProperty(
+          '--showcase-rotate-z',
+          `${rotateZ}deg`,
+        );
+
+        section.style.setProperty(
+          '--showcase-translate-x',
+          `${translateX}%`,
+        );
+
+        section.style.setProperty(
+          '--showcase-translate-y',
+          `${translateY}px`,
+        );
+
+        section.style.setProperty(
+          '--showcase-translate-z',
+          `${translateZ}px`,
+        );
+
+        section.style.setProperty(
+          '--showcase-scale',
+          `${scale}`,
+        );
+
+        section.style.setProperty(
+          '--showcase-opacity',
+          `${opacity}`,
+        );
+
+        /*
+         * Only the first copy controls the visible counter.
+         */
+        if (
+          index < count &&
+          distance < closestDistance
+        ) {
+          closestDistance = distance;
+          closestIndex = index;
+        }
+      });
+
+      setActiveIndex(closestIndex % count);
     };
 
     const animate = (now: number) => {
       if (!running) return;
 
       const elapsed = Math.min(
-        now - last,
+        now - lastTime,
         MAX_DELTA_MS,
       );
 
-      last = now;
+      lastTime = now;
 
       if (!pausedRef.current) {
         const movement =
@@ -97,44 +195,32 @@ export function VerticalShowcase({
 
         const loopHeight = getLoopHeight();
 
-        if (loopHeight > 0 && offsetRef.current >= loopHeight) {
+        if (
+          loopHeight > 0 &&
+          offsetRef.current >= loopHeight
+        ) {
           offsetRef.current -= loopHeight;
         }
 
-        track.style.transform = `translate3d(0, -${offsetRef.current}px, 0)`;
-
         /*
-         * Determine the currently visible vehicle from the moving
-         * track instead of relying on document scrolling.
+         * Move the duplicated track continuously.
+         * The individual cards retain their own 3D transforms.
          */
-        const children = Array.from(
-          track.children,
-        ) as HTMLElement[];
-
-        const viewportRect = viewport.getBoundingClientRect();
-        const viewportCenter =
-          viewportRect.top + viewportRect.height / 2;
-
-        let closestIndex = 0;
-        let closestDistance = Number.POSITIVE_INFINITY;
-
-        children.slice(0, count).forEach((child, index) => {
-          const rect = child.getBoundingClientRect();
-          const center = rect.top + rect.height / 2;
-          const distance = Math.abs(center - viewportCenter);
-
-          if (distance < closestDistance) {
-            closestDistance = distance;
-            closestIndex = index;
-          }
-        });
-
-        setActiveIndex(closestIndex);
+        track.style.transform =
+          `translate3d(0, -${offsetRef.current}px, 0)`;
       }
+
+      /*
+       * Recalculate the original 3D effect every frame.
+       * This is what keeps the showcase dimensional while moving.
+       */
+      update3D();
 
       animationRef.current =
         window.requestAnimationFrame(animate);
     };
+
+    update3D();
 
     animationRef.current =
       window.requestAnimationFrame(animate);
@@ -143,15 +229,17 @@ export function VerticalShowcase({
       running = false;
 
       if (animationRef.current !== null) {
-        window.cancelAnimationFrame(animationRef.current);
+        window.cancelAnimationFrame(
+          animationRef.current,
+        );
+
         animationRef.current = null;
       }
     };
   }, [count]);
 
   /*
-   * Pause briefly when the user interacts with the page.
-   * Autoplay resumes automatically after the interaction stops.
+   * Briefly pause autoplay when the user interacts.
    */
   useEffect(() => {
     if (count < 2) return;
@@ -165,7 +253,6 @@ export function VerticalShowcase({
 
       resumeTimerRef.current = setTimeout(() => {
         pausedRef.current = false;
-        lastTimeRef.current = performance.now();
       }, RESUME_DELAY_MS);
     };
 
@@ -224,13 +311,14 @@ export function VerticalShowcase({
   const renderVehicle = (
     vehicle: VehicleSummary,
     index: number,
-    copy: string,
+    copy: 'original' | 'duplicate',
   ) => (
     <article
       key={`${copy}-${vehicle.id}-${index}`}
       data-marketplace-showcase-item
       className={`marketplace-native-showcase-item marketplace-3d-showcase-item ${
-        copy === 'original' && index === activeIndex
+        copy === 'original' &&
+        index === activeIndex
           ? 'marketplace-native-showcase-item-active'
           : ''
       }`}
@@ -274,11 +362,19 @@ export function VerticalShowcase({
           className="marketplace-native-showcase-list marketplace-3d-showcase-list marketplace-continuous-showcase-track"
         >
           {vehicles.map((vehicle, index) =>
-            renderVehicle(vehicle, index, 'original'),
+            renderVehicle(
+              vehicle,
+              index,
+              'original',
+            ),
           )}
 
           {vehicles.map((vehicle, index) =>
-            renderVehicle(vehicle, index, 'duplicate'),
+            renderVehicle(
+              vehicle,
+              index,
+              'duplicate',
+            ),
           )}
         </div>
       </div>
