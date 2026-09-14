@@ -10,247 +10,252 @@ type VerticalShowcaseProps = {
   mode?: 'sale' | 'rental';
 };
 
-const RESUME_DELAY_MS = 1800;
-
-// Slow, continuous showroom movement.
-// Lower = slower, higher = faster.
-const CONTINUOUS_SCROLL_PX_PER_FRAME = 0.42;
-const CONTINUOUS_SCROLL_MAX_DELTA_MS = 32;
+const AUTO_SPEED = 0.35;
+const MAX_DELTA_MS = 32;
+const RESUME_DELAY_MS = 1200;
 
 export function VerticalShowcase({
   vehicles,
   mode = 'sale',
 }: VerticalShowcaseProps) {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [autoPlay, setAutoPlay] = useState(true);
 
+  const viewportRef = useRef<HTMLDivElement | null>(null);
+  const trackRef = useRef<HTMLDivElement | null>(null);
+
+  const animationRef = useRef<number | null>(null);
+  const lastTimeRef = useRef<number>(0);
+  const offsetRef = useRef(0);
+  const pausedRef = useRef(false);
   const resumeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const interactionRef = useRef(false);
-  const rafRef = useRef<number | null>(null);
 
   const count = vehicles.length;
 
+  /*
+   * Continuous vertical carousel.
+   *
+   * The track is duplicated so it can travel continuously without
+   * reaching a visual dead-end. Once the first copy has completely
+   * passed, the offset is seamlessly wrapped back to the beginning.
+   */
   useEffect(() => {
-    if (!count) return;
+    if (count < 2) return;
 
-    const updateShowcase = () => {
-      const sections = Array.from(
-        document.querySelectorAll<HTMLElement>(
-          '[data-marketplace-showcase-item]',
-        ),
+    const viewport = viewportRef.current;
+    const track = trackRef.current;
+
+    if (!viewport || !track) return;
+
+    let running = true;
+    let last = performance.now();
+
+    const getLoopHeight = () => {
+      const children = Array.from(track.children) as HTMLElement[];
+
+      if (children.length < count * 2) return 0;
+
+      let height = 0;
+
+      for (let i = 0; i < count; i += 1) {
+        const child = children[i];
+
+        if (!child) continue;
+
+        const style = window.getComputedStyle(child);
+        const marginBottom = parseFloat(style.marginBottom || '0');
+
+        height += child.offsetHeight + marginBottom;
+      }
+
+      const list = track.parentElement;
+
+      if (list) {
+        const listStyle = window.getComputedStyle(list);
+        const gap = parseFloat(listStyle.rowGap || listStyle.gap || '0');
+
+        height += gap * count;
+      }
+
+      return height;
+    };
+
+    const animate = (now: number) => {
+      if (!running) return;
+
+      const elapsed = Math.min(
+        now - last,
+        MAX_DELTA_MS,
       );
 
-      if (!sections.length) return;
+      last = now;
 
-      const viewportCenter = window.innerHeight * 0.5;
+      if (!pausedRef.current) {
+        const movement =
+          AUTO_SPEED * (elapsed / 16.67);
 
-      let closestIndex = 0;
-      let closestDistance = Number.POSITIVE_INFINITY;
+        offsetRef.current += movement;
 
-      sections.forEach((section, index) => {
-        const rect = section.getBoundingClientRect();
-        const center = rect.top + rect.height * 0.5;
-        const distance = Math.abs(center - viewportCenter);
+        const loopHeight = getLoopHeight();
 
-        /*
-         * Progress is measured against the viewport center.
-         * The browser remains completely responsible for scrolling.
-         */
-        const sectionHeight = Math.max(rect.height, 1);
-        const rawProgress =
-          (viewportCenter - center) / sectionHeight;
-
-        const progress = Math.max(-1.5, Math.min(1.5, rawProgress));
-
-        const absProgress = Math.min(Math.abs(progress), 1);
-
-        /*
-         * Aggressive 3D:
-         *
-         * Entering from below:
-         *   rotateX / rotateY / translateZ / translateX
-         *
-         * Leaving toward above:
-         *   opposite rotation.
-         */
-        const direction = progress > 0 ? 1 : -1;
-
-        const rotateY = progress * -25;
-        const rotateX = absProgress * 8 * direction;
-        const rotateZ = progress * -2.5;
-        const translateX = progress * -4;
-        const translateY = progress * 18;
-        const translateZ = -absProgress * 110;
-        const scale = 1 - absProgress * 0.095;
-
-        const opacity =
-          1 - Math.max(0, absProgress - 0.45) * 0.55;
-
-        section.style.setProperty(
-          '--showcase-rotate-y',
-          `${rotateY}deg`,
-        );
-        section.style.setProperty(
-          '--showcase-rotate-x',
-          `${rotateX}deg`,
-        );
-        section.style.setProperty(
-          '--showcase-rotate-z',
-          `${rotateZ}deg`,
-        );
-        section.style.setProperty(
-          '--showcase-translate-x',
-          `${translateX}%`,
-        );
-        section.style.setProperty(
-          '--showcase-translate-y',
-          `${translateY}px`,
-        );
-        section.style.setProperty(
-          '--showcase-translate-z',
-          `${translateZ}px`,
-        );
-        section.style.setProperty(
-          '--showcase-scale',
-          `${scale}`,
-        );
-        section.style.setProperty(
-          '--showcase-opacity',
-          `${opacity}`,
-        );
-
-        if (distance < closestDistance) {
-          closestDistance = distance;
-          closestIndex = index;
+        if (loopHeight > 0 && offsetRef.current >= loopHeight) {
+          offsetRef.current -= loopHeight;
         }
-      });
 
-      setActiveIndex(closestIndex % count);
+        track.style.transform = `translate3d(0, -${offsetRef.current}px, 0)`;
+
+        /*
+         * Determine the currently visible vehicle from the moving
+         * track instead of relying on document scrolling.
+         */
+        const children = Array.from(
+          track.children,
+        ) as HTMLElement[];
+
+        const viewportRect = viewport.getBoundingClientRect();
+        const viewportCenter =
+          viewportRect.top + viewportRect.height / 2;
+
+        let closestIndex = 0;
+        let closestDistance = Number.POSITIVE_INFINITY;
+
+        children.slice(0, count).forEach((child, index) => {
+          const rect = child.getBoundingClientRect();
+          const center = rect.top + rect.height / 2;
+          const distance = Math.abs(center - viewportCenter);
+
+          if (distance < closestDistance) {
+            closestDistance = distance;
+            closestIndex = index;
+          }
+        });
+
+        setActiveIndex(closestIndex);
+      }
+
+      animationRef.current =
+        window.requestAnimationFrame(animate);
     };
 
-    const onScroll = () => {
-      if (rafRef.current !== null) return;
-
-      rafRef.current = window.requestAnimationFrame(() => {
-        updateShowcase();
-        rafRef.current = null;
-      });
-    };
-
-    updateShowcase();
-
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll, { passive: true });
+    animationRef.current =
+      window.requestAnimationFrame(animate);
 
     return () => {
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
+      running = false;
 
-      if (rafRef.current !== null) {
-        window.cancelAnimationFrame(rafRef.current);
-        rafRef.current = null;
+      if (animationRef.current !== null) {
+        window.cancelAnimationFrame(animationRef.current);
+        animationRef.current = null;
       }
     };
   }, [count]);
 
+  /*
+   * Pause briefly when the user interacts with the page.
+   * Autoplay resumes automatically after the interaction stops.
+   */
   useEffect(() => {
-    if (count < 2 || !autoPlay) return;
+    if (count < 2) return;
 
-    let animationFrame: number | null = null;
-    let lastTime = performance.now();
-
-    const advanceContinuously = (now: number) => {
-      if (interactionRef.current) {
-        lastTime = now;
-        animationFrame = window.requestAnimationFrame(
-          advanceContinuously,
-        );
-        return;
-      }
-
-      const elapsed = Math.min(
-        now - lastTime,
-        CONTINUOUS_SCROLL_MAX_DELTA_MS,
-      );
-
-      lastTime = now;
-
-      /*
-       * Move the page by a tiny amount every animation frame.
-       * This replaces the old 6.5-second jump interval.
-       */
-      window.scrollBy({
-        top:
-          CONTINUOUS_SCROLL_PX_PER_FRAME *
-          (elapsed / 16.67),
-        left: 0,
-        behavior: 'auto',
-      });
-
-      animationFrame = window.requestAnimationFrame(
-        advanceContinuously,
-      );
-    };
-
-    animationFrame = window.requestAnimationFrame(
-      advanceContinuously,
-    );
-
-    return () => {
-      if (animationFrame !== null) {
-        window.cancelAnimationFrame(animationFrame);
-      }
-
-    };
-  }, [count, autoPlay]);
-
-  useEffect(() => {
-    const pauseDuringInteraction = () => {
-      interactionRef.current = true;
-      setAutoPlay(false);
+    const pauseBriefly = () => {
+      pausedRef.current = true;
 
       if (resumeTimerRef.current) {
         clearTimeout(resumeTimerRef.current);
       }
 
       resumeTimerRef.current = setTimeout(() => {
-        interactionRef.current = false;
-        setAutoPlay(true);
+        pausedRef.current = false;
+        lastTimeRef.current = performance.now();
       }, RESUME_DELAY_MS);
     };
 
-    window.addEventListener('wheel', pauseDuringInteraction, {
-      passive: true,
-    });
+    window.addEventListener(
+      'wheel',
+      pauseBriefly,
+      { passive: true },
+    );
 
-    window.addEventListener('touchstart', pauseDuringInteraction, {
-      passive: true,
-    });
+    window.addEventListener(
+      'touchstart',
+      pauseBriefly,
+      { passive: true },
+    );
 
-    window.addEventListener('keydown', pauseDuringInteraction);
+    window.addEventListener(
+      'pointerdown',
+      pauseBriefly,
+      { passive: true },
+    );
+
+    window.addEventListener(
+      'keydown',
+      pauseBriefly,
+    );
 
     return () => {
-      window.removeEventListener('wheel', pauseDuringInteraction);
-      window.removeEventListener('touchstart', pauseDuringInteraction);
-      window.removeEventListener('keydown', pauseDuringInteraction);
+      window.removeEventListener(
+        'wheel',
+        pauseBriefly,
+      );
+
+      window.removeEventListener(
+        'touchstart',
+        pauseBriefly,
+      );
+
+      window.removeEventListener(
+        'pointerdown',
+        pauseBriefly,
+      );
+
+      window.removeEventListener(
+        'keydown',
+        pauseBriefly,
+      );
 
       if (resumeTimerRef.current) {
         clearTimeout(resumeTimerRef.current);
       }
     };
-  }, []);
+  }, [count]);
 
   if (!vehicles.length) return null;
 
+  const renderVehicle = (
+    vehicle: VehicleSummary,
+    index: number,
+    copy: string,
+  ) => (
+    <article
+      key={`${copy}-${vehicle.id}-${index}`}
+      data-marketplace-showcase-item
+      className={`marketplace-native-showcase-item marketplace-3d-showcase-item ${
+        copy === 'original' && index === activeIndex
+          ? 'marketplace-native-showcase-item-active'
+          : ''
+      }`}
+    >
+      <div className="marketplace-3d-showcase-stage">
+        <MarketplaceVehicleCard
+          vehicle={vehicle}
+          featured
+          mode={mode}
+        />
+      </div>
+    </article>
+  );
+
   return (
     <section
-      className="marketplace-native-showcase marketplace-3d-showcase"
+      className="marketplace-native-showcase marketplace-3d-showcase marketplace-continuous-showcase"
       aria-label="Vehicle showroom"
     >
       <div className="marketplace-native-showcase-header">
         <div>
           <p className="marketplace-native-showcase-kicker">
-            {mode === 'rental' ? 'Available for rent' : 'Available vehicles'}
+            {mode === 'rental'
+              ? 'Available for rent'
+              : 'Available vehicles'}
           </p>
 
           <p className="marketplace-native-showcase-count">
@@ -260,26 +265,22 @@ export function VerticalShowcase({
         </div>
       </div>
 
-      <div className="marketplace-native-showcase-list marketplace-3d-showcase-list">
-        {vehicles.map((vehicle, index) => (
-          <article
-            key={`${vehicle.id}-${index}`}
-            data-marketplace-showcase-item
-            className={`marketplace-native-showcase-item marketplace-3d-showcase-item ${
-              index === activeIndex
-                ? 'marketplace-native-showcase-item-active'
-                : ''
-            }`}
-          >
-            <div className="marketplace-3d-showcase-stage">
-              <MarketplaceVehicleCard
-                vehicle={vehicle}
-                featured
-                mode={mode}
-              />
-            </div>
-          </article>
-        ))}
+      <div
+        ref={viewportRef}
+        className="marketplace-continuous-showcase-viewport"
+      >
+        <div
+          ref={trackRef}
+          className="marketplace-native-showcase-list marketplace-3d-showcase-list marketplace-continuous-showcase-track"
+        >
+          {vehicles.map((vehicle, index) =>
+            renderVehicle(vehicle, index, 'original'),
+          )}
+
+          {vehicles.map((vehicle, index) =>
+            renderVehicle(vehicle, index, 'duplicate'),
+          )}
+        </div>
       </div>
     </section>
   );
