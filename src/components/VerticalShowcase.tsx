@@ -241,50 +241,35 @@ export function VerticalShowcase({
       lastTimeRef.current = now;
 
       if (!userInteractingRef.current) {
-        const showcase =
-          document.querySelector<HTMLElement>(
-            '.marketplace-3d-showcase',
-          );
+        /*
+         * Autoplay uses the native document scroll position.
+         * It is intentionally independent of the showcase
+         * element's viewport visibility so turning ON always
+         * starts the continuous page movement.
+         */
+        const maxScroll =
+          document.documentElement.scrollHeight -
+          window.innerHeight;
 
-        if (showcase) {
-          const rect =
-            showcase.getBoundingClientRect();
+        if (
+          maxScroll > 0 &&
+          window.scrollY < maxScroll - 1
+        ) {
+          const movement =
+            AUTO_SPEED *
+            (elapsed / 16.67);
 
           /*
-           * Only autoplay while the showcase is actually
-           * participating in the viewport.
+           * Mark the upcoming native scroll event as
+           * autoplay-generated so it does not pause autoplay.
            */
-          const visible =
-            rect.top < window.innerHeight &&
-            rect.bottom > 0;
+          autoScrollingUntilRef.current =
+            performance.now() + 100;
 
-          if (visible) {
-            const maxScroll =
-              document.documentElement
-                .scrollHeight -
-              window.innerHeight;
-
-            if (
-              window.scrollY <
-              maxScroll - 1
-            ) {
-              const movement =
-                AUTO_SPEED *
-                (elapsed / 16.67);
-
-              /*
-               * Native page movement only.
-               * No carousel track transform.
-               */
-              autoScrollingUntilRef.current =
-                performance.now() + 100;
-
-              window.scrollBy(
-                0,
-                movement,
-              );
-            }
-          }
+          window.scrollBy(
+            0,
+            movement,
+          );
         }
       }
 
