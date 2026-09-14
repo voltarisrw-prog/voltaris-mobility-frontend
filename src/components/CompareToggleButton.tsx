@@ -92,8 +92,8 @@ export function CompareToggleButton({
       className={cn(
         'flex h-9 w-9 items-center justify-center border transition-colors',
         active
-          ? 'border-volt bg-volt text-surface'
-          : 'border-hairline/80 bg-surface/70 text-chrome backdrop-blur-sm hover:border-chrome',
+          ? 'border-volt bg-volt text-surface shadow-lg shadow-black/30'
+          : 'border-black bg-black text-white shadow-lg shadow-black/40 hover:border-black hover:bg-black',
         className,
       )}
     >
