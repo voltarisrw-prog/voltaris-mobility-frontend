@@ -1,6 +1,11 @@
 'use client';
 
-import { useCallback, useEffect, useLayoutEffect, useRef } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+} from 'react';
 
 import { MarketplaceVehicleCard } from '@/components/MarketplaceVehicleCard';
 import type { VehicleSummary } from '@/types/vehicle';
@@ -13,43 +18,50 @@ type VerticalShowcaseProps = {
 const AUTO_ADVANCE_MS = 6500;
 const RESUME_DELAY_MS = 1800;
 
-/*
- * Three copies create a physical runway:
- *
- *   COPY 0: 1 2 3
- *   COPY 1: 1 2 3   <- canonical viewing zone
- *   COPY 2: 1 2 3
- *
- * When the user reaches an outer copy, the page is silently
- * re-centered by exactly one sequence height. Because the
- * content is identical, the visual position does not jump.
- */
 const COPY_COUNT = 3;
-const CANONICAL_COPY = 1;
+const MIDDLE_COPY = 1;
 
 export function VerticalShowcase({
   vehicles,
   mode,
 }: VerticalShowcaseProps) {
-  const showcaseRef = useRef<HTMLDivElement | null>(null);
+  const showcaseRef =
+    useRef<HTMLDivElement | null>(null);
 
-  const timerRef = useRef<number | null>(null);
-  const resumeTimerRef = useRef<number | null>(null);
+  const autoTimerRef =
+    useRef<number | null>(null);
 
-  const initializedRef = useRef(false);
-  const normalizingRef = useRef(false);
-  const animatingRef = useRef(false);
+  const resumeTimerRef =
+    useRef<number | null>(null);
 
-  const currentSectionRef = useRef(0);
+  const animationTimerRef =
+    useRef<number | null>(null);
 
-  const getSets = useCallback(() => {
+  const initializedRef =
+    useRef(false);
+
+  const animatingRef =
+    useRef(false);
+
+  const currentPhysicalIndexRef =
+    useRef(0);
+
+  const canonicalSetTopRef =
+    useRef(0);
+
+  const sequenceHeightRef =
+    useRef(0);
+
+  const getLoopSets = useCallback(() => {
     const container = showcaseRef.current;
 
-    if (!container) return [];
+    if (!container) {
+      return [];
+    }
 
     return Array.from(
       container.querySelectorAll<HTMLElement>(
-        '.marketplace-showcase-loop-set'
+        '[data-showcase-loop-set]'
       )
     );
   }, []);
@@ -57,7 +69,9 @@ export function VerticalShowcase({
   const getSections = useCallback(() => {
     const container = showcaseRef.current;
 
-    if (!container) return [];
+    if (!container) {
+      return [];
+    }
 
     return Array.from(
       container.querySelectorAll<HTMLElement>(
@@ -66,93 +80,110 @@ export function VerticalShowcase({
     );
   }, []);
 
-  const getSetHeight = useCallback(() => {
-    const sets = getSets();
-
-    return sets[0]?.getBoundingClientRect().height ?? 0;
-  }, [getSets]);
-
   /*
-   * Keep the browser inside the middle copy.
+   * Measure the real middle copy.
    *
-   * This is the key to making:
-   *
-   *   1 -> 2 -> 3 -> 1
-   *
-   * physically seamless.
+   * The middle copy is the canonical position.
+   * When the browser reaches either outer copy,
+   * we move it by exactly one sequence height.
    */
-  const normalizeLoopPosition = useCallback(() => {
-    if (
-      normalizingRef.current ||
-      !initializedRef.current
-    ) {
-      return;
-    }
-
-    const sets = getSets();
+  const measureLoop = useCallback(() => {
+    const sets = getLoopSets();
 
     if (sets.length !== COPY_COUNT) {
+      return false;
+    }
+
+    const middleSet = sets[MIDDLE_COPY];
+
+    if (!middleSet) {
+      return false;
+    }
+
+    const rect =
+      middleSet.getBoundingClientRect();
+
+    canonicalSetTopRef.current =
+      window.scrollY + rect.top;
+
+    sequenceHeightRef.current =
+      middleSet.offsetHeight;
+
+    return (
+      sequenceHeightRef.current > 0
+    );
+  }, [getLoopSets]);
+
+  /*
+   * Recenter the physical document without
+   * changing what the customer sees.
+   *
+   * Example:
+   *
+   *   COPY 0: 1 2 3
+   *   COPY 1: 1 2 3  <- customer lives here
+   *   COPY 2: 1 2 3
+   *
+   * After scrolling down through COPY 2,
+   * subtract one complete sequence height.
+   *
+   * The pixels on screen remain identical because
+   * COPY 1 and COPY 2 contain the same vehicles.
+   */
+  const normalizePosition = useCallback(() => {
+    if (
+      !initializedRef.current ||
+      animatingRef.current
+    ) {
       return;
     }
 
-    const setHeight = getSetHeight();
+    const sequenceHeight =
+      sequenceHeightRef.current;
 
-    if (!setHeight) return;
+    if (!sequenceHeight) {
+      return;
+    }
 
     const canonicalTop =
-      sets[CANONICAL_COPY]?.getBoundingClientRect().top;
+      canonicalSetTopRef.current;
 
-    if (canonicalTop === undefined) return;
+    const currentScroll =
+      window.scrollY;
 
-    const viewportTop = window.scrollY;
+    const lowerBoundary =
+      canonicalTop - sequenceHeight * 0.65;
 
-    /*
-     * We compare against the canonical copy's document position.
-     *
-     * If the user moves one full copy above or below it,
-     * shift the browser by exactly one copy height.
-     */
-    const middleStart =
-      viewportTop +
-      canonicalTop;
+    const upperBoundary =
+      canonicalTop + sequenceHeight * 1.65;
 
-    const distanceFromMiddle =
-      viewportTop - middleStart;
-
-    if (
-      distanceFromMiddle <
-      -setHeight * 0.65
-    ) {
-      normalizingRef.current = true;
-
+    if (currentScroll < lowerBoundary) {
       window.scrollTo(
         0,
-        window.scrollY + setHeight
+        currentScroll + sequenceHeight
       );
 
-      normalizingRef.current = false;
-    } else if (
-      distanceFromMiddle >
-      setHeight * 1.65
-    ) {
-      normalizingRef.current = true;
-
-      window.scrollTo(
-        0,
-        window.scrollY - setHeight
-      );
-
-      normalizingRef.current = false;
+      return;
     }
-  }, [getSetHeight, getSets]);
+
+    if (currentScroll > upperBoundary) {
+      window.scrollTo(
+        0,
+        currentScroll - sequenceHeight
+      );
+    }
+  }, []);
 
   /*
-   * Apply cinematic focus based on distance from viewport center.
+   * Determine which physical vehicle is closest
+   * to the viewport center.
    */
   const updateComposition = useCallback(() => {
     const sections = getSections();
 
-    if (!sections.length) return;
+    if (!sections.length) {
+      return;
+    }
 
     const viewportHeight =
       window.innerHeight || 1;
@@ -164,78 +195,108 @@ export function VerticalShowcase({
     let closestDistance =
       Number.POSITIVE_INFINITY;
 
-    sections.forEach((section, index) => {
-      const rect =
-        section.getBoundingClientRect();
+    sections.forEach(
+      (section, index) => {
+        const rect =
+          section.getBoundingClientRect();
 
-      const center =
-        rect.top + rect.height * 0.5;
+        const center =
+          rect.top + rect.height * 0.5;
 
-      const distance =
-        Math.abs(center - viewportCenter);
+        const distance =
+          Math.abs(
+            center - viewportCenter
+          );
 
-      if (distance < closestDistance) {
-        closestDistance = distance;
-        closestIndex = index;
+        if (
+          distance <
+          closestDistance
+        ) {
+          closestDistance =
+            distance;
+
+          closestIndex =
+            index;
+        }
       }
-    });
+    );
 
-    currentSectionRef.current =
+    currentPhysicalIndexRef.current =
       closestIndex;
 
-    sections.forEach((section, index) => {
-      const rect =
-        section.getBoundingClientRect();
+    sections.forEach(
+      (section, index) => {
+        const rect =
+          section.getBoundingClientRect();
 
-      const center =
-        rect.top + rect.height * 0.5;
+        const center =
+          rect.top + rect.height * 0.5;
 
-      const distance =
-        Math.abs(center - viewportCenter);
+        const distance =
+          Math.abs(
+            center - viewportCenter
+          );
 
-      const range =
-        Math.max(viewportHeight * 0.82, 1);
+        const range =
+          Math.max(
+            viewportHeight * 0.82,
+            1
+          );
 
-      const progress = Math.max(
-        0,
-        Math.min(
-          1,
-          1 - distance / range
-        )
-      );
+        const progress =
+          Math.max(
+            0,
+            Math.min(
+              1,
+              1 - distance / range
+            )
+          );
 
-      const direction =
-        center < viewportCenter
-          ? -1
-          : 1;
+        const direction =
+          center < viewportCenter
+            ? -1
+            : 1;
 
-      section.style.setProperty(
-        '--vehicle-progress',
-        progress.toFixed(4)
-      );
+        section.style.setProperty(
+          '--vehicle-progress',
+          progress.toFixed(4)
+        );
 
-      section.style.setProperty(
-        '--vehicle-direction',
-        String(direction)
-      );
+        section.style.setProperty(
+          '--vehicle-direction',
+          String(direction)
+        );
 
-      section.style.setProperty(
-        '--vehicle-distance',
-        `${Math.min(
-          distance,
-          viewportHeight
-        )}px`
-      );
+        section.style.setProperty(
+          '--vehicle-distance',
+          `${Math.min(
+            distance,
+            viewportHeight
+          )}px`
+        );
 
-      section.dataset.active =
-        index === closestIndex
-          ? 'true'
-          : 'false';
-    });
+        section.dataset.active =
+          index === closestIndex
+            ? 'true'
+            : 'false';
+      }
+    );
   }, [getSections]);
 
-  const goToNextVehicle = useCallback(() => {
-    const sections = getSections();
+  /*
+   * Move exactly one physical vehicle forward.
+   *
+   * Because the DOM is:
+   *
+   *   1 2 3 | 1 2 3 | 1 2 3
+   *
+   * Vehicle 3 naturally has Vehicle 1 after it.
+   *
+   * There is no 3 -> top-of-page jump.
+   */
+  const advanceVehicle = useCallback(() => {
+    const sections =
+      getSections();
 
     if (
       sections.length < 2 ||
@@ -245,7 +306,7 @@ export function VerticalShowcase({
     }
 
     const current =
-      currentSectionRef.current;
+      currentPhysicalIndexRef.current;
 
     const next =
       current + 1;
@@ -253,7 +314,14 @@ export function VerticalShowcase({
     const target =
       sections[next];
 
-    if (!target) return;
+    if (!target) {
+      /*
+       * This should only happen if the DOM is
+       * unexpectedly incomplete. Recenter and retry.
+       */
+      normalizePosition();
+      return;
+    }
 
     animatingRef.current = true;
 
@@ -262,130 +330,165 @@ export function VerticalShowcase({
       block: 'center',
     });
 
-    /*
-     * Allow the smooth scroll to finish before
-     * normalization is considered.
-     */
-    window.setTimeout(() => {
-      animatingRef.current = false;
-      normalizeLoopPosition();
-      updateComposition();
-    }, 1100);
+    if (
+      animationTimerRef.current !==
+      null
+    ) {
+      window.clearTimeout(
+        animationTimerRef.current
+      );
+    }
+
+    animationTimerRef.current =
+      window.setTimeout(() => {
+        /*
+         * The smooth movement is complete.
+         *
+         * If we crossed a copy boundary,
+         * silently move back one sequence.
+         */
+        animatingRef.current = false;
+
+        normalizePosition();
+
+        updateComposition();
+      }, 1100);
   }, [
     getSections,
-    normalizeLoopPosition,
+    normalizePosition,
     updateComposition,
   ]);
 
-  const stopAutoAdvance = useCallback(() => {
-    if (timerRef.current !== null) {
-      window.clearInterval(
-        timerRef.current
-      );
+  const stopAutoAdvance =
+    useCallback(() => {
+      if (
+        autoTimerRef.current !== null
+      ) {
+        window.clearInterval(
+          autoTimerRef.current
+        );
 
-      timerRef.current = null;
-    }
+        autoTimerRef.current = null;
+      }
 
-    if (
-      resumeTimerRef.current !== null
-    ) {
-      window.clearTimeout(
-        resumeTimerRef.current
-      );
+      if (
+        resumeTimerRef.current !== null
+      ) {
+        window.clearTimeout(
+          resumeTimerRef.current
+        );
 
-      resumeTimerRef.current = null;
-    }
-  }, []);
+        resumeTimerRef.current = null;
+      }
+    }, []);
 
-  const startAutoAdvance = useCallback(() => {
-    stopAutoAdvance();
+  const startAutoAdvance =
+    useCallback(() => {
+      stopAutoAdvance();
 
-    timerRef.current =
-      window.setInterval(
-        goToNextVehicle,
-        AUTO_ADVANCE_MS
-      );
-  }, [
-    goToNextVehicle,
-    stopAutoAdvance,
-  ]);
+      autoTimerRef.current =
+        window.setInterval(
+          advanceVehicle,
+          AUTO_ADVANCE_MS
+        );
+    }, [
+      advanceVehicle,
+      stopAutoAdvance,
+    ]);
 
-  const resumeAutoAdvance = useCallback(() => {
-    stopAutoAdvance();
+  const resumeAutoAdvance =
+    useCallback(() => {
+      stopAutoAdvance();
 
-    resumeTimerRef.current =
-      window.setTimeout(() => {
-        startAutoAdvance();
-      }, RESUME_DELAY_MS);
-  }, [
-    startAutoAdvance,
-    stopAutoAdvance,
-  ]);
+      resumeTimerRef.current =
+        window.setTimeout(() => {
+          startAutoAdvance();
+        }, RESUME_DELAY_MS);
+    }, [
+      startAutoAdvance,
+      stopAutoAdvance,
+    ]);
 
   /*
-   * Initial positioning:
-   *
-   * Start in the middle copy so there is room
-   * to travel in either direction.
+   * Start the browser inside the middle copy.
    */
   useLayoutEffect(() => {
     if (
       initializedRef.current ||
-      vehicles.length < 1
+      vehicles.length === 0
     ) {
       return;
     }
 
-    const sets = getSets();
+    const measured =
+      measureLoop();
 
-    if (sets.length !== COPY_COUNT) {
+    if (!measured) {
       return;
     }
 
-    const canonicalSet =
-      sets[CANONICAL_COPY];
+    const sets =
+      getLoopSets();
 
-    if (!canonicalSet) return;
+    const middleSet =
+      sets[MIDDLE_COPY];
 
-    const targetTop =
-      canonicalSet.offsetTop;
+    if (!middleSet) {
+      return;
+    }
 
     /*
-     * Start at the first vehicle of the
-     * canonical middle sequence.
+     * Position at the beginning of the middle copy.
      */
-    window.scrollTo(0, targetTop);
+    window.scrollTo(
+      0,
+      middleSet.offsetTop
+    );
+
+    /*
+     * Measure again because scroll positioning
+     * can affect viewport-relative measurements.
+     */
+    measureLoop();
 
     initializedRef.current = true;
 
     updateComposition();
   }, [
-    getSets,
+    getLoopSets,
+    measureLoop,
     updateComposition,
     vehicles.length,
   ]);
 
+  /*
+   * Scroll handling.
+   */
   useEffect(() => {
-    if (!vehicles.length) return;
+    if (vehicles.length === 0) {
+      return;
+    }
 
     let frame = 0;
 
     const onScroll = () => {
-      if (!frame) {
-        frame =
-          window.requestAnimationFrame(
-            () => {
-              frame = 0;
-
-              normalizeLoopPosition();
-              updateComposition();
-            }
-          );
+      if (frame) {
+        return;
       }
+
+      frame =
+        window.requestAnimationFrame(
+          () => {
+            frame = 0;
+
+            normalizePosition();
+            updateComposition();
+          }
+        );
     };
 
     const onResize = () => {
-      normalizeLoopPosition();
+      measureLoop();
       updateComposition();
     };
 
@@ -464,6 +567,17 @@ export function VerticalShowcase({
 
       stopAutoAdvance();
 
+      if (
+        animationTimerRef.current !==
+        null
+      ) {
+        window.clearTimeout(
+          animationTimerRef.current
+        );
+
+        animationTimerRef.current = null;
+      }
+
       if (frame) {
         window.cancelAnimationFrame(
           frame
@@ -471,7 +585,8 @@ export function VerticalShowcase({
       }
     };
   }, [
-    normalizeLoopPosition,
+    measureLoop,
+    normalizePosition,
     resumeAutoAdvance,
     startAutoAdvance,
     stopAutoAdvance,
@@ -492,8 +607,9 @@ export function VerticalShowcase({
         { length: COPY_COUNT },
         (_, copyIndex) => (
           <div
-            key={`showcase-copy-${copyIndex}`}
+            key={`showcase-loop-${copyIndex}`}
             className="marketplace-showcase-loop-set"
+            data-showcase-loop-set
             data-loop-copy={copyIndex}
           >
             {vehicles.map(
@@ -501,7 +617,9 @@ export function VerticalShowcase({
                 <section
                   key={`${copyIndex}-${vehicle.id}`}
                   className="marketplace-vertical-showcase-item marketplace-infinite-showcase-item"
-                  aria-label={`Vehicle ${vehicleIndex + 1}`}
+                  aria-label={`Vehicle ${
+                    vehicleIndex + 1
+                  }`}
                   data-vehicle-index={
                     vehicleIndex
                   }
@@ -513,7 +631,7 @@ export function VerticalShowcase({
                     vehicle={vehicle}
                     priority={
                       copyIndex ===
-                        CANONICAL_COPY &&
+                        MIDDLE_COPY &&
                       vehicleIndex === 0
                     }
                     featured={true}

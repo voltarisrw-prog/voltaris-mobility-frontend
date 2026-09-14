@@ -2703,22 +2703,48 @@ button[title*="ompare"]:focus-visible {
 
 
 /* ============================================================
-   VOLTARIS — CONTINUOUS WORLD MARKETPLACE TRANSITION V2
-   Per-vehicle cinematic composition engine.
-   Each vehicle responds independently to viewport position.
+   VOLTARIS — INFINITE VERTICAL SHOWROOM
+   CLEAN TRANSITION LAYER
+
+   Physical sequence:
+   1 -> 2 -> 3 -> 1 -> 2 -> 3 -> ...
+
+   The component supplies three identical physical sequences.
+   JavaScript silently re-centers the document by one sequence
+   height when a boundary is crossed.
+
+   This CSS is intentionally limited to the transition layer.
+   Existing marketplace card/layout rules remain untouched.
    ============================================================ */
 
-.marketplace-vertical-showcase-item {
+.marketplace-infinite-showcase {
+  position: relative;
+  overflow: visible;
+  isolation: isolate;
+}
+
+.marketplace-showcase-loop-set {
+  position: relative;
+  width: 100%;
+}
+
+/*
+ * Vehicle sections remain normal vertical blocks.
+ * No horizontal carousel.
+ * No fixed-height scroll trap.
+ */
+.marketplace-infinite-showcase-item {
   --vehicle-progress: 0;
   --vehicle-direction: 1;
+  --vehicle-distance: 9999px;
 
   position: relative;
 
-  /*
-   * The section itself participates in the transition.
-   * The browser still owns the natural vertical scroll.
-   */
-  opacity: calc(0.34 + (var(--vehicle-progress) * 0.66));
+  opacity:
+    calc(
+      0.42 +
+      (var(--vehicle-progress) * 0.58)
+    );
 
   transform:
     translate3d(
@@ -2726,101 +2752,124 @@ button[title*="ompare"]:focus-visible {
       calc(
         (1 - var(--vehicle-progress))
         * var(--vehicle-direction)
-        * 44px
+        * 34px
       ),
       0
     )
     scale(
       calc(
-        0.94 + (var(--vehicle-progress) * 0.06)
+        0.965 +
+        (var(--vehicle-progress) * 0.035)
       )
     );
 
   transition:
     opacity 180ms linear,
-    transform 180ms cubic-bezier(.22,.61,.36,1);
+    transform 240ms cubic-bezier(.22,.61,.36,1);
 
-  will-change: opacity, transform;
+  will-change:
+    opacity,
+    transform;
 }
 
 /*
- * The vehicle image becomes the main cinematic element.
+ * The vehicle nearest the viewport center is the hero.
  */
-.marketplace-vertical-showcase-item
+.marketplace-infinite-showcase-item[data-active="true"] {
+  opacity: 1;
+  z-index: 2;
+}
+
+/*
+ * Media depth.
+ */
+.marketplace-infinite-showcase-item
 .marketplace-vehicle-card-media {
   transform:
     scale(
       calc(
-        0.965 + (var(--vehicle-progress) * 0.035)
+        0.975 +
+        (var(--vehicle-progress) * 0.025)
       )
     );
 
   filter:
     brightness(
       calc(
-        0.84 + (var(--vehicle-progress) * 0.16)
+        0.9 +
+        (var(--vehicle-progress) * 0.1)
       )
     )
     saturate(
       calc(
-        0.88 + (var(--vehicle-progress) * 0.12)
-      )
-    );
-
-  transition:
-    transform 220ms cubic-bezier(.16,1,.3,1),
-    filter 220ms ease;
-
-  will-change: transform, filter;
-}
-
-.marketplace-vertical-showcase-item
-.marketplace-vehicle-card-media
-img {
-  transform:
-    scale(
-      calc(
-        1.015 + (var(--vehicle-progress) * 0.035)
+        0.94 +
+        (var(--vehicle-progress) * 0.06)
       )
     );
 
   transition:
     transform 320ms cubic-bezier(.16,1,.3,1),
-    filter 220ms ease;
+    filter 260ms ease;
 
-  will-change: transform, filter;
+  will-change:
+    transform,
+    filter;
+}
+
+.marketplace-infinite-showcase-item
+.marketplace-vehicle-card-media
+img {
+  transform:
+    scale(
+      calc(
+        1.01 +
+        (var(--vehicle-progress) * 0.025)
+      )
+    );
+
+  transition:
+    transform 420ms cubic-bezier(.16,1,.3,1);
+
+  will-change:
+    transform;
 }
 
 /*
- * Metadata follows the vehicle rather than appearing as a
- * disconnected card overlay.
+ * Information follows the vehicle naturally.
  */
-.marketplace-vertical-showcase-item
+.marketplace-infinite-showcase-item
 .marketplace-vehicle-card-info {
-  opacity: var(--vehicle-progress);
+  opacity:
+    calc(
+      0.72 +
+      (var(--vehicle-progress) * 0.28)
+    );
 
   transform:
     translate3d(
       0,
       calc(
         (1 - var(--vehicle-progress))
-        * 22px
+        * 18px
       ),
       0
     );
 
   transition:
-    opacity 180ms ease,
-    transform 260ms cubic-bezier(.22,.61,.36,1);
+    opacity 220ms ease,
+    transform 300ms cubic-bezier(.22,.61,.36,1);
 
-  will-change: opacity, transform;
+  will-change:
+    opacity,
+    transform;
 }
 
-.marketplace-vertical-showcase-item
+.marketplace-infinite-showcase-item
 .marketplace-vehicle-card-actions {
   opacity:
     calc(
-      0.55 + (var(--vehicle-progress) * 0.45)
+      0.76 +
+      (var(--vehicle-progress) * 0.24)
     );
 
   transform:
@@ -2828,37 +2877,49 @@ img {
       0,
       calc(
         (1 - var(--vehicle-progress))
-        * 16px
+        * 12px
       ),
       0
     );
 
   transition:
-    opacity 180ms ease,
-    transform 260ms cubic-bezier(.22,.61,.36,1);
+    opacity 220ms ease,
+    transform 300ms cubic-bezier(.22,.61,.36,1);
 
-  will-change: opacity, transform;
+  will-change:
+    opacity,
+    transform;
 }
 
 /*
- * Active vehicle gets a subtle visual priority.
+ * Desktop hero treatment.
  */
-.marketplace-vertical-showcase-item
-.marketplace-vehicle-card {
-  transition:
-    box-shadow 350ms ease;
+@media (min-width: 768px) {
+  .marketplace-infinite-showcase-item[data-active="true"]
+  .marketplace-vehicle-card-media
+  img {
+    transform: scale(1.035);
+  }
+
+  .marketplace-infinite-showcase-item[data-active="true"]
+  .marketplace-vehicle-card-info,
+  .marketplace-infinite-showcase-item[data-active="true"]
+  .marketplace-vehicle-card-actions {
+    transform: translate3d(0, 0, 0);
+  }
 }
 
 /*
  * Mobile:
- * preserve the carefully engineered mobile composition while
- * still allowing the cinematic entrance/exit.
+ * keep the existing carefully engineered card composition.
+ * The loop transition is deliberately restrained.
  */
 @media (max-width: 767px) {
-  .marketplace-vertical-showcase-item {
+  .marketplace-infinite-showcase-item {
     opacity:
       calc(
-        0.48 + (var(--vehicle-progress) * 0.52)
+        0.56 +
+        (var(--vehicle-progress) * 0.44)
       );
 
     transform:
@@ -2867,29 +2928,19 @@ img {
         calc(
           (1 - var(--vehicle-progress))
           * var(--vehicle-direction)
-          * 26px
+          * 18px
         ),
         0
       )
       scale(
         calc(
-          0.975 + (var(--vehicle-progress) * 0.025)
+          0.985 +
+          (var(--vehicle-progress) * 0.015)
         )
       );
   }
 
-  .marketplace-vertical-showcase-item
-  .marketplace-vehicle-card-media
-  img {
-    transform:
-      scale(
-        calc(
-          1.01 + (var(--vehicle-progress) * 0.025)
-        )
-      );
-  }
-
-  .marketplace-vertical-showcase-item
+  .marketplace-infinite-showcase-item
   .marketplace-vehicle-card-info {
     opacity: 1;
 
@@ -2898,28 +2949,39 @@ img {
         0,
         calc(
           (1 - var(--vehicle-progress))
-          * 10px
+          * 7px
         ),
         0
+      );
+  }
+
+  .marketplace-infinite-showcase-item
+  .marketplace-vehicle-card-media
+  img {
+    transform:
+      scale(
+        calc(
+          1.005 +
+          (var(--vehicle-progress) * 0.018)
+        )
       );
   }
 }
 
 /*
- * Accessibility:
- * completely remove cinematic transforms when the user requests
- * reduced motion.
+ * Reduced motion:
+ * retain the infinite functionality but remove animation.
  */
 @media (prefers-reduced-motion: reduce) {
-  .marketplace-vertical-showcase-item,
-  .marketplace-vertical-showcase-item
+  .marketplace-infinite-showcase-item,
+  .marketplace-infinite-showcase-item
   .marketplace-vehicle-card-media,
-  .marketplace-vertical-showcase-item
+  .marketplace-infinite-showcase-item
   .marketplace-vehicle-card-media
   img,
-  .marketplace-vertical-showcase-item
+  .marketplace-infinite-showcase-item
   .marketplace-vehicle-card-info,
-  .marketplace-vertical-showcase-item
+  .marketplace-infinite-showcase-item
   .marketplace-vehicle-card-actions {
     opacity: 1 !important;
     transform: none !important;
@@ -2929,5 +2991,6 @@ img {
 }
 
 /* ============================================================
-   END — CONTINUOUS WORLD MARKETPLACE TRANSITION V2
+   END — INFINITE VERTICAL SHOWROOM
    ============================================================ */
+
