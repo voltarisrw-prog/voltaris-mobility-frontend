@@ -2590,3 +2590,50 @@ a {
     font-size: 0.72rem;
   }
 }
+
+/* ============================================================
+   VOLTARIS — MOBILE CARD TOP CLEARANCE
+   ------------------------------------------------------------
+   Reserve the upper control zone for:
+     LEFT  = Powertrain
+     RIGHT = Compare
+
+   Vehicle information begins BELOW that zone.
+   Nothing else moves.
+   ============================================================ */
+
+@media (max-width: 767px) {
+
+  .marketplace-vertical-showcase
+  .marketplace-vehicle-card-info {
+    /*
+     * 82px reserved above the information.
+     * This prevents collision with the powertrain and compare
+     * controls while keeping the information visually high.
+     */
+    top: 82px;
+  }
+
+}
+
+@media (max-width: 420px) {
+
+  /*
+   * Slightly tighter phone geometry, while maintaining a
+   * deliberate separation from the top controls.
+   */
+  .marketplace-vertical-showcase
+  .marketplace-vehicle-card-info {
+    top: 76px;
+  }
+
+}
+
+@media (max-width: 360px) {
+
+  .marketplace-vertical-showcase
+  .marketplace-vehicle-card-info {
+    top: 72px;
+  }
+
+}
