@@ -8,10 +8,11 @@ import { formatPrice } from '@/lib/format';
 import type { VehicleSummary } from '@/types/vehicle';
 
 const CENTER_SIZE =
-  'h-[min(78svh,54rem)] w-[min(90vw,40rem)]';
+  'h-[clamp(24rem,78vw,30rem)] w-[min(88vw,30rem)] sm:h-[clamp(30rem,68vw,38rem)] sm:w-[min(78vw,30rem)] md:h-[clamp(34rem,62vw,44rem)] md:w-[min(70vw,34rem)] lg:h-[clamp(38rem,54vw,52rem)] lg:w-[min(58vw,40rem)] 2xl:h-[58rem] 2xl:w-[42rem]';
 
 const PEEK_SIZE =
-  'h-[min(52svh,31rem)] w-[min(55vw,25rem)]';
+  'h-[clamp(14rem,48vw,17rem)] w-[min(72vw,17rem)] sm:h-[clamp(18rem,48vw,22rem)] sm:w-[min(58vw,19rem)] md:h-[clamp(20rem,44vw,26rem)] md:w-[min(50vw,22rem)] lg:h-[clamp(23rem,38vw,29rem)] lg:w-[min(42vw,25rem)] 2xl:h-[31rem] 2xl:w-[25rem]';
+
 export function ShowcaseSlider({
   vehicles,
 }: {
@@ -31,8 +32,8 @@ export function ShowcaseSlider({
             src={vehicle.primary_image.card}
             alt=""
             fill
-            sizes="min(55vw, 25rem)"
-            className="object-contain p-1"
+            sizes="(min-width: 1024px) 23rem, (min-width: 640px) 18rem, 90vw"
+            className="object-contain p-1 sm:p-2 lg:p-2"
           />
         )
       }
@@ -47,8 +48,8 @@ export function ShowcaseSlider({
                 alt={vehicle.primary_image.alt || title}
                 fill
                 priority
-                sizes="min(90vw, 40rem)"
-                className="object-contain p-0"
+                sizes="(min-width: 1024px) 38rem, (min-width: 768px) 32rem, (min-width: 640px) 28rem, 88vw"
+                className="object-contain p-0 sm:p-1 lg:p-1"
               />
             ) : (
               <div className="flex h-full items-center justify-center font-data text-[0.62rem] uppercase tracking-[0.14em] text-[color:var(--vds-text-muted)]">
@@ -66,7 +67,7 @@ export function ShowcaseSlider({
                 {vehicle.year}
               </p>
 
-              <h3 className="mt-1 max-w-[75%] font-display text-[clamp(1.15rem,3vw,1.7rem)] font-semibold leading-none tracking-[-0.03em] text-white">
+              <h3 className="mt-1 max-w-[75%] font-display text-xl font-semibold leading-none tracking-[-0.03em] text-white sm:text-2xl lg:text-[1.7rem]">
                 {title}
               </h3>
             </div>
@@ -77,7 +78,7 @@ export function ShowcaseSlider({
                   {vehicle.location.city}
                 </p>
 
-                <p className="mt-1 font-display text-[clamp(1rem,2vw,1.25rem)] font-semibold leading-none tracking-[-0.02em] text-white">
+                <p className="mt-1 font-display text-lg font-semibold leading-none tracking-[-0.02em] text-white sm:text-xl">
                   {vehicle.price === null
                     ? 'Price on request'
                     : formatPrice(vehicle.price, vehicle.currency)}
@@ -94,7 +95,7 @@ export function ShowcaseSlider({
             <div className="absolute inset-y-0 inset-x-0 z-10 pointer-events-none">
               <Link
                 href={`/cars/${vehicle.slug}`}
-                className="group pointer-events-auto absolute left-2 top-1/2 -translate-y-1/2 inline-flex min-h-11 items-center gap-1.5 rounded-full vds-link-outline px-2.5 py-2.5 font-data text-[0.52rem] font-bold uppercase tracking-[0.12em] text-black shadow-[0_12px_35px_-12px_rgba(0,0,0,0.55)] transition-all duration-300 hover:-translate-y-1/2 hover:bg-white/90 hover:shadow-[0_16px_45px_-12px_rgba(0,0,0,0.7)] left-2 min-h-11 gap-1.5 px-2.5 py-2.5 text-[clamp(0.52rem,0.7vw,0.56rem)] tracking-[0.12em]"
+                className="group pointer-events-auto absolute left-2 top-1/2 -translate-y-1/2 inline-flex min-h-11 items-center gap-1.5 rounded-full vds-link-outline px-2.5 py-2.5 font-data text-[0.52rem] font-bold uppercase tracking-[0.12em] text-black shadow-[0_12px_35px_-12px_rgba(0,0,0,0.55)] transition-all duration-300 hover:-translate-y-1/2 hover:bg-white/90 hover:shadow-[0_16px_45px_-12px_rgba(0,0,0,0.7)] sm:left-5 sm:min-h-12 sm:gap-2 sm:px-4 sm:py-3 sm:text-[0.56rem] sm:tracking-[0.14em] lg:left-6"
               >
                 <span>View vehicle</span>
                 <ArrowRight
@@ -109,7 +110,7 @@ export function ShowcaseSlider({
                     ? `/cars/${vehicle.slug}?mode=rental`
                     : `/cars/${vehicle.slug}`
                 }
-                className="group pointer-events-auto absolute right-2 top-1/2 -translate-y-1/2 inline-flex min-h-11 items-center gap-1.5 rounded-full vds-link-outline px-2.5 py-2.5 font-data text-[0.52rem] font-bold uppercase tracking-[0.12em] text-black shadow-[0_12px_35px_-12px_rgba(0,0,0,0.55)] transition-all duration-300 hover:-translate-y-1/2 hover:bg-white/90 hover:shadow-[0_16px_45px_-12px_rgba(0,0,0,0.7)] right-2 min-h-11 gap-1.5 px-2.5 py-2.5 text-[clamp(0.52rem,0.7vw,0.56rem)] tracking-[0.12em]"
+                className="group pointer-events-auto absolute right-2 top-1/2 -translate-y-1/2 inline-flex min-h-11 items-center gap-1.5 rounded-full vds-link-outline px-2.5 py-2.5 font-data text-[0.52rem] font-bold uppercase tracking-[0.12em] text-black shadow-[0_12px_35px_-12px_rgba(0,0,0,0.55)] transition-all duration-300 hover:-translate-y-1/2 hover:bg-white/90 hover:shadow-[0_16px_45px_-12px_rgba(0,0,0,0.7)] sm:right-5 sm:min-h-12 sm:gap-2 sm:px-4 sm:py-3 sm:text-[0.56rem] sm:tracking-[0.14em] lg:right-6"
               >
                 <span>
                   {vehicle.listing_mode === 'rental'

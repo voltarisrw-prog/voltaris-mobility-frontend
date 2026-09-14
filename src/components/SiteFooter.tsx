@@ -59,7 +59,7 @@ function FooterLink({
   return (
     <Link
       href={href}
-      className="group flex min-h-9 items-center gap-2 py-1 font-display text-[clamp(0.95rem,1.2vw,1rem)] font-medium tracking-[-0.02em] text-black/55 transition-colors duration-200 hover:text-[#0a0a0a] focus-visible:text-[color:var(--vds-brand-secondary)] focus-visible:outline-none"
+      className="group flex min-h-9 items-center gap-2 py-1 font-display text-[0.95rem] font-medium tracking-[-0.02em] text-black/55 transition-colors duration-200 hover:text-[#0a0a0a] focus-visible:text-[color:var(--vds-brand-secondary)] focus-visible:outline-none sm:text-base"
     >
       <span>{label}</span>
 
@@ -75,28 +75,28 @@ export function SiteFooter() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="mx-[clamp(0.75rem,2vw,2rem)] my-[clamp(0.75rem,2vw,2rem)] overflow-hidden rounded-[2rem] bg-[#07e5ed] font-sans font-bold text-black border border-black/5 shadow-[0_20px_60px_-30px_rgba(0,0,0,0.35)] [&_a]:!text-black [&_a]:font-bold [&_p]:!text-black [&_p]:font-bold [&_span]:!text-black [&_span]:font-bold [&_h1]:!text-black [&_h2]:!text-black [&_h3]:!text-black [&_h4]:!text-black [&_h5]:!text-black [&_h6]:!text-black [&_svg]:!text-black [&_border-white\/10]:border-black/15 [&_border-white\/20]:border-black/15 [&_border-white\/25]:border-black/20">
+    <footer className="mx-3 my-4 overflow-hidden rounded-[2rem] bg-[#07e5ed] font-sans font-bold text-black sm:mx-5 sm:my-6 lg:mx-8 lg:my-8 border border-black/5 shadow-[0_20px_60px_-30px_rgba(0,0,0,0.35)] [&_a]:!text-black [&_a]:font-bold [&_p]:!text-black [&_p]:font-bold [&_span]:!text-black [&_span]:font-bold [&_h1]:!text-black [&_h2]:!text-black [&_h3]:!text-black [&_h4]:!text-black [&_h5]:!text-black [&_h6]:!text-black [&_svg]:!text-black [&_border-white\/10]:border-black/15 [&_border-white\/20]:border-black/15 [&_border-white\/25]:border-black/20">
 
       {/* =========================================================
           COMPACT FOOTER
       ========================================================== */}
 
-      <div className="shell py-[clamp(1.75rem,5vw,4rem)]">
+      <div className="shell py-7 sm:py-12 lg:py-16">
 
-        <div className="grid gap-[clamp(2rem,5vw,5rem)] [grid-template-columns:repeat(auto-fit,minmax(min(100%,18rem),1fr))]">
+        <div className="grid gap-7 lg:grid-cols-[minmax(15rem,0.8fr)_minmax(0,2fr)] lg:gap-20 xl:gap-28">
 
           {/* =====================================================
               BRAND
           ====================================================== */}
 
-          <div className="voltaris-footer-brand relative min-w-0">
+          <div className="relative min-w-0">
 
             <Link
               href="/"
               aria-label="Voltaris Mobility home"
-              className="inline-flex max-w-full rounded-sm text-[#0a0a0a] transition-opacity duration-200 hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-volt"
+              className="inline-flex rounded-sm text-[#0a0a0a] transition-opacity duration-200 hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-volt"
             >
-              <VoltarisLogo className="h-[clamp(2rem,3vw,2.25rem)]" />
+              <VoltarisLogo className="h-8 sm:h-9" />
             </Link>
 
             <p className="mt-3 max-w-xs text-sm leading-5 text-[#6b6b6b]">
@@ -121,7 +121,41 @@ export function SiteFooter() {
 
           <nav aria-label="Footer navigation">
 
-              <div className="voltaris-footer-grid">
+              {/* MOBILE — COMPACT EXPANDABLE NAVIGATION */}
+              <div className="sm:hidden divide-y divide-[color:var(--vds-border)] border-y border-[color:var(--vds-border)]">
+
+                {footerGroups.map((group) => (
+                  <details key={group.heading} className="group">
+
+                    <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between py-3">
+                      <span className="font-data text-[0.58rem] font-medium uppercase tracking-[0.18em] text-[#6b6b6b]">
+                        {group.heading}
+                      </span>
+
+                      <span
+                        aria-hidden="true"
+                        className="relative flex h-7 w-7 shrink-0 items-center justify-center text-[#6b6b6b]"
+                      >
+                        <span className="absolute h-px w-3 bg-current" />
+                        <span className="absolute h-3 w-px bg-current transition-transform duration-200 group-open:rotate-90" />
+                      </span>
+                    </summary>
+
+                    <ul className="pb-3 pl-0">
+                      {group.links.map((link) => (
+                        <li key={link.href}>
+                          <FooterLink {...link} />
+                        </li>
+                      ))}
+                    </ul>
+
+                  </details>
+                ))}
+
+              </div>
+
+              {/* DESKTOP / TABLET — FULL NAVIGATION */}
+              <div className="hidden sm:grid sm:grid-cols-2 sm:gap-x-8 sm:gap-y-10 lg:grid-cols-4 lg:gap-x-10 xl:gap-x-14">
 
                 {footerGroups.map((group) => (
                   <div key={group.heading} className="min-w-0">
@@ -151,9 +185,9 @@ export function SiteFooter() {
             ACCREDITATION + LEGAL
         ======================================================== */}
 
-        <div className="mt-[clamp(1.75rem,4vw,3.5rem)] border-t border-[color:var(--vds-border)] pt-[clamp(1rem,2vw,1.5rem)]">
+        <div className="mt-7 border-t border-[color:var(--vds-border)] pt-4 sm:mt-14 sm:pt-6">
 
-          <div className="flex flex-wrap items-center justify-between gap-x-[clamp(1rem,3vw,2rem)] gap-y-3 text-[0.52rem] uppercase tracking-[0.1em] text-[#6b6b6b]">
+          <div className="flex flex-col gap-3 text-[0.52rem] uppercase tracking-[0.1em] text-[#6b6b6b] lg:flex-row lg:items-center lg:justify-between lg:gap-8">
 
             <p>
               © {year} {site.legalName}. All rights reserved.
