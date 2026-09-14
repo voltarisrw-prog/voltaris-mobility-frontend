@@ -2334,250 +2334,217 @@ a {
   }
 }
 
-
-/* ================================================================
-   VOLTARIS MOBILE VEHICLE CARD — TOP INFORMATION
-   Phone + small-device composition
-   ================================================================ */
-
-@media (max-width: 640px) {
-
-  .marketplace-vertical-showcase .marketplace-vehicle-card {
-    position: relative;
-    overflow: hidden;
-    isolation: isolate;
-  }
-
-  /* Keep the vehicle image behind the information */
-  .marketplace-vertical-showcase
-  .marketplace-vehicle-card-media {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-  }
-
-  .marketplace-vertical-showcase
-  .marketplace-vehicle-card-media img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    object-position: center center;
-  }
-
-  /* Dark upper gradient makes white information readable */
-  .marketplace-vertical-showcase
-  .marketplace-vehicle-card-gradient {
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    pointer-events: none;
-
-    background:
-      linear-gradient(
-        to bottom,
-        rgba(0, 0, 0, 0.78) 0%,
-        rgba(0, 0, 0, 0.52) 15%,
-        rgba(0, 0, 0, 0.08) 38%,
-        rgba(0, 0, 0, 0.00) 58%,
-        rgba(0, 0, 0, 0.30) 100%
-      );
-  }
-
-  /* Vehicle information at the TOP */
-  .marketplace-vertical-showcase
-  .marketplace-vehicle-card-content {
-    position: relative;
-    z-index: 3;
-
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-
-    padding: 22px 20px 110px;
-
-    color: #fff;
-    text-align: left;
-  }
-
-  /* 2024 · Kigali */
-  .marketplace-vertical-showcase
-  .marketplace-vehicle-card-content
-  > *:first-child {
-    color: #fff;
-    font-weight: 800;
-    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.85);
-  }
-
-  /* Tesla Model S Plaid */
-  .marketplace-vertical-showcase
-  .marketplace-vehicle-card-content
-  h2,
-  .marketplace-vertical-showcase
-  .marketplace-vehicle-card-content
-  h3 {
-    color: #fff;
-    font-weight: 900;
-    text-shadow: 0 3px 16px rgba(0, 0, 0, 0.9);
-  }
-
-  /* RF 148,000,000 */
-  .marketplace-vertical-showcase
-  .marketplace-vehicle-card-content
-  [class*="price"],
-  .marketplace-vertical-showcase
-  .marketplace-vehicle-card-content
-  [class*="Price"] {
-    color: #fff;
-    font-weight: 900;
-    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.9);
-  }
-
-  /* Make all links containing the vehicle information white */
-  .marketplace-vertical-showcase
-  .marketplace-vehicle-card-content
-  a {
-    color: #fff;
-    font-weight: 800;
-    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.85);
-  }
-
-  /* Preserve buttons/actions at the bottom */
-  .marketplace-vertical-showcase
-  .marketplace-vehicle-card-actions {
-    position: absolute;
-    left: 20px;
-    right: 20px;
-    bottom: 20px;
-    z-index: 4;
-  }
-}
-
-
-/* Extra-small phones */
-@media (max-width: 390px) {
-
-  .marketplace-vertical-showcase
-  .marketplace-vehicle-card-content {
-    padding: 18px 16px 100px;
-  }
-
-  .marketplace-vertical-showcase
-  .marketplace-vehicle-card-actions {
-    left: 16px;
-    right: 16px;
-    bottom: 16px;
-  }
-}
-
 /* ============================================================
-   VOLTARIS — MOBILE SHOWROOM INFORMATION
-   ONLY LOCATION + VEHICLE NAME + PRICE MOVE TO TOP CENTER
-   BADGES / ACTIONS / IMAGE STAY IN THEIR ORIGINAL POSITIONS
+   VOLTARIS — ENGINEERED MOBILE VEHICLE CARD
+   ------------------------------------------------------------
+   CARD GEOMETRY:
+     ROW 1 = vehicle identity
+              location
+              vehicle name
+              price
+     ROW 2 = vehicle image / visual field
+     ROW 3 = existing controls + actions
+
+   PRINCIPLE:
+     Do NOT move individual controls arbitrarily.
+     Do NOT use broad :first-child selectors.
+     Do NOT move the complete content container.
+     Establish clear spatial zones instead.
    ============================================================ */
 
 @media (max-width: 767px) {
 
-  /*
-   * The card itself remains the original responsive card.
-   */
+  /* ----------------------------------------------------------
+     1. CARD = FIXED COORDINATE SYSTEM
+     ---------------------------------------------------------- */
+
   .marketplace-vehicle-card {
     position: relative;
     overflow: hidden;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    min-height: 34rem;
+    isolation: isolate;
   }
 
-  /*
-   * Keep the media/image completely independent.
-   */
+  /* ----------------------------------------------------------
+     2. IMAGE = MIDDLE VISUAL FIELD
+     ---------------------------------------------------------- */
+
   .marketplace-vehicle-card-media {
     position: relative;
     z-index: 1;
+    grid-row: 1 / -1;
+    grid-column: 1;
+    min-height: 34rem;
   }
 
-  /*
-   * The content remains anchored to the bottom exactly as
-   * before. We do NOT move the whole content container.
-   */
+  .marketplace-vehicle-card-media img {
+    object-fit: contain !important;
+    object-position: center center !important;
+  }
+
+  /* ----------------------------------------------------------
+     3. GRADIENT = LEGIBILITY, NOT LAYOUT
+     ---------------------------------------------------------- */
+
+  .marketplace-vehicle-card-gradient {
+    z-index: 2;
+    background:
+      linear-gradient(
+        to bottom,
+        rgb(0 0 0 / 0.78) 0%,
+        rgb(0 0 0 / 0.38) 18%,
+        transparent 34%,
+        transparent 65%,
+        rgb(0 0 0 / 0.62) 100%
+      ) !important;
+  }
+
+  /* ----------------------------------------------------------
+     4. CONTENT = FULL CARD COORDINATE LAYER
+        It no longer dictates card height.
+     ---------------------------------------------------------- */
+
   .marketplace-vehicle-card-content {
-    position: absolute;
-    inset-inline: 0;
-    bottom: 0;
-    top: auto;
+    position: absolute !important;
+    inset: 0 !important;
     z-index: 10;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    align-items: stretch !important;
+    width: 100%;
+    height: 100%;
+    padding: 0.85rem !important;
     pointer-events: none;
   }
 
-  /*
-   * Existing controls/actions retain their normal position.
-   */
-  .marketplace-vehicle-card-actions {
-    position: relative;
-    z-index: 20;
-    pointer-events: auto;
-  }
+  /* ----------------------------------------------------------
+     5. TOP INFORMATION ZONE
+        Only the existing textual vehicle information is
+        centered here. It gets its own spatial area.
+     ---------------------------------------------------------- */
 
-  /*
-   * IMPORTANT:
-   * Do not reposition badges, feature labels, comparison controls,
-   * order/drive controls, or the image.
-   */
-  .marketplace-vehicle-card-content
-  > div
-  > div {
-    position: relative;
-  }
-
-  /*
-   * Mobile information strip.
-   *
-   * The existing card content remains structurally intact.
-   * These rules only center the textual identity information
-   * rather than moving the entire card UI.
-   */
   .marketplace-vehicle-card-content h2,
   .marketplace-vehicle-card-content h3 {
-    text-align: center;
+    position: relative;
+    z-index: 12;
+    width: 100%;
+    max-width: 88%;
     margin-inline: auto;
-    max-width: 92%;
+    text-align: center !important;
+    color: #ffffff !important;
+    text-shadow:
+      0 2px 12px rgb(0 0 0 / 0.85),
+      0 1px 3px rgb(0 0 0 / 0.95);
   }
 
   /*
-   * The vehicle metadata/price text is centered without
-   * changing the position of adjacent controls.
+   * Keep metadata readable at the top without allowing it
+   * to collide with the vehicle name.
    */
-  .marketplace-vehicle-card-content h2,
-  .marketplace-vehicle-card-content h3,
   .marketplace-vehicle-card-content p {
-    text-wrap: balance;
+    color: #ffffff;
+    text-shadow:
+      0 2px 10px rgb(0 0 0 / 0.8),
+      0 1px 3px rgb(0 0 0 / 0.9);
   }
 
-  /*
-   * Keep all existing buttons and badges above the image/UI
-   * layers without forcing them into the information area.
-   */
-  .marketplace-vehicle-card-content a,
-  .marketplace-vehicle-card-content button,
-  .marketplace-vehicle-card-content [role="button"] {
+  /* ----------------------------------------------------------
+     6. ACTION ZONE = BOTTOM
+        Buttons remain grouped together.
+        They are NOT mixed with the title/price zone.
+     ---------------------------------------------------------- */
+
+  .marketplace-vehicle-card-actions {
+    position: relative !important;
+    z-index: 30;
+    width: 100%;
+    margin-top: auto;
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
     pointer-events: auto;
   }
 
+  .marketplace-vehicle-card-actions > a {
+    width: 100%;
+    min-width: 0;
+    justify-content: center;
+    pointer-events: auto;
+  }
+
+  .marketplace-vehicle-card-actions > a:nth-child(2):last-child {
+    grid-column: 1 / -1;
+  }
+
+  /*
+   * Any buttons/links elsewhere in the card keep their own
+   * original position and remain above the image.
+   */
+  .marketplace-vehicle-card-content button,
+  .marketplace-vehicle-card-content a {
+    pointer-events: auto;
+  }
+
+  /* ----------------------------------------------------------
+     7. PREVENT LONG VEHICLE NAMES FROM DESTROYING GEOMETRY
+     ---------------------------------------------------------- */
+
+  .marketplace-vehicle-card-content h2,
+  .marketplace-vehicle-card-content h3 {
+    overflow-wrap: break-word;
+    word-break: normal;
+  }
 }
 
-/*
- * Small phones: keep the three textual elements compact enough
- * that long vehicle names never collide with the UI.
- */
+/* ------------------------------------------------------------
+   SMALL PHONE GEOMETRY
+   ------------------------------------------------------------ */
+
 @media (max-width: 420px) {
+
+  .marketplace-vehicle-card,
+  .marketplace-vehicle-card-media {
+    min-height: 32rem;
+  }
+
+  .marketplace-vehicle-card-content {
+    padding: 0.75rem !important;
+  }
 
   .marketplace-vehicle-card-content h2,
   .marketplace-vehicle-card-content h3 {
-    max-width: 86%;
+    max-width: 84%;
     font-size: 1.05rem;
     line-height: 1.05;
-    text-align: center;
   }
 
-  .marketplace-vehicle-card-content p {
-    line-height: 1.15;
+  .marketplace-vehicle-card-actions {
+    gap: 0.45rem;
   }
 
+  .marketplace-vehicle-card-actions > a {
+    min-height: 2.6rem;
+    font-size: 0.5rem;
+  }
+}
+
+/* ------------------------------------------------------------
+   VERY SMALL PHONES
+   ------------------------------------------------------------ */
+
+@media (max-width: 360px) {
+
+  .marketplace-vehicle-card,
+  .marketplace-vehicle-card-media {
+    min-height: 30rem;
+  }
+
+  .marketplace-vehicle-card-content h2,
+  .marketplace-vehicle-card-content h3 {
+    max-width: 80%;
+    font-size: 0.98rem;
+  }
 }
