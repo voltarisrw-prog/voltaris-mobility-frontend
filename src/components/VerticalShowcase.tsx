@@ -19,7 +19,7 @@ export function VerticalShowcase({
   mode = 'sale',
 }: VerticalShowcaseProps) {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [autoPlay, setAutoPlay] = useState(false);
+  const [autoPlay, setAutoPlay] = useState(true);
 
   const animationRef = useRef<number | null>(null);
   const interactionTimerRef =
