@@ -2333,3 +2333,138 @@ a {
     font-size: 10px;
   }
 }
+
+
+/* ================================================================
+   VOLTARIS MOBILE VEHICLE CARD — TOP INFORMATION
+   Phone + small-device composition
+   ================================================================ */
+
+@media (max-width: 640px) {
+
+  .marketplace-vertical-showcase .marketplace-vehicle-card {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  /* Keep the vehicle image behind the information */
+  .marketplace-vertical-showcase
+  .marketplace-vehicle-card-media {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .marketplace-vertical-showcase
+  .marketplace-vehicle-card-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center center;
+  }
+
+  /* Dark upper gradient makes white information readable */
+  .marketplace-vertical-showcase
+  .marketplace-vehicle-card-gradient {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+
+    background:
+      linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.78) 0%,
+        rgba(0, 0, 0, 0.52) 15%,
+        rgba(0, 0, 0, 0.08) 38%,
+        rgba(0, 0, 0, 0.00) 58%,
+        rgba(0, 0, 0, 0.30) 100%
+      );
+  }
+
+  /* Vehicle information at the TOP */
+  .marketplace-vertical-showcase
+  .marketplace-vehicle-card-content {
+    position: relative;
+    z-index: 3;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    padding: 22px 20px 110px;
+
+    color: #fff;
+    text-align: left;
+  }
+
+  /* 2024 · Kigali */
+  .marketplace-vertical-showcase
+  .marketplace-vehicle-card-content
+  > *:first-child {
+    color: #fff;
+    font-weight: 800;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.85);
+  }
+
+  /* Tesla Model S Plaid */
+  .marketplace-vertical-showcase
+  .marketplace-vehicle-card-content
+  h2,
+  .marketplace-vertical-showcase
+  .marketplace-vehicle-card-content
+  h3 {
+    color: #fff;
+    font-weight: 900;
+    text-shadow: 0 3px 16px rgba(0, 0, 0, 0.9);
+  }
+
+  /* RF 148,000,000 */
+  .marketplace-vertical-showcase
+  .marketplace-vehicle-card-content
+  [class*="price"],
+  .marketplace-vertical-showcase
+  .marketplace-vehicle-card-content
+  [class*="Price"] {
+    color: #fff;
+    font-weight: 900;
+    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.9);
+  }
+
+  /* Make all links containing the vehicle information white */
+  .marketplace-vertical-showcase
+  .marketplace-vehicle-card-content
+  a {
+    color: #fff;
+    font-weight: 800;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.85);
+  }
+
+  /* Preserve buttons/actions at the bottom */
+  .marketplace-vertical-showcase
+  .marketplace-vehicle-card-actions {
+    position: absolute;
+    left: 20px;
+    right: 20px;
+    bottom: 20px;
+    z-index: 4;
+  }
+}
+
+
+/* Extra-small phones */
+@media (max-width: 390px) {
+
+  .marketplace-vertical-showcase
+  .marketplace-vehicle-card-content {
+    padding: 18px 16px 100px;
+  }
+
+  .marketplace-vertical-showcase
+  .marketplace-vehicle-card-actions {
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+  }
+}
