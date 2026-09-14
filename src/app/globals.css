@@ -2470,77 +2470,114 @@ a {
 }
 
 /* ============================================================
-   VOLTARIS — MOBILE VEHICLE INFO TOP CENTER
-   ONLY: LOCATION + CAR NAME + PRICE
-   EVERYTHING ELSE REMAINS IN ITS ORIGINAL POSITION
+   VOLTARIS — MOBILE SHOWROOM INFORMATION
+   ONLY LOCATION + VEHICLE NAME + PRICE MOVE TO TOP CENTER
+   BADGES / ACTIONS / IMAGE STAY IN THEIR ORIGINAL POSITIONS
    ============================================================ */
 
 @media (max-width: 767px) {
 
-  /* Keep the card and all existing elements in their normal layout */
+  /*
+   * The card itself remains the original responsive card.
+   */
   .marketplace-vehicle-card {
+    position: relative;
+    overflow: hidden;
+  }
+
+  /*
+   * Keep the media/image completely independent.
+   */
+  .marketplace-vehicle-card-media {
+    position: relative;
+    z-index: 1;
+  }
+
+  /*
+   * The content remains anchored to the bottom exactly as
+   * before. We do NOT move the whole content container.
+   */
+  .marketplace-vehicle-card-content {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    top: auto;
+    z-index: 10;
+    pointer-events: none;
+  }
+
+  /*
+   * Existing controls/actions retain their normal position.
+   */
+  .marketplace-vehicle-card-actions {
+    position: relative;
+    z-index: 20;
+    pointer-events: auto;
+  }
+
+  /*
+   * IMPORTANT:
+   * Do not reposition badges, feature labels, comparison controls,
+   * order/drive controls, or the image.
+   */
+  .marketplace-vehicle-card-content
+  > div
+  > div {
     position: relative;
   }
 
   /*
-   * Move ONLY the vehicle identity/price information visually
-   * to the top-center. Do not reposition the actions or image.
+   * Mobile information strip.
+   *
+   * The existing card content remains structurally intact.
+   * These rules only center the textual identity information
+   * rather than moving the entire card UI.
    */
-  .marketplace-vehicle-card-content {
-    position: relative;
-  }
-
-  /* Location */
-  .marketplace-vehicle-card-content > :first-child {
-    text-align: center;
-  }
-
-  /* Vehicle name / brand */
   .marketplace-vehicle-card-content h2,
   .marketplace-vehicle-card-content h3 {
     text-align: center;
+    margin-inline: auto;
+    max-width: 92%;
   }
 
-  /* Price */
-  .marketplace-vehicle-card-content [class*="price"],
-  .marketplace-vehicle-card-content [class*="Price"] {
+  /*
+   * The vehicle metadata/price text is centered without
+   * changing the position of adjacent controls.
+   */
+  .marketplace-vehicle-card-content h2,
+  .marketplace-vehicle-card-content h3,
+  .marketplace-vehicle-card-content p {
+    text-wrap: balance;
+  }
+
+  /*
+   * Keep all existing buttons and badges above the image/UI
+   * layers without forcing them into the information area.
+   */
+  .marketplace-vehicle-card-content a,
+  .marketplace-vehicle-card-content button,
+  .marketplace-vehicle-card-content [role="button"] {
+    pointer-events: auto;
+  }
+
+}
+
+/*
+ * Small phones: keep the three textual elements compact enough
+ * that long vehicle names never collide with the UI.
+ */
+@media (max-width: 420px) {
+
+  .marketplace-vehicle-card-content h2,
+  .marketplace-vehicle-card-content h3 {
+    max-width: 86%;
+    font-size: 1.05rem;
+    line-height: 1.05;
     text-align: center;
   }
 
-  /*
-   * Keep the three identity elements visually centered and
-   * above the vehicle image without changing other content.
-   */
-  .marketplace-vehicle-card-content > :first-child,
-  .marketplace-vehicle-card-content h2,
-  .marketplace-vehicle-card-content h3,
-  .marketplace-vehicle-card-content [class*="price"],
-  .marketplace-vehicle-card-content [class*="Price"] {
-    position: relative;
-    z-index: 5;
-    width: 100%;
-    margin-left: auto;
-    margin-right: auto;
+  .marketplace-vehicle-card-content p {
+    line-height: 1.15;
   }
 
-  /* Strong premium white typography for the three items */
-  .marketplace-vehicle-card-content > :first-child,
-  .marketplace-vehicle-card-content h2,
-  .marketplace-vehicle-card-content h3,
-  .marketplace-vehicle-card-content [class*="price"],
-  .marketplace-vehicle-card-content [class*="Price"] {
-    color: #fff;
-    text-shadow:
-      0 2px 10px rgba(0, 0, 0, 0.65),
-      0 1px 3px rgba(0, 0, 0, 0.9);
-  }
-
-  /*
-   * DO NOT alter:
-   * - marketplace-vehicle-card-media
-   * - marketplace-vehicle-card-actions
-   * - vehicle image positioning
-   * - buttons / links
-   * - other vehicle details
-   */
 }
