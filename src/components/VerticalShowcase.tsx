@@ -239,69 +239,146 @@ export function VerticalShowcase({
   }, [count]);
 
   /*
-   * Briefly pause autoplay when the user interacts.
+   * Give the user's native scrolling complete priority.
+   *
+   * Autoplay pauses as soon as the user scrolls and remains paused
+   * while scrolling continues. It only resumes after the user has
+   * completely stopped interacting for a short idle period.
+   *
+   * This prevents autoplay from fighting the browser when the user
+   * wants to bring a previous vehicle back into view.
    */
   useEffect(() => {
     if (count < 2) return;
 
-    const pauseBriefly = () => {
+    let resumeTimer: ReturnType<typeof setTimeout> | null = null;
+
+    const pauseForUserScroll = () => {
       pausedRef.current = true;
 
-      if (resumeTimerRef.current) {
-        clearTimeout(resumeTimerRef.current);
+      if (resumeTimer) {
+        clearTimeout(resumeTimer);
       }
 
-      resumeTimerRef.current = setTimeout(() => {
+      resumeTimer = setTimeout(() => {
         pausedRef.current = false;
       }, RESUME_DELAY_MS);
     };
 
+    const onScroll = () => {
+      pauseForUserScroll();
+    };
+
+    const onWheel = () => {
+      pauseForUserScroll();
+    };
+
+    const onTouchStart = () => {
+      pausedRef.current = true;
+
+      if (resumeTimer) {
+        clearTimeout(resumeTimer);
+      }
+    };
+
+    const onTouchEnd = () => {
+      if (resumeTimer) {
+        clearTimeout(resumeTimer);
+      }
+
+      resumeTimer = setTimeout(() => {
+        pausedRef.current = false;
+      }, RESUME_DELAY_MS);
+    };
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      /*
+       * Only navigation keys should pause the autoplay.
+       * Regular typing elsewhere on the page should not.
+       */
+      const navigationKeys = [
+        'ArrowUp',
+        'ArrowDown',
+        'PageUp',
+        'PageDown',
+        'Home',
+        'End',
+        ' ',
+      ];
+
+      if (!navigationKeys.includes(event.key)) return;
+
+      pauseForUserScroll();
+    };
+
+    window.addEventListener(
+      'scroll',
+      onScroll,
+      { passive: true },
+    );
+
     window.addEventListener(
       'wheel',
-      pauseBriefly,
+      onWheel,
       { passive: true },
     );
 
     window.addEventListener(
       'touchstart',
-      pauseBriefly,
+      onTouchStart,
       { passive: true },
     );
 
     window.addEventListener(
-      'pointerdown',
-      pauseBriefly,
+      'touchend',
+      onTouchEnd,
+      { passive: true },
+    );
+
+    window.addEventListener(
+      'touchcancel',
+      onTouchEnd,
       { passive: true },
     );
 
     window.addEventListener(
       'keydown',
-      pauseBriefly,
+      onKeyDown,
     );
 
     return () => {
       window.removeEventListener(
+        'scroll',
+        onScroll,
+      );
+
+      window.removeEventListener(
         'wheel',
-        pauseBriefly,
+        onWheel,
       );
 
       window.removeEventListener(
         'touchstart',
-        pauseBriefly,
+        onTouchStart,
       );
 
       window.removeEventListener(
-        'pointerdown',
-        pauseBriefly,
+        'touchend',
+        onTouchEnd,
+      );
+
+      window.removeEventListener(
+        'touchcancel',
+        onTouchEnd,
       );
 
       window.removeEventListener(
         'keydown',
-        pauseBriefly,
+        onKeyDown,
       );
 
-      if (resumeTimerRef.current) {
-        clearTimeout(resumeTimerRef.current);
+      if (resumeTimer) {
+        clearTimeout(resumeTimer);
       }
     };
   }, [count]);
