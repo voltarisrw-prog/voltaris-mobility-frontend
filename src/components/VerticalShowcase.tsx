@@ -19,6 +19,7 @@ export function VerticalShowcase({
   mode = 'sale',
 }: VerticalShowcaseProps) {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [autoPlay, setAutoPlay] = useState(false);
 
   const animationRef = useRef<number | null>(null);
   const interactionTimerRef =
@@ -221,7 +222,7 @@ export function VerticalShowcase({
    *   - autoplay = gentle background movement
    */
   useEffect(() => {
-    if (count < 2) return;
+    if (count < 2 || !autoPlay) return;
 
     let running = true;
 
@@ -307,7 +308,7 @@ export function VerticalShowcase({
         animationRef.current = null;
       }
     };
-  }, [count]);
+  }, [count, autoPlay]);
 
   /*
    * USER CONTROL
@@ -469,6 +470,23 @@ export function VerticalShowcase({
             )}
           </p>
         </div>
+
+        <button
+          type="button"
+          className="marketplace-native-showcase-autoplay"
+          aria-pressed={autoPlay}
+          onClick={() => {
+            const next = !autoPlay;
+            setAutoPlay(next);
+
+            if (next) {
+              userInteractingRef.current = false;
+              lastTimeRef.current = performance.now();
+            }
+          }}
+        >
+          Autoplay {autoPlay ? 'ON' : 'OFF'}
+        </button>
       </div>
 
       <div className="marketplace-native-showcase-list marketplace-3d-showcase-list">
