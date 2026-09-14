@@ -2637,3 +2637,66 @@ a {
   }
 
 }
+
+/* ============================================================
+   VOLTARIS — GLOBAL COMPARE CONTROL
+   ------------------------------------------------------------
+   Always visible against light/white vehicle imagery.
+   Applies to every device size.
+   ONLY affects the Compare control.
+   ============================================================ */
+
+.marketplace-vehicle-card
+.marketplace-vehicle-card-media
+button[class*="compare"],
+.marketplace-vehicle-card .compare-toggle-button {
+  /* intentionally scoped below by the actual Compare button */
+}
+
+/* Compare button inside every vehicle card */
+.marketplace-vehicle-card-media
+button[aria-label*="ompare"],
+.marketplace-vehicle-card-media
+button[title*="ompare"] {
+  background: #000000 !important;
+  border-color: #000000 !important;
+  color: #ffffff !important;
+
+  font-weight: 700 !important;
+
+  box-shadow:
+    0 4px 14px rgb(0 0 0 / 0.28),
+    0 1px 3px rgb(0 0 0 / 0.35);
+
+  opacity: 1 !important;
+}
+
+/* Icon inside Compare control */
+.marketplace-vehicle-card-media
+button[aria-label*="ompare"] svg,
+.marketplace-vehicle-card-media
+button[title*="ompare"] svg {
+  color: #ffffff !important;
+  stroke: currentColor !important;
+}
+
+/* Hover / focus — remains black, becomes slightly stronger */
+.marketplace-vehicle-card-media
+button[aria-label*="ompare"]:hover,
+.marketplace-vehicle-card-media
+button[aria-label*="ompare"]:focus-visible,
+.marketplace-vehicle-card-media
+button[title*="ompare"]:hover,
+.marketplace-vehicle-card-media
+button[title*="ompare"]:focus-visible {
+  background: #000000 !important;
+  border-color: #000000 !important;
+  color: #ffffff !important;
+  box-shadow:
+    0 6px 18px rgb(0 0 0 / 0.35),
+    0 2px 5px rgb(0 0 0 / 0.4);
+}
+
+/* ============================================================
+   END — GLOBAL COMPARE CONTROL
+   ============================================================ */
