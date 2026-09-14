@@ -8,6 +8,7 @@ import { breadcrumbJsonLd, faqJsonLd } from '@/lib/seo/jsonld';
 import { buildHref } from '@/lib/vehicles/filters';
 import type { LandingPage } from '@/config/landing';
 import type { VehicleSummary } from '@/types/vehicle';
+import styles from './CategoryLanding.module.css';
 
 /**
  * One renderer for every curated landing page. The content comes from
@@ -57,7 +58,7 @@ export async function CategoryLanding({ page }: { page: LandingPage }) {
           />
         ) : (
           <>
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <div className={styles.vehicleGrid}>
               {vehicles.map((vehicle, index) => (
                 <VehicleCard key={vehicle.id} vehicle={vehicle} priority={index < 3} />
               ))}
