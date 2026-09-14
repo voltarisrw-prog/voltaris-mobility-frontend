@@ -2753,6 +2753,73 @@ img {
     translateZ(12px);
 }
 
+
+/* Vertical Showcase — premium cylinder autoplay control */
+.marketplace-native-showcase-header {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.marketplace-native-showcase-autoplay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 40;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 108px;
+  height: 36px;
+  padding: 0 16px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.72);
+  color: #fff;
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  white-space: nowrap;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  transition:
+    transform 180ms ease,
+    background 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.marketplace-native-showcase-autoplay:hover {
+  transform: translateY(-1px);
+  background: rgba(0, 0, 0, 0.86);
+  border-color: rgba(255, 255, 255, 0.42);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.24);
+}
+
+.marketplace-native-showcase-autoplay:active {
+  transform: translateY(0) scale(0.97);
+}
+
+.marketplace-native-showcase-autoplay:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+@media (max-width: 767px) {
+  .marketplace-native-showcase-autoplay {
+    min-width: 94px;
+    height: 32px;
+    padding: 0 13px;
+    font-size: 0.64rem;
+  }
+}
+
 .marketplace-3d-showcase .marketplace-native-showcase-header {
   z-index: 30;
 }
