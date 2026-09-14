@@ -10,9 +10,9 @@ type VerticalShowcaseProps = {
   mode?: 'sale' | 'rental';
 };
 
-const AUTO_SPEED = 0.32;
+const AUTO_SPEED = 0.28;
 const MAX_DELTA_MS = 32;
-const RESUME_DELAY_MS = 1200;
+const RESUME_DELAY_MS = 1400;
 
 export function VerticalShowcase({
   vehicles,
@@ -20,80 +20,59 @@ export function VerticalShowcase({
 }: VerticalShowcaseProps) {
   const [activeIndex, setActiveIndex] = useState(0);
 
-  const viewportRef = useRef<HTMLDivElement | null>(null);
-  const trackRef = useRef<HTMLDivElement | null>(null);
-
   const animationRef = useRef<number | null>(null);
-  const offsetRef = useRef(0);
-  const pausedRef = useRef(false);
-  const resumeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const interactionTimerRef =
+    useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const userInteractingRef = useRef(false);
+  const lastTimeRef = useRef<number | null>(null);
 
   const count = vehicles.length;
 
   /*
-   * Continuous autoplay + original 3D positioning.
+   * ORIGINAL 3D SHOWCASE
    *
-   * The track moves continuously, while every individual card still
-   * receives the original 3D rotation, depth, scale and opacity based
-   * on its distance from the showcase viewport center.
+   * Every card remains part of the normal document flow.
+   * Its 3D position is calculated from its real position in the
+   * viewport. This keeps manual scrolling completely natural.
    */
   useEffect(() => {
-    if (count < 2) return;
+    if (!count) return;
 
-    const viewport = viewportRef.current;
-    const track = trackRef.current;
+    let frame: number | null = null;
 
-    if (!viewport || !track) return;
-
-    let running = true;
-    let lastTime = performance.now();
-
-    const getLoopHeight = () => {
-      const children = Array.from(
-        track.children,
-      ) as HTMLElement[];
-
-      const secondCopy = children[count];
-
-      if (!secondCopy) return 0;
-
-      /*
-       * offsetTop gives the exact distance from the first copy to the
-       * second copy, including the flex gap. This makes the wrap seamless.
-       */
-      return secondCopy.offsetTop;
-    };
-
-    const update3D = () => {
+    const updateShowcase = () => {
       const sections = Array.from(
-        track.querySelectorAll<HTMLElement>(
+        document.querySelectorAll<HTMLElement>(
           '[data-marketplace-showcase-item]',
         ),
       );
 
       if (!sections.length) return;
 
-      const viewportRect = viewport.getBoundingClientRect();
       const viewportCenter =
-        viewportRect.top + viewportRect.height * 0.5;
+        window.innerHeight * 0.5;
 
       let closestIndex = 0;
-      let closestDistance = Number.POSITIVE_INFINITY;
+      let closestDistance =
+        Number.POSITIVE_INFINITY;
 
       sections.forEach((section, index) => {
-        const rect = section.getBoundingClientRect();
-        const center = rect.top + rect.height * 0.5;
-        const distance = Math.abs(center - viewportCenter);
+        const rect =
+          section.getBoundingClientRect();
 
-        /*
-         * ORIGINAL 3D SHOWCASE MATH
-         *
-         * This is deliberately kept from the previous 3D implementation.
-         */
-        const sectionHeight = Math.max(rect.height, 1);
+        const center =
+          rect.top + rect.height * 0.5;
+
+        const distance =
+          Math.abs(center - viewportCenter);
+
+        const sectionHeight =
+          Math.max(rect.height, 1);
 
         const rawProgress =
-          (viewportCenter - center) / sectionHeight;
+          (viewportCenter - center) /
+          sectionHeight;
 
         const progress = Math.max(
           -1.5,
@@ -105,14 +84,29 @@ export function VerticalShowcase({
           1,
         );
 
-        const direction = progress > 0 ? 1 : -1;
+        const direction =
+          progress > 0 ? 1 : -1;
 
-        const rotateY = progress * -25;
-        const rotateX = absProgress * 8 * direction;
-        const rotateZ = progress * -2.5;
-        const translateX = progress * -4;
-        const translateY = progress * 18;
-        const translateZ = -absProgress * 110;
+        /*
+         * ORIGINAL 3D TRANSFORM VALUES
+         */
+        const rotateY =
+          progress * -25;
+
+        const rotateX =
+          absProgress * 8 * direction;
+
+        const rotateZ =
+          progress * -2.5;
+
+        const translateX =
+          progress * -4;
+
+        const translateY =
+          progress * 18;
+
+        const translateZ =
+          -absProgress * 110;
 
         const scale =
           1 - absProgress * 0.095;
@@ -162,73 +156,150 @@ export function VerticalShowcase({
           `${opacity}`,
         );
 
-        /*
-         * Only the first copy controls the visible counter.
-         */
         if (
-          index < count &&
           distance < closestDistance
         ) {
           closestDistance = distance;
-          closestIndex = index;
+          closestIndex =
+            index % count;
         }
       });
 
-      setActiveIndex(closestIndex % count);
+      setActiveIndex(closestIndex);
     };
+
+    const requestUpdate = () => {
+      if (frame !== null) return;
+
+      frame =
+        window.requestAnimationFrame(() => {
+          updateShowcase();
+          frame = null;
+        });
+    };
+
+    updateShowcase();
+
+    window.addEventListener(
+      'scroll',
+      requestUpdate,
+      { passive: true },
+    );
+
+    window.addEventListener(
+      'resize',
+      requestUpdate,
+      { passive: true },
+    );
+
+    return () => {
+      window.removeEventListener(
+        'scroll',
+        requestUpdate,
+      );
+
+      window.removeEventListener(
+        'resize',
+        requestUpdate,
+      );
+
+      if (frame !== null) {
+        window.cancelAnimationFrame(frame);
+      }
+    };
+  }, [count]);
+
+  /*
+   * NATIVE PAGE AUTOPLAY
+   *
+   * Autoplay uses the browser's actual document scroll position.
+   * It never transforms the showcase track itself.
+   *
+   * Therefore:
+   *   - manual scroll = completely natural
+   *   - 3D follows real viewport positions
+   *   - autoplay = gentle background movement
+   */
+  useEffect(() => {
+    if (count < 2) return;
+
+    let running = true;
 
     const animate = (now: number) => {
       if (!running) return;
 
+      const previous =
+        lastTimeRef.current ?? now;
+
       const elapsed = Math.min(
-        now - lastTime,
+        now - previous,
         MAX_DELTA_MS,
       );
 
-      lastTime = now;
+      lastTimeRef.current = now;
 
-      if (!pausedRef.current) {
-        const movement =
-          AUTO_SPEED * (elapsed / 16.67);
+      if (!userInteractingRef.current) {
+        const showcase =
+          document.querySelector<HTMLElement>(
+            '.marketplace-3d-showcase',
+          );
 
-        offsetRef.current += movement;
+        if (showcase) {
+          const rect =
+            showcase.getBoundingClientRect();
 
-        const loopHeight = getLoopHeight();
+          /*
+           * Only autoplay while the showcase is actually
+           * participating in the viewport.
+           */
+          const visible =
+            rect.top < window.innerHeight &&
+            rect.bottom > 0;
 
-        if (
-          loopHeight > 0 &&
-          offsetRef.current >= loopHeight
-        ) {
-          offsetRef.current -= loopHeight;
+          if (visible) {
+            const maxScroll =
+              document.documentElement
+                .scrollHeight -
+              window.innerHeight;
+
+            if (
+              window.scrollY <
+              maxScroll - 1
+            ) {
+              const movement =
+                AUTO_SPEED *
+                (elapsed / 16.67);
+
+              /*
+               * Native page movement only.
+               * No carousel track transform.
+               */
+              window.scrollBy(
+                0,
+                movement,
+              );
+            }
+          }
         }
-
-        /*
-         * Move the duplicated track continuously.
-         * The individual cards retain their own 3D transforms.
-         */
-        track.style.transform =
-          `translate3d(0, -${offsetRef.current}px, 0)`;
       }
 
-      /*
-       * Recalculate the original 3D effect every frame.
-       * This is what keeps the showcase dimensional while moving.
-       */
-      update3D();
-
       animationRef.current =
-        window.requestAnimationFrame(animate);
+        window.requestAnimationFrame(
+          animate,
+        );
     };
 
-    update3D();
-
     animationRef.current =
-      window.requestAnimationFrame(animate);
+      window.requestAnimationFrame(
+        animate,
+      );
 
     return () => {
       running = false;
 
-      if (animationRef.current !== null) {
+      if (
+        animationRef.current !== null
+      ) {
         window.cancelAnimationFrame(
           animationRef.current,
         );
@@ -239,180 +310,143 @@ export function VerticalShowcase({
   }, [count]);
 
   /*
-   * Give the user's native scrolling complete priority.
+   * USER CONTROL
    *
-   * Autoplay pauses as soon as the user scrolls and remains paused
-   * while scrolling continues. It only resumes after the user has
-   * completely stopped interacting for a short idle period.
-   *
-   * This prevents autoplay from fighting the browser when the user
-   * wants to bring a previous vehicle back into view.
+   * Any native scroll immediately takes control away
+   * from autoplay. Autoplay only resumes after the user
+   * has genuinely stopped interacting.
    */
   useEffect(() => {
     if (count < 2) return;
 
-    let resumeTimer: ReturnType<typeof setTimeout> | null = null;
+    const pauseAutoplay =
+      () => {
+        userInteractingRef.current =
+          true;
 
-    const pauseForUserScroll = () => {
-      pausedRef.current = true;
+        if (
+          interactionTimerRef.current
+        ) {
+          clearTimeout(
+            interactionTimerRef.current,
+          );
+        }
 
-      if (resumeTimer) {
-        clearTimeout(resumeTimer);
-      }
+        interactionTimerRef.current =
+          setTimeout(() => {
+            userInteractingRef.current =
+              false;
 
-      resumeTimer = setTimeout(() => {
-        pausedRef.current = false;
-      }, RESUME_DELAY_MS);
-    };
+            lastTimeRef.current =
+              performance.now();
+          }, RESUME_DELAY_MS);
+      };
 
-    const onScroll = () => {
-      pauseForUserScroll();
-    };
+    const startTouch =
+      () => {
+        userInteractingRef.current =
+          true;
 
-    const onWheel = () => {
-      pauseForUserScroll();
-    };
+        if (
+          interactionTimerRef.current
+        ) {
+          clearTimeout(
+            interactionTimerRef.current,
+          );
+        }
+      };
 
-    const onTouchStart = () => {
-      pausedRef.current = true;
+    const endTouch =
+      () => {
+        if (
+          interactionTimerRef.current
+        ) {
+          clearTimeout(
+            interactionTimerRef.current,
+          );
+        }
 
-      if (resumeTimer) {
-        clearTimeout(resumeTimer);
-      }
-    };
+        interactionTimerRef.current =
+          setTimeout(() => {
+            userInteractingRef.current =
+              false;
 
-    const onTouchEnd = () => {
-      if (resumeTimer) {
-        clearTimeout(resumeTimer);
-      }
-
-      resumeTimer = setTimeout(() => {
-        pausedRef.current = false;
-      }, RESUME_DELAY_MS);
-    };
-
-    const onKeyDown = (event: KeyboardEvent) => {
-      /*
-       * Only navigation keys should pause the autoplay.
-       * Regular typing elsewhere on the page should not.
-       */
-      const navigationKeys = [
-        'ArrowUp',
-        'ArrowDown',
-        'PageUp',
-        'PageDown',
-        'Home',
-        'End',
-        ' ',
-      ];
-
-      if (!navigationKeys.includes(event.key)) return;
-
-      pauseForUserScroll();
-    };
+            lastTimeRef.current =
+              performance.now();
+          }, RESUME_DELAY_MS);
+      };
 
     window.addEventListener(
       'scroll',
-      onScroll,
+      pauseAutoplay,
       { passive: true },
     );
 
     window.addEventListener(
       'wheel',
-      onWheel,
+      pauseAutoplay,
       { passive: true },
     );
 
     window.addEventListener(
       'touchstart',
-      onTouchStart,
+      startTouch,
       { passive: true },
     );
 
     window.addEventListener(
       'touchend',
-      onTouchEnd,
+      endTouch,
       { passive: true },
     );
 
     window.addEventListener(
       'touchcancel',
-      onTouchEnd,
+      endTouch,
       { passive: true },
-    );
-
-    window.addEventListener(
-      'keydown',
-      onKeyDown,
     );
 
     return () => {
       window.removeEventListener(
         'scroll',
-        onScroll,
+        pauseAutoplay,
       );
 
       window.removeEventListener(
         'wheel',
-        onWheel,
+        pauseAutoplay,
       );
 
       window.removeEventListener(
         'touchstart',
-        onTouchStart,
+        startTouch,
       );
 
       window.removeEventListener(
         'touchend',
-        onTouchEnd,
+        endTouch,
       );
 
       window.removeEventListener(
         'touchcancel',
-        onTouchEnd,
+        endTouch,
       );
 
-      window.removeEventListener(
-        'keydown',
-        onKeyDown,
-      );
-
-      if (resumeTimer) {
-        clearTimeout(resumeTimer);
+      if (
+        interactionTimerRef.current
+      ) {
+        clearTimeout(
+          interactionTimerRef.current,
+        );
       }
     };
   }, [count]);
 
   if (!vehicles.length) return null;
 
-  const renderVehicle = (
-    vehicle: VehicleSummary,
-    index: number,
-    copy: 'original' | 'duplicate',
-  ) => (
-    <article
-      key={`${copy}-${vehicle.id}-${index}`}
-      data-marketplace-showcase-item
-      className={`marketplace-native-showcase-item marketplace-3d-showcase-item ${
-        copy === 'original' &&
-        index === activeIndex
-          ? 'marketplace-native-showcase-item-active'
-          : ''
-      }`}
-    >
-      <div className="marketplace-3d-showcase-stage">
-        <MarketplaceVehicleCard
-          vehicle={vehicle}
-          featured
-          mode={mode}
-        />
-      </div>
-    </article>
-  );
-
   return (
     <section
-      className="marketplace-native-showcase marketplace-3d-showcase marketplace-continuous-showcase"
+      className="marketplace-native-showcase marketplace-3d-showcase"
       aria-label="Vehicle showroom"
     >
       <div className="marketplace-native-showcase-header">
@@ -424,36 +458,41 @@ export function VerticalShowcase({
           </p>
 
           <p className="marketplace-native-showcase-count">
-            {String(activeIndex + 1).padStart(2, '0')} /{' '}
-            {String(count).padStart(2, '0')}
+            {String(activeIndex + 1).padStart(
+              2,
+              '0',
+            )}{' '}
+            /{' '}
+            {String(count).padStart(
+              2,
+              '0',
+            )}
           </p>
         </div>
       </div>
 
-      <div
-        ref={viewportRef}
-        className="marketplace-continuous-showcase-viewport"
-      >
-        <div
-          ref={trackRef}
-          className="marketplace-native-showcase-list marketplace-3d-showcase-list marketplace-continuous-showcase-track"
-        >
-          {vehicles.map((vehicle, index) =>
-            renderVehicle(
-              vehicle,
-              index,
-              'original',
-            ),
-          )}
-
-          {vehicles.map((vehicle, index) =>
-            renderVehicle(
-              vehicle,
-              index,
-              'duplicate',
-            ),
-          )}
-        </div>
+      <div className="marketplace-native-showcase-list marketplace-3d-showcase-list">
+        {vehicles.map(
+          (vehicle, index) => (
+            <article
+              key={`${vehicle.id}-${index}`}
+              data-marketplace-showcase-item
+              className={`marketplace-native-showcase-item marketplace-3d-showcase-item ${
+                index === activeIndex
+                  ? 'marketplace-native-showcase-item-active'
+                  : ''
+              }`}
+            >
+              <div className="marketplace-3d-showcase-stage">
+                <MarketplaceVehicleCard
+                  vehicle={vehicle}
+                  featured
+                  mode={mode}
+                />
+              </div>
+            </article>
+          ),
+        )}
       </div>
     </section>
   );
