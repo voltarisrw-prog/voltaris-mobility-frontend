@@ -10,8 +10,12 @@ type VerticalShowcaseProps = {
   mode?: 'sale' | 'rental';
 };
 
-const AUTO_ADVANCE_MS = 6500;
 const RESUME_DELAY_MS = 1800;
+
+// Slow, continuous showroom movement.
+// Lower = slower, higher = faster.
+const CONTINUOUS_SCROLL_PX_PER_FRAME = 0.42;
+const CONTINUOUS_SCROLL_MAX_DELTA_MS = 32;
 
 export function VerticalShowcase({
   vehicles,
@@ -21,7 +25,6 @@ export function VerticalShowcase({
   const [autoPlay, setAutoPlay] = useState(true);
 
   const resumeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const autoTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const interactionRef = useRef(false);
   const rafRef = useRef<number | null>(null);
 
@@ -153,48 +156,51 @@ export function VerticalShowcase({
   useEffect(() => {
     if (count < 2 || !autoPlay) return;
 
-    autoTimerRef.current = setInterval(() => {
-      if (interactionRef.current) return;
+    let animationFrame: number | null = null;
+    let lastTime = performance.now();
 
-      const sections = Array.from(
-        document.querySelectorAll<HTMLElement>(
-          '[data-marketplace-showcase-item]',
-        ),
+    const advanceContinuously = (now: number) => {
+      if (interactionRef.current) {
+        lastTime = now;
+        animationFrame = window.requestAnimationFrame(
+          advanceContinuously,
+        );
+        return;
+      }
+
+      const elapsed = Math.min(
+        now - lastTime,
+        CONTINUOUS_SCROLL_MAX_DELTA_MS,
       );
 
-      if (!sections.length) return;
+      lastTime = now;
 
-      const viewportCenter = window.innerHeight * 0.5;
-
-      let closestIndex = 0;
-      let closestDistance = Number.POSITIVE_INFINITY;
-
-      sections.forEach((section, index) => {
-        const rect = section.getBoundingClientRect();
-        const center = rect.top + rect.height * 0.5;
-        const distance = Math.abs(center - viewportCenter);
-
-        if (distance < closestDistance) {
-          closestDistance = distance;
-          closestIndex = index;
-        }
+      /*
+       * Move the page by a tiny amount every animation frame.
+       * This replaces the old 6.5-second jump interval.
+       */
+      window.scrollBy({
+        top:
+          CONTINUOUS_SCROLL_PX_PER_FRAME *
+          (elapsed / 16.67),
+        left: 0,
+        behavior: 'auto',
       });
 
-      const nextSection = sections[closestIndex + 1];
+      animationFrame = window.requestAnimationFrame(
+        advanceContinuously,
+      );
+    };
 
-      if (nextSection) {
-        nextSection.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center',
-        });
-      }
-    }, AUTO_ADVANCE_MS);
+    animationFrame = window.requestAnimationFrame(
+      advanceContinuously,
+    );
 
     return () => {
-      if (autoTimerRef.current) {
-        clearInterval(autoTimerRef.current);
-        autoTimerRef.current = null;
+      if (animationFrame !== null) {
+        window.cancelAnimationFrame(animationFrame);
       }
+
     };
   }, [count, autoPlay]);
 
