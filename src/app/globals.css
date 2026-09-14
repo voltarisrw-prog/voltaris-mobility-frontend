@@ -2765,7 +2765,7 @@ img {
 
 .marketplace-native-showcase-autoplay {
   position: fixed;
-  top: 24px;
+  top: 40px;
   right: 24px;
   z-index: 9999;
   display: flex;
@@ -2862,7 +2862,7 @@ img {
 
 @media (max-width: 767px) {
   .marketplace-native-showcase-autoplay {
-    top: 16px;
+    top: 28px;
     right: 16px;
     width: 92px;
     height: 34px;
