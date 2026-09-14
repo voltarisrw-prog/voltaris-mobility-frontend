@@ -461,29 +461,6 @@ export function VerticalShowcase({
         className="marketplace-native-showcase marketplace-3d-showcase"
         aria-label="Vehicle showroom"
       >
-      <div className="marketplace-native-showcase-header">
-        <div>
-          <p className="marketplace-native-showcase-kicker">
-            {mode === 'rental'
-              ? 'Available for rent'
-              : 'Available vehicles'}
-          </p>
-
-          <p className="marketplace-native-showcase-count">
-            {String(activeIndex + 1).padStart(
-              2,
-              '0',
-            )}{' '}
-            /{' '}
-            {String(count).padStart(
-              2,
-              '0',
-            )}
-          </p>
-        </div>
-
-      </div>
-
       <div className="marketplace-native-showcase-list marketplace-3d-showcase-list">
         {vehicles.map(
           (vehicle, index) => (
