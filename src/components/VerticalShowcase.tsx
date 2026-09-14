@@ -1,7 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
-
+import { useEffect, useRef } from 'react';
 
 import { MarketplaceVehicleCard } from '@/components/MarketplaceVehicleCard';
 import type { VehicleSummary } from '@/types/vehicle';
@@ -15,45 +14,96 @@ export function VerticalShowcase({
   vehicles,
   mode,
 }: VerticalShowcaseProps) {
-
   const showcaseRef = useRef<HTMLDivElement | null>(null);
-  const [transitionProgress, setTransitionProgress] = useState(0);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
-    const root = showcaseRef.current;
-    if (!root) return;
+    const container = showcaseRef.current;
+
+    if (!container) {
+      return;
+    }
+
+    const sections = Array.from(
+      container.querySelectorAll<HTMLElement>(
+        '.marketplace-vertical-showcase-item'
+      )
+    );
+
+    if (!sections.length) {
+      return;
+    }
 
     let frame = 0;
 
-    const updateProgress = () => {
+    const updateComposition = () => {
       frame = 0;
 
-      const rect = root.getBoundingClientRect();
-      const viewport = window.innerHeight || 1;
-      const distance = Math.max(rect.height - viewport, 1);
-      const travelled = Math.min(Math.max(-rect.top, 0), distance);
+      const viewportHeight = window.innerHeight || 1;
+      const viewportCenter = viewportHeight * 0.5;
 
-      setTransitionProgress(travelled / distance);
+      sections.forEach((section, index) => {
+        const rect = section.getBoundingClientRect();
+        const sectionCenter = rect.top + rect.height * 0.5;
+
+        /*
+         * Progress:
+         * 0 = vehicle is outside the active cinematic zone
+         * 1 = vehicle is centered in the viewport
+         */
+        const distance = Math.abs(sectionCenter - viewportCenter);
+        const range = Math.max(viewportHeight * 0.72, 1);
+
+        const rawProgress = 1 - distance / range;
+        const progress = Math.max(0, Math.min(1, rawProgress));
+
+        /*
+         * Direction tells CSS whether the vehicle is entering
+         * from below or leaving toward the top.
+         */
+        const direction =
+          sectionCenter < viewportCenter ? -1 : 1;
+
+        section.style.setProperty(
+          '--vehicle-progress',
+          progress.toFixed(4)
+        );
+
+        section.style.setProperty(
+          '--vehicle-direction',
+          String(direction)
+        );
+
+        section.style.setProperty(
+          '--vehicle-index',
+          String(index)
+        );
+      });
     };
 
     const onScroll = () => {
       if (!frame) {
-        frame = window.requestAnimationFrame(updateProgress);
+        frame = window.requestAnimationFrame(updateComposition);
       }
     };
 
-    updateProgress();
-    window.addEventListener('scroll', onScroll, { passive: true });
+    updateComposition();
+
+    window.addEventListener('scroll', onScroll, {
+      passive: true,
+    });
+
     window.addEventListener('resize', onScroll);
 
     return () => {
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onScroll);
-      if (frame) window.cancelAnimationFrame(frame);
-    };
-  }, []);
 
-  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+      if (frame) {
+        window.cancelAnimationFrame(frame);
+      }
+    };
+  }, [vehicles.length]);
 
   useEffect(() => {
     const container = showcaseRef.current;
@@ -87,8 +137,10 @@ export function VerticalShowcase({
         let closestDistance = Number.POSITIVE_INFINITY;
 
         sections.forEach((section, index) => {
+          const rect = section.getBoundingClientRect();
           const distance = Math.abs(
-            section.getBoundingClientRect().top
+            rect.top + rect.height * 0.5 -
+              (window.innerHeight || 1) * 0.5
           );
 
           if (distance < closestDistance) {
@@ -106,7 +158,7 @@ export function VerticalShowcase({
 
         nextSection.scrollIntoView({
           behavior: 'smooth',
-          block: 'start',
+          block: 'center',
         });
       }, 6500);
     };
@@ -123,9 +175,11 @@ export function VerticalShowcase({
 
     container.addEventListener('mouseenter', pause);
     container.addEventListener('mouseleave', resume);
+
     container.addEventListener('touchstart', pause, {
       passive: true,
     });
+
     container.addEventListener('touchend', resume, {
       passive: true,
     });
@@ -144,7 +198,6 @@ export function VerticalShowcase({
     <div
       ref={showcaseRef}
       className="marketplace-vertical-showcase"
-      style={{ "--showcase-progress": transitionProgress } as React.CSSProperties}
     >
       {vehicles.map((vehicle, index) => (
         <section
