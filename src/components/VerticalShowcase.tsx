@@ -446,10 +446,39 @@ export function VerticalShowcase({
   if (!vehicles.length) return null;
 
   return (
-    <section
-      className="marketplace-native-showcase marketplace-3d-showcase"
-      aria-label="Vehicle showroom"
-    >
+    <>
+      <button
+        type="button"
+        className={`marketplace-native-showcase-autoplay ${
+          autoPlay
+            ? 'marketplace-native-showcase-autoplay-on'
+            : 'marketplace-native-showcase-autoplay-off'
+        }`}
+        aria-pressed={autoPlay}
+        aria-label={`Autoplay ${autoPlay ? 'on' : 'off'}`}
+        onClick={() => {
+          const next = !autoPlay;
+          setAutoPlay(next);
+
+          if (next) {
+            userInteractingRef.current = false;
+            lastTimeRef.current = performance.now();
+          }
+        }}
+      >
+        <span className="marketplace-native-showcase-autoplay-label">
+          {autoPlay ? 'ON' : 'OFF'}
+        </span>
+        <span
+          className="marketplace-native-showcase-autoplay-knob"
+          aria-hidden="true"
+        />
+      </button>
+
+      <section
+        className="marketplace-native-showcase marketplace-3d-showcase"
+        aria-label="Vehicle showroom"
+      >
       <div className="marketplace-native-showcase-header">
         <div>
           <p className="marketplace-native-showcase-kicker">
@@ -471,33 +500,6 @@ export function VerticalShowcase({
           </p>
         </div>
 
-        <button
-          type="button"
-          className={`marketplace-native-showcase-autoplay ${
-            autoPlay
-              ? 'marketplace-native-showcase-autoplay-on'
-              : 'marketplace-native-showcase-autoplay-off'
-          }`}
-          aria-pressed={autoPlay}
-          aria-label={`Autoplay ${autoPlay ? 'on' : 'off'}`}
-          onClick={() => {
-            const next = !autoPlay;
-            setAutoPlay(next);
-
-            if (next) {
-              userInteractingRef.current = false;
-              lastTimeRef.current = performance.now();
-            }
-          }}
-        >
-          <span className="marketplace-native-showcase-autoplay-label">
-            {autoPlay ? 'ON' : 'OFF'}
-          </span>
-          <span
-            className="marketplace-native-showcase-autoplay-knob"
-            aria-hidden="true"
-          />
-        </button>
       </div>
 
       <div className="marketplace-native-showcase-list marketplace-3d-showcase-list">
@@ -523,7 +525,8 @@ export function VerticalShowcase({
           ),
         )}
       </div>
-    </section>
+      </section>
+    </>
   );
 }
 
