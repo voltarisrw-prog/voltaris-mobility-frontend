@@ -2764,10 +2764,10 @@ img {
 }
 
 .marketplace-native-showcase-autoplay {
-  position: absolute;
-  top: 0;
-  right: 0;
-  z-index: 40;
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 9999;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2862,6 +2862,8 @@ img {
 
 @media (max-width: 767px) {
   .marketplace-native-showcase-autoplay {
+    top: 16px;
+    right: 16px;
     width: 92px;
     height: 34px;
     padding: 3px;
@@ -2869,9 +2871,13 @@ img {
   }
 
   .marketplace-native-showcase-autoplay-knob {
-    flex-basis: 28px;
     width: 28px;
     height: 28px;
+  }
+
+  .marketplace-native-showcase-autoplay-on
+    .marketplace-native-showcase-autoplay-knob {
+    transform: translateX(58px);
   }
 }
 
