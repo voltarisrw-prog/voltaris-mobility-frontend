@@ -1,11 +1,6 @@
 'use client';
 
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-} from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { MarketplaceVehicleCard } from '@/components/MarketplaceVehicleCard';
 import type { VehicleSummary } from '@/types/vehicle';
@@ -18,631 +13,204 @@ type VerticalShowcaseProps = {
 const AUTO_ADVANCE_MS = 6500;
 const RESUME_DELAY_MS = 1800;
 
-const COPY_COUNT = 3;
-const MIDDLE_COPY = 1;
-
 export function VerticalShowcase({
   vehicles,
-  mode,
+  mode = 'sale',
 }: VerticalShowcaseProps) {
-  const showcaseRef =
-    useRef<HTMLDivElement | null>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [autoPlay, setAutoPlay] = useState(true);
 
-  const autoTimerRef =
-    useRef<number | null>(null);
+  const resumeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const autoTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const interactionRef = useRef(false);
 
-  const resumeTimerRef =
-    useRef<number | null>(null);
+  const count = vehicles.length;
 
-  const animationTimerRef =
-    useRef<number | null>(null);
-
-  const initializedRef =
-    useRef(false);
-
-  const animatingRef =
-    useRef(false);
-
-  const currentPhysicalIndexRef =
-    useRef(0);
-
-  const canonicalSetTopRef =
-    useRef(0);
-
-  const sequenceHeightRef =
-    useRef(0);
-
-  const getLoopSets = useCallback(() => {
-    const container = showcaseRef.current;
-
-    if (!container) {
-      return [];
-    }
-
-    return Array.from(
-      container.querySelectorAll<HTMLElement>(
-        '[data-showcase-loop-set]'
-      )
-    );
-  }, []);
-
-  const getSections = useCallback(() => {
-    const container = showcaseRef.current;
-
-    if (!container) {
-      return [];
-    }
-
-    return Array.from(
-      container.querySelectorAll<HTMLElement>(
-        '.marketplace-vertical-showcase-item'
-      )
-    );
-  }, []);
-
-  /*
-   * Measure the real middle copy.
-   *
-   * The middle copy is the canonical position.
-   * When the browser reaches either outer copy,
-   * we move it by exactly one sequence height.
-   */
-  const measureLoop = useCallback(() => {
-    const sets = getLoopSets();
-
-    if (sets.length !== COPY_COUNT) {
-      return false;
-    }
-
-    const middleSet = sets[MIDDLE_COPY];
-
-    if (!middleSet) {
-      return false;
-    }
-
-    const rect =
-      middleSet.getBoundingClientRect();
-
-    canonicalSetTopRef.current =
-      window.scrollY + rect.top;
-
-    sequenceHeightRef.current =
-      middleSet.offsetHeight;
-
-    return (
-      sequenceHeightRef.current > 0
-    );
-  }, [getLoopSets]);
-
-  /*
-   * Recenter the physical document without
-   * changing what the customer sees.
-   *
-   * Example:
-   *
-   *   COPY 0: 1 2 3
-   *   COPY 1: 1 2 3  <- customer lives here
-   *   COPY 2: 1 2 3
-   *
-   * After scrolling down through COPY 2,
-   * subtract one complete sequence height.
-   *
-   * The pixels on screen remain identical because
-   * COPY 1 and COPY 2 contain the same vehicles.
-   */
-  const normalizePosition = useCallback(() => {
-    if (
-      !initializedRef.current ||
-      animatingRef.current
-    ) {
-      return;
-    }
-
-    const sequenceHeight =
-      sequenceHeightRef.current;
-
-    if (!sequenceHeight) {
-      return;
-    }
-
-    const canonicalTop =
-      canonicalSetTopRef.current;
-
-    const currentScroll =
-      window.scrollY;
-
-    const lowerBoundary =
-      canonicalTop - sequenceHeight * 0.65;
-
-    const upperBoundary =
-      canonicalTop + sequenceHeight * 1.65;
-
-    if (currentScroll < lowerBoundary) {
-      window.scrollTo(
-        0,
-        currentScroll + sequenceHeight
-      );
-
-      return;
-    }
-
-    if (currentScroll > upperBoundary) {
-      window.scrollTo(
-        0,
-        currentScroll - sequenceHeight
-      );
-    }
-  }, []);
-
-  /*
-   * Determine which physical vehicle is closest
-   * to the viewport center.
-   */
-  const updateComposition = useCallback(() => {
-    const sections = getSections();
-
-    if (!sections.length) {
-      return;
-    }
-
-    const viewportHeight =
-      window.innerHeight || 1;
-
-    const viewportCenter =
-      viewportHeight * 0.5;
-
-    let closestIndex = 0;
-    let closestDistance =
-      Number.POSITIVE_INFINITY;
-
-    sections.forEach(
-      (section, index) => {
-        const rect =
-          section.getBoundingClientRect();
-
-        const center =
-          rect.top + rect.height * 0.5;
-
-        const distance =
-          Math.abs(
-            center - viewportCenter
-          );
-
-        if (
-          distance <
-          closestDistance
-        ) {
-          closestDistance =
-            distance;
-
-          closestIndex =
-            index;
-        }
-      }
-    );
-
-    currentPhysicalIndexRef.current =
-      closestIndex;
-
-    sections.forEach(
-      (section, index) => {
-        const rect =
-          section.getBoundingClientRect();
-
-        const center =
-          rect.top + rect.height * 0.5;
-
-        const distance =
-          Math.abs(
-            center - viewportCenter
-          );
-
-        const range =
-          Math.max(
-            viewportHeight * 0.82,
-            1
-          );
-
-        const progress =
-          Math.max(
-            0,
-            Math.min(
-              1,
-              1 - distance / range
-            )
-          );
-
-        const direction =
-          center < viewportCenter
-            ? -1
-            : 1;
-
-        section.style.setProperty(
-          '--vehicle-progress',
-          progress.toFixed(4)
-        );
-
-        section.style.setProperty(
-          '--vehicle-direction',
-          String(direction)
-        );
-
-        section.style.setProperty(
-          '--vehicle-distance',
-          `${Math.min(
-            distance,
-            viewportHeight
-          )}px`
-        );
-
-        section.dataset.active =
-          index === closestIndex
-            ? 'true'
-            : 'false';
-      }
-    );
-  }, [getSections]);
-
-  /*
-   * Move exactly one physical vehicle forward.
-   *
-   * Because the DOM is:
-   *
-   *   1 2 3 | 1 2 3 | 1 2 3
-   *
-   * Vehicle 3 naturally has Vehicle 1 after it.
-   *
-   * There is no 3 -> top-of-page jump.
-   */
-  const advanceVehicle = useCallback(() => {
-    const sections =
-      getSections();
-
-    if (
-      sections.length < 2 ||
-      animatingRef.current
-    ) {
-      return;
-    }
-
-    const current =
-      currentPhysicalIndexRef.current;
-
-    const next =
-      current + 1;
-
-    const target =
-      sections[next];
-
-    if (!target) {
-      /*
-       * This should only happen if the DOM is
-       * unexpectedly incomplete. Recenter and retry.
-       */
-      normalizePosition();
-      return;
-    }
-
-    animatingRef.current = true;
-
-    target.scrollIntoView({
-      behavior: 'smooth',
-      block: 'center',
-    });
-
-    if (
-      animationTimerRef.current !==
-      null
-    ) {
-      window.clearTimeout(
-        animationTimerRef.current
-      );
-    }
-
-    animationTimerRef.current =
-      window.setTimeout(() => {
-        /*
-         * The smooth movement is complete.
-         *
-         * If we crossed a copy boundary,
-         * silently move back one sequence.
-         */
-        animatingRef.current = false;
-
-        normalizePosition();
-
-        updateComposition();
-      }, 1100);
-  }, [
-    getSections,
-    normalizePosition,
-    updateComposition,
-  ]);
-
-  const stopAutoAdvance =
-    useCallback(() => {
-      if (
-        autoTimerRef.current !== null
-      ) {
-        window.clearInterval(
-          autoTimerRef.current
-        );
-
-        autoTimerRef.current = null;
-      }
-
-      if (
-        resumeTimerRef.current !== null
-      ) {
-        window.clearTimeout(
-          resumeTimerRef.current
-        );
-
-        resumeTimerRef.current = null;
-      }
-    }, []);
-
-  const startAutoAdvance =
-    useCallback(() => {
-      stopAutoAdvance();
-
-      autoTimerRef.current =
-        window.setInterval(
-          advanceVehicle,
-          AUTO_ADVANCE_MS
-        );
-    }, [
-      advanceVehicle,
-      stopAutoAdvance,
-    ]);
-
-  const resumeAutoAdvance =
-    useCallback(() => {
-      stopAutoAdvance();
-
-      resumeTimerRef.current =
-        window.setTimeout(() => {
-          startAutoAdvance();
-        }, RESUME_DELAY_MS);
-    }, [
-      startAutoAdvance,
-      stopAutoAdvance,
-    ]);
-
-  /*
-   * Start the browser inside the middle copy.
-   */
-  useLayoutEffect(() => {
-    if (
-      initializedRef.current ||
-      vehicles.length === 0
-    ) {
-      return;
-    }
-
-    const measured =
-      measureLoop();
-
-    if (!measured) {
-      return;
-    }
-
-    const sets =
-      getLoopSets();
-
-    const middleSet =
-      sets[MIDDLE_COPY];
-
-    if (!middleSet) {
-      return;
-    }
-
-    /*
-     * Position at the beginning of the middle copy.
-     */
-    window.scrollTo(
-      0,
-      middleSet.offsetTop
-    );
-
-    /*
-     * Measure again because scroll positioning
-     * can affect viewport-relative measurements.
-     */
-    measureLoop();
-
-    initializedRef.current = true;
-
-    updateComposition();
-  }, [
-    getLoopSets,
-    measureLoop,
-    updateComposition,
-    vehicles.length,
-  ]);
-
-  /*
-   * Scroll handling.
-   */
   useEffect(() => {
-    if (vehicles.length === 0) {
-      return;
-    }
+    if (count < 2 || !autoPlay) return;
 
-    let frame = 0;
+    const updateActiveVehicle = () => {
+      const sections = Array.from(
+        document.querySelectorAll<HTMLElement>(
+          '[data-marketplace-showcase-item]',
+        ),
+      );
+
+      if (!sections.length) return;
+
+      const viewportCenter = window.innerHeight * 0.5;
+
+      let closestIndex = 0;
+      let closestDistance = Number.POSITIVE_INFINITY;
+
+      sections.forEach((section, index) => {
+        const rect = section.getBoundingClientRect();
+        const center = rect.top + rect.height * 0.5;
+        const distance = Math.abs(center - viewportCenter);
+
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closestIndex = index;
+        }
+      });
+
+      setActiveIndex(closestIndex % count);
+    };
+
+    let ticking = false;
 
     const onScroll = () => {
-      if (frame) {
-        return;
-      }
+      if (ticking) return;
 
-      frame =
-        window.requestAnimationFrame(
-          () => {
-            frame = 0;
+      ticking = true;
 
-            normalizePosition();
-            updateComposition();
-          }
-        );
+      window.requestAnimationFrame(() => {
+        updateActiveVehicle();
+        ticking = false;
+      });
     };
 
-    const onResize = () => {
-      measureLoop();
-      updateComposition();
-    };
+    updateActiveVehicle();
 
-    window.addEventListener(
-      'scroll',
-      onScroll,
-      { passive: true }
-    );
-
-    window.addEventListener(
-      'resize',
-      onResize
-    );
-
-    const container =
-      showcaseRef.current;
-
-    if (container) {
-      container.addEventListener(
-        'mouseenter',
-        stopAutoAdvance
-      );
-
-      container.addEventListener(
-        'mouseleave',
-        resumeAutoAdvance
-      );
-
-      container.addEventListener(
-        'touchstart',
-        stopAutoAdvance,
-        { passive: true }
-      );
-
-      container.addEventListener(
-        'touchend',
-        resumeAutoAdvance,
-        { passive: true }
-      );
-    }
-
-    startAutoAdvance();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
 
     return () => {
-      window.removeEventListener(
-        'scroll',
-        onScroll
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
+  }, [count, autoPlay]);
+
+  useEffect(() => {
+    if (count < 2 || !autoPlay) return;
+
+    autoTimerRef.current = setInterval(() => {
+      if (interactionRef.current) return;
+
+      const sections = Array.from(
+        document.querySelectorAll<HTMLElement>(
+          '[data-marketplace-showcase-item]',
+        ),
       );
 
-      window.removeEventListener(
-        'resize',
-        onResize
-      );
+      if (!sections.length) return;
 
-      if (container) {
-        container.removeEventListener(
-          'mouseenter',
-          stopAutoAdvance
-        );
+      const viewportCenter = window.innerHeight * 0.5;
 
-        container.removeEventListener(
-          'mouseleave',
-          resumeAutoAdvance
-        );
+      let closestSection: HTMLElement | null = null;
+      let closestDistance = Number.POSITIVE_INFINITY;
 
-        container.removeEventListener(
-          'touchstart',
-          stopAutoAdvance
-        );
+      sections.forEach((section) => {
+        const rect = section.getBoundingClientRect();
+        const center = rect.top + rect.height * 0.5;
+        const distance = Math.abs(center - viewportCenter);
 
-        container.removeEventListener(
-          'touchend',
-          resumeAutoAdvance
-        );
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closestSection = section;
+        }
+      });
+
+      if (!closestSection) return;
+
+      const currentIndex = sections.indexOf(closestSection);
+      const nextSection = sections[currentIndex + 1];
+
+      if (nextSection) {
+        nextSection.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+        });
       }
+    }, AUTO_ADVANCE_MS);
 
-      stopAutoAdvance();
-
-      if (
-        animationTimerRef.current !==
-        null
-      ) {
-        window.clearTimeout(
-          animationTimerRef.current
-        );
-
-        animationTimerRef.current = null;
-      }
-
-      if (frame) {
-        window.cancelAnimationFrame(
-          frame
-        );
+    return () => {
+      if (autoTimerRef.current) {
+        clearInterval(autoTimerRef.current);
+        autoTimerRef.current = null;
       }
     };
-  }, [
-    measureLoop,
-    normalizePosition,
-    resumeAutoAdvance,
-    startAutoAdvance,
-    stopAutoAdvance,
-    updateComposition,
-    vehicles.length,
-  ]);
+  }, [count, autoPlay]);
+
+  useEffect(() => {
+    const pauseDuringInteraction = () => {
+      interactionRef.current = true;
+      setAutoPlay(false);
+
+      if (resumeTimerRef.current) {
+        clearTimeout(resumeTimerRef.current);
+      }
+
+      resumeTimerRef.current = setTimeout(() => {
+        interactionRef.current = false;
+        setAutoPlay(true);
+      }, RESUME_DELAY_MS);
+    };
+
+    window.addEventListener('wheel', pauseDuringInteraction, {
+      passive: true,
+    });
+
+    window.addEventListener('touchstart', pauseDuringInteraction, {
+      passive: true,
+    });
+
+    window.addEventListener('keydown', pauseDuringInteraction);
+
+    return () => {
+      window.removeEventListener('wheel', pauseDuringInteraction);
+      window.removeEventListener('touchstart', pauseDuringInteraction);
+      window.removeEventListener('keydown', pauseDuringInteraction);
+
+      if (resumeTimerRef.current) {
+        clearTimeout(resumeTimerRef.current);
+      }
+    };
+  }, []);
 
   if (!vehicles.length) {
     return null;
   }
 
   return (
-    <div
-      ref={showcaseRef}
-      className="marketplace-vertical-showcase marketplace-infinite-showcase"
+    <section
+      className="marketplace-native-showcase"
+      aria-label="Vehicle showroom"
     >
-      {Array.from(
-        { length: COPY_COUNT },
-        (_, copyIndex) => (
-          <div
-            key={`showcase-loop-${copyIndex}`}
-            className="marketplace-showcase-loop-set"
-            data-showcase-loop-set
-            data-loop-copy={copyIndex}
+      <div className="marketplace-native-showcase-header">
+        <div>
+          <p className="marketplace-native-showcase-kicker">
+            {mode === 'rental' ? 'Available for rent' : 'Available vehicles'}
+          </p>
+
+          <p className="marketplace-native-showcase-count">
+            {String(activeIndex + 1).padStart(2, '0')} /{' '}
+            {String(count).padStart(2, '0')}
+          </p>
+        </div>
+      </div>
+
+      <div className="marketplace-native-showcase-list">
+        {vehicles.map((vehicle, index) => (
+          <article
+            key={`${vehicle.id}-${index}`}
+            data-marketplace-showcase-item
+            className={`marketplace-native-showcase-item ${
+              index === activeIndex
+                ? 'marketplace-native-showcase-item-active'
+                : ''
+            }`}
           >
-            {vehicles.map(
-              (vehicle, vehicleIndex) => (
-                <section
-                  key={`${copyIndex}-${vehicle.id}`}
-                  className="marketplace-vertical-showcase-item marketplace-infinite-showcase-item"
-                  aria-label={`Vehicle ${
-                    vehicleIndex + 1
-                  }`}
-                  data-vehicle-index={
-                    vehicleIndex
-                  }
-                  data-loop-copy={
-                    copyIndex
-                  }
-                >
-                  <MarketplaceVehicleCard
-                    vehicle={vehicle}
-                    priority={
-                      copyIndex ===
-                        MIDDLE_COPY &&
-                      vehicleIndex === 0
-                    }
-                    featured={true}
-                    mode={mode}
-                  />
-                </section>
-              )
-            )}
-          </div>
-        )
-      )}
-    </div>
+            <MarketplaceVehicleCard
+              vehicle={vehicle}
+              featured
+              mode={mode}
+            />
+          </article>
+        ))}
+      </div>
+    </section>
   );
 }
+
+export default VerticalShowcase;
