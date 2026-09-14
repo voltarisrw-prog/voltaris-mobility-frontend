@@ -135,7 +135,7 @@ export function MarketplaceVehicleCard({
           <div className="flex flex-col gap-5">
             <Link
               href={`/cars/${vehicle.slug}?mode=${mode ?? 'sale'}`}
-              className="block text-white"
+              className="marketplace-vehicle-card-info block text-white"
               aria-label={`Explore ${title}`}
             >
               <p className="font-data text-[0.625rem] uppercase tracking-[0.18em] text-white/65">
