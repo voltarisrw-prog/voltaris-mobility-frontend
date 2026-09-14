@@ -2454,11 +2454,7 @@ button[title*="ompare"]:focus-visible {
    Existing marketplace card/layout rules remain untouched.
    ============================================================ */
 
-.marketplace-infinite-showcase {
-  position: relative;
-  overflow: visible;
-  isolation: isolate;
-}
+
 
 .marketplace-showcase-loop-set {
   position: relative;
@@ -2470,52 +2466,12 @@ button[title*="ompare"]:focus-visible {
  * No horizontal carousel.
  * No fixed-height scroll trap.
  */
-.marketplace-infinite-showcase-item {
-  --vehicle-progress: 0;
-  --vehicle-direction: 1;
-  --vehicle-distance: 9999px;
 
-  position: relative;
-
-  opacity:
-    calc(
-      0.42 +
-      (var(--vehicle-progress) * 0.58)
-    );
-
-  transform:
-    translate3d(
-      0,
-      calc(
-        (1 - var(--vehicle-progress))
-        * var(--vehicle-direction)
-        * 34px
-      ),
-      0
-    )
-    scale(
-      calc(
-        0.965 +
-        (var(--vehicle-progress) * 0.035)
-      )
-    );
-
-  transition:
-    opacity 180ms linear,
-    transform 240ms cubic-bezier(.22,.61,.36,1);
-
-  will-change:
-    opacity,
-    transform;
-}
 
 /*
  * The vehicle nearest the viewport center is the hero.
  */
-.marketplace-infinite-showcase-item[data-active="true"] {
-  opacity: 1;
-  z-index: 2;
-}
+
 
 /*
  * Media depth.
@@ -2652,30 +2608,7 @@ img {
  * The loop transition is deliberately restrained.
  */
 @media (max-width: 767px) {
-  .marketplace-infinite-showcase-item {
-    opacity:
-      calc(
-        0.56 +
-        (var(--vehicle-progress) * 0.44)
-      );
 
-    transform:
-      translate3d(
-        0,
-        calc(
-          (1 - var(--vehicle-progress))
-          * var(--vehicle-direction)
-          * 18px
-        ),
-        0
-      )
-      scale(
-        calc(
-          0.985 +
-          (var(--vehicle-progress) * 0.015)
-        )
-      );
-  }
 
   .marketplace-infinite-showcase-item
   .marketplace-vehicle-card-info {
@@ -2732,115 +2665,137 @@ img {
    ============================================================ */
 
 
-
 /* =========================================================
-   VOLTARIS — NATIVE VERTICAL SHOWROOM
-   Browser owns scrolling.
-   No scroll interception.
-   No scrollY normalization.
-   No nested scroll container.
+   VOLTARIS — AGGRESSIVE 3D VERTICAL SHOWROOM
+   =========================================================
+   Native browser scrolling remains the source of truth.
+   JavaScript only reads scroll position and updates transforms.
+   No wheel interception.
+   No preventDefault().
+   No scrollTo().
+   No nested scrolling.
    ========================================================= */
 
-.marketplace-native-showcase {
+.marketplace-3d-showcase {
   position: relative;
   width: 100%;
   margin-top: 2rem;
+  perspective: 1500px;
+  perspective-origin: 50% 50%;
 }
 
-.marketplace-native-showcase-header {
+.marketplace-3d-showcase-list {
   position: relative;
-  z-index: 20;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   width: 100%;
-  margin-bottom: 1rem;
-  pointer-events: none;
-}
-
-.marketplace-native-showcase-kicker {
-  margin: 0;
-  color: #6b6b6b;
-  font-family: var(--font-data, monospace);
-  font-size: 0.58rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  line-height: 1.2;
-  text-transform: uppercase;
-}
-
-.marketplace-native-showcase-count {
-  margin: 0.3rem 0 0;
-  color: #0a0a0a;
-  font-family: var(--font-data, monospace);
-  font-size: 0.62rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-}
-
-.marketplace-native-showcase-list {
   display: flex;
   flex-direction: column;
-  width: 100%;
-  gap: clamp(2.5rem, 7vw, 8rem);
+  gap: clamp(3.5rem, 10vw, 9rem);
+  transform-style: preserve-3d;
 }
 
-.marketplace-native-showcase-item {
+.marketplace-3d-showcase-item {
   position: relative;
   width: 100%;
   margin: 0;
-  opacity: 0.68;
-  transform: translateY(18px);
+  opacity: var(--showcase-opacity, 1);
+  transform:
+    translate3d(
+      var(--showcase-translate-x, 0),
+      var(--showcase-translate-y, 0),
+      var(--showcase-translate-z, 0)
+    )
+    rotateX(var(--showcase-rotate-x, 0deg))
+    rotateY(var(--showcase-rotate-y, 0deg))
+    rotateZ(var(--showcase-rotate-z, 0deg))
+    scale(var(--showcase-scale, 1));
+  transform-origin: 50% 50%;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  will-change: transform, opacity;
   transition:
-    opacity 700ms cubic-bezier(0.22, 1, 0.36, 1),
-    transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: opacity, transform;
+    opacity 180ms linear;
 }
 
-.marketplace-native-showcase-item-active {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.marketplace-native-showcase-item .marketplace-vehicle-card {
+.marketplace-3d-showcase-stage {
+  position: relative;
   width: 100%;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
 }
 
-/*
- * CRITICAL:
- * Never attach scroll snapping or overflow scrolling to this showroom.
- * The document itself remains the only scroll surface.
- */
+.marketplace-3d-showcase-stage .marketplace-vehicle-card {
+  width: 100%;
+  transform: translateZ(0);
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
 
-.marketplace-native-showcase,
-.marketplace-native-showcase-list,
-.marketplace-native-showcase-item {
-  overflow: visible;
-  scroll-snap-type: none;
+.marketplace-3d-showcase-stage .marketplace-vehicle-card-media {
+  overflow: hidden;
+  transform-style: preserve-3d;
+}
+
+.marketplace-3d-showcase-stage .marketplace-vehicle-card-media img {
+  transform:
+    scale(1.012)
+    translateZ(0);
+  transform-origin: center center;
+  backface-visibility: hidden;
+  transition:
+    transform 900ms cubic-bezier(.16, 1, .3, 1);
+}
+
+.marketplace-3d-showcase-item-active
+  .marketplace-3d-showcase-stage
+  .marketplace-vehicle-card-media img {
+  transform:
+    scale(1.025)
+    translateZ(12px);
+}
+
+.marketplace-3d-showcase .marketplace-native-showcase-header {
+  z-index: 30;
 }
 
 @media (max-width: 767px) {
-  .marketplace-native-showcase {
+  .marketplace-3d-showcase {
+    perspective: 1100px;
     margin-top: 1.25rem;
   }
 
-  .marketplace-native-showcase-list {
-    gap: 2.5rem;
+  .marketplace-3d-showcase-list {
+    gap: 2.75rem;
   }
 
-  .marketplace-native-showcase-item {
-    opacity: 1;
-    transform: none;
-  }
-
-  .marketplace-native-showcase-header {
-    margin-bottom: 0.7rem;
+  .marketplace-3d-showcase-item {
+    transform:
+      translate3d(
+        0,
+        var(--showcase-translate-y, 0),
+        var(--showcase-translate-z, 0)
+      )
+      rotateX(
+        calc(var(--showcase-rotate-x, 0deg) * .7)
+      )
+      rotateY(
+        calc(var(--showcase-rotate-y, 0deg) * .7)
+      )
+      rotateZ(
+        var(--showcase-rotate-z, 0deg)
+      )
+      scale(var(--showcase-scale, 1));
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .marketplace-native-showcase-item {
+  .marketplace-3d-showcase-item {
     opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .marketplace-3d-showcase-stage
+    .marketplace-vehicle-card-media img {
     transform: none;
     transition: none;
   }
