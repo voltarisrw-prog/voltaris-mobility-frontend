@@ -2700,3 +2700,112 @@ button[title*="ompare"]:focus-visible {
 /* ============================================================
    END — GLOBAL COMPARE CONTROL
    ============================================================ */
+
+/* ============================================================
+   VOLTARIS — CONTINUOUS WORLD MARKETPLACE TRANSITION V1
+   Scroll progress subtly drives the showroom composition.
+   ============================================================ */
+
+.marketplace-vertical-showcase {
+  --showcase-progress: 0;
+  position: relative;
+  isolation: isolate;
+}
+
+.marketplace-vertical-showcase-item {
+  position: relative;
+  transform: translate3d(
+    0,
+    calc(sin(var(--showcase-progress) * 3.14159) * -10px),
+    0
+  );
+  transition:
+    transform 700ms cubic-bezier(.22,.61,.36,1),
+    opacity 700ms cubic-bezier(.22,.61,.36,1);
+  will-change: transform, opacity;
+}
+
+.marketplace-vertical-showcase-item .marketplace-vehicle-card-media {
+  transition:
+    transform 900ms cubic-bezier(.22,.61,.36,1),
+    filter 900ms cubic-bezier(.22,.61,.36,1);
+  will-change: transform, filter;
+}
+
+.marketplace-vertical-showcase-item
+  .marketplace-vehicle-card-media
+  img {
+  transition:
+    transform 1100ms cubic-bezier(.16,1,.3,1),
+    filter 900ms cubic-bezier(.22,.61,.36,1);
+  will-change: transform, filter;
+}
+
+.marketplace-vertical-showcase-item
+  .marketplace-vehicle-card-info {
+  transition:
+    transform 700ms cubic-bezier(.22,.61,.36,1),
+    opacity 500ms ease;
+  will-change: transform, opacity;
+}
+
+.marketplace-vertical-showcase-item
+  .marketplace-vehicle-card-actions {
+  transition:
+    transform 700ms cubic-bezier(.22,.61,.36,1),
+    opacity 500ms ease;
+  will-change: transform, opacity;
+}
+
+/*
+ * Give the image a very subtle cinematic depth response.
+ * The effect remains intentionally restrained so the vehicle stays
+ * visually dominant.
+ */
+@media (min-width: 768px) {
+  .marketplace-vertical-showcase-item
+    .marketplace-vehicle-card-media
+    img {
+    transform:
+      scale(calc(1.018 + (var(--showcase-progress) * 0.008)));
+  }
+
+  .marketplace-vertical-showcase-item
+    .marketplace-vehicle-card-info {
+    transform:
+      translate3d(
+        calc(var(--showcase-progress) * 6px),
+        0,
+        0
+      );
+  }
+
+  .marketplace-vertical-showcase-item
+    .marketplace-vehicle-card-actions {
+    transform:
+      translate3d(
+        calc(var(--showcase-progress) * -4px),
+        0,
+        0
+      );
+  }
+}
+
+/*
+ * The showroom itself remains natural vertical scrolling.
+ * No forced snapping is introduced in this version.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .marketplace-vertical-showcase-item,
+  .marketplace-vertical-showcase-item .marketplace-vehicle-card-media,
+  .marketplace-vertical-showcase-item .marketplace-vehicle-card-media img,
+  .marketplace-vertical-showcase-item .marketplace-vehicle-card-info,
+  .marketplace-vertical-showcase-item .marketplace-vehicle-card-actions {
+    transition: none !important;
+    transform: none !important;
+  }
+}
+
+/* ============================================================
+   END — CONTINUOUS WORLD MARKETPLACE TRANSITION V1
+   ============================================================ */

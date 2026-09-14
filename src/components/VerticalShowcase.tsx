@@ -1,6 +1,8 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+
+
 import { MarketplaceVehicleCard } from '@/components/MarketplaceVehicleCard';
 import type { VehicleSummary } from '@/types/vehicle';
 
@@ -13,7 +15,44 @@ export function VerticalShowcase({
   vehicles,
   mode,
 }: VerticalShowcaseProps) {
+
   const showcaseRef = useRef<HTMLDivElement | null>(null);
+  const [transitionProgress, setTransitionProgress] = useState(0);
+
+  useEffect(() => {
+    const root = showcaseRef.current;
+    if (!root) return;
+
+    let frame = 0;
+
+    const updateProgress = () => {
+      frame = 0;
+
+      const rect = root.getBoundingClientRect();
+      const viewport = window.innerHeight || 1;
+      const distance = Math.max(rect.height - viewport, 1);
+      const travelled = Math.min(Math.max(-rect.top, 0), distance);
+
+      setTransitionProgress(travelled / distance);
+    };
+
+    const onScroll = () => {
+      if (!frame) {
+        frame = window.requestAnimationFrame(updateProgress);
+      }
+    };
+
+    updateProgress();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
+  }, []);
+
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
@@ -105,6 +144,7 @@ export function VerticalShowcase({
     <div
       ref={showcaseRef}
       className="marketplace-vertical-showcase"
+      style={{ "--showcase-progress": transitionProgress } as React.CSSProperties}
     >
       {vehicles.map((vehicle, index) => (
         <section
