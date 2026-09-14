@@ -59,19 +59,19 @@ export default async function HomePage() {
       {/* 01 — HERO ------------------------------------------------------- */}
       <section className="relative isolate overflow-hidden">
         <HeroMedia />
-        <div className="shell relative flex min-h-[clamp(36rem,88svh,56rem)] flex-col items-center justify-end py-[clamp(2.5rem,6vw,5rem)] pb-[clamp(4rem,9vw,6rem)] pt-[clamp(5rem,12vw,8rem)] text-center">
-          <div className="voltaris-hero-content animate-rise-in pb-[clamp(1rem,2vw,1.5rem)]">
-            <p className="mb-[clamp(1rem,2vw,1.5rem)] font-sans text-[clamp(1rem,2vw,1.25rem)] font-bold tracking-[0.02em] text-white">
+        <div className="shell relative flex min-h-[clamp(40rem,88svh,56rem)] flex-col items-center justify-end py-10 pb-16 pt-24 text-center sm:py-16 sm:pb-20 sm:pt-28 lg:pb-24">
+          <div className="w-full max-w-[48rem] animate-rise-in pb-4 sm:max-w-[52rem] sm:pb-6 lg:max-w-5xl">
+            <p className="mb-5 font-sans text-lg font-bold tracking-[0.02em] text-white sm:mb-6 sm:text-xl">
               {hero.eyebrow}
             </p>
 
-            <h1 className="voltaris-hero-title mx-auto mt-0 font-display font-bold text-white">{hero.headline}</h1>
+            <h1 className="mx-auto mt-0 max-w-[20ch] font-display text-hero font-bold text-white sm:max-w-[18ch] lg:max-w-5xl">{hero.headline}</h1>
 
-            <p className="voltaris-hero-copy mt-[clamp(1rem,2vw,1.5rem)] font-sans font-bold text-white">
+            <p className="mx-auto mt-5 max-w-[34rem] font-sans text-base font-bold leading-relaxed text-white sm:mt-6 sm:max-w-2xl sm:text-lg">
               {hero.sub}
             </p>
 
-            <div className="fluid-actions mx-auto mt-[clamp(1.5rem,3vw,2.25rem)] w-full">
+            <div className="mx-auto mt-8 flex w-full max-w-[22rem] flex-col items-stretch justify-center gap-3 sm:mt-9 sm:w-auto sm:max-w-none sm:flex-row sm:items-center">
               <Link
                 href={hero.primaryCta.href}
                 className="group inline-flex min-h-12 items-center justify-center gap-3 bg-volt px-5 py-3.5 font-data text-eyebrow font-bold uppercase tracking-[0.08em] text-white transition-all duration-300 hover:bg-[color:var(--vds-brand-secondary)] sm:px-7 sm:py-4"
@@ -114,14 +114,14 @@ export default async function HomePage() {
               aria-hidden="true"
             />
 
-            <div className="fluid-section">
+            <div className="relative py-16 sm:py-20 lg:py-24">
               <header className="shell">
-                <div className="flex flex-wrap items-end justify-between gap-[clamp(1.25rem,3vw,2.5rem)] border-b border-[color:var(--vds-border)] pb-[clamp(1.25rem,2.5vw,1.75rem)]">
+                <div className="flex flex-col gap-6 border-b border-[color:var(--vds-border)] pb-7 sm:flex-row sm:items-end sm:justify-between sm:gap-10">
                   <div>
                     <p className="font-data text-[0.62rem] uppercase tracking-[0.2em] text-[color:var(--vds-brand-secondary)]">
                       Worth a closer look
                     </p>
-                    <p className="mt-3 max-w-md font-display text-[clamp(1.2rem,2.5vw,1.5rem)] leading-tight text-[color:var(--vds-text)]">
+                    <p className="mt-3 max-w-md font-display text-xl leading-tight text-[color:var(--vds-text)] sm:text-2xl">
                       A few vehicles that deserve your attention
                     </p>
                   </div>
@@ -139,7 +139,7 @@ export default async function HomePage() {
                 </div>
               </header>
 
-              <div className="mt-[clamp(0.5rem,1.5vw,1rem)]">
+              <div className="mt-2 sm:mt-4">
                 <ShowcaseSlider vehicles={showcaseVehicles} />
                 <PowertrainShowcase />
               </div>
