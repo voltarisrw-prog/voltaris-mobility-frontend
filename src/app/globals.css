@@ -2703,6 +2703,21 @@ button[title*="ompare"]:focus-visible {
 
 
 
+
+/* VOLTARIS BACKGROUND CONTENT — WHITE AND BOLD
+   Dedicated background-copy wrapper.
+   The form is outside this wrapper and is completely untouched. */
+
+.voltaris-form-background-copy,
+.voltaris-form-background-copy h1,
+.voltaris-form-background-copy p,
+.voltaris-form-background-copy nav,
+.voltaris-form-background-copy nav a,
+.voltaris-form-background-copy nav span {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+}
+
 /* VOLTARIS FORM IMAGE BACKGROUND */
 
 /* Form pages: viewport-wide background, original form layout preserved. */

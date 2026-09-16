@@ -32,17 +32,19 @@ export default async function TestDrivePage({
 
   return (
     <div className="voltaris-form-page shell max-w-2xl py-10">
-      <Breadcrumbs
-        trail={[
-          { name: 'Home', path: '/' },
-          { name: 'Test drive', path: '/test-drive' },
-        ]}
-      />
-      <h1 className="mt-6 font-display text-headline">Drive it before you decide</h1>
-      <p className="mt-3 max-w-prose text-sm leading-relaxed text-steel">
-        Range on paper and range on the Nyabugogo climb are different numbers. Pick a slot and a
-        district, and Voltaris arranges the drive with the seller.
-      </p>
+      <div className="voltaris-form-background-copy">
+        <Breadcrumbs
+          trail={[
+            { name: 'Home', path: '/' },
+            { name: 'Test drive', path: '/test-drive' },
+          ]}
+        />
+        <h1 className="mt-6 font-display text-headline">Drive it before you decide</h1>
+        <p className="mt-3 max-w-prose text-sm leading-relaxed text-steel">
+          Range on paper and range on the Nyabugogo climb are different numbers. Pick a slot and a
+          district, and Voltaris arranges the drive with the seller.
+        </p>
+      </div>
       <div className="mt-8">
         <TestDriveForm
           {...(vehicleId ? { vehicleId } : {})}
