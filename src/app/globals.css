@@ -2707,9 +2707,6 @@ button[title*="ompare"]:focus-visible {
 /* Form pages use the supplied image as the full-page background. */
 .voltaris-form-page {
   min-height: 100vh;
-  width: 100vw;
-  max-width: none;
-  margin-left: calc(50% - 50vw);
   background-image:
     linear-gradient(rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.08)),
     url("/images/voltaris-form-background.png");
