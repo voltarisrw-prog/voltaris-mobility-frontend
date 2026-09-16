@@ -2703,25 +2703,6 @@ button[title*="ompare"]:focus-visible {
 
 
 
-/* White bold text over the form background image */
-.voltaris-form-page {
-  color: #ffffff;
-  font-weight: 700;
-}
-
-.voltaris-form-page h1,
-.voltaris-form-page h2,
-.voltaris-form-page h3,
-.voltaris-form-page h4,
-.voltaris-form-page h5,
-.voltaris-form-page h6,
-.voltaris-form-page p,
-.voltaris-form-page label,
-.voltaris-form-page span {
-  color: #ffffff;
-  font-weight: 700;
-}
-
 /* VOLTARIS FORM IMAGE BACKGROUND */
 
 /* Form pages use the supplied image as the full-page background. */
