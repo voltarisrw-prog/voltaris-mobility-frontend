@@ -44,10 +44,14 @@ export default async function TestDrivePage({
         district, and Voltaris arranges the drive with the seller.
       </p>
       <div className="mt-8">
-        <TestDriveForm
+        <div className="voltaris-form-image-bg">
+          <div className="voltaris-form-image-card">
+            <TestDriveForm
           {...(vehicleId ? { vehicleId } : {})}
           {...(vehicleTitle ? { vehicleTitle } : {})}
         />
+          </div>
+        </div>
       </div>
     </div>
   );

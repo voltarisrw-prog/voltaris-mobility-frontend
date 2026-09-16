@@ -51,7 +51,11 @@ export default async function LoginPage() {
           <span className="h-px flex-1 bg-hairline" />
         </div>
 
-        <LoginForm />
+        <div className="voltaris-form-image-bg">
+          <div className="voltaris-form-image-card">
+            <LoginForm />
+          </div>
+        </div>
         </Suspense>
       </div>
     </div>

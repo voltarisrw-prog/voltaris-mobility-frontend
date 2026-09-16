@@ -72,7 +72,11 @@ export default function ContactPage() {
             </p>
           </div>
 
-          <HomeInquiryForm />
+          <div className="voltaris-form-image-bg">
+          <div className="voltaris-form-image-card">
+            <HomeInquiryForm />
+          </div>
+        </div>
         </div>
       </div>
     </div>

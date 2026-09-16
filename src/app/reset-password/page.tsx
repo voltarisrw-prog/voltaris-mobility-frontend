@@ -39,7 +39,11 @@ export default async function ResetPasswordPage({
     <div className="shell max-w-sm py-16">
       <h1 className="font-display text-headline">Set a new password</h1>
       <div className="mt-8">
-        <ResetPasswordForm token={token} />
+        <div className="voltaris-form-image-bg">
+          <div className="voltaris-form-image-card">
+            <ResetPasswordForm token={token} />
+          </div>
+        </div>
       </div>
     </div>
   );

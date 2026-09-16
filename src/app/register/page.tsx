@@ -32,7 +32,11 @@ export default function RegisterPage() {
           <span className="h-px flex-1 bg-hairline" />
         </div>
 
-        <RegisterForm />
+        <div className="voltaris-form-image-bg">
+          <div className="voltaris-form-image-card">
+            <RegisterForm />
+          </div>
+        </div>
       </div>
     </div>
   );

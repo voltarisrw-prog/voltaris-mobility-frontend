@@ -48,7 +48,11 @@ export default async function EnquirePage({ params }: { params: Params }) {
         can follow up if you do not hear back.
       </p>
       <div className="mt-8">
-        <InquiryForm vehicleId={vehicle.id} vehicleTitle={title} />
+        <div className="voltaris-form-image-bg">
+          <div className="voltaris-form-image-card">
+            <InquiryForm vehicleId={vehicle.id} vehicleTitle={title} />
+          </div>
+        </div>
       </div>
     </div>
   );

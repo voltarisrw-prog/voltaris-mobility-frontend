@@ -139,10 +139,14 @@ export default async function ApplyPage({ params }: PageProps) {
         </aside>
 
         <div className="order-1 lg:order-2">
-          <JobApplicationForm
+          <div className="voltaris-form-image-bg">
+          <div className="voltaris-form-image-card">
+            <JobApplicationForm
             jobSlug={job.slug}
             jobTitle={job.title}
           />
+          </div>
+        </div>
         </div>
       </main>
     </div>
