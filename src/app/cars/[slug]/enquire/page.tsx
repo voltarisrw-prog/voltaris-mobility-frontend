@@ -32,7 +32,7 @@ export default async function EnquirePage({ params }: { params: Params }) {
   const title = `${vehicle.year} ${vehicle.make} ${vehicle.model}`;
 
   return (
-    <div className="shell max-w-2xl py-10">
+    <div className="voltaris-form-page shell max-w-2xl py-10">
       <Breadcrumbs
         trail={[
           { name: 'Home', path: '/' },
@@ -48,11 +48,7 @@ export default async function EnquirePage({ params }: { params: Params }) {
         can follow up if you do not hear back.
       </p>
       <div className="mt-8">
-        <div className="voltaris-form-image-bg">
-          <div className="voltaris-form-image-card">
-            <InquiryForm vehicleId={vehicle.id} vehicleTitle={title} />
-          </div>
-        </div>
+        <InquiryForm vehicleId={vehicle.id} vehicleTitle={title} />
       </div>
     </div>
   );

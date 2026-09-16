@@ -14,7 +14,7 @@ export const metadata: Metadata = buildMetadata({
 
 export default function RegisterPage() {
   return (
-    <div className="shell max-w-sm py-16">
+    <div className="voltaris-form-page shell max-w-sm py-16">
       <h1 className="font-display text-headline">Create an account</h1>
       <p className="mt-3 text-sm text-steel">
         Already have one?{' '}
@@ -32,11 +32,7 @@ export default function RegisterPage() {
           <span className="h-px flex-1 bg-hairline" />
         </div>
 
-        <div className="voltaris-form-image-bg">
-          <div className="voltaris-form-image-card">
-            <RegisterForm />
-          </div>
-        </div>
+        <RegisterForm />
       </div>
     </div>
   );

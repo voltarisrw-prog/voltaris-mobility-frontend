@@ -27,7 +27,7 @@ export default async function LoginPage() {
     : null;
 
   return (
-    <div className="shell max-w-sm py-16">
+    <div className="voltaris-form-page shell max-w-sm py-16">
       <h1 className="font-display text-headline">Sign in</h1>
       <p className="mt-3 text-sm text-steel">
         Saved vehicles, enquiries, and test drives in one place.
@@ -51,11 +51,7 @@ export default async function LoginPage() {
           <span className="h-px flex-1 bg-hairline" />
         </div>
 
-        <div className="voltaris-form-image-bg">
-          <div className="voltaris-form-image-card">
-            <LoginForm />
-          </div>
-        </div>
+        <LoginForm />
         </Suspense>
       </div>
     </div>

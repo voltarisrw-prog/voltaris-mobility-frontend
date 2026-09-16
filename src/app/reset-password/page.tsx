@@ -20,7 +20,7 @@ export default async function ResetPasswordPage({
 
   if (!token) {
     return (
-      <div className="shell max-w-sm py-16">
+      <div className="voltaris-form-page shell max-w-sm py-16">
         <h1 className="font-display text-headline">This link is incomplete</h1>
         <p className="mt-3 text-sm text-steel">
           Open the link straight from the email, or request a new one.
@@ -39,11 +39,7 @@ export default async function ResetPasswordPage({
     <div className="shell max-w-sm py-16">
       <h1 className="font-display text-headline">Set a new password</h1>
       <div className="mt-8">
-        <div className="voltaris-form-image-bg">
-          <div className="voltaris-form-image-card">
-            <ResetPasswordForm token={token} />
-          </div>
-        </div>
+        <ResetPasswordForm token={token} />
       </div>
     </div>
   );

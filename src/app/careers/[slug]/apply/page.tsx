@@ -51,7 +51,7 @@ export default async function ApplyPage({ params }: PageProps) {
   }
 
   return (
-    <div className="shell py-10">
+    <div className="voltaris-form-page shell py-10">
       <Breadcrumbs
         trail={[
           { name: 'Home', path: '/' },
@@ -139,14 +139,10 @@ export default async function ApplyPage({ params }: PageProps) {
         </aside>
 
         <div className="order-1 lg:order-2">
-          <div className="voltaris-form-image-bg">
-          <div className="voltaris-form-image-card">
-            <JobApplicationForm
+          <JobApplicationForm
             jobSlug={job.slug}
             jobTitle={job.title}
           />
-          </div>
-        </div>
         </div>
       </main>
     </div>

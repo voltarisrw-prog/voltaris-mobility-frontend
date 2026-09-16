@@ -11,15 +11,11 @@ export const metadata: Metadata = buildMetadata({
 
 export default function ForgotPasswordPage() {
   return (
-    <div className="shell max-w-sm py-16">
+    <div className="voltaris-form-page shell max-w-sm py-16">
       <h1 className="font-display text-headline">Reset your password</h1>
       <p className="mt-3 text-sm text-steel">We will email you a link to set a new one.</p>
       <div className="mt-8">
-        <div className="voltaris-form-image-bg">
-          <div className="voltaris-form-image-card">
-            <ForgotPasswordForm />
-          </div>
-        </div>
+        <ForgotPasswordForm />
       </div>
     </div>
   );

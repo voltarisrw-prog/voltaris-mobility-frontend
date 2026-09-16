@@ -12,7 +12,7 @@ export const metadata: Metadata = buildMetadata({
 
 export default function ContactPage() {
   return (
-    <div className="shell py-10">
+    <div className="voltaris-form-page shell py-10">
       <Breadcrumbs trail={[{ name: 'Home', path: '/' }, { name: 'Contact', path: '/contact' }]} />
 
       <div className="mt-8 grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:gap-20">
@@ -72,11 +72,7 @@ export default function ContactPage() {
             </p>
           </div>
 
-          <div className="voltaris-form-image-bg">
-          <div className="voltaris-form-image-card">
-            <HomeInquiryForm />
-          </div>
-        </div>
+          <HomeInquiryForm />
         </div>
       </div>
     </div>

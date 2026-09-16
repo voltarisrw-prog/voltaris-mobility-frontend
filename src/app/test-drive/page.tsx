@@ -31,7 +31,7 @@ export default async function TestDrivePage({
   }
 
   return (
-    <div className="shell max-w-2xl py-10">
+    <div className="voltaris-form-page shell max-w-2xl py-10">
       <Breadcrumbs
         trail={[
           { name: 'Home', path: '/' },
@@ -44,14 +44,10 @@ export default async function TestDrivePage({
         district, and Voltaris arranges the drive with the seller.
       </p>
       <div className="mt-8">
-        <div className="voltaris-form-image-bg">
-          <div className="voltaris-form-image-card">
-            <TestDriveForm
+        <TestDriveForm
           {...(vehicleId ? { vehicleId } : {})}
           {...(vehicleTitle ? { vehicleTitle } : {})}
         />
-          </div>
-        </div>
       </div>
     </div>
   );
