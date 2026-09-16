@@ -2700,3 +2700,34 @@ button[title*="ompare"]:focus-visible {
 /* ============================================================
    END — GLOBAL COMPARE CONTROL
    ============================================================ */
+
+
+/* VOLTARIS FORM IMAGE BACKGROUND */
+.voltaris-form-image-bg {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background-image: url("/images/voltaris-form-background.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: clamp(1.5rem, 3vw, 2.5rem);
+  padding: clamp(1rem, 3vw, 3rem);
+}
+
+.voltaris-form-image-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.voltaris-form-image-card {
+  position: relative;
+  z-index: 1;
+  background: #fff;
+  border-radius: clamp(1.25rem, 2.5vw, 2rem);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.14);
+}
+
