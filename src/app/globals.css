@@ -2705,13 +2705,28 @@ button[title*="ompare"]:focus-visible {
 
 /* VOLTARIS FORM IMAGE BACKGROUND */
 
-/* Form pages use the supplied image as the full-page background. */
+/* Form pages: viewport-wide background, original form layout preserved. */
 .voltaris-form-page {
+  position: relative;
   min-height: 100vh;
+  background: transparent;
+  isolation: isolate;
+}
+
+.voltaris-form-page::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 50%;
+  width: 100vw;
+  min-height: 100%;
+  transform: translateX(-50%);
   background-image:
     linear-gradient(rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.08)),
     url("/images/voltaris-form-background.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  pointer-events: none;
 }
