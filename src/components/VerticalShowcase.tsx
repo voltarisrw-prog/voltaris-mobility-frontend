@@ -1,7 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-
+import { useEffect, useRef } from 'react';
 import { MarketplaceVehicleCard } from '@/components/MarketplaceVehicleCard';
 import type { VehicleSummary } from '@/types/vehicle';
 
@@ -10,483 +9,117 @@ type VerticalShowcaseProps = {
   mode?: 'sale' | 'rental';
 };
 
-const AUTO_SPEED = 0.55;
-const MAX_DELTA_MS = 32;
-const RESUME_DELAY_MS = 1400;
-
 export function VerticalShowcase({
   vehicles,
-  mode = 'sale',
+  mode,
 }: VerticalShowcaseProps) {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [autoPlay, setAutoPlay] = useState(true);
+  const showcaseRef = useRef<HTMLDivElement | null>(null);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const animationRef = useRef<number | null>(null);
-  const interactionTimerRef =
-    useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const userInteractingRef = useRef(false);
-  const lastTimeRef = useRef<number | null>(null);
-
-  const count = vehicles.length;
-
-  /*
-   * ORIGINAL 3D SHOWCASE
-   *
-   * Every card remains part of the normal document flow.
-   * Its 3D position is calculated from its real position in the
-   * viewport. This keeps manual scrolling completely natural.
-   */
   useEffect(() => {
-    if (!count) return;
+    const container = showcaseRef.current;
 
-    let frame: number | null = null;
+    if (!container || vehicles.length < 2) {
+      return;
+    }
 
-    const updateShowcase = () => {
-      const sections = Array.from(
-        document.querySelectorAll<HTMLElement>(
-          '[data-marketplace-showcase-item]',
-        ),
-      );
-
-      if (!sections.length) return;
-
-      const viewportCenter =
-        window.innerHeight * 0.5;
-
-      let closestIndex = 0;
-      let closestDistance =
-        Number.POSITIVE_INFINITY;
-
-      sections.forEach((section, index) => {
-        const rect =
-          section.getBoundingClientRect();
-
-        const center =
-          rect.top + rect.height * 0.5;
-
-        const distance =
-          Math.abs(center - viewportCenter);
-
-        const sectionHeight =
-          Math.max(rect.height, 1);
-
-        const rawProgress =
-          (viewportCenter - center) /
-          sectionHeight;
-
-        const progress = Math.max(
-          -1.5,
-          Math.min(1.5, rawProgress),
-        );
-
-        const absProgress = Math.min(
-          Math.abs(progress),
-          1,
-        );
-
-        const direction =
-          progress > 0 ? 1 : -1;
-
-        /*
-         * ORIGINAL 3D TRANSFORM VALUES
-         */
-        const rotateY =
-          progress * -25;
-
-        const rotateX =
-          absProgress * 8 * direction;
-
-        const rotateZ =
-          progress * -2.5;
-
-        const translateX =
-          progress * -4;
-
-        const translateY =
-          progress * 18;
-
-        const translateZ =
-          -absProgress * 110;
-
-        const scale =
-          1 - absProgress * 0.095;
-
-        const opacity =
-          1 -
-          Math.max(0, absProgress - 0.45) *
-            0.55;
-
-        section.style.setProperty(
-          '--showcase-rotate-y',
-          `${rotateY}deg`,
-        );
-
-        section.style.setProperty(
-          '--showcase-rotate-x',
-          `${rotateX}deg`,
-        );
-
-        section.style.setProperty(
-          '--showcase-rotate-z',
-          `${rotateZ}deg`,
-        );
-
-        section.style.setProperty(
-          '--showcase-translate-x',
-          `${translateX}%`,
-        );
-
-        section.style.setProperty(
-          '--showcase-translate-y',
-          `${translateY}px`,
-        );
-
-        section.style.setProperty(
-          '--showcase-translate-z',
-          `${translateZ}px`,
-        );
-
-        section.style.setProperty(
-          '--showcase-scale',
-          `${scale}`,
-        );
-
-        section.style.setProperty(
-          '--showcase-opacity',
-          `${opacity}`,
-        );
-
-        if (
-          distance < closestDistance
-        ) {
-          closestDistance = distance;
-          closestIndex =
-            index % count;
-        }
-      });
-
-      setActiveIndex(closestIndex);
-    };
-
-    const requestUpdate = () => {
-      if (frame !== null) return;
-
-      frame =
-        window.requestAnimationFrame(() => {
-          updateShowcase();
-          frame = null;
-        });
-    };
-
-    updateShowcase();
-
-    window.addEventListener(
-      'scroll',
-      requestUpdate,
-      { passive: true },
-    );
-
-    window.addEventListener(
-      'resize',
-      requestUpdate,
-      { passive: true },
-    );
-
-    return () => {
-      window.removeEventListener(
-        'scroll',
-        requestUpdate,
-      );
-
-      window.removeEventListener(
-        'resize',
-        requestUpdate,
-      );
-
-      if (frame !== null) {
-        window.cancelAnimationFrame(frame);
+    const pause = () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
       }
     };
-  }, [count]);
 
-  /*
-   * NATIVE PAGE AUTOPLAY
-   *
-   * Autoplay uses the browser's actual document scroll position.
-   * It never transforms the showcase track itself.
-   *
-   * Therefore:
-   *   - manual scroll = completely natural
-   *   - 3D follows real viewport positions
-   *   - autoplay = gentle background movement
-   */
-  useEffect(() => {
-    if (count < 2 || !autoPlay) return;
+    const start = () => {
+      pause();
 
-    let running = true;
+      timerRef.current = setInterval(() => {
+        const sections = Array.from(
+          container.querySelectorAll<HTMLElement>(
+            '.marketplace-vertical-showcase-item'
+          )
+        );
 
-    const animate = (now: number) => {
-      if (!running) return;
+        if (sections.length < 2) {
+          return;
+        }
 
-      const previous =
-        lastTimeRef.current ?? now;
+        let currentIndex = 0;
+        let closestDistance = Number.POSITIVE_INFINITY;
 
-      const elapsed = Math.min(
-        now - previous,
-        MAX_DELTA_MS,
-      );
+        sections.forEach((section, index) => {
+          const distance = Math.abs(
+            section.getBoundingClientRect().top
+          );
 
-      lastTimeRef.current = now;
-
-      if (!userInteractingRef.current) {
-        /*
-         * Autoplay uses the native document scroll position.
-         * It is intentionally independent of the showcase
-         * element's viewport visibility so turning ON always
-         * starts the continuous page movement.
-         */
-        const maxScroll =
-          document.documentElement.scrollHeight -
-          window.innerHeight;
-
-        if (maxScroll > 0) {
-          if (window.scrollY >= maxScroll - 1) {
-            window.scrollTo({
-              top: 0,
-              left: 0,
-              behavior: 'auto',
-            });
-          } else {
-            const movement =
-              AUTO_SPEED *
-              (elapsed / 16.67);
-
-            window.scrollBy({
-              top: movement,
-              left: 0,
-              behavior: 'auto',
-            });
+          if (distance < closestDistance) {
+            closestDistance = distance;
+            currentIndex = index;
           }
+        });
+
+        const nextIndex = (currentIndex + 1) % sections.length;
+        const nextSection = sections[nextIndex];
+
+        if (!nextSection) {
+          return;
         }
-      }
 
-      animationRef.current =
-        window.requestAnimationFrame(
-          animate,
-        );
+        nextSection.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        });
+      }, 6500);
     };
 
-    animationRef.current =
-      window.requestAnimationFrame(
-        animate,
-      );
+    const resume = () => {
+      pause();
+
+      window.setTimeout(() => {
+        start();
+      }, 1800);
+    };
+
+    start();
+
+    container.addEventListener('mouseenter', pause);
+    container.addEventListener('mouseleave', resume);
+    container.addEventListener('touchstart', pause, {
+      passive: true,
+    });
+    container.addEventListener('touchend', resume, {
+      passive: true,
+    });
 
     return () => {
-      running = false;
+      pause();
 
-      if (
-        animationRef.current !== null
-      ) {
-        window.cancelAnimationFrame(
-          animationRef.current,
-        );
-
-        animationRef.current = null;
-      }
+      container.removeEventListener('mouseenter', pause);
+      container.removeEventListener('mouseleave', resume);
+      container.removeEventListener('touchstart', pause);
+      container.removeEventListener('touchend', resume);
     };
-  }, [count, autoPlay]);
-
-  /*
-   * USER CONTROL
-   *
-   * IMPORTANT:
-   * Do not listen to the native "scroll" event here.
-   * Autoplay itself intentionally creates scroll events.
-   *
-   * Instead, only genuine user input pauses autoplay.
-   */
-  useEffect(() => {
-    if (count < 2) return;
-
-    const pauseForUser = () => {
-      userInteractingRef.current = true;
-
-      if (interactionTimerRef.current) {
-        clearTimeout(
-          interactionTimerRef.current,
-        );
-      }
-
-      interactionTimerRef.current =
-        setTimeout(() => {
-          userInteractingRef.current = false;
-          lastTimeRef.current =
-            performance.now();
-        }, RESUME_DELAY_MS);
-    };
-
-    const startTouch = () => {
-      userInteractingRef.current = true;
-
-      if (interactionTimerRef.current) {
-        clearTimeout(
-          interactionTimerRef.current,
-        );
-      }
-    };
-
-    const endTouch = () => {
-      if (interactionTimerRef.current) {
-        clearTimeout(
-          interactionTimerRef.current,
-        );
-      }
-
-      interactionTimerRef.current =
-        setTimeout(() => {
-          userInteractingRef.current = false;
-          lastTimeRef.current =
-            performance.now();
-        }, RESUME_DELAY_MS);
-    };
-
-    window.addEventListener(
-      'wheel',
-      pauseForUser,
-      { passive: true },
-    );
-
-    window.addEventListener(
-      'pointerdown',
-      pauseForUser,
-      { passive: true },
-    );
-
-    window.addEventListener(
-      'touchstart',
-      startTouch,
-      { passive: true },
-    );
-
-    window.addEventListener(
-      'touchend',
-      endTouch,
-      { passive: true },
-    );
-
-    window.addEventListener(
-      'touchcancel',
-      endTouch,
-      { passive: true },
-    );
-
-    window.addEventListener(
-      'keydown',
-      pauseForUser,
-    );
-
-    return () => {
-      window.removeEventListener(
-        'wheel',
-        pauseForUser,
-      );
-
-      window.removeEventListener(
-        'pointerdown',
-        pauseForUser,
-      );
-
-      window.removeEventListener(
-        'touchstart',
-        startTouch,
-      );
-
-      window.removeEventListener(
-        'touchend',
-        endTouch,
-      );
-
-      window.removeEventListener(
-        'touchcancel',
-        endTouch,
-      );
-
-      window.removeEventListener(
-        'keydown',
-        pauseForUser,
-      );
-
-      if (interactionTimerRef.current) {
-        clearTimeout(
-          interactionTimerRef.current,
-        );
-      }
-    };
-  }, [count]);
-
-  if (!vehicles.length) return null;
+  }, [vehicles.length]);
 
   return (
-    <>
-      <button
-        type="button"
-        className={`marketplace-native-showcase-autoplay ${
-          autoPlay
-            ? 'marketplace-native-showcase-autoplay-on'
-            : 'marketplace-native-showcase-autoplay-off'
-        }`}
-        aria-pressed={autoPlay}
-        aria-label={`Autoplay ${autoPlay ? 'on' : 'off'}`}
-        onClick={() => {
-          const next = !autoPlay;
-          setAutoPlay(next);
-
-          if (next) {
-            userInteractingRef.current = false;
-            lastTimeRef.current = performance.now();
-          }
-        }}
-      >
-        <span className="marketplace-native-showcase-autoplay-label">
-          {autoPlay ? 'ON' : 'OFF'}
-        </span>
-        <span
-          className="marketplace-native-showcase-autoplay-knob"
-          aria-hidden="true"
-        />
-      </button>
-
-      <section
-        className="marketplace-native-showcase marketplace-3d-showcase"
-        aria-label="Vehicle showroom"
-      >
-      <div className="marketplace-native-showcase-list marketplace-3d-showcase-list">
-        {vehicles.map(
-          (vehicle, index) => (
-            <article
-              key={`${vehicle.id}-${index}`}
-              data-marketplace-showcase-item
-              className={`marketplace-native-showcase-item marketplace-3d-showcase-item ${
-                index === activeIndex
-                  ? 'marketplace-native-showcase-item-active'
-                  : ''
-              }`}
-            >
-              <div className="marketplace-3d-showcase-stage">
-                <MarketplaceVehicleCard
-                  vehicle={vehicle}
-                  featured
-                  mode={mode}
-                />
-              </div>
-            </article>
-          ),
-        )}
-      </div>
-      </section>
-    </>
+    <div
+      ref={showcaseRef}
+      className="marketplace-vertical-showcase"
+    >
+      {vehicles.map((vehicle, index) => (
+        <section
+          key={vehicle.id}
+          className="marketplace-vertical-showcase-item"
+          aria-label={`Vehicle ${index + 1}`}
+        >
+          <MarketplaceVehicleCard
+            vehicle={vehicle}
+            priority={index === 0}
+            featured={true}
+            mode={mode}
+          />
+        </section>
+      ))}
+    </div>
   );
 }
-
-export default VerticalShowcase;

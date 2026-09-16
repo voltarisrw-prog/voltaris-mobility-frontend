@@ -13,6 +13,7 @@ const CENTER_SIZE =
 const PEEK_SIZE =
   'h-[clamp(14rem,48vw,17rem)] w-[min(72vw,17rem)] sm:h-[clamp(18rem,48vw,22rem)] sm:w-[min(58vw,19rem)] md:h-[clamp(20rem,44vw,26rem)] md:w-[min(50vw,22rem)] lg:h-[clamp(23rem,38vw,29rem)] lg:w-[min(42vw,25rem)] 2xl:h-[31rem] 2xl:w-[25rem]';
 
+console.log('SHOWCASE IMAGE DEBUG');
 export function ShowcaseSlider({
   vehicles,
 }: {
