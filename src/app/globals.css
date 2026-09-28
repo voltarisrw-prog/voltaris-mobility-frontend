@@ -2745,3 +2745,14 @@ button[title*="ompare"]:focus-visible {
   background-repeat: no-repeat;
   pointer-events: none;
 }
+
+/* ---------------------------------------------------------------- Finance */
+/* Native range input, restyled once. Keyboard arrows work out of the box. */
+.voltaris-range { -webkit-appearance: none; appearance: none; height: 2.5rem; background: transparent; cursor: pointer; }
+.voltaris-range::-webkit-slider-runnable-track { height: 2px; background: #e5e5e5; }
+.voltaris-range::-moz-range-track { height: 2px; background: #e5e5e5; }
+.voltaris-range::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; margin-top: -11px; height: 24px; width: 24px; border-radius: 9999px; border: 2px solid #fff; background: #0a0a0a; box-shadow: 0 1px 4px rgba(0,0,0,.25); }
+.voltaris-range::-moz-range-thumb { height: 24px; width: 24px; border-radius: 9999px; border: 2px solid #fff; background: #0a0a0a; box-shadow: 0 1px 4px rgba(0,0,0,.25); }
+.voltaris-range:focus-visible { outline: none; }
+.voltaris-range:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px rgba(10,99,196,.35); }
+.voltaris-range:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 4px rgba(10,99,196,.35); }

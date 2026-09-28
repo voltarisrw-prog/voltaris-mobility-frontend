@@ -20,6 +20,8 @@ const footerGroups = [
     heading: 'Buy & Sell',
     links: [
       { label: 'How it works', href: '/how-it-works' },
+      { label: 'Finance calculator', href: '/finance' },
+      { label: 'Book a garage', href: '/garage' },
       { label: 'Sell a vehicle', href: '/sell' },
       { label: 'Trust & verification', href: '/trust-and-verification' },
       { label: 'Guides', href: '/guides' },
