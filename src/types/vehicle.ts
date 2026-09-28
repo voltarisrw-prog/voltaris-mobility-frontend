@@ -14,6 +14,14 @@ export interface VehicleImage {
   height: number;
   alt: string;
   blur_data_url?: string;
+  /**
+   * Where the shot sits in the magazine spread. The photographer's shot list:
+   * one `hero` (three-quarter front, exterior), one `interior` (from the rear
+   * seat, forward), three `detail` (wheel, dashboard, charge port), the rest
+   * `gallery`. Absent on older listings — lib/vehicles/imageRoles.ts falls
+   * back to order.
+   */
+  role?: 'hero' | 'interior' | 'detail' | 'gallery';
 }
 
 export interface VehicleSeller {
@@ -60,6 +68,10 @@ export interface VehicleSummary {
 }
 
 export interface VehicleDetail extends VehicleSummary {
+  /** Manufacturer spec sheet, when the seller supplied one. */
+  spec_sheet_url?: string | null;
+  /** 0–100 km/h, seconds. */
+  acceleration_0_100_s?: number | null;
   description: string;
   images: VehicleImage[];
   seller: VehicleSeller;

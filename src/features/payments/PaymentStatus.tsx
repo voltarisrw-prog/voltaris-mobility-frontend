@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { ConfirmationCard } from '@/components/ConfirmationCard';
 import { Button, useToast } from '@/components/ui';
 import { createCheckoutSession, getPaymentState, type PaymentState } from '@/lib/api/payments';
 import { displayMessage } from '@/lib/api/errors';
@@ -122,10 +123,30 @@ export function CheckoutClient({ order }: { order: Order }) {
         <h1 className="font-display text-headline">{order.vehicle.title}</h1>
         <p className="mt-2 font-data text-xs text-steel-muted">Order {order.reference}</p>
 
-        <div className="mt-8">
-          <PaymentStatus state={state} />
-          <p className="mt-4 max-w-prose text-sm leading-relaxed text-steel">{EXPLAIN[state]}</p>
-        </div>
+        {state === 'PAID' ? (
+          <div className="mt-8">
+            <ConfirmationCard
+              eyebrow={order.kind === 'rental' ? 'Rental reserved' : 'Reserved'}
+              title={order.kind === 'rental' ? 'Your dates are held.' : 'The car is held for you.'}
+              reference={order.reference}
+              steps={
+                order.kind === 'rental'
+                  ? ['Your advisor confirms pickup by phone or WhatsApp.', 'Bring your licence and ID; a condition report is done together at handover.', 'Return at the agreed time; the deposit is released within five working days.']
+                  : ['Your advisor calls within one working day to confirm documents.', 'Inspection and RRA ownership transfer are arranged; the balance is due at handover.', 'Handover at the showroom or your home, with charging set up.']
+              }
+              {...(order.rental
+                ? { event: { title: `Voltaris rental pickup — ${order.vehicle.title}`, start: order.rental.start_date, durationMinutes: 60 } }
+                : {})}
+              whatsappText={`Hello Voltaris, about order ${order.reference} (${order.vehicle.title}).`}
+              links={[{ label: 'Your orders', href: '/account/orders' }]}
+            />
+          </div>
+        ) : (
+          <div className="mt-8">
+            <PaymentStatus state={state} />
+            <p className="mt-4 max-w-prose text-sm leading-relaxed text-steel">{EXPLAIN[state]}</p>
+          </div>
+        )}
 
         {state === 'PROCESSING' && (
           <p aria-live="polite" className="mt-4 font-data text-xs text-steel-muted">

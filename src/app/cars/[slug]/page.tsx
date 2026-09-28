@@ -16,6 +16,11 @@ import { getSimilarVehicles, getVehicleBySlug } from '@/lib/api/vehicles';
 import { breadcrumbJsonLd, faqJsonLd, vehicleJsonLd } from '@/lib/seo/jsonld';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { formatKm, formatKwh } from '@/lib/format';
+import { splitImages } from '@/lib/vehicles/imageRoles';
+import { heroNumbers } from '@/lib/vehicles/heroNumbers';
+import { VehicleSpreads } from '@/features/vehicles/VehicleSpreads';
+import { PinnedVehicleCta } from '@/features/vehicles/PinnedVehicleCta';
+import { priceLabelFor } from '@/lib/vehicles/priceLabel';
 import { features } from '@/config/features';
 import type { VehicleDetail, VehicleSummary } from '@/types/vehicle';
 
@@ -92,6 +97,19 @@ export default async function VehiclePage({
   }
 
   const title = vehicleTitle(vehicle);
+  const spread = splitImages(vehicle.images ?? []);
+  const numbers = heroNumbers(vehicle);
+  const available = vehicle.status !== 'sold' && vehicle.status !== 'unavailable';
+  const demoDriveHref =
+    mode === 'sale' && vehicle.test_drive_available ? `/test-drive?vehicle=${vehicle.id}` : null;
+  const reserveHref =
+    mode === 'sale' && features.checkout && vehicle.purchase_enabled
+      ? `/order?vehicle=${encodeURIComponent(vehicle.slug)}`
+      : null;
+  const whatsappNumber = (vehicle.seller.whatsapp ?? '').replace(/\D/g, '');
+  const whatsappHref = whatsappNumber
+    ? `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`Hello, I am interested in the ${title} (${vehicle.slug}).`)}`
+    : null;
   const trail = [
     { name: 'Home', path: '/' },
     { name: 'Electric + hybrid cars', path: '/cars' },
@@ -183,28 +201,42 @@ export default async function VehiclePage({
                 {title}
               </h1>
 
-              <div className="mt-6 flex flex-wrap items-center gap-x-8 gap-y-3 text-white/75">
-                <span className="font-data text-xs uppercase tracking-[0.16em]">
-                  {vehicle.range_km} km range
-                </span>
-                <span className="h-1 w-1 rounded-full bg-white/40" aria-hidden="true" />
-                <span className="font-data text-xs uppercase tracking-[0.16em]">
-                  {formatKwh(vehicle.battery_kwh)} battery
-                </span>
-                <span className="h-1 w-1 rounded-full bg-white/40" aria-hidden="true" />
-                <span className="font-data text-xs uppercase tracking-[0.16em]">
-                  {vehicle.power_kw} kW
-                </span>
-              </div>
+              <dl className="mt-6 flex flex-wrap gap-x-10 gap-y-4 text-white sm:gap-x-14">
+                {numbers.map((n) => (
+                  <div key={n.label}>
+                    <dd className="font-display text-[clamp(1.6rem,3.5vw,3rem)] leading-none tabular-nums">{n.value}</dd>
+                    <dt className="mt-1.5 font-data text-[0.7rem] uppercase tracking-[0.18em] text-white/60">{n.label}</dt>
+                  </div>
+                ))}
+              </dl>
             </div>
           </div>
         </div>
       </div>
 
+      <VehicleSpreads interior={spread.interior} detail={spread.detail} />
+
       <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1.7fr)_minmax(0,0.8fr)]">
         <div>
 
-          <section className="mt-12 border-t border-hairline pt-8">
+          <details id="full-details" className="group mt-12 border-y border-hairline">
+            <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between marker:hidden">
+              <span className="font-data text-eyebrow uppercase tracking-[0.12em] text-chrome">Full details</span>
+              <ChevronDown aria-hidden="true" className="h-4 w-4 text-steel-muted transition-transform duration-200 group-open:rotate-180" />
+            </summary>
+
+          {vehicle.spec_sheet_url && (
+            <a
+              href={vehicle.spec_sheet_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-2 inline-flex min-h-12 items-center gap-2 border border-chrome px-5 font-data text-eyebrow uppercase text-chrome transition-colors hover:bg-chrome hover:text-white"
+            >
+              Download spec sheet (PDF) <span aria-hidden="true">↓</span>
+            </a>
+          )}
+
+          <section className="mt-8">
             <h2 className="eyebrow">About this vehicle</h2>
             <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-steel">
               {vehicle.description}
@@ -220,7 +252,7 @@ export default async function VehiclePage({
                 for someone who'll only ever charge at home). */}
             <div className="mt-4 divide-y divide-hairline border-t border-hairline">
               {specGroups.map((group) => (
-                <details key={group.label} open className="group py-1">
+                <details key={group.label} className="group py-1">
                   <summary className="flex cursor-pointer list-none items-center justify-between py-3 marker:hidden">
                     <span className="font-display text-sm font-semibold tracking-tight text-chrome">
                       {group.label}
@@ -280,6 +312,8 @@ export default async function VehiclePage({
               </div>
             </section>
           )}
+          <div className="h-8" />
+          </details>
         </div>
 
         <aside className="lg:sticky lg:top-24 lg:self-start">
@@ -322,10 +356,10 @@ export default async function VehiclePage({
                   <div className="mt-6">
                     {features.checkout && vehicle.purchase_enabled && (
                       <Link
-                        href={`/checkout/start?vehicle=${vehicle.id}`}
-                        className="flex w-full items-center justify-between bg-volt px-5 py-4 font-data text-eyebrow uppercase text-surface transition-colors hover:bg-volt-bright"
+                        href={`/order?vehicle=${encodeURIComponent(vehicle.slug)}`}
+                        className="flex min-h-12 w-full items-center justify-between bg-volt px-5 py-4 font-data text-eyebrow uppercase text-surface transition-colors hover:bg-volt-bright"
                       >
-                        <span>Buy this vehicle</span>
+                        <span>Reserve this vehicle</span>
                         <span aria-hidden="true">→</span>
                       </Link>
                     )}
@@ -337,7 +371,11 @@ export default async function VehiclePage({
                 vehicle.rental_enabled &&
                 vehicle.rental_price_per_day ? (
                   <div id="rental-details" className="mt-6">
-                    <RentalCheckoutPanel vehicleId={vehicle.id} />
+                    <RentalCheckoutPanel
+                      vehicleId={vehicle.id}
+                      dailyRate={vehicle.rental_price_per_day}
+                      currency={vehicle.currency}
+                    />
                   </div>
                 ) : null}
 
@@ -347,13 +385,24 @@ export default async function VehiclePage({
                       href={`/test-drive?vehicle=${vehicle.id}`}
                       className="flex items-center justify-center border border-chrome px-5 py-3 font-data text-eyebrow uppercase transition-colors hover:bg-chrome hover:text-surface"
                     >
-                      Book a free test drive
+                      Demo drive
                     </Link>
+                  )}
+
+                  {whatsappHref && (
+                    <a
+                      href={whatsappHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex min-h-12 items-center justify-center border border-hairline px-5 py-3 font-data text-eyebrow uppercase text-chrome transition-colors hover:border-chrome"
+                    >
+                      WhatsApp the seller
+                    </a>
                   )}
 
                   <Link
                     href={`/cars/${vehicle.slug}/enquire`}
-                    className="flex items-center justify-center border border-hairline px-5 py-3 font-data text-eyebrow uppercase text-steel transition-colors hover:border-chrome hover:text-chrome"
+                    className="flex min-h-12 items-center justify-center border border-hairline px-5 py-3 font-data text-eyebrow uppercase text-steel transition-colors hover:border-chrome hover:text-chrome"
                   >
                     Ask for more details
                   </Link>
@@ -406,14 +455,31 @@ export default async function VehiclePage({
             </div>
 
             {vehicle.financing_available && (
-              <p className="mt-5 bg-volt-wash p-4 text-sm text-chrome">
-                Financing is available on this vehicle through a Voltaris partner bank. Terms are
-                confirmed after your enquiry.
-              </p>
+              <Link
+                href={`/finance?vehicle=${encodeURIComponent(vehicle.slug)}`}
+                className="mt-5 flex min-h-12 items-center justify-between bg-volt-wash px-4 font-data text-eyebrow uppercase tracking-[0.1em] text-white transition-colors hover:bg-volt-deep"
+              >
+                Finance this vehicle <span aria-hidden="true">→</span>
+              </Link>
             )}
           </div>
         </aside>
       </div>
+
+      {available && (
+          <PinnedVehicleCta
+            priceLabel={priceLabelFor(vehicle.price, vehicle.rental_price_per_day, mode)}
+            demoDriveHref={demoDriveHref}
+            primary={
+              mode === 'rental'
+                ? { label: 'Reserve', href: '#rental-details' }
+                : reserveHref
+                  ? { label: 'Reserve', href: reserveHref }
+                  : { label: 'Enquire', href: `/cars/${vehicle.slug}/enquire` }
+            }
+            whatsappHref={whatsappHref}
+          />
+        )}
 
       {similar.length > 0 && (
         <section className="mt-20">

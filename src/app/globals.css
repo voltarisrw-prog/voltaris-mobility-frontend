@@ -100,7 +100,7 @@
 @layer components {
   .shell {
     @apply mx-auto w-full max-w-shell;
-    padding-inline: clamp(1rem, 2.8vw, 2rem);
+    padding-inline: clamp(1rem, 4vw, 4rem);
   }
   .eyebrow {
     @apply font-data text-eyebrow uppercase text-steel-muted;

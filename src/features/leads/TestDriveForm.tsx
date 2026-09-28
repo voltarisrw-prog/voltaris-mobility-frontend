@@ -3,8 +3,8 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
-import Link from 'next/link';
 import { Button, Field, inputClass, selectClass, useToast } from '@/components/ui';
+import { ConfirmationCard } from '@/components/ConfirmationCard';
 import { requestTestDrive } from '@/lib/api/leads';
 import { displayMessage } from '@/lib/api/errors';
 import { track } from '@/lib/analytics';
@@ -39,20 +39,14 @@ export function TestDriveForm({
 
   if (result) {
     return (
-      <div className="rounded-[2rem] border border-volt/30 bg-white p-6 text-black shadow-[0_18px_50px_rgba(0,0,0,0.12)]">
-        <h2 className="font-display text-xl tracking-tight">Test drive requested</h2>
-        <p className="mt-3 text-sm text-black/65">
-          Reference <span className="font-data text-black">{result.reference}</span>. This is a
-          request, not a confirmed booking — Voltaris confirms the slot with the seller and comes
-          back to you.
-        </p>
-        <Link
-          href={`/test-drive/${result.reference}`}
-          className="mt-5 inline-block font-data text-eyebrow uppercase text-volt underline underline-offset-4"
-        >
-          Track this request →
-        </Link>
-      </div>
+      <ConfirmationCard
+        eyebrow="Demo drive requested"
+        title={vehicleTitle ? `${vehicleTitle}, at your pace.` : 'Your drive is requested.'}
+        reference={result.reference}
+        steps={['Voltaris confirms the slot with the seller and comes back to you.', 'Bring your driving licence. An advisor meets you at the location you chose.', 'No pressure afterwards: reserve, compare, or walk away.']}
+        whatsappText={`Hello Voltaris, about test drive ${result.reference}.`}
+        links={[{ label: 'Track this request', href: `/test-drive/${result.reference}` }]}
+      />
     );
   }
 

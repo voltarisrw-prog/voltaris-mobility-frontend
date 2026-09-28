@@ -2,11 +2,11 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import dynamic from 'next/dynamic';
-import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Check, ArrowLeft } from 'lucide-react';
 import { Button, Field, inputClass, useToast } from '@/components/ui';
+import { ConfirmationCard } from '@/components/ConfirmationCard';
 import { garagePartners, garageServices, garageSlots, type GarageServiceId } from '@/config/garage';
 import { requestGarageBooking } from './api';
 import { displayMessage } from '@/lib/api/errors';
@@ -107,27 +107,15 @@ export function GarageBookingFlow({ initialService }: { initialService?: GarageS
 
   if (result) {
     return (
-      <div className="border border-hairline bg-abyss p-8 sm:p-10">
-        <p className="eyebrow text-volt-deep">Booking requested</p>
-        <h2 className="mt-3 font-display text-display text-chrome">
-          {chosenService?.label} at {chosenGarage?.name}
-        </h2>
-        <p className="mt-4 max-w-prose text-sm leading-relaxed text-steel">
-          Reference <span className="font-data text-chrome">{result.reference}</span>. The garage confirms
-          the slot by phone or WhatsApp, usually the same working day. Bring the logbook and your
-          charging cable if the service touches the battery.
-        </p>
-        <dl className="mt-6 grid gap-3 border-t border-hairline pt-6 font-data text-xs text-steel sm:grid-cols-3">
-          <div><dt className="text-steel-muted">When</dt><dd className="mt-1 text-chrome">{values.preferred_date} · {values.preferred_slot}</dd></div>
-          <div><dt className="text-steel-muted">Where</dt><dd className="mt-1 text-chrome">{chosenGarage?.address}</dd></div>
-          <div><dt className="text-steel-muted">Vehicle</dt><dd className="mt-1 text-chrome">{values.vehicle_make} {values.vehicle_model}{values.vehicle_plate ? ` · ${values.vehicle_plate}` : ''}</dd></div>
-        </dl>
-        <div className="mt-8 flex flex-wrap gap-3">
-          <Link href="/cars" className="inline-flex min-h-12 items-center border border-chrome px-5 font-data text-eyebrow uppercase text-chrome transition-colors hover:bg-chrome hover:text-white">
-            Back to the showroom
-          </Link>
-        </div>
-      </div>
+      <ConfirmationCard
+        eyebrow="Booking requested"
+        title={`${chosenService?.label ?? 'Garage'} at ${chosenGarage?.name ?? 'a partner garage'}.`}
+        reference={result.reference}
+        steps={['The garage confirms the slot by phone or WhatsApp, usually the same day.', `Bring the logbook${values.vehicle_plate ? ` for ${values.vehicle_plate}` : ''} and your charging cable if the job touches the battery.`, chosenGarage ? `${chosenGarage.address}. ${chosenGarage.hours}.` : 'Address and hours are in your confirmation.']}
+        event={{ title: `${chosenService?.label ?? 'Garage'} — ${chosenGarage?.name ?? 'Voltaris'}`, start: `${values.preferred_date}T${values.preferred_slot}:00`, durationMinutes: 120, ...(chosenGarage ? { location: chosenGarage.address } : {}) }}
+        whatsappText={`Hello Voltaris, about garage booking ${result.reference}.`}
+        links={[{ label: 'Back to the showroom', href: '/cars' }]}
+      />
     );
   }
 
