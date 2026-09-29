@@ -64,6 +64,52 @@ jobs:
           NEXT_PUBLIC_API_BASE_URL: ${{ vars.NEXT_PUBLIC_API_BASE_URL }}
           NEXT_PUBLIC_ENVIRONMENT: production
 
+  performance:
+    name: Lighthouse budget (Moto G4, slow 4G)
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+        env:
+          NEXT_PUBLIC_SITE_URL: https://voltaris.rw
+          NEXT_PUBLIC_API_BASE_URL: http://localhost:9
+          NEXT_PUBLIC_DEMO_DATA: 'true'
+      # Budgets live in lighthouserc.json: LCP < 2.5 s, CLS < 0.05, JS < 250 KB per route.
+      # A broken budget fails this job, and this job gates deploy below.
+      - run: npm run lighthouse
+        env:
+          NEXT_PUBLIC_DEMO_DATA: 'true'
+
+  visual:
+    name: Screenshot baselines (360–3440 + 200% zoom)
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run build
+        env:
+          NEXT_PUBLIC_DEMO_DATA: 'true'
+          NEXT_PUBLIC_FEATURE_CHECKOUT: 'true'
+      - run: npm run e2e:visual
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: visual-diffs
+          path: test-results/
+          retention-days: 7
+
   e2e:
     name: End-to-end (staging)
     runs-on: ubuntu-latest
@@ -91,7 +137,7 @@ jobs:
   deploy-staging:
     name: Deploy to staging
     runs-on: ubuntu-latest
-    needs: [quality, security, build]
+    needs: [quality, security, build, performance, visual]
     if: github.ref == 'refs/heads/develop'
     environment: staging
     steps:
@@ -101,7 +147,7 @@ jobs:
   deploy-production:
     name: Deploy to production
     runs-on: ubuntu-latest
-    needs: [quality, security, build]
+    needs: [quality, security, build, performance, visual]
     if: github.ref == 'refs/heads/main'
     # Requires a manual approval configured on the GitHub environment.
     environment: production

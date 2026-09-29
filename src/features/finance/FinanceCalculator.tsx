@@ -6,6 +6,8 @@ import { bpsFromDeposit, computeLoan, depositFromBps } from '@/lib/finance/amort
 import { formatPrice } from '@/lib/format';
 import { cn } from '@/lib/format';
 import { FinanceApplyForm } from './FinanceApplyForm';
+import { Reveal } from '@/components/motion/Reveal';
+
 
 /**
  * Live credit calculator. Everything recomputes on every input change; the
@@ -285,7 +287,7 @@ export function FinanceCalculator({
         <h2 id="partners-heading" className="mt-3 font-display text-display text-chrome">
           Same car, three ways to pay for it.
         </h2>
-        <ul className="mt-8 grid gap-px border border-hairline bg-hairline md:grid-cols-3">
+        <Reveal as="ul" stagger={120} className="mt-8 grid gap-px border border-hairline bg-hairline md:grid-cols-3">
           {perPartner.map(({ partner, loan: pl, term: pt }) => (
             <li key={partner.id} className="flex flex-col bg-surface p-6">
               <div className="flex items-baseline justify-between">
@@ -316,11 +318,11 @@ export function FinanceCalculator({
               </button>
             </li>
           ))}
-        </ul>
+        </Reveal>
       </section>
 
       {/* ------------------------------------------------------------ Apply */}
-      <section id="finance-apply" className="scroll-mt-28 lg:col-span-2" aria-labelledby="apply-heading">
+      <Reveal as="section" id="finance-apply" className="scroll-mt-28 lg:col-span-2" aria-labelledby="apply-heading">
         <div className="grid gap-8 border-t border-hairline pt-10 lg:grid-cols-[0.8fr_1.2fr]">
           <div>
             <p className="eyebrow">Apply</p>
@@ -346,7 +348,7 @@ export function FinanceCalculator({
             />
           </div>
         </div>
-      </section>
+      </Reveal>
     </div>
   );
 }

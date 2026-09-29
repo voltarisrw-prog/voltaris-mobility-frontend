@@ -16,7 +16,8 @@
     "test:watch": "vitest",
     "e2e": "playwright test",
     "format": "prettier --write .",
-    "e2e:visual": "playwright test -c playwright.visual.config.ts"
+    "e2e:visual": "playwright test -c playwright.visual.config.ts",
+    "lighthouse": "lhci autorun"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",
@@ -34,6 +35,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
+    "@lhci/cli": "^0.14.0",
     "@next/eslint-plugin-next": "^16.3.2",
     "@playwright/test": "^1.55.0",
     "@types/node": "22.15.3",

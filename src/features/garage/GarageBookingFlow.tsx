@@ -7,6 +7,8 @@ import { useForm } from 'react-hook-form';
 import { Check, ArrowLeft } from 'lucide-react';
 import { Button, Field, inputClass, useToast } from '@/components/ui';
 import { ConfirmationCard } from '@/components/ConfirmationCard';
+import { Reveal } from '@/components/motion/Reveal';
+
 import { garagePartners, garageServices, garageSlots, type GarageServiceId } from '@/config/garage';
 import { requestGarageBooking } from './api';
 import { displayMessage } from '@/lib/api/errors';
@@ -140,13 +142,13 @@ export function GarageBookingFlow({ initialService }: { initialService?: GarageS
         ))}
       </ol>
 
-      <div className="mt-10 min-h-[24rem]">
+      <Reveal key={step} variant="fade" threshold={0} className="mt-10 min-h-[24rem]">
         {/* ---------------------------------------------------- 0 Service */}
         {step === 0 && (
           <fieldset>
             <legend className="font-display text-display text-chrome">What does the car need?</legend>
             {errors.service && <p className="mt-2 text-sm text-red-600">{errors.service.message}</p>}
-            <div className="mt-8 grid gap-px border border-hairline bg-hairline sm:grid-cols-2 lg:grid-cols-3">
+            <Reveal stagger={70} className="mt-8 grid gap-px border border-hairline bg-hairline sm:grid-cols-2 lg:grid-cols-3">
               {garageServices.map((s) => {
                 const on = service === s.id;
                 return (
@@ -163,7 +165,7 @@ export function GarageBookingFlow({ initialService }: { initialService?: GarageS
                   </label>
                 );
               })}
-            </div>
+            </Reveal>
           </fieldset>
         )}
 
@@ -297,7 +299,7 @@ export function GarageBookingFlow({ initialService }: { initialService?: GarageS
             </div>
           </fieldset>
         )}
-      </div>
+      </Reveal>
 
       <div className="mt-10 flex items-center justify-between border-t border-hairline pt-6">
         <button

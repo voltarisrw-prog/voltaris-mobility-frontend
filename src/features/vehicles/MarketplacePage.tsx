@@ -1,4 +1,6 @@
 import { Breadcrumbs } from '@/components/Breadcrumbs';
+import { Reveal } from '@/components/motion/Reveal';
+
 import { VerticalShowcase } from '@/components/VerticalShowcase';
 import { EmptyState } from '@/components/EmptyState';
 import { JsonLd } from '@/components/JsonLd';
@@ -133,10 +135,12 @@ export async function MarketplacePage({
 
           return (
             <>
-              <VerticalShowcase
-                vehicles={loadedResults.items}
-                mode={mode}
-              />
+              <Reveal variant="fade">
+                <VerticalShowcase
+                  vehicles={loadedResults.items}
+                  mode={mode}
+                />
+              </Reveal>
 
               <div className="mt-10">
                 <Pagination

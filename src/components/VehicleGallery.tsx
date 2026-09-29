@@ -84,8 +84,9 @@ export function VehicleGallery({
             alt={current.alt || title}
             fill
             sizes="100vw"
-            className="object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.012]"
+            className="object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.012] [view-transition-name:vehicle-hero]"
             priority
+            fetchPriority="high"
             {...(current.blur_data_url
               ? {
                   placeholder: 'blur' as const,

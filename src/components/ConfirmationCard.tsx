@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import { CalendarPlus, MessageCircle } from 'lucide-react';
 import { site } from '@/config/site';
+import { Reveal } from '@/components/motion/Reveal';
+
 
 export interface ConfirmationProps {
   eyebrow: string;
@@ -53,14 +55,14 @@ export function ConfirmationCard(p: ConfirmationProps) {
         Reference <span className="font-semibold">{p.reference}</span>
       </p>
 
-      <ol className="mt-8 grid gap-px border border-hairline bg-hairline sm:grid-cols-3">
+      <Reveal as="ol" stagger={140} threshold={0} className="mt-8 grid gap-px border border-hairline bg-hairline sm:grid-cols-3">
         {p.steps.map((step, i) => (
           <li key={step} className="bg-white p-4">
             <p className="font-data text-xs text-steel-muted">0{i + 1}</p>
             <p className="mt-2 text-sm leading-relaxed text-steel">{step}</p>
           </li>
         ))}
-      </ol>
+      </Reveal>
 
       <div className="mt-6 flex flex-wrap gap-3">
         {wa && (

@@ -9,6 +9,8 @@ import { z } from 'zod';
 import { ArrowLeft, Check } from 'lucide-react';
 import { Button, Field, inputClass, useToast } from '@/components/ui';
 import { FinanceCalculator } from '@/features/finance/FinanceCalculator';
+import { Reveal } from '@/components/motion/Reveal';
+
 import { createGeneralInquiry } from '@/lib/api/leads';
 import { displayMessage } from '@/lib/api/errors';
 import { cn, formatPrice } from '@/lib/format';
@@ -107,7 +109,7 @@ export function OrderFlow({ vehicle }: { vehicle: VehicleDetail }) {
       </div>
       <p className="mt-3 font-data text-xs uppercase tracking-[0.14em] text-steel-muted">Step {step + 1} of 5 · {STEPS[step]}</p>
 
-      <div className="mt-8 min-h-[22rem]">
+      <Reveal key={step} variant="fade" threshold={0} className="mt-8 min-h-[22rem]">
         {step === 0 && (
           <section>
             <h1 ref={heading} tabIndex={-1} className="font-display text-display text-chrome outline-none">This one?</h1>
@@ -184,7 +186,7 @@ export function OrderFlow({ vehicle }: { vehicle: VehicleDetail }) {
             </div>
           </section>
         )}
-      </div>
+      </Reveal>
 
       <div className="mt-10 flex items-center justify-between border-t border-hairline pt-6">
         <button type="button" onClick={back} disabled={step === 0} className="inline-flex min-h-12 items-center gap-2 font-data text-eyebrow uppercase text-steel disabled:opacity-30 hover:text-chrome"><ArrowLeft className="h-4 w-4" aria-hidden="true" /> Back</button>

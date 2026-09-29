@@ -1,5 +1,6 @@
 import Image from 'next/image';
-import Link from 'next/link';
+import { TransitionLink } from '@/components/motion/TransitionLink';
+import { HoverPrefetch } from '@/components/motion/HoverPrefetch';
 import { ShieldCheck } from 'lucide-react';
 import { RangeMeter } from './RangeMeter';
 import { CompareToggleButton } from './CompareToggleButton';
@@ -33,6 +34,7 @@ export function VehicleCard({
 
   return (
     <article className="group relative flex h-full flex-col border border-hairline bg-slab/40 transition-colors duration-200 ease-out hover:border-volt/50">
+      <HoverPrefetch href={`/cars/${vehicle.slug}`} />
       <div className="relative aspect-[4/3] overflow-hidden bg-abyss">
         {vehicle.primary_image ? (
           <Image
@@ -40,8 +42,9 @@ export function VehicleCard({
             alt={vehicle.primary_image.alt || title}
             fill
             sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 70vw"
-            className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
+            className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04] [.is-leaving_&]:[view-transition-name:vehicle-hero]"
             priority={priority}
+            loading={priority ? undefined : 'lazy'}
             {...(vehicle.primary_image.blur_data_url
               ? { placeholder: 'blur' as const, blurDataURL: vehicle.primary_image.blur_data_url }
               : {})}
@@ -85,9 +88,9 @@ export function VehicleCard({
           <h3 className="mt-2 font-display text-base font-semibold leading-tight tracking-tight">
             {/* The whole card is clickable via the stretched link, but only the title
                 is announced as the link target to a screen reader. */}
-            <Link href={`/cars/${vehicle.slug}`} className="after:absolute after:inset-0">
+            <TransitionLink href={`/cars/${vehicle.slug}`} className="after:absolute after:inset-0">
               {title}
-            </Link>
+            </TransitionLink>
           </h3>
           <p className="mt-1 font-data text-xs text-steel-muted">{vehicle.year}</p>
         </div>
@@ -162,13 +165,13 @@ export function VehicleCard({
 export function VehicleCardSkeleton() {
   return (
     <div className="border border-hairline bg-slab/40" aria-hidden="true">
-      <div className="aspect-[4/3] animate-pulse bg-abyss" />
+      <div className="skeleton aspect-[4/3]" />
       <div className="space-y-3 p-5">
-        <div className="h-3 w-24 animate-pulse bg-hairline" />
-        <div className="h-4 w-3/4 animate-pulse bg-hairline" />
+        <div className="skeleton h-3 w-24" />
+        <div className="skeleton h-4 w-3/4" />
         <div className="h-[3px] w-full bg-hairline" />
-        <div className="h-3 w-1/2 animate-pulse bg-hairline" />
-        <div className="h-6 w-32 animate-pulse bg-hairline" />
+        <div className="skeleton h-3 w-1/2" />
+        <div className="skeleton h-6 w-32" />
       </div>
     </div>
   );

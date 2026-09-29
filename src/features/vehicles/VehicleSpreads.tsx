@@ -1,5 +1,7 @@
 import Image from 'next/image';
 import type { VehicleImage } from '@/types/vehicle';
+import { Parallax } from '@/components/motion/Parallax';
+import { Reveal } from '@/components/motion/Reveal';
 
 function Spread({
   image,
@@ -12,15 +14,18 @@ function Spread({
 }) {
   return (
     <figure className="relative isolate min-h-[100svh] overflow-hidden bg-black lg:min-h-[85svh]">
-      <Image
-        src={image.detail}
-        alt={image.alt}
-        fill
-        priority={priority}
-        sizes="100vw"
-        className="object-cover"
-        {...(image.blur_data_url ? { placeholder: 'blur', blurDataURL: image.blur_data_url } : {})}
-      />
+      <Parallax className="absolute inset-0">
+        <Image
+          src={image.detail}
+          alt={image.alt}
+          fill
+          priority={priority}
+          loading={priority ? undefined : 'lazy'}
+          sizes="100vw"
+          className="parallax-img object-cover"
+          {...(image.blur_data_url ? { placeholder: 'blur', blurDataURL: image.blur_data_url } : {})}
+        />
+      </Parallax>
       {caption && (
         <figcaption className="absolute bottom-6 left-0 right-0 px-[clamp(1rem,4vw,4rem)] font-data text-[0.7rem] uppercase tracking-[0.18em] text-white/70 sm:bottom-10">
           {caption}
@@ -48,7 +53,10 @@ export function VehicleSpreads({
       {interior && <Spread image={interior} caption="Interior" />}
 
       {detail.length > 0 && (
-        <ul
+        <Reveal
+          as="ul"
+          variant="up"
+          stagger={120}
           className="mt-1 flex snap-x snap-mandatory gap-1 overflow-x-auto lg:grid lg:grid-cols-3 lg:overflow-visible"
           aria-label="Details"
         >
@@ -59,12 +67,13 @@ export function VehicleSpreads({
                 alt={image.alt}
                 fill
                 sizes="(min-width: 1024px) 33vw, 86vw"
+                loading="lazy"
                 className="object-cover"
                 {...(image.blur_data_url ? { placeholder: 'blur', blurDataURL: image.blur_data_url } : {})}
               />
             </li>
           ))}
-        </ul>
+        </Reveal>
       )}
     </div>
   );

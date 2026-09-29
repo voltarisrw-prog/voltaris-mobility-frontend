@@ -20,6 +20,8 @@ import { splitImages } from '@/lib/vehicles/imageRoles';
 import { heroNumbers } from '@/lib/vehicles/heroNumbers';
 import { VehicleSpreads } from '@/features/vehicles/VehicleSpreads';
 import { PinnedVehicleCta } from '@/features/vehicles/PinnedVehicleCta';
+import { Reveal } from '@/components/motion/Reveal';
+
 import { priceLabelFor } from '@/lib/vehicles/priceLabel';
 import { features } from '@/config/features';
 import type { VehicleDetail, VehicleSummary } from '@/types/vehicle';
@@ -219,6 +221,7 @@ export default async function VehiclePage({
       <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1.7fr)_minmax(0,0.8fr)]">
         <div>
 
+          <Reveal variant="fade">
           <details id="full-details" className="group mt-12 border-y border-hairline">
             <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between marker:hidden">
               <span className="font-data text-eyebrow uppercase tracking-[0.12em] text-chrome">Full details</span>
@@ -314,9 +317,10 @@ export default async function VehiclePage({
           )}
           <div className="h-8" />
           </details>
+          </Reveal>
         </div>
 
-        <aside className="lg:sticky lg:top-24 lg:self-start">
+        <Reveal as="aside" variant="up" delay={120} className="lg:sticky lg:top-24 lg:self-start">
           <div className="border border-hairline p-6">
             <p className="eyebrow">ELECTRIC + HYBRID</p>
             <p className="mt-2 text-xs uppercase tracking-[0.16em] text-steel-muted">
@@ -463,7 +467,7 @@ export default async function VehiclePage({
               </Link>
             )}
           </div>
-        </aside>
+        </Reveal>
       </div>
 
       {available && (
@@ -486,11 +490,11 @@ export default async function VehiclePage({
           <h2 className="section-heading">
             More electric + hybrid cars
           </h2>
-          <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <Reveal stagger={110} className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {similar.slice(0, 3).map((item) => (
-              <VehicleCard key={item.id} vehicle={item} mode={mode} />
+              <div key={item.id}><VehicleCard vehicle={item} mode={mode} /></div>
             ))}
-          </div>
+          </Reveal>
         </section>
       )}
     </div>
