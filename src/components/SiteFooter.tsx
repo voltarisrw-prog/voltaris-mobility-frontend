@@ -61,7 +61,7 @@ function FooterLink({
   return (
     <Link
       href={href}
-      className="group flex min-h-9 items-center gap-2 py-1 font-display text-[0.95rem] font-medium tracking-[-0.02em] text-black/55 transition-colors duration-200 hover:text-[#0a0a0a] focus-visible:text-[color:var(--vds-brand-secondary)] focus-visible:outline-none sm:text-base"
+      className="group flex min-h-9 items-center gap-2 py-1 font-display text-[0.95rem] font-medium tracking-[-0.02em] text-black/55 transition-colors duration-200 hover:text-chrome focus-visible:text-[color:var(--vds-brand-secondary)] focus-visible:outline-none sm:text-base"
     >
       <span>{label}</span>
 
@@ -77,7 +77,7 @@ export function SiteFooter() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="mx-3 my-4 overflow-hidden rounded-[2rem] bg-[#5DC8FE] font-sans font-bold text-black sm:mx-5 sm:my-6 lg:mx-8 lg:my-8 border border-black/5 shadow-[0_20px_60px_-30px_rgba(0,0,0,0.35)] [&_a]:!text-black [&_a]:font-bold [&_p]:!text-black [&_p]:font-bold [&_span]:!text-black [&_span]:font-bold [&_h1]:!text-black [&_h2]:!text-black [&_h3]:!text-black [&_h4]:!text-black [&_h5]:!text-black [&_h6]:!text-black [&_svg]:!text-black [&_border-white\/10]:border-black/15 [&_border-white\/20]:border-black/15 [&_border-white\/25]:border-black/20">
+    <footer className="mx-3 my-4 overflow-hidden rounded-[2rem] bg-volt font-sans font-bold text-black sm:mx-5 sm:my-6 lg:mx-8 lg:my-8 border border-black/5 shadow-[0_20px_60px_-30px_rgba(0,0,0,0.35)] [&_a]:!text-black [&_a]:font-bold [&_p]:!text-black [&_p]:font-bold [&_span]:!text-black [&_span]:font-bold [&_h1]:!text-black [&_h2]:!text-black [&_h3]:!text-black [&_h4]:!text-black [&_h5]:!text-black [&_h6]:!text-black [&_svg]:!text-black [&_border-white\/10]:border-black/15 [&_border-white\/20]:border-black/15 [&_border-white\/25]:border-black/20">
 
       {/* =========================================================
           COMPACT FOOTER
@@ -96,12 +96,12 @@ export function SiteFooter() {
             <Link
               href="/"
               aria-label="Voltaris Mobility home"
-              className="inline-flex rounded-sm text-[#0a0a0a] transition-opacity duration-200 hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-volt"
+              className="inline-flex rounded-sm text-chrome transition-opacity duration-200 hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-volt"
             >
               <VoltarisLogo className="h-8 sm:h-9" />
             </Link>
 
-            <p className="mt-3 max-w-xs text-sm leading-5 text-[#6b6b6b]">
+            <p className="mt-3 max-w-xs text-sm leading-5 text-steel-muted">
               Mobility, made simpler.
             </p>
 
@@ -110,7 +110,7 @@ export function SiteFooter() {
             </div>
 
             <div className="mt-4">
-              <span className="font-data text-[0.56rem] uppercase tracking-[0.16em] text-[#6b6b6b]">
+              <span className="font-data text-[0.56rem] uppercase tracking-[0.16em] text-steel-muted">
                 Kigali · Rwanda
               </span>
             </div>
@@ -130,13 +130,13 @@ export function SiteFooter() {
                   <details key={group.heading} className="group">
 
                     <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between py-3">
-                      <span className="font-data text-[0.58rem] font-medium uppercase tracking-[0.18em] text-[#6b6b6b]">
+                      <span className="font-data text-[0.58rem] font-medium uppercase tracking-[0.18em] text-steel-muted">
                         {group.heading}
                       </span>
 
                       <span
                         aria-hidden="true"
-                        className="relative flex h-7 w-7 shrink-0 items-center justify-center text-[#6b6b6b]"
+                        className="relative flex h-7 w-7 shrink-0 items-center justify-center text-steel-muted"
                       >
                         <span className="absolute h-px w-3 bg-current" />
                         <span className="absolute h-3 w-px bg-current transition-transform duration-200 group-open:rotate-90" />
@@ -162,7 +162,7 @@ export function SiteFooter() {
                 {footerGroups.map((group) => (
                   <div key={group.heading} className="min-w-0">
 
-                    <h2 className="font-data text-[0.58rem] font-medium uppercase tracking-[0.18em] text-[#6b6b6b]">
+                    <h2 className="font-data text-[0.58rem] font-medium uppercase tracking-[0.18em] text-steel-muted">
                       {group.heading}
                     </h2>
 
@@ -189,7 +189,7 @@ export function SiteFooter() {
 
         <div className="mt-7 border-t border-[color:var(--vds-border)] pt-4 sm:mt-14 sm:pt-6">
 
-          <div className="flex flex-col gap-3 text-[0.52rem] uppercase tracking-[0.1em] text-[#6b6b6b] lg:flex-row lg:items-center lg:justify-between lg:gap-8">
+          <div className="flex flex-col gap-3 text-[0.52rem] uppercase tracking-[0.1em] text-steel-muted lg:flex-row lg:items-center lg:justify-between lg:gap-8">
 
             <p>
               © {year} {site.legalName}. All rights reserved.
@@ -197,7 +197,7 @@ export function SiteFooter() {
 
             <p>
               Designed &amp; Developed by{' '}
-              <span className="text-[#4a4a4a]">
+              <span className="text-steel">
                 <a href="https://www.linkedin.com/in/patrice-iradukunda-74931827a/" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4 hover:opacity-70">Patrice IRADUKUNDA</a>
               </span>
             </p>
@@ -206,14 +206,14 @@ export function SiteFooter() {
 
               <Link
                 href="/legal/privacy"
-                className="transition-colors hover:text-[#0a0a0a] focus-visible:text-[color:var(--vds-brand-secondary)] focus-visible:outline-none"
+                className="transition-colors hover:text-chrome focus-visible:text-[color:var(--vds-brand-secondary)] focus-visible:outline-none"
               >
                 Privacy
               </Link>
 
               <Link
                 href="/legal/terms"
-                className="transition-colors hover:text-[#0a0a0a] focus-visible:text-[color:var(--vds-brand-secondary)] focus-visible:outline-none"
+                className="transition-colors hover:text-chrome focus-visible:text-[color:var(--vds-brand-secondary)] focus-visible:outline-none"
               >
                 Terms
               </Link>

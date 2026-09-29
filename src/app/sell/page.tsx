@@ -36,7 +36,7 @@ const gallery = [
 
 export default function SellPage() {
   return (
-    <main className="bg-white text-[#0a0a0a]">
+    <main className="bg-surface text-chrome">
       {/* CINEMATIC SELL HERO */}
       <section className="relative min-h-[100svh] overflow-hidden bg-black">
         {/* Car image gallery background */}

@@ -200,7 +200,7 @@ export function RentalSearch() {
       {error ? (
         <p
           role="alert"
-          className="mt-4 font-data text-xs uppercase tracking-wide text-red-600"
+          className="mt-4 font-data text-xs uppercase tracking-wide text-danger"
         >
           {error}
         </p>

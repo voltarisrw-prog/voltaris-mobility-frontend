@@ -320,7 +320,7 @@ export function JobApplicationForm({
             )}
 
             {errors.cv_file_name?.message && (
-              <p className="mt-2 text-xs text-red-600">{errors.cv_file_name.message}</p>
+              <p className="mt-2 text-xs text-danger">{errors.cv_file_name.message}</p>
             )}
           </div>
         </section>

@@ -166,7 +166,7 @@ export function RentalCheckoutPanel({
             </div>
           </div>
           {quoteMatches && !quote.available && (
-            <p className="mt-3 border-t border-hairline pt-3 text-xs text-red-600">{quote.unavailable_reason || 'Unavailable for these dates.'}</p>
+            <p className="mt-3 border-t border-hairline pt-3 text-xs text-danger">{quote.unavailable_reason || 'Unavailable for these dates.'}</p>
           )}
         </div>
       )}
@@ -193,7 +193,7 @@ export function RentalCheckoutPanel({
         </dl>
       </details>
 
-      {error && <p role="alert" className="font-data text-xs uppercase tracking-wide text-red-600">{error}</p>}
+      {error && <p role="alert" className="font-data text-xs uppercase tracking-wide text-danger">{error}</p>}
 
       <button
         type="submit"

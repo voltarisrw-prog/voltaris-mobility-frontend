@@ -114,10 +114,10 @@ export function Field({
 }
 
 export const inputClass =
-  'vds-input text-sm text-black placeholder:text-black/40 aria-[invalid=true]:border-red-400';
+  'vds-input text-sm text-black placeholder:text-black/40 aria-[invalid=true]:border-danger';
 
 export const selectClass =
-  'vds-select text-sm text-black aria-[invalid=true]:border-red-400';
+  'vds-select text-sm text-black aria-[invalid=true]:border-danger';
 
 /* ------------------------------------------------------------------- Toast */
 
@@ -182,8 +182,8 @@ export function ToastProvider({
               className={cn(
                 'h-2 w-2 shrink-0 rounded-full',
                 toast.tone === 'success'
-                  ? 'bg-[#6A3717]'
-                  : 'bg-red-400',
+                  ? 'bg-success'
+                  : 'bg-danger',
               )}
             />
 

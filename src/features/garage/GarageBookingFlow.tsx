@@ -147,7 +147,7 @@ export function GarageBookingFlow({ initialService }: { initialService?: GarageS
         {step === 0 && (
           <fieldset>
             <legend className="font-display text-display text-chrome">What does the car need?</legend>
-            {errors.service && <p className="mt-2 text-sm text-red-600">{errors.service.message}</p>}
+            {errors.service && <p className="mt-2 text-sm text-danger">{errors.service.message}</p>}
             <Reveal stagger={70} className="mt-8 grid gap-px border border-hairline bg-hairline sm:grid-cols-2 lg:grid-cols-3">
               {garageServices.map((s) => {
                 const on = service === s.id;
@@ -173,7 +173,7 @@ export function GarageBookingFlow({ initialService }: { initialService?: GarageS
         {step === 1 && (
           <fieldset>
             <legend className="font-display text-display text-chrome">Where?</legend>
-            {errors.garage_slug && <p className="mt-2 text-sm text-red-600">{errors.garage_slug.message}</p>}
+            {errors.garage_slug && <p className="mt-2 text-sm text-danger">{errors.garage_slug.message}</p>}
             <div className="mt-8 grid gap-6 lg:grid-cols-[1fr_1fr]">
               <ul className="divide-y divide-hairline border-y border-hairline">
                 {eligible.map((p) => {
@@ -216,7 +216,7 @@ export function GarageBookingFlow({ initialService }: { initialService?: GarageS
               </Field>
               <div>
                 <p className="eyebrow">Arrival time</p>
-                {errors.preferred_slot && <p className="mt-1 text-sm text-red-600">{errors.preferred_slot.message}</p>}
+                {errors.preferred_slot && <p className="mt-1 text-sm text-danger">{errors.preferred_slot.message}</p>}
                 <div className="mt-3 grid grid-cols-3 gap-2 sm:grid-cols-5">
                   {garageSlots.map((slot) => {
                     const on = values.preferred_slot === slot.value;

@@ -25,14 +25,14 @@ const stationIcon = L.divIcon({
       width: 34px;
       height: 34px;
       border-radius: 9999px;
-      background: #000;
+      background: #00030C;
       border: 2px solid #fff;
-      box-shadow: 0 6px 18px rgba(0,0,0,.28);
+      box-shadow: 0 6px 18px rgba(0,3,12,.28);
       display: grid;
       place-items: center;
     ">
       <span style="
-        color: #b8ff00;
+        color: #5CC8FF;
         font-size: 17px;
         line-height: 1;
         font-weight: 800;
@@ -116,16 +116,16 @@ export function ChargingMap({ locations }: ChargingMapProps) {
                     <p className="text-base font-semibold leading-tight">
                       {location.name}
                     </p>
-                    <p className="mt-1 text-xs text-gray-500">
+                    <p className="mt-1 text-xs text-steel-muted">
                       {location.operator}
                     </p>
                   </div>
 
-                  <p className="text-xs leading-relaxed text-gray-600">
+                  <p className="text-xs leading-relaxed text-steel">
                     {location.address}
                   </p>
 
-                  <div className="border-t border-gray-200 pt-2 text-xs">
+                  <div className="border-t border-hairline pt-2 text-xs">
                     <p>
                       <strong>Access:</strong>{' '}
                       {location.access === 'customers_only'
