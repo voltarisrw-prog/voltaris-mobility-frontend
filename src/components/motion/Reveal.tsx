@@ -57,7 +57,12 @@ export function Reveal({
           setInView(false);
         }
       },
-      { threshold, rootMargin: '0px 0px -8% 0px' },
+      // A ratio threshold can never be met by an element taller than the
+      // viewport (the showroom is N × 82svh), so fall back to any pixel.
+      {
+        threshold: node.offsetHeight > window.innerHeight ? 0 : threshold,
+        rootMargin: '0px 0px -8% 0px',
+      },
     );
     io.observe(node);
     return () => io.disconnect();
