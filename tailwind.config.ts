@@ -36,6 +36,10 @@ const config: Config = {
         },
         danger: '#FF6B60',
         success: '#4ADE9B',
+        // The logo field and the chrome of the V, for the rare moments that
+        // want the mark's own materials rather than the type greys.
+        ink: '#00030C',
+        metal: { DEFAULT: '#E8EAED', deep: '#6C727C' },
       },
       fontFamily: {
         display: ['var(--font-display)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
@@ -47,9 +51,19 @@ const config: Config = {
         hero: ['clamp(2.75rem, 6.5vw, 6.5rem)', { lineHeight: '0.92', letterSpacing: '-0.04em' }],
         display: ['clamp(2rem, 5vw, 3.75rem)', { lineHeight: '0.98', letterSpacing: '-0.035em' }],
         headline: ['clamp(1.5rem, 3vw, 2.25rem)', { lineHeight: '1.05', letterSpacing: '-0.025em' }],
+        // Two mid-steps so nothing between headline and body has to be improvised.
+        title: ['clamp(1.25rem, 1.05rem + 0.9vw, 1.625rem)', { lineHeight: '1.15', letterSpacing: '-0.02em' }],
+        lead: ['clamp(1.0625rem, 0.95rem + 0.4vw, 1.25rem)', { lineHeight: '1.55' }],
       },
-      borderRadius: { xs: '2px', sm: '3px', DEFAULT: '4px', lg: '8px' },
-      maxWidth: { shell: '82rem' },
+      borderRadius: { xs: '2px', sm: '3px', DEFAULT: '4px', lg: '8px', xl: '12px' },
+      maxWidth: { shell: '82rem', measure: '65ch' },
+      // Rhythm: py-section between sections, gap-block inside them, px-gutter at
+      // the page edge. Fluid, and the same numbers the CSS side reads.
+      spacing: {
+        gutter: 'var(--vds-gutter)',
+        block: 'var(--vds-block)',
+        section: 'var(--vds-section)',
+      },
       transitionTimingFunction: { out: 'cubic-bezier(0.16, 1, 0.3, 1)' },
       keyframes: {
         'rise-in': { from: { opacity: '0', transform: 'translateY(14px)' }, to: { opacity: '1', transform: 'none' } },

@@ -13,6 +13,12 @@ import { cn } from '@/lib/format';
 /* ------------------------------------------------------------------ Button */
 
 type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
+type ButtonSize = 'md' | 'lg';
+
+const BUTTON_SIZES: Record<ButtonSize, string> = {
+  md: '',
+  lg: 'vds-button-lg',
+};
 
 const BUTTON_STYLES: Record<ButtonVariant, string> = {
   primary: 'vds-button-primary',
@@ -23,6 +29,7 @@ const BUTTON_STYLES: Record<ButtonVariant, string> = {
 
 export function Button({
   variant = 'primary',
+  size = 'md',
   loading = false,
   className,
   children,
@@ -30,6 +37,7 @@ export function Button({
   ...props
 }: React.ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: ButtonVariant;
+  size?: ButtonSize;
   loading?: boolean;
 }) {
   return (
@@ -40,6 +48,7 @@ export function Button({
       className={cn(
         'vds-button',
         BUTTON_STYLES[variant],
+        BUTTON_SIZES[size],
         className,
       )}
     >

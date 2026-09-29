@@ -114,6 +114,17 @@
   .section-heading {
     @apply font-display text-xl font-semibold tracking-tight;
   }
+  /* Section rhythm: one vertical measure between sections, one inside them.
+     Pages opt in block by block; nothing is restyled by this existing. */
+  .section-rhythm {
+    padding-block: var(--vds-section);
+  }
+  .section-rhythm > * + * {
+    margin-top: var(--vds-block);
+  }
+  .measure {
+    max-width: 65ch;
+  }
 
   /* ------------------------------------------------------------------
      The vanishing point.
