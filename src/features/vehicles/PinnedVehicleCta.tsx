@@ -51,7 +51,7 @@ export function PinnedVehicleCta({
             rel="noopener noreferrer"
             aria-label="WhatsApp"
             tabIndex={shown ? 0 : -1}
-            className="flex h-12 w-12 shrink-0 items-center justify-center border border-hairline text-chrome"
+            className="vds-button vds-button-ghost h-12 w-12 shrink-0 px-0"
           >
             <MessageCircle className="h-5 w-5" aria-hidden="true" />
           </a>
@@ -60,7 +60,7 @@ export function PinnedVehicleCta({
           <Link
             href={demoDriveHref}
             tabIndex={shown ? 0 : -1}
-            className="flex h-12 shrink-0 items-center border border-chrome px-4 font-data text-eyebrow uppercase text-chrome"
+            className="vds-button vds-button-secondary h-12 shrink-0 px-4 font-data text-eyebrow uppercase"
           >
             Demo drive
           </Link>
@@ -69,7 +69,7 @@ export function PinnedVehicleCta({
           <Link
             href={primary.href}
             tabIndex={shown ? 0 : -1}
-            className="flex h-12 shrink-0 items-center bg-chrome px-4 font-data text-eyebrow uppercase text-white"
+            className="vds-button vds-button-primary h-12 shrink-0 px-4 font-data text-eyebrow uppercase"
           >
             {primary.label}
           </Link>

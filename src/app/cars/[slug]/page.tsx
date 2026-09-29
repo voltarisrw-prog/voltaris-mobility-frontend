@@ -7,7 +7,7 @@ import { JsonLd } from '@/components/JsonLd';
 import { PriceDisplay } from '@/components/PriceDisplay';
 import { RangeMeter } from '@/components/RangeMeter';
 import { RentalCheckoutPanel } from '@/features/vehicles/RentalCheckoutPanel';
-import { VehicleGallery } from '@/components/VehicleGallery';
+import { VehicleShowcase } from '@/features/vehicles/VehicleShowcase';
 import { TrackVehicleView } from '@/components/TrackVehicleView';
 import { VehicleCard } from '@/components/VehicleCard';
 import { VerificationBadge } from '@/components/VerificationBadge';
@@ -23,6 +23,7 @@ import { PinnedVehicleCta } from '@/features/vehicles/PinnedVehicleCta';
 import { Reveal } from '@/components/motion/Reveal';
 
 import { priceLabelFor } from '@/lib/vehicles/priceLabel';
+import { splitDescription } from '@/lib/vehicles/description';
 import { features } from '@/config/features';
 import type { VehicleDetail, VehicleSummary } from '@/types/vehicle';
 
@@ -101,6 +102,8 @@ export default async function VehiclePage({
   const title = vehicleTitle(vehicle);
   const spread = splitImages(vehicle.images ?? []);
   const numbers = heroNumbers(vehicle);
+  const priceLabel = priceLabelFor(vehicle.price, vehicle.rental_price_per_day, mode);
+  const description = splitDescription(vehicle.description ?? '');
   const available = vehicle.status !== 'sold' && vehicle.status !== 'unavailable';
   const demoDriveHref =
     mode === 'sale' && vehicle.test_drive_available ? `/test-drive?vehicle=${vehicle.id}` : null;
@@ -168,7 +171,7 @@ export default async function VehiclePage({
   ];
 
   return (
-    <div className="shell py-6 sm:py-10">
+    <div className="pb-10 sm:pb-16">
       <JsonLd data={breadcrumbJsonLd(trail)} />
       <JsonLd data={vehicleJsonLd(vehicle)} />
       <JsonLd data={faqJsonLd(vehicle.faqs)} />
@@ -180,155 +183,137 @@ export default async function VehiclePage({
         price={vehicle.price}
       />
 
-      <div className="relative mt-4 overflow-hidden bg-abyss">
-        <div className="relative min-h-[72svh] sm:min-h-[78svh] lg:min-h-[82svh]">
-          <VehicleGallery vehicle={vehicle} title={title} />
+      {/* 1 · The showroom: wordmark, photograph, identity strip. */}
+      <VehicleShowcase
+        images={vehicle.images ?? []}
+        title={title}
+        make={vehicle.make}
+        model={vehicle.model}
+        variant={vehicle.variant}
+        year={vehicle.year}
+        meta={`${mode === 'rental' ? 'Available for rental' : 'Available for purchase'} · ${
+          vehicle.condition === 'new' ? 'New' : 'Used'
+        } · ${vehicle.location.city}`}
+        priceLabel={priceLabel}
+        numbers={numbers}
+      />
 
-          <div
-            className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/90 via-black/15 to-transparent"
-            aria-hidden="true"
-          />
-
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 p-6 sm:p-10 lg:p-14">
-            <div className="max-w-5xl">
-              <p className="font-data text-[0.6875rem] uppercase tracking-[0.22em] text-white/65">
-                {mode === 'rental' ? 'Available for rental' : 'Available for purchase'}
-                <span className="mx-2 text-white/30">/</span>
-                {vehicle.condition === 'new' ? 'New' : 'Used'}
-                <span className="mx-2 text-white/30">/</span>
-                {vehicle.location.city}
-              </p>
-
-              <h1 className="mt-3 max-w-4xl font-display text-4xl font-semibold leading-[0.94] tracking-[-0.035em] text-white sm:text-6xl lg:text-8xl">
-                {title}
-              </h1>
-
-              <dl className="mt-6 flex flex-wrap gap-x-10 gap-y-4 text-white sm:gap-x-14">
-                {numbers.map((n) => (
-                  <div key={n.label}>
-                    <dd className="font-display text-[clamp(1.6rem,3.5vw,3rem)] leading-none tabular-nums">{n.value}</dd>
-                    <dt className="mt-1.5 font-data text-[0.7rem] uppercase tracking-[0.18em] text-white/60">{n.label}</dt>
-                  </div>
-                ))}
-              </dl>
-            </div>
-          </div>
+      {/* 2 · One short paragraph, the rest on request. */}
+      {description.lead && (
+        <div className="shell">
+          <Reveal variant="fade" className="max-w-measure pt-block">
+            <p className="eyebrow">About this vehicle</p>
+            <p className="mt-3 whitespace-pre-line text-lead text-chrome">{description.lead}</p>
+            {description.rest && (
+              <details className="group mt-3">
+                <summary className="inline-flex min-h-11 cursor-pointer list-none items-center gap-2 font-data text-eyebrow uppercase tracking-[0.12em] text-steel transition-colors hover:text-chrome marker:hidden">
+                  <span className="group-open:hidden">Read more</span>
+                  <span className="hidden group-open:inline">Read less</span>
+                  <ChevronDown aria-hidden="true" className="h-4 w-4 transition-transform duration-200 group-open:rotate-180" />
+                </summary>
+                <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-steel">{description.rest}</p>
+              </details>
+            )}
+          </Reveal>
         </div>
-      </div>
+      )}
 
+      {/* 3 · Cinematic spreads: interior, then details. */}
       <VehicleSpreads interior={spread.interior} detail={spread.detail} />
 
-      <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1.7fr)_minmax(0,0.8fr)]">
+      <div className="shell mt-block grid gap-10 lg:grid-cols-[minmax(0,1.7fr)_minmax(0,0.8fr)] lg:gap-12">
         <div>
-
-          <Reveal variant="fade">
-          <details id="full-details" className="group mt-12 border-y border-hairline">
-            <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between marker:hidden">
-              <span className="font-data text-eyebrow uppercase tracking-[0.12em] text-chrome">Full details</span>
-              <ChevronDown aria-hidden="true" className="h-4 w-4 text-steel-muted transition-transform duration-200 group-open:rotate-180" />
-            </summary>
-
-          {vehicle.spec_sheet_url && (
-            <a
-              href={vehicle.spec_sheet_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-2 inline-flex min-h-12 items-center gap-2 border border-chrome px-5 font-data text-eyebrow uppercase text-chrome transition-colors hover:bg-chrome hover:text-white"
+          {/* 4 · Specification as four compact groups. */}
+          <section aria-labelledby="specification">
+            <h2 id="specification" className="eyebrow">Specification</h2>
+            <Reveal
+              as="div"
+              variant="fade"
+              stagger={90}
+              className="mt-4 grid gap-px border border-hairline bg-hairline sm:grid-cols-2 xl:grid-cols-4"
             >
-              Download spec sheet (PDF) <span aria-hidden="true">↓</span>
-            </a>
-          )}
-
-          <section className="mt-8">
-            <h2 className="eyebrow">About this vehicle</h2>
-            <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-steel">
-              {vehicle.description}
-            </p>
-          </section>
-
-          <section className="mt-10">
-            <h2 className="eyebrow">Specification</h2>
-            {/* Native <details>/<summary> — same collapsible pattern already used for
-                FAQs below, rather than a bespoke accordion. Each group defaults open
-                (nothing here was hidden before; this only adds the option to collapse
-                a group you don't care about, e.g. Charging on a listing you're buying
-                for someone who'll only ever charge at home). */}
-            <div className="mt-4 divide-y divide-hairline border-t border-hairline">
               {specGroups.map((group) => (
-                <details key={group.label} className="group py-1">
-                  <summary className="flex cursor-pointer list-none items-center justify-between py-3 marker:hidden">
-                    <span className="font-display text-sm font-semibold tracking-tight text-chrome">
-                      {group.label}
-                    </span>
-                    <ChevronDown
-                      aria-hidden="true"
-                      className="h-4 w-4 text-steel-muted transition-transform duration-200 group-open:rotate-180"
-                    />
-                  </summary>
-                  <dl className="grid grid-cols-1 pb-3 sm:grid-cols-2">
+                <div key={group.label} className="bg-surface p-5">
+                  <h3 className="font-display text-sm font-semibold tracking-tight text-chrome">{group.label}</h3>
+                  <dl className="mt-3 space-y-2.5">
                     {group.specs.map((spec) => (
-                      <div
-                        key={spec.label}
-                        className="flex items-baseline justify-between gap-4 border-b border-hairline/60 py-3 sm:odd:pr-8 sm:even:pl-8"
-                      >
-                        <dt className="text-sm text-steel">{spec.label}</dt>
+                      <div key={spec.label} className="flex items-baseline justify-between gap-3">
+                        <dt className="text-xs text-steel">{spec.label}</dt>
                         <dd className="font-data text-sm tabular-nums text-chrome">{spec.value}</dd>
                       </div>
                     ))}
                   </dl>
-                </details>
+                </div>
               ))}
-            </div>
+            </Reveal>
           </section>
 
-          {vehicle.features.length > 0 && (
-            <section className="mt-10">
-              <h2 className="eyebrow">Features</h2>
-              <ul className="mt-4 grid grid-cols-1 gap-x-8 gap-y-2 sm:grid-cols-2">
-                {vehicle.features.map((feature) => (
-                  <li key={feature} className="border-b border-hairline/60 py-2 text-sm text-steel">
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-            </section>
-          )}
+          {/* 5 · Everything else, one disclosure. */}
+          <details id="full-details" className="group mt-10 border-y border-hairline">
+            <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between marker:hidden">
+              <span className="font-data text-eyebrow uppercase tracking-[0.12em] text-chrome">
+                More details
+                {vehicle.features.length > 0 ? ` · ${vehicle.features.length} features` : ''}
+                {vehicle.faqs.length > 0 ? ` · ${vehicle.faqs.length} questions` : ''}
+              </span>
+              <ChevronDown aria-hidden="true" className="h-4 w-4 text-steel-muted transition-transform duration-200 group-open:rotate-180" />
+            </summary>
 
-          {vehicle.faqs.length > 0 && (
-            <section className="mt-10">
-              <h2 className="eyebrow">Questions buyers ask</h2>
-              <div className="mt-4 divide-y divide-hairline/60 border-y border-hairline/60">
-                {vehicle.faqs.map((faq) => (
-                  <details key={faq.question} className="group py-4">
-                    <summary className="flex cursor-pointer list-none items-center justify-between gap-4 marker:hidden">
-                      <span className="font-display text-sm font-semibold tracking-tight">
-                        {faq.question}
-                      </span>
-                      <ChevronDown
-                        aria-hidden="true"
-                        className="h-4 w-4 shrink-0 text-steel-muted transition-transform duration-200 group-open:rotate-180"
-                      />
-                    </summary>
-                    <p className="mt-2 text-sm leading-relaxed text-steel">{faq.answer}</p>
-                  </details>
-                ))}
-              </div>
-            </section>
-          )}
-          <div className="h-8" />
+            {vehicle.spec_sheet_url && (
+              <a
+                href={vehicle.spec_sheet_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="vds-button vds-button-secondary mt-2"
+              >
+                Download spec sheet (PDF) <span aria-hidden="true">↓</span>
+              </a>
+            )}
+
+            {vehicle.features.length > 0 && (
+              <section className="mt-8">
+                <h2 className="eyebrow">Features</h2>
+                <ul className="mt-4 grid grid-cols-1 gap-x-8 gap-y-2 sm:grid-cols-2">
+                  {vehicle.features.map((feature) => (
+                    <li key={feature} className="border-b border-hairline/60 py-2 text-sm text-steel">
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+
+            {vehicle.faqs.length > 0 && (
+              <section className="mt-10">
+                <h2 className="eyebrow">Questions buyers ask</h2>
+                <div className="mt-4 divide-y divide-hairline/60 border-y border-hairline/60">
+                  {vehicle.faqs.map((faq) => (
+                    <details key={faq.question} className="group/faq py-4">
+                      <summary className="flex cursor-pointer list-none items-center justify-between gap-4 marker:hidden">
+                        <span className="font-display text-sm font-semibold tracking-tight">{faq.question}</span>
+                        <ChevronDown
+                          aria-hidden="true"
+                          className="h-4 w-4 shrink-0 text-steel-muted transition-transform duration-200 group-open/faq:rotate-180"
+                        />
+                      </summary>
+                      <p className="mt-2 text-sm leading-relaxed text-steel">{faq.answer}</p>
+                    </details>
+                  ))}
+                </div>
+              </section>
+            )}
+            <div className="h-8" />
           </details>
-          </Reveal>
         </div>
 
+        {/* 6 · Actions, sticky beside the content. */}
         <Reveal as="aside" variant="up" delay={120} className="lg:sticky lg:top-24 lg:self-start">
           <div className="border border-hairline p-6">
-            <p className="eyebrow">ELECTRIC + HYBRID</p>
+            <p className="eyebrow">Electric + hybrid</p>
             <p className="mt-2 text-xs uppercase tracking-[0.16em] text-steel-muted">
               {vehicle.condition === 'new' ? 'New' : 'Used'} · {vehicle.location.city}
             </p>
-            <h1 className="mt-2 font-display text-2xl font-semibold leading-tight tracking-tight">
-              {title}
-            </h1>
+            <p className="mt-2 font-display text-title font-semibold leading-tight tracking-tight">{title}</p>
 
             <div className="mt-5">
               <PriceDisplay
@@ -356,18 +341,11 @@ export default async function VehiclePage({
               </p>
             ) : (
               <>
-                {mode === 'sale' && (
-                  <div className="mt-6">
-                    {features.checkout && vehicle.purchase_enabled && (
-                      <Link
-                        href={`/order?vehicle=${encodeURIComponent(vehicle.slug)}`}
-                        className="flex min-h-12 w-full items-center justify-between bg-volt px-5 py-4 font-data text-eyebrow uppercase text-surface transition-colors hover:bg-volt-bright"
-                      >
-                        <span>Reserve this vehicle</span>
-                        <span aria-hidden="true">→</span>
-                      </Link>
-                    )}
-                  </div>
+                {mode === 'sale' && reserveHref && (
+                  <Link href={reserveHref} className="vds-button vds-button-primary vds-button-lg mt-6 w-full justify-between">
+                    <span>Reserve this vehicle</span>
+                    <span aria-hidden="true">→</span>
+                  </Link>
                 )}
 
                 {mode === 'rental' &&
@@ -383,31 +361,18 @@ export default async function VehiclePage({
                   </div>
                 ) : null}
 
-                <div className="mt-4 grid gap-2">
-                  {mode === 'sale' && vehicle.test_drive_available && (
-                    <Link
-                      href={`/test-drive?vehicle=${vehicle.id}`}
-                      className="flex items-center justify-center border border-chrome px-5 py-3 font-data text-eyebrow uppercase transition-colors hover:bg-chrome hover:text-surface"
-                    >
-                      Demo drive
+                <div className="mt-3 grid gap-2">
+                  {demoDriveHref && (
+                    <Link href={demoDriveHref} className="vds-button vds-button-secondary w-full">
+                      Book a test drive
                     </Link>
                   )}
-
                   {whatsappHref && (
-                    <a
-                      href={whatsappHref}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex min-h-12 items-center justify-center border border-hairline px-5 py-3 font-data text-eyebrow uppercase text-chrome transition-colors hover:border-chrome"
-                    >
+                    <a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="vds-button vds-button-ghost w-full">
                       WhatsApp the seller
                     </a>
                   )}
-
-                  <Link
-                    href={`/cars/${vehicle.slug}/enquire`}
-                    className="flex min-h-12 items-center justify-center border border-hairline px-5 py-3 font-data text-eyebrow uppercase text-steel transition-colors hover:border-chrome hover:text-chrome"
-                  >
+                  <Link href={`/cars/${vehicle.slug}/enquire`} className="vds-button vds-button-ghost w-full">
                     Ask for more details
                   </Link>
                 </div>
@@ -417,11 +382,7 @@ export default async function VehiclePage({
             {/* Available regardless of sold status — comparing against a sold listing's
                 specs is still useful context, even though it can't be the thing you buy. */}
             <div className="mt-2">
-              <CompareToggleButton
-                vehicleId={vehicle.id}
-                mode={mode}
-                variant="button"
-              />
+              <CompareToggleButton vehicleId={vehicle.id} mode={mode} variant="button" />
             </div>
 
             <div className="mt-5 grid grid-cols-3 border-y border-hairline/60 py-4">
@@ -443,10 +404,7 @@ export default async function VehiclePage({
               <p className="eyebrow">Listed by</p>
               <p className="mt-2 text-sm font-medium">
                 {vehicle.seller.slug ? (
-                  <Link
-                    href={`/dealers/${vehicle.seller.slug}`}
-                    className="hover:text-volt hover:underline"
-                  >
+                  <Link href={`/dealers/${vehicle.seller.slug}`} className="hover:text-volt-deep hover:underline">
                     {vehicle.seller.display_name}
                   </Link>
                 ) : (
@@ -461,7 +419,7 @@ export default async function VehiclePage({
             {vehicle.financing_available && (
               <Link
                 href={`/finance?vehicle=${encodeURIComponent(vehicle.slug)}`}
-                className="mt-5 flex min-h-12 items-center justify-between bg-volt-wash px-4 font-data text-eyebrow uppercase tracking-[0.1em] text-white transition-colors hover:bg-volt-deep"
+                className="vds-button vds-button-secondary mt-5 w-full justify-between"
               >
                 Finance this vehicle <span aria-hidden="true">→</span>
               </Link>
@@ -471,25 +429,23 @@ export default async function VehiclePage({
       </div>
 
       {available && (
-          <PinnedVehicleCta
-            priceLabel={priceLabelFor(vehicle.price, vehicle.rental_price_per_day, mode)}
-            demoDriveHref={demoDriveHref}
-            primary={
-              mode === 'rental'
-                ? { label: 'Reserve', href: '#rental-details' }
-                : reserveHref
-                  ? { label: 'Reserve', href: reserveHref }
-                  : { label: 'Enquire', href: `/cars/${vehicle.slug}/enquire` }
-            }
-            whatsappHref={whatsappHref}
-          />
-        )}
+        <PinnedVehicleCta
+          priceLabel={priceLabel}
+          demoDriveHref={demoDriveHref}
+          primary={
+            mode === 'rental'
+              ? { label: 'Reserve', href: '#rental-details' }
+              : reserveHref
+                ? { label: 'Reserve', href: reserveHref }
+                : { label: 'Enquire', href: `/cars/${vehicle.slug}/enquire` }
+          }
+          whatsappHref={whatsappHref}
+        />
+      )}
 
       {similar.length > 0 && (
-        <section className="mt-20">
-          <h2 className="section-heading">
-            More electric + hybrid cars
-          </h2>
+        <section className="shell mt-section">
+          <h2 className="section-heading">More electric + hybrid cars</h2>
           <Reveal stagger={110} className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {similar.slice(0, 3).map((item) => (
               <div key={item.id}><VehicleCard vehicle={item} mode={mode} /></div>
