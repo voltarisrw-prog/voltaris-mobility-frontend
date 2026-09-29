@@ -55,21 +55,14 @@ export default function VoltarisScrollMotion() {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
+          if (!entry.isIntersecting) return; // never re-hide
           const el = entry.target as HTMLElement;
-
-          if (entry.isIntersecting) {
-            el.classList.add("voltaris-motion-visible");
-            el.classList.remove("voltaris-motion-hidden");
-          } else {
-            el.classList.remove("voltaris-motion-visible");
-            el.classList.add("voltaris-motion-hidden");
-          }
+          el.classList.add("voltaris-motion-visible");
+          el.classList.remove("voltaris-motion-hidden");
+          observer.unobserve(el); // reveal once
         });
       },
-      {
-        threshold: 0.08,
-        rootMargin: "-8% 0px -8% 0px",
-      }
+      { threshold: 0, rootMargin: "0px 0px -5% 0px" }
     );
 
     document
