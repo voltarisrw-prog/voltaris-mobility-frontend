@@ -130,6 +130,8 @@ export function SiteHeader() {
   }, []);
 
   const headerHeight = compact ? 'h-14 lg:h-16' : 'h-16 lg:h-[4.75rem]';
+  // Over the home hero the bar is transparent with white type until scrolled.
+  const onHero = isHome && !compact;
 
   return (
     <header
@@ -137,9 +139,7 @@ export function SiteHeader() {
       className={cn(
         'z-40 border-b border-hairline/80 transition-[background-color,box-shadow,border-color] duration-300 ease-out',
         isHome ? 'fixed inset-x-0 top-0' : 'sticky top-0',
-        compact
-          ? 'bg-surface'
-          : 'bg-surface',
+        onHero ? 'border-transparent bg-transparent' : 'bg-surface',
       )}
       onBlur={(e) => {
         // Focus left the header entirely (keyboard users tabbing past): close panels.
@@ -160,7 +160,9 @@ export function SiteHeader() {
           aria-label="Voltaris Mobility, home"
           className="inline-flex min-h-11 w-fit items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volt focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
         >
-          <VoltarisLogo className={cn('transition-[height] duration-300 ease-out', compact ? 'h-6 lg:h-7' : 'h-7 lg:h-8')} />
+          <span className={cn(onHero && 'logo-on-dark')}>
+            <VoltarisLogo className={cn('transition-[height] duration-300 ease-out', compact ? 'h-6 lg:h-7' : 'h-7 lg:h-8')} />
+          </span>
         </Link>
 
         {/* Desktop nav, centred */}
@@ -177,7 +179,7 @@ export function SiteHeader() {
                       aria-current={active ? 'page' : undefined}
                       className={cn(
                         'group relative inline-flex h-10 items-center gap-1.5 px-3 font-data text-[0.8125rem] font-medium uppercase tracking-[0.1em] transition-colors duration-150',
-                        active ? 'text-chrome' : 'text-steel hover:text-chrome',
+                        onHero ? (active ? 'text-white' : 'text-white/80 hover:text-white') : active ? 'text-chrome' : 'text-steel hover:text-chrome',
                       )}
                     >
                       {entry.label}
@@ -189,7 +191,8 @@ export function SiteHeader() {
                       <span
                         aria-hidden="true"
                         className={cn(
-                          'absolute inset-x-3 bottom-1 h-px origin-left bg-volt transition-transform duration-300 ease-out',
+                          'absolute inset-x-3 bottom-1 h-px origin-left transition-transform duration-300 ease-out',
+                          onHero ? 'bg-white' : 'bg-volt',
                           active ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100',
                         )}
                       />
@@ -202,6 +205,7 @@ export function SiteHeader() {
                   key={entry.label}
                   group={entry}
                   active={active}
+                  onHero={onHero}
                   open={openGroup === entry.label}
                   onOpen={() => {
                     clearHover();
@@ -224,7 +228,7 @@ export function SiteHeader() {
           <Link
             href="/account"
             aria-label="Your account"
-            className="inline-flex h-11 w-11 items-center justify-center rounded-full text-steel transition-colors hover:bg-slab hover:text-chrome focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volt"
+            className={cn('inline-flex h-11 w-11 items-center justify-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volt', onHero ? 'text-white hover:bg-white/10' : 'text-steel hover:bg-slab hover:text-chrome')}
           >
             <User className="h-[19px] w-[19px]" strokeWidth={1.75} aria-hidden="true" />
           </Link>
@@ -235,7 +239,7 @@ export function SiteHeader() {
             aria-expanded={sheetOpen}
             aria-controls="site-menu"
             onClick={() => setSheetOpen(true)}
-            className="inline-flex h-11 w-11 items-center justify-center rounded-full text-chrome transition-colors hover:bg-slab focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volt lg:hidden"
+            className={cn('inline-flex h-11 w-11 items-center justify-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volt lg:hidden', onHero ? 'text-white hover:bg-white/10' : 'text-chrome hover:bg-slab')}
           >
             <Menu className="h-[22px] w-[22px]" strokeWidth={1.75} aria-hidden="true" />
           </button>
@@ -369,6 +373,7 @@ export function SiteHeader() {
 function DesktopGroup({
   group,
   active,
+  onHero,
   open,
   onOpen,
   onToggle,
@@ -377,6 +382,7 @@ function DesktopGroup({
 }: {
   group: NavGroup;
   active: boolean;
+  onHero: boolean;
   open: boolean;
   onOpen: () => void;
   onToggle: () => void;
@@ -405,18 +411,19 @@ function DesktopGroup({
         }}
         className={cn(
           'group relative inline-flex h-10 items-center gap-1 px-3 font-data text-[0.8125rem] font-medium uppercase tracking-[0.1em] transition-colors duration-150',
-          active || open ? 'text-chrome' : 'text-steel hover:text-chrome',
+          onHero ? (active || open ? 'text-white' : 'text-white/80 hover:text-white') : active || open ? 'text-chrome' : 'text-steel hover:text-chrome',
         )}
       >
         {group.label}
         <ChevronDown
-          className={cn('h-3.5 w-3.5 text-steel-muted transition-transform duration-300 ease-out', open && 'rotate-180 text-chrome')}
+          className={cn('h-3.5 w-3.5 transition-transform duration-300 ease-out', onHero ? 'text-white/70' : 'text-steel-muted', open && (onHero ? 'rotate-180 text-white' : 'rotate-180 text-chrome'))}
           aria-hidden="true"
         />
         <span
           aria-hidden="true"
           className={cn(
-            'absolute inset-x-3 bottom-1 h-px origin-left bg-volt transition-transform duration-300 ease-out',
+            'absolute inset-x-3 bottom-1 h-px origin-left transition-transform duration-300 ease-out',
+            onHero ? 'bg-white' : 'bg-volt',
             active ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100',
           )}
         />

@@ -61,7 +61,7 @@ function FooterLink({
   return (
     <Link
       href={href}
-      className="group flex min-h-9 items-center gap-2 py-1 font-display text-[0.95rem] font-medium tracking-[-0.02em] text-black/55 transition-colors duration-200 hover:text-chrome focus-visible:text-[color:var(--vds-brand-secondary)] focus-visible:outline-none sm:text-base"
+      className="group flex min-h-9 items-center gap-2 py-1 font-display text-[0.95rem] font-medium tracking-[-0.02em] text-white/85 transition-colors duration-200 hover:!text-white focus-visible:text-[color:var(--vds-brand-secondary)] focus-visible:outline-none sm:text-base"
     >
       <span>{label}</span>
 
@@ -77,7 +77,7 @@ export function SiteFooter() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="mx-3 my-4 overflow-hidden bg-volt font-sans font-bold text-black sm:mx-5 sm:my-6 lg:mx-8 lg:my-8 border border-black/5 [&_a]:!text-black [&_a]:font-bold [&_p]:!text-black [&_p]:font-bold [&_span]:!text-black [&_span]:font-bold [&_h1]:!text-black [&_h2]:!text-black [&_h3]:!text-black [&_h4]:!text-black [&_h5]:!text-black [&_h6]:!text-black [&_svg]:!text-black [&_border-white\/10]:border-black/15 [&_border-white\/20]:border-black/15 [&_border-white\/25]:border-black/20">
+    <footer className="mx-3 my-4 overflow-hidden bg-chrome font-sans text-white sm:mx-5 sm:my-6 lg:mx-8 lg:my-8 [&_a]:!text-white [&_p]:!text-white/70 [&_span]:!text-white/70 [&_h2]:!text-white/60 [&_svg]:!text-white">
 
       {/* =========================================================
           COMPACT FOOTER
@@ -96,7 +96,7 @@ export function SiteFooter() {
             <Link
               href="/"
               aria-label="Voltaris Mobility home"
-              className="inline-flex text-chrome transition-opacity duration-200 hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-volt"
+              className="logo-on-dark inline-flex transition-opacity duration-200 hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-volt"
             >
               <VoltarisLogo className="h-8 sm:h-9" />
             </Link>
@@ -124,7 +124,7 @@ export function SiteFooter() {
           <nav aria-label="Footer navigation">
 
               {/* MOBILE — COMPACT EXPANDABLE NAVIGATION */}
-              <div className="sm:hidden divide-y divide-[color:var(--vds-border)] border-y border-[color:var(--vds-border)]">
+              <div className="sm:hidden divide-y divide-white/15 border-y border-white/15">
 
                 {footerGroups.map((group) => (
                   <details key={group.heading} className="group">
@@ -187,7 +187,7 @@ export function SiteFooter() {
             ACCREDITATION + LEGAL
         ======================================================== */}
 
-        <div className="mt-7 border-t border-[color:var(--vds-border)] pt-4 sm:mt-14 sm:pt-6">
+        <div className="mt-7 border-t border-white/15 pt-4 sm:mt-14 sm:pt-6">
 
           <div className="flex flex-col gap-3 text-[0.52rem] uppercase tracking-[0.1em] text-steel-muted lg:flex-row lg:items-center lg:justify-between lg:gap-8">
 
@@ -206,14 +206,14 @@ export function SiteFooter() {
 
               <Link
                 href="/legal/privacy"
-                className="transition-colors hover:text-chrome focus-visible:text-[color:var(--vds-brand-secondary)] focus-visible:outline-none"
+                className="transition-colors hover:!text-white focus-visible:!text-white focus-visible:outline-none"
               >
                 Privacy
               </Link>
 
               <Link
                 href="/legal/terms"
-                className="transition-colors hover:text-chrome focus-visible:text-[color:var(--vds-brand-secondary)] focus-visible:outline-none"
+                className="transition-colors hover:!text-white focus-visible:!text-white focus-visible:outline-none"
               >
                 Terms
               </Link>

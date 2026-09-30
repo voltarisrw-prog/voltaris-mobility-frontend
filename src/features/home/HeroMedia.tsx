@@ -110,11 +110,14 @@ export function HeroMedia() {
           fill
           priority={index === 0}
           sizes="100vw"
-          className={`object-cover object-center transition-opacity duration-[1400ms] ease-in-out ${
+          className={`object-cover object-[50%_28%] transition-opacity duration-[1400ms] ease-in-out ${
             index === activeImage ? 'opacity-100' : 'opacity-0'
           }`}
         />
       ))}
+
+      {/* Scrim: the photograph stays, the type becomes readable on every frame. */}
+      <div className="hero-scrim absolute inset-0 bg-[linear-gradient(to_bottom,rgba(0,0,0,.55)_0%,rgba(0,0,0,.18)_32%,rgba(0,0,0,.28)_60%,rgba(0,0,0,.78)_100%)]" />
 
       {enabled && (
         <video

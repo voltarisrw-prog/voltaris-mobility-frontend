@@ -59,7 +59,7 @@ export default async function HomePage() {
       {/* 01 — HERO ------------------------------------------------------- */}
       <section className="relative isolate overflow-hidden">
         <HeroMedia />
-        <div className="shell relative flex min-h-[clamp(40rem,88svh,56rem)] flex-col items-center justify-end py-10 pb-16 pt-24 text-center sm:py-16 sm:pb-20 sm:pt-28 lg:pb-24">
+        <div className="hero-type shell relative flex min-h-[clamp(34rem,92svh,56rem)] flex-col items-center justify-end py-10 pb-16 pt-24 text-center sm:py-16 sm:pb-20 sm:pt-28 lg:pb-24">
           <div className="w-full max-w-[48rem] animate-rise-in pb-4 sm:max-w-[52rem] sm:pb-6 lg:max-w-5xl">
             <p className="mb-5 font-sans text-lg font-bold tracking-[0.02em] text-white sm:mb-6 sm:text-xl">
               {hero.eyebrow}
@@ -74,7 +74,7 @@ export default async function HomePage() {
             <div className="mx-auto mt-8 flex w-full max-w-[22rem] flex-col items-stretch justify-center gap-3 sm:mt-9 sm:w-auto sm:max-w-none sm:flex-row sm:items-center">
               <Link
                 href={hero.primaryCta.href}
-                className="group inline-flex min-h-12 items-center justify-center gap-3 bg-volt px-5 py-3.5 font-data text-eyebrow font-bold uppercase tracking-[0.08em] text-white transition-all duration-300 hover:bg-[color:var(--vds-brand-secondary)] sm:px-7 sm:py-4"
+                className="group inline-flex min-h-[3.25rem] items-center justify-center gap-3 border border-white bg-white px-6 py-3.5 font-data text-eyebrow font-semibold uppercase tracking-[0.08em] text-chrome transition-colors duration-300 hover:bg-white/90 sm:px-8 sm:py-4"
               >
                 {hero.primaryCta.label}
                 <ArrowRight
@@ -85,7 +85,7 @@ export default async function HomePage() {
 
               <Link
                 href={hero.secondaryCta.href}
-                className="inline-flex min-h-12 items-center justify-center border border-white/40 px-5 py-3.5 font-data text-eyebrow font-bold uppercase tracking-[0.08em] text-white transition-all duration-300 hover:border-white hover:bg-white/15 hover:text-white sm:px-7 sm:py-4"
+                className="inline-flex min-h-[3.25rem] items-center justify-center border border-white bg-black/20 px-6 py-3.5 font-data text-eyebrow font-semibold uppercase tracking-[0.08em] text-white backdrop-blur-sm transition-colors duration-300 hover:bg-white hover:text-chrome sm:px-8 sm:py-4"
               >
                 {hero.secondaryCta.label}
               </Link>
