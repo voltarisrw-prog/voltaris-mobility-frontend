@@ -1,16 +1,9 @@
 import Link from 'next/link';
-import { notFound, redirect } from 'next/navigation';
-import { STAFF_ROLES, getSession } from '@/lib/api/auth';
-import { ApiError } from '@/lib/api/errors';
+import { notFound } from 'next/navigation';
 import { SignOutButton } from '@/features/auth/SignOutButton';
-
-const NAV = [
-  { href: '/admin', label: 'Dashboard' },
-  { href: '/admin/vehicles', label: 'Vehicles' },
-  { href: '/admin/leads', label: 'Leads' },
-  { href: '/admin/audit', label: 'Audit log' },
-];
-
+import { MfaPanel } from '@/features/auth/MfaPanel';
+import { currentSession } from '@/lib/access/server';
+import { visibleSections } from '@/lib/access/sections';
 /**
  * Never prerendered. Every page in this segment is per-viewer: it reads the
  * session cookie and returns that person's data.
@@ -27,46 +20,64 @@ const NAV = [
 export const dynamic = 'force-dynamic';
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  let session;
-  try {
-    session = await getSession();
-  } catch (cause) {
-    if (cause instanceof ApiError && cause.isUnauthorized) redirect('/login?next=/admin');
-    throw cause;
-  }
+  const session = await currentSession('/admin');
+  const user = session.user;
 
-  const isStaff = session.user.roles.some((role) => STAFF_ROLES.includes(role));
   // 404 rather than 403: a signed-in customer should not learn that /admin exists.
   // This hides the surface. It does not protect it — every /admin API call is
   // authorized by the backend against the session, independently of this check.
-  if (!isStaff) notFound();
+  if (!user.mfa_required) notFound();
+
+  const header = (
+    <header className="flex flex-wrap items-center justify-between gap-4 border-b border-chrome pb-4">
+      <div className="flex items-baseline gap-4">
+        <span className="font-display text-lg font-bold tracking-tight">Voltaris admin</span>
+        <span className="font-data text-eyebrow uppercase text-steel-muted">{user.email}</span>
+      </div>
+      <div className="flex items-center gap-6">
+        <Link href="/" className="font-data text-eyebrow uppercase text-steel hover:text-chrome">
+          View site
+        </Link>
+        <Link
+          href="/account"
+          prefetch={false}
+          className="font-data text-eyebrow uppercase text-steel hover:text-chrome"
+        >
+          My account
+        </Link>
+        <SignOutButton />
+      </div>
+    </header>
+  );
+
+  // Staff powers only apply after an authenticator code in this session.
+  if (!user.mfa_verified) {
+    return (
+      <div className="shell py-8">
+        {header}
+        <div className="mt-10">
+          <MfaPanel
+            mode={user.mfa_enabled ? 'verify' : 'setup'}
+            needsSetupCode
+            intro={
+              user.mfa_enabled
+                ? 'Staff tools need your authenticator code once every 12 hours.'
+                : 'Every Voltaris staff account uses two-step sign-in. Enter the setup code your Super Administrator gave you, then scan the QR code with your authenticator app.'
+            }
+          />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="shell py-8">
-      <header className="flex flex-wrap items-center justify-between gap-4 border-b border-chrome pb-4">
-        <div className="flex items-baseline gap-4">
-          <span className="font-display text-lg font-bold tracking-tight">Voltaris admin</span>
-          <span className="font-data text-eyebrow uppercase text-steel-muted">
-            {session.user.email}
-          </span>
-        </div>
-        <div className="flex items-center gap-6">
-          <Link href="/" className="font-data text-eyebrow uppercase text-steel hover:text-chrome">
-            View site
-          </Link>
-          <Link
-            href="/account"
-            prefetch={false}
-            className="font-data text-eyebrow uppercase text-steel hover:text-chrome"
-          >
-            My account
-          </Link>
-          <SignOutButton />
-        </div>
-      </header>
-
-      <nav aria-label="Admin" className="mt-4 flex flex-wrap gap-5 border-b border-hairline/60 pb-4">
-        {NAV.map((item) => (
+      {header}
+      <nav
+        aria-label="Admin"
+        className="mt-4 flex flex-wrap gap-5 border-b border-hairline/60 pb-4"
+      >
+        {visibleSections(user.permissions).map((item) => (
           <Link
             key={item.href}
             href={item.href}

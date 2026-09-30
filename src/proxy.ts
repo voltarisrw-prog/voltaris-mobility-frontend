@@ -10,7 +10,7 @@ import { NextResponse, type NextRequest } from 'next/server';
  *
  * Forging the cookie gets you an empty page and a run of 401s. Nothing more.
  */
-const PROTECTED = ['/account', '/checkout', '/admin'];
+const PROTECTED = ['/account', '/checkout', '/admin', '/business'];
 const SESSION_COOKIE = 'voltaris_session';
 
 export default function proxy(request: NextRequest) {
@@ -31,5 +31,5 @@ export default function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/account/:path*', '/checkout/:path*', '/admin/:path*'],
+  matcher: ['/account/:path*', '/checkout/:path*', '/admin/:path*', '/business/:path*'],
 };

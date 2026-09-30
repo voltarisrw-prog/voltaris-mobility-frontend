@@ -9,11 +9,17 @@ import { displayMessage } from '@/lib/api/errors';
 import { formatPrice } from '@/lib/format';
 
 /**
- * Approve and reject buttons are shown to anyone who reached this page. They are not
- * a permission check — the backend rejects the PATCH from an account that lacks the
- * right, and this table surfaces that rejection as an error.
+ * Approve / reject / unpublish buttons appear only for people who may moderate.
+ * That is ergonomics, not security — the backend rejects the PATCH from anyone
+ * without `listings.moderate`, and this table surfaces that rejection as an error.
  */
-export function VehicleReviewTable({ rows }: { rows: AdminVehicleRow[] }) {
+export function VehicleReviewTable({
+  rows,
+  canModerate = false,
+}: {
+  rows: AdminVehicleRow[];
+  canModerate?: boolean;
+}) {
   const router = useRouter();
   const toast = useToast();
   const [busy, setBusy] = useState<string | null>(null);
@@ -66,7 +72,9 @@ export function VehicleReviewTable({ rows }: { rows: AdminVehicleRow[] }) {
         </span>
       ),
     },
-    {
+  ];
+  if (canModerate) {
+    columns.push({
       key: 'actions',
       header: 'Actions',
       align: 'right',
@@ -103,8 +111,8 @@ export function VehicleReviewTable({ rows }: { rows: AdminVehicleRow[] }) {
           )}
         </div>
       ),
-    },
-  ];
+    });
+  }
 
   return (
     <DataTable

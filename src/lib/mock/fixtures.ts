@@ -1180,9 +1180,10 @@ export const DEMO_USER: PublicUser = {
   id: 'demo-user-1',
   full_name: 'Aline Uwase',
   email: 'demo@voltaris.rw',
-  roles: ['BUYER'],
+  roles: ['CUSTOMER'],
   email_verified: true,
   mfa_enabled: false,
+  permissions: ['account.own'],
 };
 
 /**

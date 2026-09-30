@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { STAFF_ROLES, getSession } from '@/lib/api/auth';
+import { getSession } from '@/lib/api/auth';
 import { ApiError } from '@/lib/api/errors';
 import { SignOutButton } from '@/features/auth/SignOutButton';
 
@@ -12,6 +12,7 @@ const NAV = [
   { href: '/account/test-drives', label: 'Test drives' },
   { href: '/account/orders', label: 'Orders' },
   { href: '/account/notifications', label: 'Notifications' },
+  { href: '/account/security', label: 'Security' },
 ];
 
 /**
@@ -48,7 +49,12 @@ export default async function AccountLayout({ children }: { children: React.Reac
           <h1 className="mt-2 font-display text-headline">{session.user.full_name}</h1>
         </div>
         <div className="flex items-center gap-6">
-          {session.user.roles.some((role) => STAFF_ROLES.includes(role)) && (
+          {(session.memberships ?? []).length > 0 && (
+            <Link href="/business" prefetch={false} className="vds-button vds-button-secondary">
+              Company console
+            </Link>
+          )}
+          {session.user.mfa_required && (
             <Link href="/admin" prefetch={false} className="vds-button vds-button-primary">
               Admin dashboard
             </Link>

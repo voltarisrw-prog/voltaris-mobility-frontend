@@ -50,9 +50,11 @@ export function LoginForm() {
       // Deliberately the same message for a wrong password and an unknown email —
       // distinguishing them turns the login form into an account enumeration oracle.
       setFormError(
-        cause instanceof ApiError && cause.status === 401
-          ? 'That email and password combination did not work.'
-          : displayMessage(cause),
+        cause instanceof ApiError && cause.code === 'MFA_INVALID'
+          ? cause.message
+          : cause instanceof ApiError && cause.status === 401
+            ? 'That email and password combination did not work.'
+            : displayMessage(cause),
       );
     }
   });

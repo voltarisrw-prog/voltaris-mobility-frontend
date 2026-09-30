@@ -1,10 +1,40 @@
 import Link from 'next/link';
-import { getAdminMetrics } from '@/lib/api/admin';
+import { getAdminMetrics, getMyAccess } from '@/lib/api/admin';
+import { can } from '@/lib/api/auth';
+import { requirePermission } from '@/lib/access/server';
+import { DASHBOARD_PERMISSIONS } from '@/lib/access/sections';
 import { formatPrice } from '@/lib/format';
 
 export const dynamic = 'force-dynamic';
 
-export default async function AdminDashboard() {
+export default async function AdminOverview() {
+  const session = await requirePermission('/admin');
+  if (!session) return null;
+  const access = await getMyAccess();
+  return (
+    <>
+      {can(session.user, ...DASHBOARD_PERMISSIONS) && <Dashboard />}
+      <section className={can(session.user, ...DASHBOARD_PERMISSIONS) ? 'mt-16' : ''}>
+        <p className="eyebrow">Your access</p>
+        <h2 className="mt-2 font-display text-headline">
+          {access.roles.map((r) => r.label).join(' · ')}
+        </h2>
+        <p className="mt-2 text-sm text-steel">
+          What your role lets you do on Voltaris. Sections you can open are in the menu above.
+        </p>
+        <ul className="mt-6 grid gap-px border border-hairline bg-hairline sm:grid-cols-2">
+          {access.permissions.map((p) => (
+            <li key={p.key} className="panel px-5 py-4 text-sm">
+              {p.description}
+            </li>
+          ))}
+        </ul>
+      </section>
+    </>
+  );
+}
+
+async function Dashboard() {
   const metrics = await getAdminMetrics();
 
   const cards = [

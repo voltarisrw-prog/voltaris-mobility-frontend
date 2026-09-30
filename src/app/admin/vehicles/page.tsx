@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { VehicleReviewTable } from '@/features/admin/VehicleReviewTable';
 import { listAdminVehicles } from '@/lib/api/admin';
+import { can } from '@/lib/api/auth';
+import { requirePermission } from '@/lib/access/server';
 
 export const dynamic = 'force-dynamic';
 
@@ -16,6 +18,8 @@ export default async function AdminVehiclesPage({
 }: {
   searchParams: Promise<{ status?: string }>;
 }) {
+  const session = await requirePermission('/admin/vehicles', 'listings.read_all');
+  if (!session) return null;
   const { status } = await searchParams;
   const result = await listAdminVehicles(status ? { status } : {});
 
@@ -50,7 +54,10 @@ export default async function AdminVehiclesPage({
       </nav>
 
       <div className="mt-8">
-        <VehicleReviewTable rows={result.items} />
+        <VehicleReviewTable
+          rows={result.items}
+          canModerate={can(session.user, 'listings.moderate')}
+        />
       </div>
     </section>
   );

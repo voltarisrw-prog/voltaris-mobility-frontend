@@ -1,9 +1,12 @@
 import { DataTableServer } from '@/features/admin/DataTableServer';
 import { listAdminLeads } from '@/lib/api/admin';
 
+import { requirePermission } from '@/lib/access/server';
+
 export const dynamic = 'force-dynamic';
 
 export default async function AdminLeadsPage() {
+  if (!(await requirePermission('/admin/leads', 'leads.read_all'))) return null;
   const result = await listAdminLeads();
   return (
     <section>

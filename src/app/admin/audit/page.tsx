@@ -1,9 +1,12 @@
 import { DataTableServer } from '@/features/admin/DataTableServer';
 import { listAuditLogs } from '@/lib/api/admin';
 
+import { requirePermission } from '@/lib/access/server';
+
 export const dynamic = 'force-dynamic';
 
 export default async function AdminAuditPage() {
+  if (!(await requirePermission('/admin/audit', 'audit.read'))) return null;
   const result = await listAuditLogs();
   return (
     <section>
