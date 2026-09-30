@@ -44,7 +44,7 @@ export default function HelpPage() {
               {section.faqs.map((faq, index) => (
                 <details
                   key={faq.q}
-                  className="group relative overflow-hidden border border-black/10 rounded-[2rem] bg-white p-6 shadow-[0_18px_50px_rgba(0,0,0,0.12)] transition-all duration-500 hover:-translate-y-1 hover:border-black/20 sm:p-7"
+                  className="group relative overflow-hidden border border-black/10 bg-white p-6 transition-all duration-500 hover:border-black/20 sm:p-7"
                 >
                   <summary className="cursor-pointer list-none">
                     <div className="flex items-start justify-between gap-5">
@@ -74,7 +74,7 @@ export default function HelpPage() {
         ))}
       </div>
 
-      <div className="group relative mt-16 overflow-hidden border border-black/10 rounded-[2rem] bg-white p-7 shadow-[0_18px_50px_rgba(0,0,0,0.12)] transition-all duration-500 hover:border-black/20 sm:p-9 lg:p-10">
+      <div className="group relative mt-16 overflow-hidden border border-black/10 bg-white p-7 transition-all duration-500 hover:border-black/20 sm:p-9 lg:p-10">
         <div className="flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="font-data text-[9px] uppercase tracking-[0.18em] text-volt">

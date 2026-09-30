@@ -46,7 +46,7 @@ export default function TrustPage() {
         {trust.checks.map((check, index) => (
           <li
             key={check.title}
-            className="group relative min-h-[240px] overflow-hidden border border-black/10 rounded-[2rem] bg-white p-7 shadow-[0_18px_50px_rgba(0,0,0,0.12)] transition-all duration-500 hover:-translate-y-1 hover:border-black/20 sm:p-8"
+            className="group relative min-h-[240px] overflow-hidden border border-black/10 bg-white p-7 transition-all duration-500 hover:border-black/20 sm:p-8"
           >
             <div className="flex items-start justify-between gap-6">
               <span className="font-data text-[9px] uppercase tracking-[0.18em] text-volt">
@@ -74,7 +74,7 @@ export default function TrustPage() {
       </ol>
 
       <div className="mt-14 grid gap-4 lg:grid-cols-2">
-        <section className="group relative overflow-hidden border border-volt/25 bg-volt-wash p-7 shadow-[0_18px_50px_rgba(0,0,0,0.12)] transition-all duration-500 hover:-translate-y-1 hover:border-volt/40 sm:p-8">
+        <section className="group relative overflow-hidden border border-volt/25 bg-volt-wash p-7 transition-all duration-500 hover:border-volt/40 sm:p-8">
           <div className="flex items-start justify-between gap-6">
             <p className="font-data text-[9px] uppercase tracking-[0.18em] text-volt">
               Verified mark
@@ -97,7 +97,7 @@ export default function TrustPage() {
         </section>
 
         {/* Stating the limits is what makes the claims above credible. */}
-        <section className="group relative overflow-hidden border border-black/10 rounded-[2rem] bg-white p-7 shadow-[0_18px_50px_rgba(0,0,0,0.12)] transition-all duration-500 hover:-translate-y-1 hover:border-black/20 sm:p-8">
+        <section className="group relative overflow-hidden border border-black/10 bg-white p-7 transition-all duration-500 hover:border-black/20 sm:p-8">
           <div className="flex items-start justify-between gap-6">
             <p className="font-data text-[9px] uppercase tracking-[0.18em] text-black/45">
               Important limits
@@ -120,7 +120,7 @@ export default function TrustPage() {
         </section>
       </div>
 
-      <section className="group relative mt-14 overflow-hidden border border-black/10 rounded-[2rem] bg-white p-7 shadow-[0_18px_50px_rgba(0,0,0,0.12)] transition-all duration-500 hover:border-black/20 sm:p-8 lg:p-9">
+      <section className="group relative mt-14 overflow-hidden border border-black/10 bg-white p-7 transition-all duration-500 hover:border-black/20 sm:p-8 lg:p-9">
         <p className="font-data text-[9px] uppercase tracking-[0.18em] text-volt">
           Report an issue
         </p>
@@ -151,7 +151,7 @@ export default function TrustPage() {
 
         <Link
           href="/how-it-works"
-          className="inline-flex w-fit items-center gap-3 border border-black/10 rounded-[2rem] bg-white px-6 py-3.5 font-data text-eyebrow uppercase text-black transition-all duration-300 hover:border-black/25 hover:bg-white/[0.025]"
+          className="inline-flex w-fit items-center gap-3 border border-black/10 bg-white px-6 py-3.5 font-data text-eyebrow uppercase text-black transition-all duration-300 hover:border-black/25 hover:bg-white/[0.025]"
         >
           How it works
           <span className="text-black/45">→</span>

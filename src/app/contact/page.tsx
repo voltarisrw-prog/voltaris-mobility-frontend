@@ -24,7 +24,7 @@ export default function ContactPage() {
           </p>
 
           <dl className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
-            <div className="border border-black/10 rounded-[2rem] bg-white p-6 shadow-[0_18px_50px_rgba(0,0,0,0.12)]">
+            <div className="border border-black/10 bg-white p-6">
               <dt className="font-data text-[9px] uppercase tracking-[0.18em] text-volt">
                 Email
               </dt>
@@ -35,21 +35,21 @@ export default function ContactPage() {
               </dd>
             </div>
 
-            <div className="border border-black/10 rounded-[2rem] bg-white p-6 shadow-[0_18px_50px_rgba(0,0,0,0.12)]">
+            <div className="border border-black/10 bg-white p-6">
               <dt className="font-data text-[9px] uppercase tracking-[0.18em] text-volt">
                 Phone
               </dt>
               <dd className="mt-4 text-sm text-black/65">{company.phone}</dd>
             </div>
 
-            <div className="border border-black/10 rounded-[2rem] bg-white p-6 shadow-[0_18px_50px_rgba(0,0,0,0.12)]">
+            <div className="border border-black/10 bg-white p-6">
               <dt className="font-data text-[9px] uppercase tracking-[0.18em] text-volt">
                 Where we are
               </dt>
               <dd className="mt-4 text-sm leading-6 text-black/65">{company.address}</dd>
             </div>
 
-            <div className="border border-black/10 rounded-[2rem] bg-white p-6 shadow-[0_18px_50px_rgba(0,0,0,0.12)]">
+            <div className="border border-black/10 bg-white p-6">
               <dt className="font-data text-[9px] uppercase tracking-[0.18em] text-volt">
                 Data and privacy
               </dt>
@@ -62,7 +62,7 @@ export default function ContactPage() {
           </dl>
         </header>
 
-        <div className="border border-black/10 rounded-[2rem] bg-white p-6 shadow-[0_18px_50px_rgba(0,0,0,0.12)] sm:p-8 lg:p-10">
+        <div className="border border-black/10 bg-white p-6 sm:p-8 lg:p-10">
           <div className="mb-8 border-b border-hairline pb-5">
             <p className="font-data text-[9px] uppercase tracking-[0.18em] text-volt">
               Send a message

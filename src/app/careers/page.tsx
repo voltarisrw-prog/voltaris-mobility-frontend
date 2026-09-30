@@ -18,7 +18,7 @@ export default function CareersPage() {
     <div className="shell py-10">
       <Breadcrumbs trail={[{ name: 'Home', path: '/' }, { name: 'Careers', path: '/careers' }]} />
 
-      <header className="relative mt-6 overflow-hidden rounded-[2.5rem] bg-black text-white lg:mt-8">
+      <header className="relative mt-6 overflow-hidden bg-black text-white lg:mt-8">
         <div className="absolute inset-0">
           <Image
             src="/demo/lifestyle/dealership-handshake.jpg"
@@ -34,7 +34,7 @@ export default function CareersPage() {
 
         <div className="relative flex min-h-[620px] flex-col justify-between p-7 sm:min-h-[680px] sm:p-10 lg:min-h-[700px] lg:p-14">
           <div className="flex items-start justify-between gap-6">
-            <div className="inline-flex rounded-2xl bg-white px-4 py-3">
+            <div className="inline-flex bg-white px-4 py-3">
               <Image
                 src="/brand/voltaris-logo-full.jpeg"
                 alt="Voltaris Mobility"
@@ -91,7 +91,7 @@ export default function CareersPage() {
             <Link
               key={job.slug}
               href={`/careers/${job.slug}`}
-              className="group relative overflow-hidden rounded-[2rem] bg-white p-7 text-black shadow-[0_18px_50px_rgba(0,0,0,0.10)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_24px_65px_rgba(0,0,0,0.16)] sm:p-8"
+              className="group relative overflow-hidden bg-white p-7 text-black transition-all duration-500 hover: sm:p-8"
             >
               <div className="flex items-start justify-between gap-6">
                 <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
@@ -135,7 +135,7 @@ export default function CareersPage() {
 
                 <span className="inline-flex items-center gap-2 font-data text-[9px] uppercase tracking-[0.16em] text-black transition-colors group-hover:text-volt">
                   View role
-                  <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" />
+                  <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1 group-" />
                 </span>
               </div>
 
@@ -145,10 +145,10 @@ export default function CareersPage() {
         </div>
       </section>
 
-      <section className="mt-8 overflow-hidden rounded-[2.5rem] bg-black text-white">
+      <section className="mt-8 overflow-hidden bg-black text-white">
         <div className="grid gap-10 p-7 sm:p-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.8fr)] lg:p-14">
           <div>
-            <div className="inline-flex rounded-2xl bg-white px-4 py-3">
+            <div className="inline-flex bg-white px-4 py-3">
               <Image
                 src="/brand/voltaris-logo-full.jpeg"
                 alt="Voltaris Mobility"
@@ -181,7 +181,7 @@ export default function CareersPage() {
                 Introduce yourself
               </span>
 
-              <ArrowUpRight className="h-6 w-6 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" />
+              <ArrowUpRight className="h-6 w-6 transition-transform duration-300 group-hover:translate-x-1 group-" />
             </a>
 
             <div className="border-t border-white/10 pt-5">

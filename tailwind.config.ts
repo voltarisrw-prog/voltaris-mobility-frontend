@@ -24,15 +24,17 @@ const config: Config = {
         slab: '#F2F2F2',
         hairline: '#E5E5E5',
         // Type and metal
-        chrome: '#0A0A0A',
-        steel: { DEFAULT: '#4A4A4A', muted: '#6B6B6B' },
+        chrome: '#111111',
+        steel: { DEFAULT: '#4A4A4A', muted: '#767676' },
         bronze: '#6B4A2B',
         // The single accent: the road light
+        // Monochrome system: the accent slots resolve to ink so every
+        // existing accent usage becomes black-on-white. The logo keeps its blue.
         volt: {
-          DEFAULT: '#5CC8FF',
-          bright: '#9EE4FF',
-          deep: '#0A63C4',
-          wash: '#0A1B2E',
+          DEFAULT: '#111111',
+          bright: '#2E2E2E',
+          deep: '#111111',
+          wash: '#F2F2F2',
         },
         danger: '#FF6B60',
         success: '#4ADE9B',
@@ -42,21 +44,21 @@ const config: Config = {
         metal: { DEFAULT: '#E8EAED', deep: '#6C727C' },
       },
       fontFamily: {
-        display: ['var(--font-display)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        sans: ['var(--font-body)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        data: ['var(--font-body)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        display: ['var(--font-inter)', 'Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        sans: ['var(--font-inter)', 'Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        data: ['var(--font-inter)', 'Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
       fontSize: {
-        eyebrow: ['0.6875rem', { lineHeight: '1', letterSpacing: '0.18em' }],
-        hero: ['clamp(2.75rem, 6.5vw, 6.5rem)', { lineHeight: '0.92', letterSpacing: '-0.04em' }],
+        eyebrow: ['0.8125rem', { lineHeight: '1', letterSpacing: '0.06em' }],
+        hero: ['clamp(2.75rem, 7vw, 7rem)', { lineHeight: '0.95', letterSpacing: '-0.04em' }],
         display: ['clamp(2rem, 5vw, 3.75rem)', { lineHeight: '0.98', letterSpacing: '-0.035em' }],
         headline: ['clamp(1.5rem, 3vw, 2.25rem)', { lineHeight: '1.05', letterSpacing: '-0.025em' }],
         // Two mid-steps so nothing between headline and body has to be improvised.
         title: ['clamp(1.25rem, 1.05rem + 0.9vw, 1.625rem)', { lineHeight: '1.15', letterSpacing: '-0.02em' }],
         lead: ['clamp(1.0625rem, 0.95rem + 0.4vw, 1.25rem)', { lineHeight: '1.55' }],
       },
-      borderRadius: { xs: '2px', sm: '3px', DEFAULT: '4px', lg: '8px', xl: '12px' },
-      maxWidth: { shell: '82rem', measure: '65ch' },
+      borderRadius: { none: '0', xs: '0', sm: '0', DEFAULT: '0', md: '0', lg: '0', xl: '0', '2xl': '0', '3xl': '0', full: '9999px' },
+      maxWidth: { shell: '76rem', measure: '62ch' },
       // Rhythm: py-section between sections, gap-block inside them, px-gutter at
       // the page edge. Fluid, and the same numbers the CSS side reads.
       spacing: {
@@ -64,6 +66,7 @@ const config: Config = {
         block: 'var(--vds-block)',
         section: 'var(--vds-section)',
       },
+      boxShadow: { none: 'none', sm: 'none', DEFAULT: 'none', md: 'none', lg: 'none', xl: 'none', '2xl': 'none' },
       transitionTimingFunction: { out: 'cubic-bezier(0.16, 1, 0.3, 1)' },
       keyframes: {
         'rise-in': { from: { opacity: '0', transform: 'translateY(14px)' }, to: { opacity: '1', transform: 'none' } },

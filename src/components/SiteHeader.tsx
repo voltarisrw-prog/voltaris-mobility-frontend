@@ -138,8 +138,8 @@ export function SiteHeader() {
         'z-40 border-b border-hairline/80 transition-[background-color,box-shadow,border-color] duration-300 ease-out',
         isHome ? 'fixed inset-x-0 top-0' : 'sticky top-0',
         compact
-          ? 'bg-surface/90 shadow-[0_1px_0_rgba(0,3,12,0.04),0_12px_32px_-20px_rgba(0,3,12,0.25)] backdrop-blur-xl'
-          : 'bg-surface/80 backdrop-blur-xl',
+          ? 'bg-surface'
+          : 'bg-surface',
       )}
       onBlur={(e) => {
         // Focus left the header entirely (keyboard users tabbing past): close panels.
@@ -158,7 +158,7 @@ export function SiteHeader() {
         <Link
           href="/"
           aria-label="Voltaris Mobility, home"
-          className="inline-flex min-h-11 w-fit items-center rounded-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volt focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
+          className="inline-flex min-h-11 w-fit items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volt focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
         >
           <VoltarisLogo className={cn('transition-[height] duration-300 ease-out', compact ? 'h-6 lg:h-7' : 'h-7 lg:h-8')} />
         </Link>
@@ -433,7 +433,7 @@ function DesktopGroup({
       >
         <div
           className={cn(
-            'border border-hairline bg-surface p-2 shadow-[0_24px_60px_-24px_rgba(0,3,12,0.35),0_1px_0_rgba(0,3,12,0.04)]',
+            'border border-chrome bg-surface p-2',
             wide ? 'grid w-[38rem] grid-cols-2 gap-1' : 'w-[22rem]',
           )}
         >
@@ -444,7 +444,7 @@ function DesktopGroup({
                 key={item.href}
                 href={item.href}
                 aria-current={itemActive ? 'page' : undefined}
-                className="group/item flex items-start justify-between gap-4 rounded-sm px-3 py-3 transition-colors duration-150 hover:bg-slab focus-visible:bg-slab focus-visible:outline-none"
+                className="group/item flex items-start justify-between gap-4 px-3 py-3 transition-colors duration-150 hover:bg-slab focus-visible:bg-slab focus-visible:outline-none"
               >
                 <span className="min-w-0">
                   <span className={cn('block text-[0.9375rem] font-medium leading-tight', itemActive ? 'text-volt-deep' : 'text-chrome')}>

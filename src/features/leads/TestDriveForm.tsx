@@ -75,7 +75,7 @@ export function TestDriveForm({
   const today = new Date().toISOString().slice(0, 10);
 
   return (
-    <div className="border border-black/10 rounded-[2rem] bg-white p-6 text-black shadow-[0_18px_50px_rgba(0,0,0,0.12)] transition-all duration-500 hover:border-black/20 sm:p-8">
+    <div className="border border-black/10 bg-white p-6 text-black transition-all duration-500 hover:border-black/20 sm:p-8">
       <form onSubmit={onSubmit} noValidate className="space-y-5">
       {vehicleId ? (
         <input type="hidden" {...register('vehicle_id')} />
@@ -91,7 +91,7 @@ export function TestDriveForm({
       )}
 
       {vehicleTitle && (
-        <p className="rounded-[1.5rem] border border-black/10 bg-black/[0.025] px-4 py-3 text-sm text-black">
+        <p className="border border-black/10 bg-black/[0.025] px-4 py-3 text-sm text-black">
           Driving the <span className="font-medium">{vehicleTitle}</span>
         </p>
       )}

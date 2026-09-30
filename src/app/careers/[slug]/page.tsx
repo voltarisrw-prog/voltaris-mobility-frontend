@@ -101,7 +101,7 @@ export default async function JobPage({ params }: JobPageProps) {
 
       <div className="mt-12 grid gap-10 lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-16">
         <main className="space-y-10">
-          <section className="rounded-[2rem] border border-black/10 bg-white p-7 text-black shadow-[0_18px_50px_rgba(0,0,0,0.12)] sm:p-9">
+          <section className="border border-black/10 bg-white p-7 text-black sm:p-9">
             <p className="font-data text-[9px] uppercase tracking-[0.18em] text-volt">
               01 / What you will do
             </p>
@@ -122,7 +122,7 @@ export default async function JobPage({ params }: JobPageProps) {
             </ul>
           </section>
 
-          <section className="rounded-[2rem] border border-black/10 bg-white p-7 text-black shadow-[0_18px_50px_rgba(0,0,0,0.12)] sm:p-9">
+          <section className="border border-black/10 bg-white p-7 text-black sm:p-9">
             <p className="font-data text-[9px] uppercase tracking-[0.18em] text-volt">
               02 / What we are looking for
             </p>
@@ -141,7 +141,7 @@ export default async function JobPage({ params }: JobPageProps) {
             </ul>
           </section>
 
-          <section className="rounded-[2rem] border border-black/10 bg-white p-7 text-black shadow-[0_18px_50px_rgba(0,0,0,0.12)] sm:p-9">
+          <section className="border border-black/10 bg-white p-7 text-black sm:p-9">
             <p className="font-data text-[9px] uppercase tracking-[0.18em] text-volt">
               03 / Bonus points
             </p>
@@ -162,7 +162,7 @@ export default async function JobPage({ params }: JobPageProps) {
         </main>
 
         <aside className="lg:sticky lg:top-28 lg:h-fit">
-          <div className="rounded-[2rem] border border-volt/30 bg-white p-7 text-black shadow-[0_18px_50px_rgba(0,0,0,0.12)] sm:p-8">
+          <div className="border border-volt/30 bg-white p-7 text-black sm:p-8">
             <p className="font-data text-[9px] uppercase tracking-[0.18em] text-volt">
               Ready to apply?
             </p>
@@ -216,7 +216,7 @@ export default async function JobPage({ params }: JobPageProps) {
             <Link
               key={relatedJob.slug}
               href={`/careers/${relatedJob.slug}`}
-              className="group rounded-[2rem] border border-black/10 bg-white p-6 text-black shadow-[0_18px_50px_rgba(0,0,0,0.12)] transition-all duration-500 hover:-translate-y-1 hover:border-black/20"
+              className="group border border-black/10 bg-white p-6 text-black transition-all duration-500 hover:border-black/20"
             >
               <p className="font-data text-[9px] uppercase tracking-[0.16em] text-volt">
                 {relatedJob.department}

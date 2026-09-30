@@ -98,7 +98,7 @@ export default async function ApplyPage({ params }: PageProps) {
 
       <main className="mt-10 grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(360px,0.8fr)] lg:gap-12">
         <aside className="order-2 lg:order-1 lg:sticky lg:top-28 lg:self-start">
-          <div className="rounded-[2rem] border border-black/10 bg-black/[0.025] p-7 sm:p-8">
+          <div className="border border-black/10 bg-black/[0.025] p-7 sm:p-8">
             <p className="font-data text-[9px] uppercase tracking-[0.18em] text-volt">
               You are applying for
             </p>

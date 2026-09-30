@@ -13,18 +13,19 @@
   /* ----------------------------------------------------------
      BRAND  (== tailwind: ink / volt.deep / volt)
      ---------------------------------------------------------- */
-  --vds-brand-primary: #00030C;   /* logo field, near-black */
-  --vds-brand-secondary: #0A63C4; /* road light, deepened for text on white (AA) */
-  --vds-brand-primary-rgb: 0, 3, 12;
-  --vds-brand-secondary-rgb: 10, 99, 196;
+  /* SQUARESPACE SYSTEM — monochrome. */
+  --vds-brand-primary: #111111;
+  --vds-brand-secondary: #111111;
+  --vds-brand-primary-rgb: 17, 17, 17;
+  --vds-brand-secondary-rgb: 17, 17, 17;
 
   /* ----------------------------------------------------------
      LIGHT  (the single accent)  (== tailwind: volt / volt.bright)
      ---------------------------------------------------------- */
-  --vds-accent: #5CC8FF;
-  --vds-accent-bright: #9EE4FF;
-  --vds-accent-rgb: 92, 200, 255;
-  --vds-accent-soft: rgba(92, 200, 255, .14);
+  --vds-accent: #111111;
+  --vds-accent-bright: #2E2E2E;
+  --vds-accent-rgb: 17, 17, 17;
+  --vds-accent-soft: rgba(17, 17, 17, .06);
 
   /* ----------------------------------------------------------
      METAL  (chrome of the V)  (== tailwind: metal / metal.deep)
@@ -43,19 +44,9 @@
   --vds-surface-hover: rgba(10,10,10,.055);
   --vds-surface-active: rgba(10,10,10,.08);
 
-  --vds-glass:
-    linear-gradient(
-      135deg,
-      rgba(255,255,255,.96),
-      rgba(247,247,247,.88)
-    );
+  --vds-glass: #ffffff;
 
-  --vds-glass-strong:
-    linear-gradient(
-      135deg,
-      rgba(255,255,255,1),
-      rgba(242,242,242,.96)
-    );
+  --vds-glass-strong: #f7f7f7;
 
   /* ----------------------------------------------------------
      BORDERS  (== tailwind: hairline)
@@ -63,14 +54,14 @@
   --vds-border: rgba(10,10,10,.12);
   --vds-border-hover: rgba(10,10,10,.22);
   --vds-border-strong: rgba(10,10,10,.32);
-  --vds-border-brand: rgba(var(--vds-accent-rgb), .70);
+  --vds-border-brand: #111111;
 
   /* ----------------------------------------------------------
      TEXT  (== tailwind: chrome / steel / steel.muted)
      ---------------------------------------------------------- */
-  --vds-text: #0a0a0a;
+  --vds-text: #111111;
   --vds-text-secondary: #4a4a4a;
-  --vds-text-muted: #6b6b6b;
+  --vds-text-muted: #767676;
   --vds-text-disabled: #9a9a9a;
   --vds-text-on-ink: #ffffff;
   --vds-steel: #4a4a4a;           /* referenced by ContactHome; was never defined */
@@ -79,11 +70,11 @@
      GEOMETRY  (== tailwind: rounded-xs/sm/DEFAULT/lg/xl)
      Sharp. The mark has no curves; neither does the interface.
      ---------------------------------------------------------- */
-  --vds-radius-xs: 2px;
-  --vds-radius-sm: 3px;
-  --vds-radius-md: 4px;
-  --vds-radius-lg: 8px;
-  --vds-radius-xl: 12px;
+  --vds-radius-xs: 0;
+  --vds-radius-sm: 0;
+  --vds-radius-md: 0;
+  --vds-radius-lg: 0;
+  --vds-radius-xl: 0;
   --vds-radius-pill: 999px;
 
   /* ----------------------------------------------------------
@@ -100,9 +91,9 @@
   --vds-space-12: 48px;
   --vds-space-16: 64px;
 
-  --vds-gutter: clamp(1rem, 4vw, 4rem);          /* page edge, == .shell */
-  --vds-block: clamp(2rem, 4vw, 3.5rem);         /* between blocks in a section */
-  --vds-section: clamp(3.5rem, 8vw, 7.5rem);     /* between sections */
+  --vds-gutter: clamp(1.25rem, 5vw, 4rem);       /* page edge, == .shell */
+  --vds-block: clamp(2.5rem, 5vw, 4.5rem);       /* between blocks in a section */
+  --vds-section: clamp(5rem, 10vw, 10rem);       /* between sections */
 
   /* ----------------------------------------------------------
      TYPE  (fluid, == tailwind: text-eyebrow … text-hero)
@@ -117,22 +108,16 @@
   /* ----------------------------------------------------------
      DEPTH  (light theme: soft, never muddy)
      ---------------------------------------------------------- */
-  --vds-shadow-sm: 0 4px 14px rgba(0,3,12,.08);
-  --vds-shadow-md: 0 12px 32px rgba(0,3,12,.12);
-  --vds-shadow-lg: 0 24px 60px rgba(0,3,12,.16);
+  --vds-shadow-sm: none;
+  --vds-shadow-md: none;
+  --vds-shadow-lg: none;
 
   /* ----------------------------------------------------------
      GLOW  (the road light, only ever the road light)
      ---------------------------------------------------------- */
-  --vds-glow-brand:
-    0 0 14px rgba(var(--vds-accent-rgb),.32),
-    0 0 36px rgba(var(--vds-accent-rgb),.14);
-
-  --vds-glow-accent:
-    0 0 14px rgba(var(--vds-accent-rgb),.35),
-    0 0 34px rgba(var(--vds-accent-rgb),.13);
-
-  --vds-ring: 0 0 0 3px rgba(var(--vds-accent-rgb),.45);
+  --vds-glow-brand: none;
+  --vds-glow-accent: none;
+  --vds-ring: 0 0 0 2px #ffffff, 0 0 0 4px #111111;
 
   /* ----------------------------------------------------------
      MOTION  (== tailwind: ease-out token)
@@ -141,8 +126,8 @@
   --vds-transition: 180ms var(--vds-ease);
   --vds-transition-slow: 320ms var(--vds-ease);
 
-  --vds-blur: 18px;
-  --vds-blur-heavy: 28px;
+  --vds-blur: 0px;
+  --vds-blur-heavy: 0px;
 }
 
 /* ============================================================
@@ -179,138 +164,93 @@
   position: relative;
   isolation: isolate;
 
-  min-height: 44px;
-  padding: 0 20px;
+  min-height: 52px;
+  padding: 0 28px;
 
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 9px;
+  gap: 10px;
 
-  border: 1px solid var(--vds-border);
-  border-radius: var(--vds-radius-md);
+  border: 1px solid #111111;
+  border-radius: 0;
 
-  color: var(--vds-text);
+  color: #111111;
 
+  font-size: 0.8125rem;
   font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   line-height: 1;
   white-space: nowrap;
 
   cursor: pointer;
-
-  background: var(--vds-glass);
-
-  backdrop-filter: blur(var(--vds-blur));
-  -webkit-backdrop-filter: blur(var(--vds-blur));
-
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.85),
-    var(--vds-shadow-sm);
+  background: #ffffff;
+  box-shadow: none;
 
   transition:
-    transform var(--vds-transition),
+    background-color var(--vds-transition),
+    color var(--vds-transition),
     border-color var(--vds-transition),
-    box-shadow var(--vds-transition),
-    background var(--vds-transition);
+    opacity var(--vds-transition);
 }
 
 .vds-button::before {
-  content: "";
-  position: absolute;
-  inset: 1px;
-  z-index: -1;
-  border-radius: inherit;
-
-  background:
-    linear-gradient(
-      135deg,
-      rgba(255,255,255,.90),
-      rgba(255,255,255,.48) 52%,
-      rgba(255,255,255,.76)
-    );
-
-  pointer-events: none;
+  content: none;
 }
 
 .vds-button:hover {
-  transform: translateY(-1px);
-  border-color: var(--vds-border-hover);
+  background: #111111;
+  color: #ffffff;
 }
 
 .vds-button:active {
-  transform: translateY(0) scale(.985);
+  opacity: .85;
 }
 
 .vds-button:focus-visible {
   outline: none;
-
-  box-shadow:
-    var(--vds-ring),
-    var(--vds-glow-brand);
+  box-shadow: var(--vds-ring);
 }
 
-/* Primary — ink, edged with the road light. */
+/* Primary — black on white; inverts on hover. */
 .vds-button-primary {
-  color: var(--vds-text-on-ink);
-  border-color: rgba(var(--vds-accent-rgb),.55);
-
-  background:
-    linear-gradient(
-      135deg,
-      #10141C,
-      var(--vds-brand-primary) 62%
-    );
-
-  box-shadow:
-    var(--vds-shadow-sm),
-    inset 0 1px 0 rgba(255,255,255,.10);
-}
-
-.vds-button-primary::before {
-  background:
-    linear-gradient(
-      135deg,
-      rgba(255,255,255,.08),
-      rgba(255,255,255,0) 52%,
-      rgba(var(--vds-accent-rgb),.10)
-    );
+  color: #ffffff;
+  background: #111111;
+  border-color: #111111;
 }
 
 .vds-button-primary:hover {
-  border-color: var(--vds-accent);
-
-  box-shadow:
-    var(--vds-glow-accent),
-    var(--vds-shadow-sm);
+  background: #ffffff;
+  color: #111111;
 }
 
-/* Secondary — chrome. */
+/* Secondary — outlined. */
 .vds-button-secondary {
-  border-color: var(--vds-border-strong);
-
-  background:
-    linear-gradient(
-      135deg,
-      #ffffff,
-      var(--vds-metal) 120%
-    );
-
-  box-shadow:
-    var(--vds-shadow-sm),
-    inset 0 1px 0 rgba(255,255,255,.90);
+  color: #111111;
+  background: transparent;
+  border-color: #111111;
 }
 
 .vds-button-secondary:hover {
-  border-color: var(--vds-brand-primary);
+  background: #111111;
+  color: #ffffff;
 }
 
-/* Ghost */
+/* Ghost — text with a rule beneath. */
 .vds-button-ghost {
-  background: rgba(10,10,10,.025);
+  border-color: transparent;
+  background: transparent;
+  padding-inline: 0;
+  min-height: 44px;
+  text-decoration: underline;
+  text-underline-offset: 6px;
+  text-decoration-thickness: 1px;
 }
 
 .vds-button-ghost:hover {
-  background: rgba(10,10,10,.055);
+  background: transparent;
+  color: #767676;
 }
 
 /* Danger */
@@ -329,12 +269,10 @@
   background: none;
 }
 
-/* Large — hero and page-level calls to action. */
+/* Large — page-level calls to action. */
 .vds-button-lg {
-  min-height: 52px;
-  padding: 0 28px;
-  font-size: 0.95rem;
-  letter-spacing: 0.02em;
+  min-height: 56px;
+  padding: 0 36px;
 }
 
 /* Icon */
@@ -354,36 +292,18 @@
 .vds-select,
 .vds-textarea {
   width: 100%;
-
-  color: var(--vds-text);
-
-  background:
-    linear-gradient(
-      135deg,
-      rgba(255,255,255,.96),
-      rgba(247,247,247,.88)
-    );
-
-  border: 1px solid var(--vds-border);
-  border-radius: var(--vds-radius-md);
-
-  box-shadow:
-    var(--vds-shadow-sm),
-    inset 0 1px 0 rgba(255,255,255,.80);
-
-  backdrop-filter: blur(var(--vds-blur));
-  -webkit-backdrop-filter: blur(var(--vds-blur));
-
-  transition:
-    border-color var(--vds-transition),
-    box-shadow var(--vds-transition),
-    background var(--vds-transition);
+  color: #111111;
+  background: #ffffff;
+  border: 1px solid #cccccc;
+  border-radius: 0;
+  box-shadow: none;
+  transition: border-color var(--vds-transition);
 }
 
 .vds-input,
 .vds-select {
-  min-height: 46px;
-  padding: 0 14px;
+  min-height: 52px;
+  padding: 0 16px;
 }
 
 .vds-textarea {
@@ -407,12 +327,8 @@
 .vds-select:focus,
 .vds-textarea:focus {
   outline: none;
-
-  border-color: rgba(var(--vds-brand-secondary-rgb),.90);
-
-  box-shadow:
-    var(--vds-ring),
-    var(--vds-glow-brand);
+  border-color: #111111;
+  box-shadow: none;
 }
 
 /* Search gets the more substantial command/search treatment. */
@@ -429,34 +345,15 @@
 .vds-card {
   position: relative;
   overflow: hidden;
-
-  border: 1px solid var(--vds-border);
-  border-radius: var(--vds-radius-lg);
-
-  background: var(--vds-glass);
-
-  box-shadow:
-    var(--vds-shadow-md),
-    inset 0 1px 0 rgba(255,255,255,.80);
-
-  backdrop-filter: blur(var(--vds-blur));
-  -webkit-backdrop-filter: blur(var(--vds-blur));
-
-  transition:
-    transform var(--vds-transition-slow),
-    border-color var(--vds-transition),
-    box-shadow var(--vds-transition);
+  border: 0;
+  border-radius: 0;
+  background: #ffffff;
+  box-shadow: none;
+  transition: opacity var(--vds-transition-slow);
 }
 
 .vds-card:hover {
-  transform: translateY(-2px);
-
-  border-color:
-    rgba(var(--vds-brand-secondary-rgb),.55);
-
-  box-shadow:
-    var(--vds-shadow-lg),
-    var(--vds-glow-brand);
+  opacity: .92;
 }
 
 /* ============================================================
@@ -775,18 +672,9 @@
    ============================================================ */
 
 .vds-site-header {
-  background:
-    linear-gradient(
-      135deg,
-      rgba(255,255,255,.96),
-      rgba(247,247,247,.88)
-    );
+  background: #ffffff;
   border-color: var(--vds-border);
-  box-shadow:
-    var(--vds-shadow-md),
-    inset 0 1px 0 rgba(255,255,255,.08);
-  backdrop-filter: blur(var(--vds-blur-heavy));
-  -webkit-backdrop-filter: blur(var(--vds-blur-heavy));
+  box-shadow: none;
 }
 
 .vds-site-footer {

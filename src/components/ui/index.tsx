@@ -316,7 +316,7 @@ export function LoadingSkeleton({
       {Array.from({ length: lines }).map((_, index) => (
         <div
           key={index}
-          className="h-4 animate-pulse rounded-md bg-white/[.06]"
+          className="h-4 animate-pulse bg-white/[.06]"
           style={{
             width: `${100 - index * 12}%`,
           }}

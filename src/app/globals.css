@@ -62,23 +62,24 @@
     min-width: 0;
   }
 
+  /* SQUARESPACE SYSTEM: one face, light headlines, tight tracking. */
   h1,
   h2,
   h3,
   h4,
   h5,
   h6 {
-    font-family: var(--font-display), serif;
-    font-weight: 600;
+    font-family: var(--font-inter), Inter, ui-sans-serif, system-ui, sans-serif;
+    font-weight: 400;
     letter-spacing: -0.02em;
     text-wrap: balance;
   }
   ::selection {
-    @apply bg-volt text-surface;
+    @apply bg-chrome text-surface;
   }
   /* WCAG 2.2 — focus is always visible and never removed. */
   :focus-visible {
-    @apply outline-none ring-2 ring-volt ring-offset-2 ring-offset-surface;
+    @apply outline-none ring-2 ring-chrome ring-offset-2 ring-offset-surface;
   }
   * {
     scrollbar-color: #b8b8b8 #f2f2f2;
@@ -112,7 +113,7 @@
      15 places before this existed as its own class; giving it a name is what let two
      of those places be caught rendering *larger* than their own page's h1. */
   .section-heading {
-    @apply font-display text-xl font-semibold tracking-tight;
+    @apply font-display text-title font-normal tracking-tight;
   }
   /* Section rhythm: one vertical measure between sections, one inside them.
      Pages opt in block by block; nothing is restyled by this existing. */
@@ -130,15 +131,15 @@
      the photograph. Transparent fill, one-pixel stroke in the mark's own
      near-black at low opacity, so it reads as etched glass, never as a title. */
   .wordmark-outline {
-    font-family: var(--font-display), serif;
+    font-family: var(--font-inter), Inter, ui-sans-serif, system-ui, sans-serif;
     font-size: clamp(3.5rem, 15.5vw, 13.75rem);
-    font-weight: 600;
+    font-weight: 500;
     line-height: 1;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     white-space: nowrap;
     color: transparent;
-    -webkit-text-stroke: 1px rgba(0, 3, 12, 0.22);
+    -webkit-text-stroke: 1px rgba(17, 17, 17, 0.18);
   }
   /* Gallery photos cross-fade in as they change. */
   .gallery-in {
@@ -424,7 +425,7 @@
   box-shadow:
     0 35px 90px rgb(0 0 0 / 0.34),
     0 12px 34px rgb(0 0 0 / 0.2);
-  border-radius: 1.15rem;
+  border-radius: 0;
   overflow: hidden;
 }
 
@@ -441,7 +442,7 @@
   box-shadow:
     0 28px 70px rgb(0 0 0 / 0.28),
     0 10px 28px rgb(0 0 0 / 0.16);
-  border-radius: 1rem;
+  border-radius: 0;
   overflow: hidden;
 }
 
@@ -461,7 +462,7 @@
   justify-content: center;
   gap: 0.7rem;
   border: 1px solid rgb(255 255 255 / 0.32);
-  border-radius: 9999px;
+  border-radius: 0;
   background: rgb(10 10 10 / 0.82);
   padding: 0.8rem 1.25rem;
   color: white;
@@ -555,7 +556,7 @@
 
   .marketplace-editorial-showroom-card-active > div {
     transform: scale(1.018);
-    border-radius: 0.9rem;
+    border-radius: 0;
   }
 
   .marketplace-editorial-showroom-controls {
@@ -1790,7 +1791,7 @@
   justify-content: center;
   gap: 0.45rem;
   border: 1px solid rgb(10 10 10 / 0.14);
-  border-radius: 9999px;
+  border-radius: 0;
   background: #ffffff;
   padding: 0.6rem 0.8rem;
   color: #0a0a0a;
@@ -2034,7 +2035,7 @@
   min-height: min(82svh, 880px);
   margin: 0 auto;
   overflow: hidden;
-  border-radius: clamp(1.25rem, 2vw, 2rem);
+  border-radius: 0;
 }
 
 /* Existing card media */
@@ -2136,7 +2137,7 @@ a {
   .marketplace-vehicle-card {
     width: 100%;
     min-height: 700px;
-    border-radius: 1.5rem;
+    border-radius: 0;
   }
 
   .marketplace-vertical-showcase
@@ -2163,7 +2164,7 @@ a {
   .marketplace-vehicle-card {
     width: 100%;
     min-height: 0;
-    border-radius: 1.1rem;
+    border-radius: 0;
   }
 
   .marketplace-vertical-showcase
@@ -2294,7 +2295,7 @@ a {
   .marketplace-vertical-showcase .marketplace-vehicle-card {
     min-height: 0;
     height: 100%;
-    border-radius: 22px;
+    border-radius: 0;
     overflow: hidden;
   }
 
@@ -2786,8 +2787,8 @@ button[title*="ompare"]:focus-visible {
 .voltaris-range { -webkit-appearance: none; appearance: none; height: 2.5rem; background: transparent; cursor: pointer; }
 .voltaris-range::-webkit-slider-runnable-track { height: 2px; background: #e5e5e5; }
 .voltaris-range::-moz-range-track { height: 2px; background: #e5e5e5; }
-.voltaris-range::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; margin-top: -11px; height: 24px; width: 24px; border-radius: 9999px; border: 2px solid #fff; background: #0a0a0a; box-shadow: 0 1px 4px rgba(0,0,0,.25); }
-.voltaris-range::-moz-range-thumb { height: 24px; width: 24px; border-radius: 9999px; border: 2px solid #fff; background: #0a0a0a; box-shadow: 0 1px 4px rgba(0,0,0,.25); }
+.voltaris-range::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; margin-top: -11px; height: 24px; width: 24px; border-radius: 0; border: 2px solid #fff; background: #0a0a0a; box-shadow: 0 1px 4px rgba(0,0,0,.25); }
+.voltaris-range::-moz-range-thumb { height: 24px; width: 24px; border-radius: 0; border: 2px solid #fff; background: #0a0a0a; box-shadow: 0 1px 4px rgba(0,0,0,.25); }
 .voltaris-range:focus-visible { outline: none; }
 .voltaris-range:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px rgba(10,99,196,.35); }
 .voltaris-range:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 4px rgba(10,99,196,.35); }

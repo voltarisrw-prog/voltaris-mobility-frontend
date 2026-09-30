@@ -106,7 +106,7 @@ export function ProsePage({
               <section
                 key={section.id}
                 id={section.id}
-                className="group relative scroll-mt-24 overflow-hidden border border-black/10 rounded-[2rem] bg-white p-6 shadow-[0_18px_50px_rgba(0,0,0,0.12)] transition-all duration-500 hover:-translate-y-0.5 hover:border-black/20 sm:p-7 lg:p-8"
+                className="group relative scroll-mt-24 overflow-hidden border border-black/10 bg-white p-6 transition-all duration-500 hover:-translate-y-0.5 hover:border-black/20 sm:p-7 lg:p-8"
               >
                 <div className="flex items-start justify-between gap-6">
                   <span className="font-data text-[9px] uppercase tracking-[0.18em] text-volt">

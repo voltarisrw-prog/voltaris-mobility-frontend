@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Instrument_Serif, Instrument_Sans, IBM_Plex_Mono } from 'next/font/google';
+import { Inter } from 'next/font/google';
 import './globals.css';
 import { site } from '@/config/site';
 import { SiteHeader } from '@/components/SiteHeader';
@@ -10,25 +10,17 @@ import { AnalyticsBootstrap } from '@/components/AnalyticsBootstrap';
 import { ToastProvider } from '@/components/ui';
 
 import VoltarisScrollMotion from "@/components/VoltarisScrollMotion";
-const display = Instrument_Serif({
-  subsets: ['latin'],
-  weight: '400',
-  style: 'normal',
-  variable: '--font-display',
-  display: 'swap',
-});
-const body = Instrument_Sans({
+// One family. Display, body and data are the same face at different sizes,
+// weights and tracking — the system's whole voice is in the type scale.
+const inter = Inter({
   subsets: ['latin'],
   weight: ['400', '500', '600'],
-  variable: '--font-body',
+  variable: '--font-inter',
   display: 'swap',
 });
-const data = IBM_Plex_Mono({
-  subsets: ['latin'],
-  weight: ['400', '500'],
-  variable: '--font-data',
-  display: 'swap',
-});
+const display = { variable: inter.variable };
+const body = { variable: '' };
+const data = { variable: '' };
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),

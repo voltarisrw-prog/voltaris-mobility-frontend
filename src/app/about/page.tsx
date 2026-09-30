@@ -17,7 +17,7 @@ export default function AboutPage() {
     <div className="shell py-6 sm:py-8">
       <Breadcrumbs trail={[{ name: 'Home', path: '/' }, { name: 'About', path: '/about' }]} />
 
-      <section className="relative mt-6 overflow-hidden rounded-[2.5rem] bg-black text-white">
+      <section className="relative mt-6 overflow-hidden bg-black text-white">
         <div className="relative min-h-[78svh] sm:min-h-[82svh]">
           <Image
             src="/demo/lifestyle/ev-lineup.jpg"
@@ -31,7 +31,7 @@ export default function AboutPage() {
           <div className="absolute inset-0 bg-gradient-to-t from-black via-black/35 to-black/10" />
 
           <div className="absolute inset-x-0 top-0 flex items-start justify-between p-6 sm:p-8 lg:p-10">
-            <div className="rounded-2xl bg-white px-4 py-3 sm:px-5 sm:py-4">
+            <div className="bg-white px-4 py-3 sm:px-5 sm:py-4">
               <Image
                 src="/brand/voltaris-logo-full.jpeg"
                 alt="Voltaris Mobility"
@@ -79,7 +79,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="mt-8 overflow-hidden rounded-[2.5rem] bg-black text-white">
+      <section className="mt-8 overflow-hidden bg-black text-white">
         <div className="grid lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)]">
           <div className="relative min-h-[430px] sm:min-h-[520px] lg:min-h-[620px]">
             <Image
@@ -125,7 +125,7 @@ export default function AboutPage() {
           {about.values.map((value, index) => (
             <div
               key={value.title}
-              className="group flex min-h-[250px] flex-col justify-between rounded-[2rem] bg-white p-6 text-black shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl sm:p-7"
+              className="group flex min-h-[250px] flex-col justify-between bg-white p-6 text-black transition duration-300 hover: sm:p-7"
             >
               <div className="flex items-start justify-between gap-6">
                 <span className="font-data text-[10px] uppercase tracking-[0.18em] text-volt">
@@ -151,7 +151,7 @@ export default function AboutPage() {
 
       <section className="mt-8">
         <div className="grid gap-4 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,0.65fr)]">
-          <div className="relative min-h-[420px] overflow-hidden rounded-[2.5rem] bg-black sm:min-h-[560px]">
+          <div className="relative min-h-[420px] overflow-hidden bg-black sm:min-h-[560px]">
             <Image
               src="/demo/lifestyle/villa-sunset-charging.jpg"
               alt="Electric mobility at home"
@@ -172,7 +172,7 @@ export default function AboutPage() {
             </div>
           </div>
 
-          <div className="relative min-h-[320px] overflow-hidden rounded-[2.5rem] bg-black sm:min-h-[420px] lg:min-h-[560px]">
+          <div className="relative min-h-[320px] overflow-hidden bg-black sm:min-h-[420px] lg:min-h-[560px]">
             <Image
               src="/demo/lifestyle/family-home-charging.jpg"
               alt="Family using electric vehicle charging at home"
@@ -190,10 +190,10 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="mt-8 overflow-hidden rounded-[2.5rem] bg-black text-white">
+      <section className="mt-8 overflow-hidden bg-black text-white">
         <div className="grid gap-10 p-7 sm:p-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:p-14">
           <div>
-            <div className="inline-flex rounded-2xl bg-white px-4 py-3">
+            <div className="inline-flex bg-white px-4 py-3">
               <Image
                 src="/brand/voltaris-logo-full.jpeg"
                 alt="Voltaris Mobility"

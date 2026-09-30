@@ -33,7 +33,7 @@ export function VehicleCard({
   const sold = vehicle.status === 'sold';
 
   return (
-    <article className="group relative flex h-full flex-col border border-hairline bg-slab/40 transition-colors duration-200 ease-out hover:border-volt/50">
+    <article className="group relative flex h-full flex-col bg-surface">
       <HoverPrefetch href={`/cars/${vehicle.slug}`} />
       <div className="relative aspect-[4/3] overflow-hidden bg-abyss">
         {vehicle.primary_image ? (

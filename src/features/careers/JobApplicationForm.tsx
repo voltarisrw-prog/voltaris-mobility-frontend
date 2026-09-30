@@ -138,7 +138,7 @@ export function JobApplicationForm({
   });
 
   return (
-    <div className="rounded-[2rem] border border-black/10 bg-white p-7 text-black shadow-[0_18px_50px_rgba(0,0,0,0.12)] sm:p-9 lg:p-10">
+    <div className="border border-black/10 bg-white p-7 text-black sm:p-9 lg:p-10">
       <div className="border-b border-black/10 pb-6">
         <p className="font-data text-[9px] uppercase tracking-[0.18em] text-volt">
           Application
@@ -274,7 +274,7 @@ export function JobApplicationForm({
             />
 
             {cvFile ? (
-              <div className="flex items-center justify-between gap-4 rounded-[1.5rem] border border-volt/30 bg-black/[0.025] p-5">
+              <div className="flex items-center justify-between gap-4 border border-volt/30 bg-black/[0.025] p-5">
                 <div className="flex min-w-0 items-center gap-4">
                   <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-black text-white">
                     <FileText className="h-5 w-5" />
@@ -303,7 +303,7 @@ export function JobApplicationForm({
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="group flex w-full flex-col items-center justify-center rounded-[1.5rem] border border-dashed border-black/15 bg-black/[0.02] px-6 py-10 text-center transition-all duration-300 hover:border-volt hover:bg-volt/[0.04]"
+                className="group flex w-full flex-col items-center justify-center border border-dashed border-black/15 bg-black/[0.02] px-6 py-10 text-center transition-all duration-300 hover:border-volt hover:bg-volt/[0.04]"
               >
                 <span className="flex h-12 w-12 items-center justify-center rounded-full bg-black text-white transition-transform duration-300 group-hover:scale-105">
                   <Upload className="h-5 w-5" />

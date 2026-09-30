@@ -120,7 +120,7 @@ export default function SellPage() {
 
             {/* Listing access */}
             <div className="flex items-end">
-              <div className="w-full max-w-xl border border-white/15 bg-black/25 p-6 shadow-2xl backdrop-blur-md sm:p-8 lg:p-10">
+              <div className="w-full max-w-xl border border-white/15 bg-black/25 p-6 backdrop-blur-md sm:p-8 lg:p-10">
                 <p className="font-data text-[9px] uppercase tracking-[0.2em] text-[#6b6b6b]">
                   Sell through Voltaris
                 </p>

@@ -230,7 +230,7 @@ export default async function VehiclePage({
               as="div"
               variant="fade"
               stagger={90}
-              className="mt-4 grid gap-px border border-hairline bg-hairline sm:grid-cols-2 xl:grid-cols-4"
+              className="mt-4 grid gap-px border border-hairline bg-hairline sm:grid-cols-2"
             >
               {specGroups.map((group) => (
                 <div key={group.label} className="bg-surface p-5">
@@ -321,7 +321,7 @@ export default async function VehiclePage({
                 currency={vehicle.currency}
                 perDay={vehicle.rental_price_per_day}
                 mode={mode}
-                size="lg"
+                size="md"
               />
             </div>
 

@@ -77,7 +77,7 @@ export function SiteFooter() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="mx-3 my-4 overflow-hidden rounded-[2rem] bg-volt font-sans font-bold text-black sm:mx-5 sm:my-6 lg:mx-8 lg:my-8 border border-black/5 shadow-[0_20px_60px_-30px_rgba(0,0,0,0.35)] [&_a]:!text-black [&_a]:font-bold [&_p]:!text-black [&_p]:font-bold [&_span]:!text-black [&_span]:font-bold [&_h1]:!text-black [&_h2]:!text-black [&_h3]:!text-black [&_h4]:!text-black [&_h5]:!text-black [&_h6]:!text-black [&_svg]:!text-black [&_border-white\/10]:border-black/15 [&_border-white\/20]:border-black/15 [&_border-white\/25]:border-black/20">
+    <footer className="mx-3 my-4 overflow-hidden bg-volt font-sans font-bold text-black sm:mx-5 sm:my-6 lg:mx-8 lg:my-8 border border-black/5 [&_a]:!text-black [&_a]:font-bold [&_p]:!text-black [&_p]:font-bold [&_span]:!text-black [&_span]:font-bold [&_h1]:!text-black [&_h2]:!text-black [&_h3]:!text-black [&_h4]:!text-black [&_h5]:!text-black [&_h6]:!text-black [&_svg]:!text-black [&_border-white\/10]:border-black/15 [&_border-white\/20]:border-black/15 [&_border-white\/25]:border-black/20">
 
       {/* =========================================================
           COMPACT FOOTER
@@ -96,7 +96,7 @@ export function SiteFooter() {
             <Link
               href="/"
               aria-label="Voltaris Mobility home"
-              className="inline-flex rounded-sm text-chrome transition-opacity duration-200 hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-volt"
+              className="inline-flex text-chrome transition-opacity duration-200 hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-volt"
             >
               <VoltarisLogo className="h-8 sm:h-9" />
             </Link>
