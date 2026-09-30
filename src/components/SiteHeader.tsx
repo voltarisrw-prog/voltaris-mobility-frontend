@@ -2,30 +2,54 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { Menu, User, X } from 'lucide-react';
+import { useCallback, useEffect, useId, useRef, useState } from 'react';
+import { ArrowUpRight, ChevronDown, Menu, User, X } from 'lucide-react';
 import { VoltarisLogo } from './VoltarisLogo';
-import { nav } from '@/content/home';
+import { siteNav, isGroup, type NavGroup } from '@/content/nav';
 import { cn } from '@/lib/format';
 import { useCompareIds, useCompareMode } from '@/lib/compare/useCompare';
 
+/**
+ * The header. One tree (content/nav.ts), three renderings:
+ *
+ *  ≥1024  logo · centred nav with disclosure panels · account.
+ *         Panels open on hover (with intent delay) and on click/Enter, close
+ *         on Escape, on click outside, when focus leaves, and on navigation.
+ *  <1024  logo · account · menu. The menu is a full-screen sheet: groups are
+ *         accordions in display type, plain links sit beside them, the
+ *         account link closes the sheet. Body scroll is locked, Escape closes,
+ *         focus lands on Close and returns to the trigger.
+ *
+ * Fixed over the home hero (the hero reserves the space), sticky elsewhere;
+ * compacts after 24px of scroll.
+ */
+
+const HOVER_OPEN_MS = 70;
+const HOVER_CLOSE_MS = 140;
+
+function isActive(pathname: string, match?: string[]): boolean {
+  if (!match) return false;
+  return match.some((m) => (m === '/' ? pathname === '/' : pathname === m || pathname.startsWith(m + '/')));
+}
+
 export function SiteHeader() {
   const pathname = usePathname();
+  const isHome = pathname === '/';
   const [compact, setCompact] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [openGroup, setOpenGroup] = useState<string | null>(null);
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const [sheetGroup, setSheetGroup] = useState<string | null>(null);
+  const headerRef = useRef<HTMLElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const hoverTimer = useRef<number | null>(null);
   const compareIds = useCompareIds();
   const compareMode = useCompareMode();
-  const isHome = pathname === '/';
-  // The nav's own Compare entry is the only static thing about it: the moment a
-  // vehicle is queued, it should lead straight into that comparison rather than to
-  // the empty state — that's the whole point of making this a real on-ramp.
   const compareHref =
-    compareIds.length > 0
-      ? `/compare?ids=${compareIds.join(',')}&mode=${compareMode ?? 'sale'}`
-      : '/compare';
+    compareIds.length > 0 ? `/compare?ids=${compareIds.join(',')}&mode=${compareMode ?? 'sale'}` : '/compare';
 
+  // Compact after a little scroll; rAF-gated so it never competes with input.
   useEffect(() => {
-    // Passive listener behind a rAF gate — scroll handlers are a classic INP regression.
     let frame = 0;
     const onScroll = () => {
       if (frame) return;
@@ -34,6 +58,7 @@ export function SiteHeader() {
         frame = 0;
       });
     };
+    onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => {
       window.removeEventListener('scroll', onScroll);
@@ -41,201 +66,403 @@ export function SiteHeader() {
     };
   }, []);
 
+  // Everything closes on navigation — adjust-state-during-render, keyed on the
+  // pathname, rather than an effect that would paint the open menu once first.
+  const [seenPath, setSeenPath] = useState(pathname);
+  if (seenPath !== pathname) {
+    setSeenPath(pathname);
+    setOpenGroup(null);
+    setSheetOpen(false);
+    setSheetGroup(null);
+  }
+
+  // Desktop panels: Escape, click outside, focus leaving the header.
   useEffect(() => {
-    // A fullscreen mobile menu must own the viewport while it is open.
-    const previousOverflow = document.body.style.overflow;
-
-    if (mobileOpen) {
-      document.body.style.overflow = 'hidden';
-    }
-
-    return () => {
-      document.body.style.overflow = previousOverflow;
+    if (!openGroup) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setOpenGroup(null);
+        (headerRef.current?.querySelector(`[data-group="${openGroup}"]`) as HTMLElement | null)?.focus();
+      }
     };
-  }, [mobileOpen]);
+    const onPointer = (e: PointerEvent) => {
+      if (!headerRef.current?.contains(e.target as Node)) setOpenGroup(null);
+    };
+    window.addEventListener('keydown', onKey);
+    window.addEventListener('pointerdown', onPointer);
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      window.removeEventListener('pointerdown', onPointer);
+    };
+  }, [openGroup]);
+
+  // Sheet: scroll lock, Escape, focus management.
+  useEffect(() => {
+    if (!sheetOpen) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setSheetOpen(false);
+    };
+    window.addEventListener('keydown', onKey);
+    const trigger = menuButtonRef.current;
+    closeButtonRef.current?.focus();
+    return () => {
+      document.body.style.overflow = previous;
+      window.removeEventListener('keydown', onKey);
+      trigger?.focus();
+    };
+  }, [sheetOpen]);
+
+  const clearHover = () => {
+    if (hoverTimer.current) {
+      window.clearTimeout(hoverTimer.current);
+      hoverTimer.current = null;
+    }
+  };
+  const hoverOpen = useCallback((label: string) => {
+    clearHover();
+    hoverTimer.current = window.setTimeout(() => setOpenGroup(label), HOVER_OPEN_MS);
+  }, []);
+  const hoverClose = useCallback(() => {
+    clearHover();
+    hoverTimer.current = window.setTimeout(() => setOpenGroup(null), HOVER_CLOSE_MS);
+  }, []);
+
+  const headerHeight = compact ? 'h-14 lg:h-16' : 'h-16 lg:h-[4.75rem]';
 
   return (
-    <>
-      <header
-        className={cn(
-          'z-40 border-b transition-all duration-300 ease-out',
-          isHome
-            ? 'fixed inset-x-0 top-0'
-            : 'sticky top-0',
-          compact
-            ? 'border-[color:var(--vds-border)] bg-[color:var(--vds-bg)]/88 backdrop-blur-xl'
-            : isHome
-              ? 'border-[color:var(--vds-border)] vds-site-header'
-              : 'border-[color:var(--vds-border)] vds-site-header',
-        )}
+    <header
+      ref={headerRef}
+      className={cn(
+        'z-40 border-b border-hairline/80 transition-[background-color,box-shadow,border-color] duration-300 ease-out',
+        isHome ? 'fixed inset-x-0 top-0' : 'sticky top-0',
+        compact
+          ? 'bg-surface/90 shadow-[0_1px_0_rgba(0,3,12,0.04),0_12px_32px_-20px_rgba(0,3,12,0.25)] backdrop-blur-xl'
+          : 'bg-surface/80 backdrop-blur-xl',
+      )}
+      onBlur={(e) => {
+        // Focus left the header entirely (keyboard users tabbing past): close panels.
+        if (!headerRef.current?.contains(e.relatedTarget as Node | null)) setOpenGroup(null);
+      }}
+    >
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:z-50 focus:bg-chrome focus:px-4 focus:py-2 focus:font-data focus:text-eyebrow focus:uppercase focus:text-surface"
       >
-        <a
-          href="#main"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:z-50 focus:bg-chrome focus:px-4 focus:py-2 focus:font-data focus:text-eyebrow focus:uppercase focus:text-surface"
-        >
-          Skip to content
-        </a>
+        Skip to content
+      </a>
 
-        <div
-          className={cn(
-            'shell flex items-center justify-between gap-2 sm:gap-4 lg:gap-[clamp(0.5rem,1.5vw,1rem)] xl:gap-5 2xl:gap-6 transition-all duration-300 ease-out',
-            compact ? 'h-14' : 'h-20',
-          )}
+      <div className={cn('shell grid items-center transition-[height] duration-300 ease-out', headerHeight, 'grid-cols-[1fr_auto] lg:grid-cols-[1fr_auto_1fr]')}>
+        {/* Brand */}
+        <Link
+          href="/"
+          aria-label="Voltaris Mobility, home"
+          className="inline-flex min-h-11 w-fit items-center rounded-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volt focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
         >
-          <Link href="/" aria-label="Voltaris Mobility, home">
-            <VoltarisLogo
-              className={cn(
-                'transition-all duration-300 ease-out',
-                compact ? 'h-6 sm:h-7 xl:h-7' : 'h-7 sm:h-8 xl:h-9',
-              )}
-            />
-          </Link>
+          <VoltarisLogo className={cn('transition-[height] duration-300 ease-out', compact ? 'h-6 lg:h-7' : 'h-7 lg:h-8')} />
+        </Link>
 
-          <nav aria-label="Main" className="hidden items-center gap-[clamp(0.65rem,1.25vw,1rem)] xl:gap-5 2xl:gap-6 lg:flex">
-            {nav.primary.map((item) => {
-              const isCompare = item.href.split('?')[0] === '/compare';
-              const href = isCompare ? compareHref : item.href;
-              const active = pathname === item.href.split('?')[0];
+        {/* Desktop nav, centred */}
+        <nav aria-label="Main" className="hidden lg:block">
+          <ul className="flex items-center gap-1">
+            {siteNav.map((entry) => {
+              const active = isActive(pathname, entry.match);
+              if (!isGroup(entry)) {
+                const href = entry.href === '/compare' ? compareHref : entry.href;
+                return (
+                  <li key={entry.label}>
+                    <Link
+                      href={href}
+                      aria-current={active ? 'page' : undefined}
+                      className={cn(
+                        'group relative inline-flex h-10 items-center gap-1.5 px-3 font-data text-[0.8125rem] font-medium uppercase tracking-[0.1em] transition-colors duration-150',
+                        active ? 'text-chrome' : 'text-steel hover:text-chrome',
+                      )}
+                    >
+                      {entry.label}
+                      {entry.href === '/compare' && compareIds.length > 0 && (
+                        <span className="inline-flex h-4 min-w-[1rem] items-center justify-center rounded-full bg-chrome px-1 font-data text-[0.6rem] text-surface">
+                          {compareIds.length}
+                        </span>
+                      )}
+                      <span
+                        aria-hidden="true"
+                        className={cn(
+                          'absolute inset-x-3 bottom-1 h-px origin-left bg-volt transition-transform duration-300 ease-out',
+                          active ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100',
+                        )}
+                      />
+                    </Link>
+                  </li>
+                );
+              }
               return (
-                <Link
-                  key={item.href}
-                  href={href}
-                  aria-current={active ? 'page' : undefined}
-                  className={cn(
-                    'relative font-data text-[clamp(0.68rem,0.72vw,0.8125rem)] font-semibold uppercase tracking-[0.07em] transition-colors duration-150 xl:text-[15px]',
-                    active ? 'text-[color:var(--vds-text)]' : 'text-[color:var(--vds-text)] hover:text-[color:var(--vds-brand-secondary)]',
-                  )}
-                >
-                  {item.label}
-                  {isCompare && compareIds.length > 0 && (
-                    <span className="ml-1.5 inline-flex h-4 min-w-[1rem] items-center justify-center rounded-full bg-volt px-1 font-data text-[0.6rem] text-surface">
-                      {compareIds.length}
-                    </span>
-                  )}
-                  {active && <span className="absolute -bottom-2 left-0 h-px w-full bg-volt" />}
-                </Link>
+                <DesktopGroup
+                  key={entry.label}
+                  group={entry}
+                  active={active}
+                  open={openGroup === entry.label}
+                  onOpen={() => {
+                    clearHover();
+                    setOpenGroup(entry.label);
+                  }}
+                  onToggle={() => {
+                    clearHover();
+                    setOpenGroup((g) => (g === entry.label ? null : entry.label));
+                  }}
+                  onHoverIn={() => hoverOpen(entry.label)}
+                  onHoverOut={hoverClose}
+                />
               );
             })}
-          </nav>
+          </ul>
+        </nav>
 
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              aria-label={mobileOpen ? 'Close navigation menu' : 'Open navigation menu'}
-              aria-expanded={mobileOpen}
-              onClick={() => setMobileOpen((value) => !value)}
-              className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-hairline bg-surface/70 text-chrome backdrop-blur-md transition-colors hover:border-volt hover:text-volt lg:hidden"
-            >
-              {mobileOpen ? (
-                <X className="h-5 w-5" aria-hidden="true" />
-              ) : (
-                <Menu className="h-5 w-5" aria-hidden="true" />
-              )}
-            </button>
-            <Link
-              href="/account"
-              aria-label="Your account"
-              className="hidden h-10 w-10 items-center justify-center text-[color:var(--vds-text-secondary)] transition-colors hover:text-[color:var(--vds-text)] sm:inline-flex"
-            >
-              <User className="h-[18px] w-[18px]" />
-            </Link>
-            <Link
-              href="/sell"
-              className="hidden bg-volt px-[clamp(0.7rem,1.1vw,1rem)] py-2.5 font-data text-eyebrow uppercase tracking-[0.04em] text-surface transition-colors hover:vds-button-primary lg:inline-block"
-            >
-              Sell your car
-            </Link>
-          </div>
+        {/* Right: account (all sizes), menu (<1024) */}
+        <div className="flex items-center justify-end gap-1">
+          <Link
+            href="/account"
+            aria-label="Your account"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-full text-steel transition-colors hover:bg-slab hover:text-chrome focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volt"
+          >
+            <User className="h-[19px] w-[19px]" strokeWidth={1.75} aria-hidden="true" />
+          </Link>
+          <button
+            ref={menuButtonRef}
+            type="button"
+            aria-label="Open menu"
+            aria-expanded={sheetOpen}
+            aria-controls="site-menu"
+            onClick={() => setSheetOpen(true)}
+            className="inline-flex h-11 w-11 items-center justify-center rounded-full text-chrome transition-colors hover:bg-slab focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volt lg:hidden"
+          >
+            <Menu className="h-[22px] w-[22px]" strokeWidth={1.75} aria-hidden="true" />
+          </button>
         </div>
-      
-      {mobileOpen && (
+      </div>
+
+      {/* Phone / tablet sheet */}
+      {sheetOpen && (
         <div
-          className="fixed inset-0 z-[90] flex h-[100dvh] flex-col bg-surface lg:hidden"
+          id="site-menu"
           role="dialog"
           aria-modal="true"
-          aria-label="Mobile navigation"
+          aria-label="Menu"
+          className="fixed inset-0 z-[90] flex h-[100dvh] flex-col bg-surface animate-backdrop-in lg:hidden"
         >
-          <div className="shell flex h-16 shrink-0 items-center justify-between border-b border-hairline sm:h-20">
-            <Link
-              href="/"
-              aria-label="Voltaris Mobility home"
-              onClick={() => setMobileOpen(false)}
-              className="inline-flex items-center rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volt/60"
-            >
-              <VoltarisLogo className="h-7 sm:h-8" />
+          <div className="shell flex h-16 shrink-0 items-center justify-between border-b border-hairline">
+            <Link href="/" aria-label="Voltaris Mobility, home" onClick={() => setSheetOpen(false)} className="inline-flex min-h-11 items-center">
+              <VoltarisLogo className="h-7" />
             </Link>
-
             <button
+              ref={closeButtonRef}
               type="button"
-              aria-label="Close navigation menu"
-              onClick={() => setMobileOpen(false)}
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-hairline text-chrome transition-colors hover:border-volt hover:text-volt focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volt/60 sm:h-11 sm:w-11"
+              aria-label="Close menu"
+              onClick={() => setSheetOpen(false)}
+              className="inline-flex h-11 w-11 items-center justify-center rounded-full text-chrome transition-colors hover:bg-slab focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volt"
             >
-              <X className="h-5 w-5" aria-hidden="true" />
+              <X className="h-[22px] w-[22px]" strokeWidth={1.75} aria-hidden="true" />
             </button>
           </div>
 
-          <div className="shell flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain py-5 sm:py-8">
-            <nav aria-label="Mobile main" className="shrink-0">
-              <ul className="border-y border-hairline">
-                {nav.primary.map((item) => {
-                  const isCompare = item.href.split('?')[0] === '/compare';
-                  const href = isCompare ? compareHref : item.href;
-                  const active = pathname === item.href.split('?')[0];
-
+          <nav aria-label="Main" className="shell flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain pb-8 pt-2">
+            <ul className="divide-y divide-hairline">
+              {siteNav.map((entry, i) => {
+                const active = isActive(pathname, entry.match);
+                const delay = { animationDelay: `${60 + i * 45}ms` };
+                if (!isGroup(entry)) {
+                  const href = entry.href === '/compare' ? compareHref : entry.href;
                   return (
-                    <li key={item.href} className="border-b border-hairline last:border-b-0">
+                    <li key={entry.label} className="animate-rise-in" style={delay}>
                       <Link
                         href={href}
-                        onClick={() => setMobileOpen(false)}
+                        onClick={() => setSheetOpen(false)}
                         aria-current={active ? 'page' : undefined}
                         className={cn(
-                          'group flex min-h-[3.65rem] items-center justify-between px-1 py-2',
-                          'font-display text-[1.08rem] font-semibold leading-none tracking-[-0.025em]',
-                          'transition-colors duration-200 sm:min-h-14 sm:text-xl',
-                          active
-                            ? 'text-volt'
-                            : 'text-chrome hover:text-volt',
+                          'flex min-h-[3.75rem] items-center justify-between font-display text-[1.375rem] font-semibold tracking-[-0.02em]',
+                          active ? 'text-chrome' : 'text-chrome/85',
                         )}
                       >
-                        <span>{item.label}</span>
-
-                        <span
-                          className={cn(
-                            'font-data text-sm leading-none transition-transform duration-200 sm:text-base',
-                            active
-                              ? 'translate-x-0 text-volt'
-                              : 'translate-x-0 text-steel-muted group-hover:translate-x-1 group-hover:text-volt',
+                        <span className="flex items-center gap-3">
+                          {entry.label}
+                          {entry.href === '/compare' && compareIds.length > 0 && (
+                            <span className="inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-chrome px-1.5 font-data text-[0.65rem] text-surface">
+                              {compareIds.length}
+                            </span>
                           )}
-                          aria-hidden="true"
-                        >
-                          →
                         </span>
+                        <ArrowUpRight className="h-5 w-5 text-steel-muted" aria-hidden="true" />
                       </Link>
                     </li>
                   );
-                })}
-              </ul>
-            </nav>
+                }
+                const expanded = sheetGroup === entry.label;
+                const panelId = `sheet-${entry.label.toLowerCase()}`;
+                return (
+                  <li key={entry.label} className="animate-rise-in" style={delay}>
+                    <button
+                      type="button"
+                      aria-expanded={expanded}
+                      aria-controls={panelId}
+                      onClick={() => setSheetGroup(expanded ? null : entry.label)}
+                      className={cn(
+                        'flex min-h-[3.75rem] w-full items-center justify-between text-left font-display text-[1.375rem] font-semibold tracking-[-0.02em]',
+                        active || expanded ? 'text-chrome' : 'text-chrome/85',
+                      )}
+                    >
+                      {entry.label}
+                      <ChevronDown
+                        className={cn('h-5 w-5 text-steel-muted transition-transform duration-300 ease-out', expanded && 'rotate-180')}
+                        aria-hidden="true"
+                      />
+                    </button>
+                    <div
+                      id={panelId}
+                      className={cn('grid transition-[grid-template-rows] duration-300 ease-out', expanded ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]')}
+                    >
+                      <ul className="min-h-0 overflow-hidden">
+                        {entry.items.map((item) => {
+                          const itemActive = pathname === item.href;
+                          return (
+                            <li key={item.href}>
+                              <Link
+                                href={item.href}
+                                onClick={() => setSheetOpen(false)}
+                                aria-current={itemActive ? 'page' : undefined}
+                                className="flex min-h-12 flex-col justify-center py-2.5 pl-4"
+                              >
+                                <span className={cn('text-base font-medium', itemActive ? 'text-volt-deep' : 'text-chrome')}>{item.label}</span>
+                                {item.description && <span className="mt-0.5 text-sm text-steel-muted">{item.description}</span>}
+                              </Link>
+                            </li>
+                          );
+                        })}
+                        <li aria-hidden="true" className="h-3" />
+                      </ul>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
 
-            <div className="mt-auto flex shrink-0 items-center justify-between gap-4 border-t border-hairline pt-4 sm:pt-6">
-              <p className="max-w-[15rem] font-data text-[0.52rem] uppercase leading-relaxed tracking-[0.13em] text-steel-muted sm:text-[0.58rem]">
-                Mobility, selected with intention.
-              </p>
-
+            <div className="mt-auto pt-8 animate-rise-in" style={{ animationDelay: '320ms' }}>
               <Link
-                href="/cars"
-                onClick={() => setMobileOpen(false)}
-                className="shrink-0 font-data text-[0.56rem] font-semibold uppercase tracking-[0.15em] text-steel-muted transition-colors hover:text-volt sm:text-[0.6rem]"
+                href="/account"
+                onClick={() => setSheetOpen(false)}
+                className="vds-button vds-button-secondary w-full justify-between"
               >
-                Explore
+                <span className="inline-flex items-center gap-2">
+                  <User className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" /> Sign in or create an account
+                </span>
+                <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
               </Link>
+              <p className="mt-5 font-data text-[0.62rem] uppercase tracking-[0.16em] text-steel-muted">Kigali · Rwanda</p>
             </div>
-          </div>
+          </nav>
         </div>
       )}
+    </header>
+  );
+}
 
-</header>
-    </>
+function DesktopGroup({
+  group,
+  active,
+  open,
+  onOpen,
+  onToggle,
+  onHoverIn,
+  onHoverOut,
+}: {
+  group: NavGroup;
+  active: boolean;
+  open: boolean;
+  onOpen: () => void;
+  onToggle: () => void;
+  onHoverIn: () => void;
+  onHoverOut: () => void;
+}) {
+  const id = useId();
+  const pathname = usePathname();
+  const wide = group.items.length > 3;
+  return (
+    <li className="relative" onPointerEnter={onHoverIn} onPointerLeave={onHoverOut}>
+      <button
+        type="button"
+        data-group={group.label}
+        aria-expanded={open}
+        aria-controls={id}
+        onClick={onToggle}
+        onKeyDown={(e) => {
+          if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            onOpen();
+            requestAnimationFrame(() => {
+              (document.getElementById(id)?.querySelector('a') as HTMLElement | null)?.focus();
+            });
+          }
+        }}
+        className={cn(
+          'group relative inline-flex h-10 items-center gap-1 px-3 font-data text-[0.8125rem] font-medium uppercase tracking-[0.1em] transition-colors duration-150',
+          active || open ? 'text-chrome' : 'text-steel hover:text-chrome',
+        )}
+      >
+        {group.label}
+        <ChevronDown
+          className={cn('h-3.5 w-3.5 text-steel-muted transition-transform duration-300 ease-out', open && 'rotate-180 text-chrome')}
+          aria-hidden="true"
+        />
+        <span
+          aria-hidden="true"
+          className={cn(
+            'absolute inset-x-3 bottom-1 h-px origin-left bg-volt transition-transform duration-300 ease-out',
+            active ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100',
+          )}
+        />
+      </button>
+
+      {/* Panel. The invisible bridge keeps the hover alive across the gap. */}
+      <div
+        id={id}
+        hidden={!open}
+        className={cn(
+          'absolute left-1/2 top-full z-50 -translate-x-1/2 pt-3',
+          open && 'animate-panel-in',
+        )}
+      >
+        <div
+          className={cn(
+            'border border-hairline bg-surface p-2 shadow-[0_24px_60px_-24px_rgba(0,3,12,0.35),0_1px_0_rgba(0,3,12,0.04)]',
+            wide ? 'grid w-[38rem] grid-cols-2 gap-1' : 'w-[22rem]',
+          )}
+        >
+          {group.items.map((item) => {
+            const itemActive = pathname === item.href;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                aria-current={itemActive ? 'page' : undefined}
+                className="group/item flex items-start justify-between gap-4 rounded-sm px-3 py-3 transition-colors duration-150 hover:bg-slab focus-visible:bg-slab focus-visible:outline-none"
+              >
+                <span className="min-w-0">
+                  <span className={cn('block text-[0.9375rem] font-medium leading-tight', itemActive ? 'text-volt-deep' : 'text-chrome')}>
+                    {item.label}
+                  </span>
+                  {item.description && (
+                    <span className="mt-1 block text-[0.8125rem] leading-snug text-steel-muted">{item.description}</span>
+                  )}
+                </span>
+                <ArrowUpRight
+                  className="mt-0.5 h-4 w-4 shrink-0 -translate-x-1 translate-y-1 text-steel-muted opacity-0 transition-all duration-200 group-hover/item:translate-x-0 group-hover/item:translate-y-0 group-hover/item:opacity-100 group-focus-visible/item:opacity-100"
+                  aria-hidden="true"
+                />
+              </Link>
+            );
+          })}
+        </div>
+      </div>
+    </li>
   );
 }
