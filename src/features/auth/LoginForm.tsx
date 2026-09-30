@@ -2,7 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import Link from 'next/link';
 import { Button, Field, inputClass } from '@/components/ui';
@@ -16,7 +16,6 @@ import type { z } from 'zod';
 type Values = z.infer<typeof loginSchema>;
 
 export function LoginForm() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const [formError, setFormError] = useState<string | null>(null);
   const [mfaRequired, setMfaRequired] = useState(false);
@@ -38,8 +37,10 @@ export function LoginForm() {
         throw new Error('Authentication succeeded but no user session was returned.');
       }
 
-      router.replace(safeNext(searchParams.get('next')));
-      router.refresh();
+      // Full navigation, not router.replace: pages prefetched while signed out
+      // (e.g. /account → redirect to /login) sit in the client router cache and
+      // would bounce the user straight back to sign-in.
+      window.location.assign(safeNext(searchParams.get('next')));
     } catch (cause) {
       if (cause instanceof ApiError && cause.code === 'MFA_REQUIRED') {
         setMfaRequired(true);

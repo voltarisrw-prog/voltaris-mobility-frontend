@@ -77,33 +77,33 @@ export type NotificationRecord = {
 
 // API functions
 export async function getProfile(): Promise<Profile> {
-  return request('/me');
+  return request('/me', { auth: true });
 }
 
 export async function updateProfile(updates: Partial<Profile>): Promise<Profile> {
-  return request('/me', { method: 'PATCH', body: updates });
+  return request('/me', { method: 'PATCH', body: updates, auth: true });
 }
 
 export async function getSavedVehicles(): Promise<VehicleSummary[]> {
-  const response = await request<Page<VehicleSummary>>('/me/saved-vehicles');
+  const response = await request<Page<VehicleSummary>>('/me/saved-vehicles', { auth: true });
   return response?.items ?? [];
 }
 
 export async function getSavedSearches(): Promise<SavedSearch[]> {
-  return request('/me/saved-searches');
+  return request('/me/saved-searches', { auth: true });
 }
 
 export async function getMyInquiries(): Promise<InquiryRecord[]> {
-  const response = await request<Page<InquiryRecord>>('/me/inquiries');
+  const response = await request<Page<InquiryRecord>>('/me/inquiries', { auth: true });
   return response?.items ?? [];
 }
 
 export async function getMyTestDrives(): Promise<TestDriveRecord[]> {
-  const response = await request<Page<TestDriveRecord>>('/me/test-drives');
+  const response = await request<Page<TestDriveRecord>>('/me/test-drives', { auth: true });
   return response?.items ?? [];
 }
 
 export async function getNotifications(): Promise<NotificationRecord[]> {
-  const response = await request<Page<NotificationRecord>>('/me/notifications');
+  const response = await request<Page<NotificationRecord>>('/me/notifications', { auth: true });
   return response?.items ?? [];
 }

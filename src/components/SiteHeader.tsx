@@ -227,6 +227,7 @@ export function SiteHeader() {
         <div className="flex items-center justify-end gap-1">
           <Link
             href="/account"
+            prefetch={false}
             aria-label="Your account"
             className={cn('inline-flex h-11 w-11 items-center justify-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-volt', onHero ? 'text-white hover:bg-white/10' : 'text-steel hover:bg-slab hover:text-chrome')}
           >
@@ -353,6 +354,7 @@ export function SiteHeader() {
             <div className="mt-auto pt-8 animate-rise-in" style={{ animationDelay: '320ms' }}>
               <Link
                 href="/account"
+                prefetch={false}
                 onClick={() => setSheetOpen(false)}
                 className="vds-button vds-button-secondary w-full justify-between"
               >

@@ -1,13 +1,11 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Button, useToast } from '@/components/ui';
 import { logout } from '@/lib/api/auth';
 import { displayMessage } from '@/lib/api/errors';
 
 export function SignOutButton() {
-  const router = useRouter();
   const toast = useToast();
   const [pending, setPending] = useState(false);
 
@@ -20,8 +18,7 @@ export function SignOutButton() {
         try {
           // Only the backend can clear an httpOnly cookie, so sign-out is a request.
           await logout();
-          router.replace('/');
-          router.refresh();
+          window.location.assign('/');
         } catch (cause) {
           toast.push('error', displayMessage(cause));
           setPending(false);

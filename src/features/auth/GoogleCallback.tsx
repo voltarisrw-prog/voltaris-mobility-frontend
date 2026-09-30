@@ -2,14 +2,13 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { LoadingSkeleton } from '@/components/ui';
 import { googleCallback } from '@/lib/api/auth';
 import { displayMessage } from '@/lib/api/errors';
 import { safeNext } from './safeNext';
 
 export function GoogleCallback() {
-  const router = useRouter();
   const params = useSearchParams();
   const [exchangeError, setExchangeError] = useState<string | null>(null);
   // React 18 mounts effects twice in development. The authorization code is
@@ -42,11 +41,10 @@ export function GoogleCallback() {
         document.cookie = 'voltaris_next=; path=/; max-age=0';
         // Session cookies were set on the callback response; refresh so Server
         // Components re-render as signed in.
-        router.replace(safeNext(stored ? decodeURIComponent(stored) : null));
-        router.refresh();
+        window.location.replace(safeNext(stored ? decodeURIComponent(stored) : null));
       })
       .catch((cause: unknown) => setExchangeError(displayMessage(cause)));
-  }, [code, state, upfrontError, router]);
+  }, [code, state, upfrontError]);
 
   const error = upfrontError ?? exchangeError;
 
