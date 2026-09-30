@@ -6,7 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import Link from 'next/link';
 import { Button, Field, inputClass } from '@/components/ui';
-import { login } from '@/lib/api/auth';
+import { landingFor, login } from '@/lib/api/auth';
 import { ApiError, displayMessage } from '@/lib/api/errors';
 import { loginSchema } from '@/lib/validation/schemas';
 import { safeNext } from './safeNext';
@@ -40,7 +40,7 @@ export function LoginForm() {
       // Full navigation, not router.replace: pages prefetched while signed out
       // (e.g. /account → redirect to /login) sit in the client router cache and
       // would bounce the user straight back to sign-in.
-      window.location.assign(safeNext(searchParams.get('next')));
+      window.location.assign(safeNext(searchParams.get('next'), landingFor(result.user)));
     } catch (cause) {
       if (cause instanceof ApiError && cause.code === 'MFA_REQUIRED') {
         setMfaRequired(true);

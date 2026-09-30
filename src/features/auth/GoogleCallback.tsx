@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { LoadingSkeleton } from '@/components/ui';
-import { googleCallback } from '@/lib/api/auth';
+import { googleCallback, landingFor } from '@/lib/api/auth';
 import { displayMessage } from '@/lib/api/errors';
 import { safeNext } from './safeNext';
 
@@ -33,7 +33,7 @@ export function GoogleCallback() {
     started.current = true;
 
     googleCallback(code, state)
-      .then(() => {
+      .then((session) => {
         const stored = document.cookie
           .split('; ')
           .find((c) => c.startsWith('voltaris_next='))
@@ -41,7 +41,9 @@ export function GoogleCallback() {
         document.cookie = 'voltaris_next=; path=/; max-age=0';
         // Session cookies were set on the callback response; refresh so Server
         // Components re-render as signed in.
-        window.location.replace(safeNext(stored ? decodeURIComponent(stored) : null));
+        window.location.replace(
+          safeNext(stored ? decodeURIComponent(stored) : null, landingFor(session.user)),
+        );
       })
       .catch((cause: unknown) => setExchangeError(displayMessage(cause)));
   }, [code, state, upfrontError]);

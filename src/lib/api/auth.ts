@@ -28,6 +28,11 @@ export const STAFF_ROLES: readonly Role[] = [
   'SUPER_ADMIN',
 ];
 
+/** Where a person lands after signing in when no `next` was asked for: staff go to the admin area. */
+export function landingFor(user: Pick<PublicUser, 'roles'>): string {
+  return user.roles.some((role) => STAFF_ROLES.includes(role)) ? '/admin' : '/account';
+}
+
 export interface PublicUser {
   id: string;
   full_name: string;

@@ -50,7 +50,19 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             {session.user.email}
           </span>
         </div>
-        <SignOutButton />
+        <div className="flex items-center gap-6">
+          <Link href="/" className="font-data text-eyebrow uppercase text-steel hover:text-chrome">
+            View site
+          </Link>
+          <Link
+            href="/account"
+            prefetch={false}
+            className="font-data text-eyebrow uppercase text-steel hover:text-chrome"
+          >
+            My account
+          </Link>
+          <SignOutButton />
+        </div>
       </header>
 
       <nav aria-label="Admin" className="mt-4 flex flex-wrap gap-5 border-b border-hairline/60 pb-4">

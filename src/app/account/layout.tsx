@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { getSession } from '@/lib/api/auth';
+import { STAFF_ROLES, getSession } from '@/lib/api/auth';
 import { ApiError } from '@/lib/api/errors';
 import { SignOutButton } from '@/features/auth/SignOutButton';
 
@@ -47,7 +47,14 @@ export default async function AccountLayout({ children }: { children: React.Reac
           <p className="eyebrow">Your account</p>
           <h1 className="mt-2 font-display text-headline">{session.user.full_name}</h1>
         </div>
-        <SignOutButton />
+        <div className="flex items-center gap-6">
+          {session.user.roles.some((role) => STAFF_ROLES.includes(role)) && (
+            <Link href="/admin" prefetch={false} className="vds-button vds-button-primary">
+              Admin dashboard
+            </Link>
+          )}
+          <SignOutButton />
+        </div>
       </header>
 
       {!session.user.email_verified && (
