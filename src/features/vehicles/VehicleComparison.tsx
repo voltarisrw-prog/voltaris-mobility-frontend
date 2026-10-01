@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { Check, Link2, X } from 'lucide-react';
 import { useEffect, useState, type CSSProperties } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -143,6 +144,7 @@ export function VehicleComparison() {
   const searchParams = useSearchParams();
   const toast = useToast();
   const [diffOnly, setDiffOnly] = useState(false);
+  const [copied, setCopied] = useState(false);
   const ids = (searchParams.get('ids') ?? '').split(',').filter(Boolean).slice(0, MAX);
   const modeParam = searchParams.get('mode');
   const mode = modeParam === 'rental' ? 'rental' : 'sale';
@@ -363,7 +365,15 @@ export function VehicleComparison() {
                   <div className="vc-meter">
                     <i style={{ width: `${(vehicle.range_km / maxRange) * 100}%` }} />
                   </div>
-                  <button type="button" onClick={() => remove(vehicle.id)} className="vc-rm">
+                  <button
+                    type="button"
+                    onClick={() => remove(vehicle.id)}
+                    className="vc-rm"
+                    aria-label={`Remove ${vehicle.year} ${vehicle.make} ${vehicle.model} from the comparison`}
+                  >
+                    <span className="vc-rm-x" aria-hidden="true">
+                      <X size={12} strokeWidth={2.75} />
+                    </span>
                     Remove vehicle
                   </button>
                 </div>
@@ -501,18 +511,23 @@ export function VehicleComparison() {
         before you commit to a used EV.
       </p>
 
-      <Button
-        variant="ghost"
+      <button
+        type="button"
+        className="vc-copy"
+        data-copied={copied}
         onClick={() => {
           toast.push(
             'success',
             'Comparison link copied. Anyone you send it to sees the same table.',
           );
           void navigator.clipboard?.writeText(window.location.href);
+          setCopied(true);
+          window.setTimeout(() => setCopied(false), 2200);
         }}
       >
-        Copy comparison link
-      </Button>
+        {copied ? <Check size={16} strokeWidth={2.5} /> : <Link2 size={16} strokeWidth={2.25} />}
+        {copied ? 'Link copied' : 'Copy comparison link'}
+      </button>
     </div>
   );
 }

@@ -23,9 +23,6 @@ export default function ComparePage() {
         ]}
       />
       <h1 className="mt-6 font-display text-headline">Compare before you choose</h1>
-      <p className="mt-3 max-w-prose text-sm leading-relaxed text-steel">
-        See how electric and hybrid cars stack up across the details that matter, with the better value marked in every row.
-      </p>
       <div className="mt-10">
         <Suspense fallback={<LoadingSkeleton lines={10} />}>
           <VehicleComparison />
