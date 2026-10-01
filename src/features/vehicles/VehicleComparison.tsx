@@ -1,11 +1,11 @@
 'use client';
 
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type CSSProperties } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Button, LoadingSkeleton, useToast } from '@/components/ui';
-import { RangeMeter } from '@/components/RangeMeter';
+import './vehicle-comparison.css';
 import { compareVehicles } from '@/lib/api/vehicles';
 import { displayMessage } from '@/lib/api/errors';
 import { formatKm, formatKwh, formatPrice } from '@/lib/format';
@@ -142,6 +142,7 @@ export function VehicleComparison() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const toast = useToast();
+  const [diffOnly, setDiffOnly] = useState(false);
   const ids = (searchParams.get('ids') ?? '').split(',').filter(Boolean).slice(0, MAX);
   const modeParam = searchParams.get('mode');
   const mode = modeParam === 'rental' ? 'rental' : 'sale';
@@ -253,206 +254,238 @@ export function VehicleComparison() {
   if (!vehicles) return <LoadingSkeleton lines={10} />;
 
   const groups = [...new Set(ROWS.map((row) => row.group))];
+  const COLORS = ['#5CC8FF', '#12d6b0', '#8b9cff', '#ffb84d'];
+  const maxRange = Math.max(...vehicles.map((v) => v.range_km));
+  const shortName = (v: VehicleDetail) => `${v.make} ${v.model}`;
+
+  // Scoreboard. A row only counts as won when the numbers actually differ, so a tie
+  // (both cars are 2024) no longer marks everything as "best".
+  const wins = vehicles.map(() => 0);
+  let ties = 0;
+  let measurable = 0;
+  const results = new Map<
+    string,
+    { values: string[]; numbers: (number | null)[]; best: number | null; same: boolean }
+  >();
+  for (const row of ROWS) {
+    const numbers = row.numeric ? vehicles.map(row.numeric) : [];
+    const valid = numbers.filter((n): n is number => n !== null);
+    const values = vehicles.map((v) => row.value(v));
+    const decisive = Boolean(row.better) && valid.length > 1 && new Set(valid).size > 1;
+    const best = decisive
+      ? row.better === 'higher'
+        ? Math.max(...valid)
+        : Math.min(...valid)
+      : null;
+    if (row.better && valid.length > 1) {
+      measurable += 1;
+      if (best === null) ties += 1;
+      else
+        numbers.forEach((n, i) => {
+          if (n === best) wins[i] = (wins[i] ?? 0) + 1;
+        });
+    }
+    results.set(row.label, {
+      values,
+      numbers,
+      best,
+      same: values.every((x) => x === values[0]),
+    });
+  }
+  const topWins = Math.max(...wins);
+  const leaders = vehicles.filter((_, i) => wins[i] === topWins);
+  const leader = leaders.length === 1 ? leaders[0] : undefined;
+  const verdict =
+    topWins === 0
+      ? 'Nothing separates these vehicles yet'
+      : leader
+        ? `${shortName(leader)} leads on ${topWins} of ${measurable} measurable rows`
+        : `Neck and neck across ${measurable} measurable rows`;
 
   return (
-    <div className="voltaris-comparison">
-      <div className="voltaris-comparison-stage">
-        <div className="voltaris-comparison-stage-kicker">
-          <span className="eyebrow">YOUR SHORTLIST</span>
-          <span className="font-data text-[0.6rem] uppercase tracking-[0.16em] text-steel-muted">
+    <div className="vc">
+      <div className="vc-board">
+        <div className="vc-top">
+          <strong>Your shortlist</strong>
+          <span>
             {vehicles.length} {vehicles.length === 1 ? 'vehicle' : 'vehicles'}
           </span>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="voltaris-comparison-table w-full min-w-[44rem] border-collapse text-sm">
-            <caption className="sr-only">
-              Side-by-side comparison of {vehicles.length} electric and hybrid vehicles
-            </caption>
-            <thead>
-              <tr>
-                <th scope="col" className="voltaris-comparison-label-head">
-                  <span className="eyebrow">COMPARE</span>
-                </th>
-                {vehicles.map((vehicle, index) => (
-                  <th
-                    key={vehicle.id}
-                    scope="col"
-                    className="voltaris-comparison-vehicle-head"
+        <div className="vc-scroller" data-n={vehicles.length}>
+          <div
+            className="vc-table"
+            role="table"
+            aria-label={`Side-by-side comparison of ${vehicles.length} electric and hybrid vehicles`}
+            style={{ '--n': vehicles.length } as CSSProperties}
+          >
+            <div className="vc-r" role="row">
+              <div className="vc-lab" role="columnheader">
+                <span>Compare</span>
+                <small>Side by side, best value marked</small>
+              </div>
+              {vehicles.map((vehicle) => (
+                <div key={vehicle.id} className="vc-car" role="columnheader">
+                  <Link
+                    href={`/cars/${vehicle.slug}`}
+                    className="vc-photo"
+                    aria-label={`View details for ${vehicle.year} ${vehicle.make} ${vehicle.model}`}
                   >
-                    <Link
-                      href={`/cars/${vehicle.slug}`}
-                      className="voltaris-comparison-vehicle-image"
-                      aria-label={`View details for ${vehicle.year} ${vehicle.make} ${vehicle.model}`}
-                    >
-                      {vehicle.primary_image ? (
-                        <Image
-                          src={
-                            vehicle.primary_image.detail ??
-                            vehicle.primary_image.card
-                          }
-                          alt={
-                            vehicle.primary_image.alt ||
-                            `${vehicle.year} ${vehicle.make} ${vehicle.model}`
-                          }
-                          fill
-                          sizes="(min-width: 1024px) 14rem, 12.5rem"
-                          className="object-cover transition-transform duration-700 ease-out hover:scale-[1.035]"
-                          {...(vehicle.primary_image.blur_data_url
-                            ? {
-                                placeholder: 'blur' as const,
-                                blurDataURL:
-                                  vehicle.primary_image.blur_data_url,
-                              }
-                            : {})}
-                        />
-                      ) : (
-                        <span className="font-data text-[0.58rem] uppercase tracking-[0.16em] text-steel-muted">
-                          Photos coming soon
-                        </span>
-                      )}
-                    </Link>
+                    {vehicle.primary_image ? (
+                      <Image
+                        src={vehicle.primary_image.detail ?? vehicle.primary_image.card}
+                        alt={
+                          vehicle.primary_image.alt ||
+                          `${vehicle.year} ${vehicle.make} ${vehicle.model}`
+                        }
+                        fill
+                        sizes="(min-width: 1024px) 24rem, 50vw"
+                        className="object-cover"
+                        {...(vehicle.primary_image.blur_data_url
+                          ? {
+                              placeholder: 'blur' as const,
+                              blurDataURL: vehicle.primary_image.blur_data_url,
+                            }
+                          : {})}
+                      />
+                    ) : (
+                      <span className="vc-nophoto">Photos coming soon</span>
+                    )}
+                  </Link>
+                  <Link href={`/cars/${vehicle.slug}`} className="vc-name">
+                    {vehicle.year} {vehicle.make} {vehicle.model}
+                  </Link>
+                  <div className="vc-price">{formatPrice(vehicle.price, vehicle.currency)}</div>
+                  <div className="vc-rng">
+                    <span>Range</span>
+                    <b>{vehicle.range_km} km</b>
+                  </div>
+                  <div className="vc-meter">
+                    <i style={{ width: `${(vehicle.range_km / maxRange) * 100}%` }} />
+                  </div>
+                  <button type="button" onClick={() => remove(vehicle.id)} className="vc-rm">
+                    Remove vehicle
+                  </button>
+                </div>
+              ))}
+            </div>
 
-                    <div className="voltaris-comparison-index">
-                      0{index + 1}
+            {vehicles.length > 1 && measurable > 0 && (
+              <div className="vc-verdict">
+                <p>{verdict}</p>
+                <div className="vc-vbar" role="img" aria-label="Head-to-head results">
+                  {vehicles.map((v, i) =>
+                    wins[i] ? (
+                      <i key={v.id} style={{ flex: wins[i], background: COLORS[i] }} />
+                    ) : null,
+                  )}
+                  {ties > 0 && <i style={{ flex: ties, background: '#e3e7f0' }} />}
+                </div>
+                <div className="vc-vkey">
+                  {vehicles.map((v, i) => (
+                    <span key={v.id} style={{ '--c': COLORS[i] } as CSSProperties}>
+                      {shortName(v)} {wins[i]}
+                    </span>
+                  ))}
+                  {ties > 0 && (
+                    <span style={{ '--c': '#e3e7f0' } as CSSProperties}>Equal {ties}</span>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {vehicles.length > 1 && (
+              <label className="vc-tools">
+                <span>Show differences only</span>
+                <input
+                  type="checkbox"
+                  className="vc-tg"
+                  checked={diffOnly}
+                  onChange={(e) => setDiffOnly(e.target.checked)}
+                />
+              </label>
+            )}
+
+            <div className="vc-r" aria-hidden="true">
+              <div className="vc-ch vc-ch-lab" />
+              {vehicles.map((v, i) => (
+                <div key={v.id} className="vc-ch" style={{ '--c': COLORS[i] } as CSSProperties}>
+                  <span className="vc-dot" />
+                  {shortName(v)}
+                </div>
+              ))}
+            </div>
+
+            {groups.map((group) => (
+              <div key={group} className="vc-g">
+                <div className="vc-gh" role="row">
+                  <div role="columnheader">{group}</div>
+                </div>
+                {ROWS.filter((row) => row.group === group).map((row) => {
+                  const r = results.get(row.label);
+                  if (!r) return null;
+                  return (
+                    <div key={row.label} role="row" className="vc-r" hidden={diffOnly && r.same}>
+                      <div role="rowheader" className="vc-l">
+                        {row.label}
+                        {row.note && <small>{row.note}</small>}
+                      </div>
+                      {vehicles.map((vehicle, i) => {
+                        const isBest = r.best !== null && r.numbers[i] === r.best;
+                        return (
+                          <div
+                            key={vehicle.id}
+                            role="cell"
+                            className={isBest ? 'vc-c is-best' : 'vc-c'}
+                          >
+                            <span>{r.values[i]}</span>
+                            {isBest && (
+                              <>
+                                <span className="vc-best" aria-hidden="true">
+                                  Best
+                                </span>
+                                <span className="sr-only"> (best of the compared vehicles)</span>
+                              </>
+                            )}
+                          </div>
+                        );
+                      })}
                     </div>
-
-                    <Link
-                      href={`/cars/${vehicle.slug}`}
-                      className="voltaris-comparison-vehicle-name"
-                    >
-                      {vehicle.year} {vehicle.make} {vehicle.model}
-                    </Link>
-
-                    <div className="voltaris-comparison-range">
-                      <span className="font-data text-[0.58rem] uppercase tracking-[0.16em] text-steel-muted">
-                        RANGE
-                      </span>
-                      <span className="font-data text-sm tabular-nums text-chrome">
-                        {vehicle.range_km} km
-                      </span>
-                    </div>
-
-                    <RangeMeter rangeKm={vehicle.range_km} showLabel={false} />
-
-                    <button
-                      type="button"
-                      onClick={() => remove(vehicle.id)}
-                      className="voltaris-comparison-remove"
-                    >
-                      Remove vehicle
-                    </button>
-                  </th>
-                ))}
-              </tr>
-            </thead>
-
-            {groups.map((group) => {
-              const rows = ROWS.filter((row) => row.group === group);
-              return (
-            <tbody key={group} className="voltaris-comparison-group">
-              <tr>
-                <th
-                  colSpan={vehicles.length + 1}
-                  scope="colgroup"
-                  className="voltaris-comparison-group-head"
-                >
-                  <span className="voltaris-comparison-group-number">
-                    {String(groups.indexOf(group) + 1).padStart(2, '0')}
-                  </span>
-                  <span className="eyebrow">{group}</span>
-                </th>
-              </tr>
-              {rows.map((row) => {
-                const numbers = row.numeric ? vehicles.map(row.numeric) : [];
-                const valid = numbers.filter((n): n is number => n !== null);
-                const best =
-                  row.better && valid.length > 1
-                    ? row.better === 'higher'
-                      ? Math.max(...valid)
-                      : Math.min(...valid)
-                    : null;
-
-                return (
-                  <tr key={row.label} className="voltaris-comparison-row">
-                    <th scope="row" className="voltaris-comparison-row-label">
-                      <span className="text-steel">{row.label}</span>
-                      {row.note && (
-                        <span className="voltaris-comparison-row-note">{row.note}</span>
-                      )}
-                    </th>
-                    {vehicles.map((vehicle, index) => {
-                      const isBest = best !== null && numbers[index] === best;
-                      return (
-                        <td
-                          key={vehicle.id}
-                          className={isBest ? 'voltaris-comparison-value is-best' : 'voltaris-comparison-value'}
-                        >
-                          <span className="font-data text-sm tabular-nums">
-                            {row.value(vehicle)}
-                          </span>
-                          {isBest && (
-                            <>
-                              <span className="voltaris-comparison-best-mark" aria-hidden="true">
-                                BEST
-                              </span>
-                              <span className="sr-only"> (best of the compared vehicles)</span>
-                            </>
-                          )}
-                        </td>
-                      );
-                    })}
-                  </tr>
-                );
-              })}
-            </tbody>
-          );
-            })}
-          </table>
+                  );
+                })}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
-      <section className="voltaris-comparison-actions" aria-label="Choose your next step">
-        <div className="voltaris-comparison-actions-head">
-          <div>
-            <p className="eyebrow">READY TO MOVE</p>
-            <h2 className="mt-2 font-display text-2xl tracking-tight text-chrome sm:text-3xl">
-              Choose what happens next
-            </h2>
-          </div>
-          <p className="max-w-md text-sm leading-relaxed text-steel">
-            Compare the numbers, then order your preferred car or book a free demo drive before you decide.
-          </p>
-        </div>
-
-        <div className="voltaris-comparison-action-grid">
+      <section className="vc-next" aria-label="Choose your next step">
+        <h2>Choose what happens next</h2>
+        <p>
+          Compare the numbers, then order your preferred car or book a free demo drive before you
+          decide.
+        </p>
+        <div className="vc-picks">
           {vehicles.map((vehicle) => {
             const vehicleTitle = `${vehicle.year} ${vehicle.make} ${vehicle.model}`;
-
             return (
-              <article key={vehicle.id} className="voltaris-comparison-action-card">
+              <article key={vehicle.id} className="vc-pick">
                 <div>
-                  <p className="font-data text-[0.58rem] uppercase tracking-[0.16em] text-volt">
-                    {vehicle.make}
-                  </p>
-                  <h3 className="mt-1 font-display text-lg font-semibold tracking-tight text-chrome">
-                    {vehicleTitle}
-                  </h3>
+                  <span>{vehicle.make}</span>
+                  <strong>{vehicleTitle}</strong>
                 </div>
-
-                <div className="mt-5 flex flex-col gap-2 sm:flex-row">
+                <div className="vc-btns">
                   <Link
                     href={`/checkout/start?vehicle=${encodeURIComponent(vehicle.id)}`}
-                    className="inline-flex min-h-11 items-center justify-center border border-volt bg-volt px-4 py-2.5 font-data text-[0.6rem] uppercase tracking-[0.14em] text-surface transition-colors hover:bg-volt-bright"
+                    className="vc-btn"
                   >
                     Order this car
                   </Link>
-
                   <Link
                     href={`/test-drive?vehicle=${encodeURIComponent(vehicle.id)}`}
-                    className="inline-flex min-h-11 items-center justify-center border border-chrome/30 px-4 py-2.5 font-data text-[0.6rem] uppercase tracking-[0.14em] text-chrome transition-colors hover:border-volt hover:text-volt"
+                    className="vc-btn vc-ghost"
                   >
-                    Free Demo Drive
+                    Free demo drive
                   </Link>
                 </div>
               </article>
@@ -461,7 +494,7 @@ export function VehicleComparison() {
         </div>
       </section>
 
-      <p className="mt-8 max-w-prose text-xs leading-relaxed text-steel-muted">
+      <p className="vc-fine">
         Charging times are calculated from battery size and the vehicle’s stated charge rate, so
         they are an upper bound — real sessions taper near full. Range figures are manufacturer
         claims; expect less on Rwandan hills with a full car. Ask us for the battery health report
@@ -470,7 +503,6 @@ export function VehicleComparison() {
 
       <Button
         variant="ghost"
-        className="mt-6"
         onClick={() => {
           toast.push(
             'success',
