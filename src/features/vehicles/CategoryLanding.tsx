@@ -1,9 +1,10 @@
 import Link from 'next/link';
 import { JsonLd } from '@/components/JsonLd';
+import { FilterButton } from '@/features/market/FilterButton';
 import { MarketFeed } from '@/features/market/MarketFeed';
 import { MarketShell } from '@/features/market/MarketShell';
 import s from '@/features/market/market.module.css';
-import { listVehicles } from '@/lib/api/vehicles';
+import { getFacets, listVehicles, type VehicleFacets } from '@/lib/api/vehicles';
 import { breadcrumbJsonLd } from '@/lib/seo/jsonld';
 import type { LandingPage } from '@/config/landing';
 import type { VehicleSummary } from '@/types/vehicle';
@@ -17,14 +18,17 @@ export async function CategoryLanding({ page }: { page: LandingPage }) {
   let vehicles: VehicleSummary[] = [];
   let total = 0;
   let failed = false;
+  let facets: VehicleFacets | null = null;
 
-  try {
-    const result = await listVehicles({ ...page.filters, mode: 'sale', sort: 'newest' });
-    vehicles = result.items;
-    total = result.total;
-  } catch {
-    failed = true;
-  }
+  const [list, facetResult] = await Promise.allSettled([
+    listVehicles({ ...page.filters, mode: 'sale', sort: 'newest' }),
+    getFacets(),
+  ]);
+  if (list.status === 'fulfilled') {
+    vehicles = list.value.items;
+    total = list.value.total;
+  } else failed = true;
+  if (facetResult.status === 'fulfilled') facets = facetResult.value;
 
   const trail = [
     { name: 'Home', path: '/' },
@@ -33,7 +37,13 @@ export async function CategoryLanding({ page }: { page: LandingPage }) {
   ];
 
   return (
-    <MarketShell title={page.h1} mode="sale" current={`/${page.slug}`} total={total}>
+    <MarketShell
+      title={page.h1}
+      mode="sale"
+      current={`/${page.slug}`}
+      total={total}
+      tools={<FilterButton action="/buy" mode="sale" filters={page.filters} facets={facets} />}
+    >
       <JsonLd data={breadcrumbJsonLd(trail)} />
       {failed || vehicles.length === 0 ? (
         <div className={s.empty}>

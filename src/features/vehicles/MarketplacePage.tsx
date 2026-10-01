@@ -1,10 +1,11 @@
 import Link from 'next/link';
 import { JsonLd } from '@/components/JsonLd';
 import { Pagination } from '@/components/Pagination';
+import { FilterButton } from '@/features/market/FilterButton';
 import { MarketFeed } from '@/features/market/MarketFeed';
 import { MarketShell } from '@/features/market/MarketShell';
 import s from '@/features/market/market.module.css';
-import { listVehicles } from '@/lib/api/vehicles';
+import { getFacets, listVehicles, type VehicleFacets } from '@/lib/api/vehicles';
 import { displayMessage } from '@/lib/api/errors';
 import { breadcrumbJsonLd } from '@/lib/seo/jsonld';
 import { parseFilters, type RawSearchParams } from '@/lib/vehicles/filters';
@@ -21,7 +22,7 @@ export interface MarketplacePageProps {
   description?: string;
 }
 
-/** Buy, Rent and Cars: the shared marketplace frame with one car per stage. */
+/** Buy, Rent and Cars: the shared marketplace frame — showroom, gallery, Filter. */
 export async function MarketplacePage({
   searchParams,
   mode,
@@ -35,12 +36,15 @@ export async function MarketplacePage({
     (mode ?? marketplaceFilters.mode) === 'rental' ? 'rental' : 'sale';
 
   let results: Page<VehicleSummary> | null = null;
+  let facets: VehicleFacets | null = null;
   let error: string | null = null;
-  try {
-    results = await listVehicles(marketplaceFilters);
-  } catch (cause) {
-    error = displayMessage(cause);
-  }
+  const [list, facetResult] = await Promise.allSettled([
+    listVehicles(marketplaceFilters),
+    getFacets(),
+  ]);
+  if (list.status === 'fulfilled') results = list.value;
+  else error = displayMessage(list.reason);
+  if (facetResult.status === 'fulfilled') facets = facetResult.value;
 
   const resolvedTitle =
     title ??
@@ -51,7 +55,15 @@ export async function MarketplacePage({
   ];
 
   return (
-    <MarketShell title={resolvedTitle} mode={view} current={basePath} total={results?.total}>
+    <MarketShell
+      title={resolvedTitle}
+      mode={view}
+      current={basePath}
+      total={results?.total}
+      tools={
+        <FilterButton action={basePath} mode={view} filters={marketplaceFilters} facets={facets} />
+      }
+    >
       <JsonLd data={breadcrumbJsonLd(trail)} />
       {error ? (
         <div className={s.empty}>

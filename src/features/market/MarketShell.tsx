@@ -1,14 +1,6 @@
-import { Inter } from 'next/font/google';
 import Link from 'next/link';
+import { heavy } from './fonts';
 import s from './market.module.css';
-
-// Display weights for the car names and prices (the site's own Inter stays 400–600).
-const heavy = Inter({
-  subsets: ['latin'],
-  weight: ['700', '800'],
-  variable: '--font-inter-heavy',
-  display: 'swap',
-});
 
 /** Every Explore destination, in the order people browse them. */
 export const EXPLORE = [
@@ -21,8 +13,8 @@ export const EXPLORE = [
 ] as const;
 
 /**
- * The frame every marketplace page shares: Buy / Rent switch, Explore chips,
- * then the feed. The page title is kept for search engines and screen readers
+ * The frame every marketplace page shares: Buy / Rent switch, Filter, the
+ * Explore chips, then the gallery. The page title is kept for search engines and screen readers
  * only — the switch and the chips already say where you are.
  */
 export function MarketShell({
@@ -30,6 +22,7 @@ export function MarketShell({
   mode,
   current,
   total,
+  tools,
   children,
 }: {
   title: string;
@@ -37,6 +30,8 @@ export function MarketShell({
   /** The path of this page, to light up its switch side or chip. */
   current: string;
   total?: number;
+  /** The Filter button. */
+  tools?: React.ReactNode;
   children: React.ReactNode;
 }) {
   return (
@@ -53,6 +48,7 @@ export function MarketShell({
               Rent
             </Link>
           </nav>
+          {tools}
           <nav className={s.explore} aria-label="Explore">
             <span className={s.exploreLabel}>Explore</span>
             <div className={s.pills}>
