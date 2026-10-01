@@ -1,0 +1,725 @@
+/*
+ * The marketplace — Buy, Rent, Cars and every Explore page share this one look.
+ *
+ *  Top    a Buy / Rent switch and the Explore chips. No breadcrumbs, no intro
+ *         copy: the chips say where you are.
+ *  Feed   one car per card, in a single column. The photo is shown whole —
+ *         never cropped, nothing written on it — standing in a showroom: a
+ *         spotlight from above, a floor glow and its own reflection. Words,
+ *         numbers and buttons sit beside it (below it on phones). On large
+ *         screens each card pins under the header and the next slides over it.
+ *
+ * Company colours: navy #0d1a55 → royal #1c3fb8, volt #35a2ff, the logo's road
+ * light #5cc8ff, ice #e8f4ff.
+ */
+
+.market {
+  --ink: #070d24;
+  --navy: #0d1a55;
+  --royal: #1c3fb8;
+  --volt: #35a2ff;
+  --light: #5cc8ff;
+  --ice: #e8f4ff;
+  --mut: #9aa7c4;
+  --g: #35a2ff;
+  --spring: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --heavy: var(--font-inter-heavy), var(--font-inter), Inter, ui-sans-serif, system-ui, sans-serif;
+  position: relative;
+  isolation: isolate;
+  padding: 18px 0 64px;
+  color: var(--ink);
+  font-family: var(--font-inter), Inter, ui-sans-serif, system-ui, sans-serif;
+}
+/* the page takes a soft tint of the car on stage */
+.market::before {
+  content: '';
+  position: absolute;
+  inset: -120px 0 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      60% 420px at 50% 0%,
+      color-mix(in srgb, var(--g) 16%, transparent),
+      transparent 75%
+    ),
+    linear-gradient(#f4f7fd, #f8fafd 40%, #fff);
+  transition: background 1s;
+}
+.market *,
+.market *::before,
+.market *::after {
+  box-sizing: border-box;
+}
+.market svg {
+  flex-shrink: 0;
+  max-width: none;
+}
+.market :is(a, button):focus-visible {
+  outline: 2px solid var(--volt);
+  outline-offset: 3px;
+  box-shadow: none;
+  --tw-ring-shadow: 0 0 #0000;
+}
+.wrap {
+  width: min(1240px, 100% - 24px);
+  margin: 0 auto;
+}
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ───────────────────────── top: switch + explore ───────────────────────── */
+.bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 18px;
+  margin-bottom: 18px;
+}
+.gate {
+  position: relative;
+  display: inline-grid;
+  grid-template-columns: 1fr 1fr;
+  flex-shrink: 0;
+  padding: 5px;
+  border-radius: 99px;
+  background: #fff;
+  box-shadow:
+    0 10px 30px -18px rgba(7, 13, 36, 0.45),
+    0 0 0 1px rgba(7, 13, 36, 0.07);
+}
+.gate i {
+  position: absolute;
+  top: 5px;
+  bottom: 5px;
+  left: 5px;
+  width: calc(50% - 5px);
+  border-radius: 99px;
+  background: linear-gradient(135deg, var(--navy), var(--royal));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 8px 20px -8px rgba(28, 63, 184, 0.8);
+  transition: transform 0.55s cubic-bezier(0.7, 0, 0.2, 1.25);
+}
+.gate[data-m='rental'] i {
+  transform: translateX(100%);
+}
+.gate a {
+  position: relative;
+  z-index: 1;
+  min-width: 96px;
+  padding: 11px 26px;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  color: #5b6684;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+.gate a[aria-current='page'] {
+  color: #fff;
+}
+
+.explore {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  flex: 1;
+}
+.exploreLabel {
+  flex-shrink: 0;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #8a94ad;
+}
+.pills {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  min-width: 0;
+  padding: 4px 2px;
+  margin: -4px 0;
+  -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent);
+  mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent);
+}
+.pills::-webkit-scrollbar {
+  display: none;
+}
+.pill {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 42px;
+  padding: 0 16px 0 13px;
+  border-radius: 99px;
+  background: #fff;
+  box-shadow: 0 0 0 1px rgba(7, 13, 36, 0.08);
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  color: #3b4562;
+  text-decoration: none;
+  transition:
+    background 0.3s,
+    color 0.3s,
+    box-shadow 0.3s,
+    transform 0.3s var(--spring);
+}
+.pill b {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--k);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--k) 22%, transparent);
+}
+.pill:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 0 0 1px rgba(53, 162, 255, 0.45),
+    0 8px 18px -12px rgba(28, 63, 184, 0.6);
+}
+.pill[aria-current='page'] {
+  background: var(--ink);
+  color: #fff;
+  box-shadow: 0 10px 24px -14px rgba(7, 13, 36, 0.9);
+}
+.pill em {
+  font-style: normal;
+  display: inline-grid;
+  place-items: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 7px;
+  border-radius: 99px;
+  background: var(--volt);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ───────────────────────── feed ───────────────────────── */
+.feed {
+  display: grid;
+  gap: 26px;
+}
+
+.card {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(340px, 1fr);
+  align-items: stretch;
+  border-radius: 34px;
+  overflow: hidden;
+  overflow: clip;
+  color: #f4f7ff;
+  background: linear-gradient(160deg, #0b1438, #050a1d 70%);
+  box-shadow:
+    0 40px 80px -40px rgba(7, 13, 36, 0.7),
+    0 0 0 1px rgba(255, 255, 255, 0.06) inset;
+  transform-origin: 50% 0;
+  opacity: 0;
+  transform: translateY(40px) scale(0.98);
+  transition:
+    opacity 0.8s,
+    transform 0.9s var(--spring);
+}
+.card[data-seen] {
+  opacity: 1;
+  transform: none;
+}
+
+/* ───────── the showroom: the photo, whole ───────── */
+.show {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-width: 0;
+  padding: clamp(28px, 4vw, 56px) clamp(18px, 3.4vw, 48px) clamp(18px, 2.4vw, 30px);
+  background:
+    radial-gradient(
+      60% 55% at 50% 0%,
+      color-mix(in srgb, var(--g) 42%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(90% 60% at 50% 100%, #0d1c52, transparent 70%), #060c22;
+}
+/* spotlight cone */
+.show::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: conic-gradient(
+    from 180deg at 50% -10%,
+    transparent 160deg,
+    rgba(255, 255, 255, 0.07) 172deg,
+    rgba(255, 255, 255, 0.11) 180deg,
+    rgba(255, 255, 255, 0.07) 188deg,
+    transparent 200deg
+  );
+}
+/* floor glow */
+.show::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: 8%;
+  right: 8%;
+  bottom: 14%;
+  height: 22%;
+  border-radius: 50%;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--g) 55%, transparent),
+    transparent
+  );
+  filter: blur(18px);
+  opacity: 0.55;
+  pointer-events: none;
+}
+.photo {
+  position: relative;
+  display: block;
+  width: 100%;
+  max-width: 880px;
+  border-radius: 22px;
+  transform: translateX(-6%);
+  opacity: 0;
+  transition:
+    transform 1.1s var(--spring),
+    opacity 0.9s;
+}
+.card[data-seen] .photo {
+  transform: none;
+  opacity: 1;
+}
+.frame {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: var(--ar, 3 / 2);
+  border-radius: 22px;
+  overflow: hidden;
+  background: #0a1230;
+  box-shadow:
+    0 30px 60px -28px rgba(0, 0, 0, 0.8),
+    0 0 0 1px rgba(255, 255, 255, 0.08);
+  transition:
+    transform 0.6s var(--spring),
+    box-shadow 0.6s;
+}
+.frame img {
+  object-fit: contain;
+}
+.photo:hover .frame {
+  transform: translateY(-6px);
+  box-shadow:
+    0 44px 70px -30px rgba(0, 0, 0, 0.85),
+    0 0 0 1px rgba(255, 255, 255, 0.14),
+    0 0 60px -20px var(--g);
+}
+/* the photo's reflection on the showroom floor */
+.mirror {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: var(--ar, 3 / 2);
+  border-radius: 22px;
+  overflow: hidden;
+  transform: scaleY(-1);
+  opacity: 0.22;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(to top, #000, transparent 32%);
+  mask-image: linear-gradient(to top, #000, transparent 32%);
+}
+.mirror img {
+  object-fit: contain;
+  filter: blur(1px);
+}
+.mirrorWrap {
+  width: 100%;
+  max-width: 880px;
+  height: clamp(36px, 6vw, 90px);
+  margin-top: 8px;
+  overflow: hidden;
+  pointer-events: none;
+  transform: translateX(-6%);
+  opacity: 0;
+  transition:
+    transform 1.1s var(--spring),
+    opacity 0.9s;
+}
+.card[data-seen] .mirrorWrap {
+  transform: none;
+  opacity: 1;
+}
+.placeholder {
+  width: 100%;
+  height: 100%;
+  color: color-mix(in srgb, var(--g) 70%, #fff);
+}
+
+/* ───────── the words, beside the photo ───────── */
+.info {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  min-width: 0;
+  padding: clamp(22px, 2.6vw, 36px);
+  border-left: 1px solid rgba(255, 255, 255, 0.07);
+}
+.infoTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+.kick {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--light);
+}
+.sold {
+  padding: 3px 10px;
+  border-radius: 99px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.compare {
+  flex-shrink: 0;
+}
+.name {
+  margin: 0;
+  font-family: var(--heavy);
+  font-size: clamp(32px, 3.6vw, 54px);
+  line-height: 0.95;
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  text-wrap: balance;
+}
+.name a {
+  color: inherit;
+  text-decoration: none;
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0 2px no-repeat;
+  transition: background-size 0.5s var(--spring);
+}
+.name a:hover {
+  background-size: 100% 2px;
+}
+.pr {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 2px 10px;
+}
+.pv {
+  font-family: var(--heavy);
+  font-size: clamp(28px, 2.8vw, 40px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  background: linear-gradient(100deg, #fff, var(--light));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.pr small {
+  font-size: 14px;
+  color: #b8c3de;
+}
+
+/* slider */
+.slide label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--mut);
+}
+.slide label b {
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+.cells {
+  display: flex;
+  gap: 4px;
+  margin: 10px 0 6px;
+}
+.cells s {
+  flex: 1;
+  height: 14px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.09);
+  transition:
+    background 0.3s,
+    box-shadow 0.3s;
+}
+.cells s[data-f] {
+  background: linear-gradient(180deg, var(--light), var(--volt));
+  box-shadow: 0 0 12px color-mix(in srgb, var(--light) 70%, transparent);
+}
+.range {
+  width: 100%;
+  accent-color: var(--light);
+  cursor: pointer;
+}
+
+/* three living figures */
+.figs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+.fig {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  padding: 12px 12px 12px 14px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.09);
+}
+.fig svg {
+  width: 100%;
+  height: 34px;
+}
+.num {
+  font-family: var(--heavy);
+  font-size: clamp(20px, 1.8vw, 26px);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.num small {
+  font-size: 0.5em;
+  font-weight: 600;
+  letter-spacing: 0;
+  margin-left: 3px;
+  color: var(--light);
+}
+.fig > span:last-child {
+  font-size: 12px;
+  color: var(--mut);
+}
+
+.acts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: auto;
+}
+.btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 54px;
+  padding: 0 18px;
+  border-radius: 99px;
+  font-size: 15px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: #fff;
+  text-decoration: none;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.06);
+  transition:
+    transform 0.3s var(--spring),
+    background 0.3s,
+    border-color 0.3s;
+}
+.btn:hover {
+  transform: translateY(-3px);
+  border-color: #fff;
+}
+.btn svg {
+  width: 16px;
+  height: 16px;
+}
+.primary {
+  border: 0;
+  color: var(--ink);
+  background: linear-gradient(135deg, #fff, var(--light));
+  box-shadow: 0 0 0 0 rgba(92, 200, 255, 0.6);
+  animation: ring 2.4s 2s infinite;
+}
+@keyframes ring {
+  70% {
+    box-shadow: 0 0 0 18px rgba(92, 200, 255, 0);
+  }
+}
+
+/* empty / error */
+.empty {
+  padding: clamp(40px, 8vw, 90px) clamp(20px, 5vw, 60px);
+  border-radius: 34px;
+  text-align: center;
+  color: #fff;
+  background: radial-gradient(70% 80% at 50% 30%, #13307e, #040817 80%);
+}
+.empty h2 {
+  margin: 0;
+  font-family: var(--heavy);
+  font-size: clamp(28px, 4.5vw, 52px);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+.empty .btn {
+  flex: none;
+  margin-top: 26px;
+  padding: 0 28px;
+}
+.pager {
+  margin-top: 40px;
+}
+
+/* ───────────────────────── large screens: the stack ───────────────────────── */
+@media (min-width: 1100px) and (min-height: 760px) {
+  .card {
+    position: sticky;
+    top: 92px;
+    max-height: calc(100svh - 112px);
+  }
+  .card[data-seen] {
+    transform: scale(calc(1 - var(--cover, 0) * 0.06));
+    filter: brightness(calc(1 - var(--cover, 0) * 0.5));
+    transition:
+      opacity 0.8s,
+      filter 0.1s linear;
+  }
+}
+
+/* ───────────────────────── tablets and phones: photo on top ───────────────────────── */
+@media (max-width: 1099px) {
+  .card {
+    grid-template-columns: 1fr;
+    border-radius: 28px;
+  }
+  .info {
+    border-left: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+  }
+  .acts {
+    margin-top: 0;
+  }
+}
+@media (min-width: 640px) and (max-width: 1099px) {
+  /* tablet: words in two columns under the photo */
+  .info {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    column-gap: 28px;
+  }
+  .infoTop,
+  .name,
+  .pr {
+    grid-column: 1;
+  }
+  .slide,
+  .figs,
+  .acts {
+    grid-column: 2;
+  }
+  .infoTop {
+    grid-row: 1;
+  }
+  .name {
+    grid-row: 2;
+  }
+  .pr {
+    grid-row: 3;
+  }
+  .figs {
+    grid-row: 1 / span 2;
+  }
+  .slide {
+    grid-row: 3;
+  }
+  .acts {
+    grid-column: 1 / -1;
+  }
+}
+@media (max-width: 639px) {
+  .bar {
+    gap: 12px;
+  }
+  .gate {
+    width: 100%;
+  }
+  .explore {
+    flex-basis: 100%;
+  }
+  .exploreLabel {
+    display: none;
+  }
+  .show {
+    padding: 22px 12px 8px;
+  }
+  .frame,
+  .mirror {
+    border-radius: 16px;
+  }
+  .info {
+    gap: 16px;
+    padding: 18px 16px 18px;
+  }
+  .btn {
+    min-height: 50px;
+    font-size: 14px;
+    padding: 0 10px;
+  }
+  .fig {
+    padding: 10px;
+  }
+}
+
+@media (hover: none) {
+  .btn:hover,
+  .pill:hover,
+  .photo:hover .frame {
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .market *,
+  .market *::before,
+  .market *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+  .card,
+  .photo {
+    opacity: 1;
+    transform: none;
+  }
+}
