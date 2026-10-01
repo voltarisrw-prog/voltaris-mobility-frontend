@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { RegisterForm } from '@/features/auth/RegisterForm';
 import { GoogleButton } from '@/features/auth/GoogleButton';
+import { AuthShell } from '@/features/auth/AuthShell';
 import { buildMetadata } from '@/lib/seo/metadata';
 
 export const metadata: Metadata = buildMetadata({
@@ -14,26 +15,20 @@ export const metadata: Metadata = buildMetadata({
 
 export default function RegisterPage() {
   return (
-    <div className="voltaris-form-page shell max-w-sm py-16">
-      <h1 className="font-display text-headline">Create an account</h1>
-      <p className="mt-3 text-sm text-steel">
-        Already have one?{' '}
-        <Link href="/login" className="text-volt underline underline-offset-2">
-          Sign in
-        </Link>
-        .
-      </p>
-      <div className="mt-8">
+    <AuthShell
+      active="register"
+      title="Create your account"
+      subtitle={
+        <>
+          Already have one? <Link href="/login">Sign in</Link>.
+        </>
+      }
+    >
+      <div className="auth-google">
         <GoogleButton />
-
-        <div className="my-6 flex items-center gap-4">
-          <span className="h-px flex-1 bg-hairline" />
-          <span className="eyebrow">or</span>
-          <span className="h-px flex-1 bg-hairline" />
-        </div>
-
-        <RegisterForm />
       </div>
-    </div>
+      <div className="auth-or">or</div>
+      <RegisterForm />
+    </AuthShell>
   );
 }
