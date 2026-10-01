@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
+import { FormShell } from '@/features/forms/FormShell';
 import { HomeInquiryForm } from '@/features/home/HomeInquiryForm';
 import { company } from '@/content/legal';
 import { buildMetadata } from '@/lib/seo/metadata';
@@ -12,69 +13,36 @@ export const metadata: Metadata = buildMetadata({
 
 export default function ContactPage() {
   return (
-    <div className="voltaris-form-page shell py-10">
-      <Breadcrumbs trail={[{ name: 'Home', path: '/' }, { name: 'Contact', path: '/contact' }]} />
+    <FormShell
+      breadcrumb={
+        <Breadcrumbs trail={[{ name: 'Home', path: '/' }, { name: 'Contact', path: '/contact' }]} />
+      }
+      title="Talk to us"
+      intro="A person reads every message and replies within a working day. You do not need to have picked a vehicle first — most people who write to us have not."
+      tagline="A real person replies."
+      taglineBody="Tell us what you need and the Voltaris team will get back to you."
+      chips={['Buying', 'Selling', 'Partnering']}
+    >
+      <HomeInquiryForm />
 
-      <div className="mt-8 grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:gap-20">
-        <header>
-          <h1 className="font-display text-display">Talk to us</h1>
-          <p className="mt-5 max-w-md text-base leading-relaxed text-black/65">
-            A person reads every message and replies within a working day. You do not need to
-            have picked a vehicle first — most people who write to us have not.
-          </p>
-
-          <dl className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
-            <div className="border border-black/10 bg-white p-6">
-              <dt className="font-data text-[9px] uppercase tracking-[0.18em] text-volt">
-                Email
-              </dt>
-              <dd className="mt-4 text-sm">
-                <a href={`mailto:${company.email}`} className="text-black transition-colors hover:text-volt">
-                  {company.email}
-                </a>
-              </dd>
-            </div>
-
-            <div className="border border-black/10 bg-white p-6">
-              <dt className="font-data text-[9px] uppercase tracking-[0.18em] text-volt">
-                Phone
-              </dt>
-              <dd className="mt-4 text-sm text-black/65">{company.phone}</dd>
-            </div>
-
-            <div className="border border-black/10 bg-white p-6">
-              <dt className="font-data text-[9px] uppercase tracking-[0.18em] text-volt">
-                Where we are
-              </dt>
-              <dd className="mt-4 text-sm leading-6 text-black/65">{company.address}</dd>
-            </div>
-
-            <div className="border border-black/10 bg-white p-6">
-              <dt className="font-data text-[9px] uppercase tracking-[0.18em] text-volt">
-                Data and privacy
-              </dt>
-              <dd className="mt-4 text-sm">
-                <a href={`mailto:${company.privacyEmail}`} className="text-black transition-colors hover:text-volt">
-                  {company.privacyEmail}
-                </a>
-              </dd>
-            </div>
-          </dl>
-        </header>
-
-        <div className="border border-black/10 bg-white p-6 sm:p-8 lg:p-10">
-          <div className="mb-8 border-b border-hairline pb-5">
-            <p className="font-data text-[9px] uppercase tracking-[0.18em] text-volt">
-              Send a message
-            </p>
-            <p className="mt-2 text-sm leading-6 text-black/65">
-              Tell us what you need and the Voltaris team will get back to you.
-            </p>
-          </div>
-
-          <HomeInquiryForm />
+      <dl className="fs-details">
+        <div>
+          <dt>Email</dt>
+          <dd><a href={`mailto:${company.email}`}>{company.email}</a></dd>
         </div>
-      </div>
-    </div>
+        <div>
+          <dt>Phone</dt>
+          <dd>{company.phone}</dd>
+        </div>
+        <div>
+          <dt>Where we are</dt>
+          <dd>{company.address}</dd>
+        </div>
+        <div>
+          <dt>Data and privacy</dt>
+          <dd><a href={`mailto:${company.privacyEmail}`}>{company.privacyEmail}</a></dd>
+        </div>
+      </dl>
+    </FormShell>
   );
 }
