@@ -4,7 +4,15 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { ArrowUpRight, BatteryCharging, Gauge, X } from 'lucide-react';
+import {
+  ArrowUpRight,
+  BatteryCharging,
+  ChevronLeft,
+  ChevronRight,
+  Gauge,
+  Maximize2,
+  X,
+} from 'lucide-react';
 import { CompareToggleButton } from '@/components/CompareToggleButton';
 import { financeDefaults, financePartners } from '@/config/finance';
 import { computeLoan, depositFromBps } from '@/lib/finance/amortisation';
@@ -24,6 +32,18 @@ const glowOf = (i: number) => GLOWS[i % GLOWS.length] ?? '#35a2ff';
 const titleOf = (v: VehicleSummary) => `${v.make} ${v.model}${v.variant ? ` ${v.variant}` : ''}`;
 const srcOf = (v: VehicleSummary) =>
   v.primary_image ? (v.primary_image.detail ?? v.primary_image.card) : null;
+/** The photo's own shape, so its frame can match it exactly and its edges can melt away. */
+const shapeOf = (v: VehicleSummary): React.CSSProperties => {
+  const im = v.primary_image;
+  const w = im && im.width > 0 ? im.width : 3;
+  const h = im && im.height > 0 ? im.height : 2;
+  return { '--ar': `${w} / ${h}`, '--arn': String(w / h) } as React.CSSProperties;
+};
+/** The largest rendition, for the showroom and the full-screen viewer. */
+const bigOf = (v: VehicleSummary) =>
+  v.primary_image
+    ? (v.primary_image.gallery ?? v.primary_image.detail ?? v.primary_image.card)
+    : null;
 
 /** The one-line price under a photo: the full price (Buy) or the day rate (Rent). */
 function shortPrice(v: VehicleSummary, mode: Mode): string {
@@ -325,11 +345,13 @@ function Panel({
   mode,
   index,
   onClose,
+  onView,
 }: {
   vehicle: VehicleSummary;
   mode: Mode;
   index: number;
   onClose: () => void;
+  onView: () => void;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -361,13 +383,19 @@ function Panel({
           <X aria-hidden="true" />
         </button>
         <div className={s.panelScroll}>
-          <div className={s.panelPic} style={{ '--ar': ratio } as React.CSSProperties}>
+          <button
+            type="button"
+            className={s.panelPic}
+            style={{ '--ar': ratio } as React.CSSProperties}
+            aria-label={`${titleOf(vehicle)} — view full screen`}
+            onClick={onView}
+          >
             {img && src ? (
               <Image src={src} alt={img.alt || titleOf(vehicle)} fill sizes="480px" />
             ) : (
               <CarSilhouette />
             )}
-          </div>
+          </button>
           <InfoCard vehicle={vehicle} mode={mode} index={index} />
         </div>
       </div>
@@ -376,16 +404,207 @@ function Panel({
   );
 }
 
-/* ───────────────────────── the auto-sliding showroom ───────────────────────── */
+/* ───────────────────────── full-screen viewer (zoom and pan) ───────────────────────── */
+
+function Viewer({
+  cars,
+  start,
+  mode,
+  onClose,
+}: {
+  cars: VehicleSummary[];
+  start: number;
+  mode: Mode;
+  onClose: () => void;
+}) {
+  const [i, setI] = useState(start);
+  const [zoom, setZoom] = useState(1);
+  const [origin, setOrigin] = useState({ x: 50, y: 50 });
+  const ref = useRef<HTMLDivElement>(null);
+  const drag = useRef<{ x: number; y: number; ox: number; oy: number } | null>(null);
+  const touchX = useRef(0);
+  const go = useCallback(
+    (n: number) => {
+      setZoom(1);
+      setI((n + cars.length) % cars.length);
+    },
+    [cars.length],
+  );
+
+  useEffect(() => {
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+      if (e.key === 'ArrowRight') go(i + 1);
+      if (e.key === 'ArrowLeft') go(i - 1);
+      if (e.key === '+' || e.key === '=') setZoom((z) => Math.min(3, z + 0.5));
+      if (e.key === '-') setZoom((z) => Math.max(1, z - 0.5));
+    };
+    window.addEventListener('keydown', onKey);
+    ref.current?.querySelector<HTMLElement>('button')?.focus();
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [onClose, go, i]);
+
+  const car = cars[i];
+  if (!car) return null;
+  const src = bigOf(car);
+  const point = (e: React.PointerEvent<HTMLDivElement>) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    return { x: ((e.clientX - r.left) / r.width) * 100, y: ((e.clientY - r.top) / r.height) * 100 };
+  };
+
+  return createPortal(
+    <div className={`${s.portal} ${heavy.variable}`}>
+      <div
+        ref={ref}
+        className={s.viewer}
+        role="dialog"
+        aria-modal="true"
+        aria-label={`${titleOf(car)} — full screen`}
+        style={{ '--g': glowOf(i) } as React.CSSProperties}
+      >
+        {src && (
+          <Image className={s.ambient} src={src} alt="" fill sizes="100vw" aria-hidden="true" />
+        )}
+        <div
+          className={s.canvas}
+          data-zoom={zoom > 1 ? '' : undefined}
+          onClick={(e) => {
+            if (drag.current?.x !== undefined && Math.abs(drag.current.x - e.clientX) > 4) return;
+            if (zoom > 1) setZoom(1);
+            else {
+              const r = e.currentTarget.getBoundingClientRect();
+              setOrigin({
+                x: ((e.clientX - r.left) / r.width) * 100,
+                y: ((e.clientY - r.top) / r.height) * 100,
+              });
+              setZoom(2.2);
+            }
+          }}
+          onPointerDown={(e) => {
+            drag.current = { x: e.clientX, y: e.clientY, ox: origin.x, oy: origin.y };
+          }}
+          onPointerMove={(e) => {
+            if (zoom === 1) return;
+            if (e.pointerType === 'mouse' && !e.buttons) {
+              setOrigin(point(e));
+              return;
+            }
+            const d = drag.current;
+            if (!d) return;
+            const r = e.currentTarget.getBoundingClientRect();
+            setOrigin({
+              x: Math.max(0, Math.min(100, d.ox - ((e.clientX - d.x) / r.width) * 100)),
+              y: Math.max(0, Math.min(100, d.oy - ((e.clientY - d.y) / r.height) * 100)),
+            });
+          }}
+          onPointerUp={() => {
+            window.setTimeout(() => (drag.current = null), 0);
+          }}
+          onTouchStart={(e) => (touchX.current = e.touches[0]?.clientX ?? 0)}
+          onTouchEnd={(e) => {
+            if (zoom > 1) return;
+            const d = (e.changedTouches[0]?.clientX ?? 0) - touchX.current;
+            if (Math.abs(d) > 60) go(i + (d < 0 ? 1 : -1));
+          }}
+          onWheel={(e) => {
+            const r = e.currentTarget.getBoundingClientRect();
+            setOrigin({
+              x: ((e.clientX - r.left) / r.width) * 100,
+              y: ((e.clientY - r.top) / r.height) * 100,
+            });
+            setZoom((z) => Math.max(1, Math.min(3, z - e.deltaY * 0.002)));
+          }}
+        >
+          <div
+            key={car.id}
+            className={s.canvasImg}
+            style={{
+              ...shapeOf(car),
+              transform: `scale(${zoom})`,
+              transformOrigin: `${origin.x}% ${origin.y}%`,
+            }}
+          >
+            <span className={s.carBox}>
+              {src ? (
+                <Image
+                  src={src}
+                  alt={car.primary_image?.alt || titleOf(car)}
+                  fill
+                  sizes="100vw"
+                  priority
+                />
+              ) : (
+                <CarSilhouette />
+              )}
+            </span>
+          </div>
+        </div>
+
+        <div className={s.vTop}>
+          <span>
+            {i + 1} / {cars.length}
+          </span>
+          <span className={s.vHint}>
+            {zoom > 1 ? 'Drag to look around · click to zoom out' : 'Click or scroll to zoom'}
+          </span>
+          <button type="button" className={s.vBtn} aria-label="Close" onClick={onClose}>
+            <X aria-hidden="true" />
+          </button>
+        </div>
+        {cars.length > 1 && (
+          <>
+            <button
+              type="button"
+              className={`${s.vBtn} ${s.vPrev}`}
+              aria-label="Previous car"
+              onClick={() => go(i - 1)}
+            >
+              <ChevronLeft aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              className={`${s.vBtn} ${s.vNext}`}
+              aria-label="Next car"
+              onClick={() => go(i + 1)}
+            >
+              <ChevronRight aria-hidden="true" />
+            </button>
+          </>
+        )}
+        <div className={s.vBottom}>
+          <div>
+            <span>
+              {car.location.city} · {car.year} · {shortPrice(car, mode)}
+            </span>
+            <b>{titleOf(car)}</b>
+          </div>
+          <Link className={`${s.btn} ${s.primary}`} href={`/cars/${car.slug}?mode=${mode}`}>
+            See every detail
+          </Link>
+        </div>
+      </div>
+    </div>,
+    document.body,
+  );
+}
+
+/* ───────────────────────── the showroom: huge, edge to edge, sliding on its own ───────────────────────── */
 
 function Showroom({
   cars,
   mode,
   onOpen,
+  onView,
 }: {
   cars: VehicleSummary[];
   mode: Mode;
   onOpen: (i: number) => void;
+  onView: (i: number) => void;
 }) {
   const [i, setI] = useState(0);
   const [hold, setHold] = useState(false);
@@ -444,7 +663,7 @@ function Showroom({
         }}
       >
         {cars.map((v, k) => {
-          const src = srcOf(v);
+          const src = bigOf(v);
           return (
             <div
               key={v.id}
@@ -453,26 +672,40 @@ function Showroom({
               data-gone={k < i ? '' : undefined}
               aria-hidden={k !== i}
             >
+              {src && (
+                <Image
+                  className={s.ambient}
+                  src={src}
+                  alt=""
+                  fill
+                  sizes="100vw"
+                  aria-hidden="true"
+                />
+              )}
               <a
                 href={`/cars/${v.slug}?mode=${mode}`}
+                className={s.slideCar}
+                style={shapeOf(v)}
                 tabIndex={k === i ? 0 : -1}
-                aria-label={`${titleOf(v)} — quick look`}
+                aria-label={`${titleOf(v)} — view full screen`}
                 onClick={(e) => {
                   e.preventDefault();
-                  onOpen(k);
+                  onView(k);
                 }}
               >
-                {src ? (
-                  <Image
-                    src={src}
-                    alt={v.primary_image?.alt || titleOf(v)}
-                    fill
-                    sizes="(min-width: 1280px) 1240px, 100vw"
-                    priority={k === 0}
-                  />
-                ) : (
-                  <CarSilhouette />
-                )}
+                <span className={s.carBox}>
+                  {src ? (
+                    <Image
+                      src={src}
+                      alt={v.primary_image?.alt || titleOf(v)}
+                      fill
+                      sizes="100vw"
+                      priority={k === 0}
+                    />
+                  ) : (
+                    <CarSilhouette />
+                  )}
+                </span>
               </a>
             </div>
           );
@@ -488,6 +721,9 @@ function Showroom({
           </h2>
         </div>
         <div className={s.heroActs}>
+          <button type="button" className={`${s.btn} ${s.ghost}`} onClick={() => onView(i)}>
+            <Maximize2 aria-hidden="true" /> Full screen
+          </button>
           <Link
             className={`${s.btn} ${s.primary}`}
             href={`/test-drive?vehicle=${encodeURIComponent(car.id)}`}
@@ -630,6 +866,8 @@ export function MarketFeed({ vehicles, mode }: { vehicles: VehicleSummary[]; mod
   const gridRef = useRef<HTMLDivElement>(null);
   const [seen, setSeen] = useState<Set<number>>(() => new Set());
   const [open, setOpen] = useState<number | null>(null);
+  const [view, setView] = useState<{ list: VehicleSummary[]; start: number } | null>(null);
+  const closeView = useCallback(() => setView(null), []);
   const hero = vehicles.slice(0, Math.min(HERO_COUNT, vehicles.length));
   const close = useCallback(() => setOpen(null), []);
 
@@ -652,7 +890,14 @@ export function MarketFeed({ vehicles, mode }: { vehicles: VehicleSummary[]; mod
 
   return (
     <>
-      {hero.length > 0 && <Showroom cars={hero} mode={mode} onOpen={(i) => setOpen(i)} />}
+      {hero.length > 0 && (
+        <Showroom
+          cars={hero}
+          mode={mode}
+          onOpen={(i) => setOpen(i)}
+          onView={(i) => setView({ list: hero, start: i })}
+        />
+      )}
       <div className={s.gridHead}>
         <h2>{mode === 'rental' ? 'Cars to rent' : 'Every car'}</h2>
         <span>
@@ -672,8 +917,18 @@ export function MarketFeed({ vehicles, mode }: { vehicles: VehicleSummary[]; mod
         ))}
       </div>
       {openCar && open !== null && (
-        <Panel vehicle={openCar} mode={mode} index={open} onClose={close} />
+        <Panel
+          vehicle={openCar}
+          mode={mode}
+          index={open}
+          onClose={close}
+          onView={() => {
+            setView({ list: vehicles, start: open });
+            setOpen(null);
+          }}
+        />
       )}
+      {view && <Viewer cars={view.list} start={view.start} mode={mode} onClose={closeView} />}
     </>
   );
 }
