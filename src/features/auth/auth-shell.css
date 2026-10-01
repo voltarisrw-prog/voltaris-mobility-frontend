@@ -79,3 +79,48 @@
 .auth-panel .vds-floating input[aria-invalid="true"]{border-color:#e5484d}
 .auth-panel .auth-meter{margin-top:2px;margin-bottom:6px}
 .auth-panel label:has(input[type=checkbox]){text-transform:none;letter-spacing:0;font-size:13px;color:#4a4a4a}
+
+/* ===== auth colour theme ===== */
+.auth-shell,.auth-panel{background:#0b1020}
+.auth-panel a{color:#f3f5fa}
+.auth-panel a:hover{color:#5CC8FF}
+.auth-panel h2,.auth-title{color:#f3f5fa}
+.auth-sub,.auth-panel .text-steel{color:#9aa3b8}
+.auth-panel .text-steel-muted{color:#8892ab}
+.auth-panel label{color:#9aa3b8}
+.auth-panel .bg-volt-wash{background:#151c33;border-color:#2a3354;color:#f3f5fa}
+
+.auth-tabs{background:#151c33}
+.auth-tabs a{color:#9aa3b8}
+.auth-tabs a[aria-current=page]{background:#232d52;color:#fff;box-shadow:0 1px 6px rgba(0,0,0,.4)}
+.auth-demo{background:#151c33;border-color:#2a3354;color:#9aa3b8}
+.auth-demo b{color:#f3f5fa}
+
+.auth-google button{background:#151c33;color:#f3f5fa;border-color:#2a3354!important}
+.auth-google button:hover{border-color:#5CC8FF!important}
+.auth-or{color:#8892ab}
+.auth-or:before,.auth-or:after{background:#2a3354}
+
+.auth-panel input:not([type=checkbox]):not([type=radio]){background:#151c33;color:#f3f5fa}
+.auth-panel input:not([type=checkbox]):not([type=radio]):focus{border-color:#5CC8FF;background:#0f1630;box-shadow:0 0 0 4px rgba(92,200,255,.22)}
+.auth-panel input:-webkit-autofill{-webkit-box-shadow:0 0 0 1000px #151c33 inset;-webkit-text-fill-color:#f3f5fa;caret-color:#f3f5fa}
+.auth-panel input[type=checkbox]{accent-color:#5CC8FF}
+.auth-panel .vds-floating-label{color:#8892ab}
+.auth-panel .vds-floating:focus-within .vds-floating-label{color:#5CC8FF}
+.auth-panel label:has(input[type=checkbox]){color:#9aa3b8}
+.auth-phone span{color:#c7cee0}
+.auth-pw button{color:#8892ab}
+.auth-pw button:hover{color:#5CC8FF}
+
+.auth-panel button[type=submit]{background:#f3f5fa;color:#0b1020}
+.auth-panel button[type=submit]:hover{background:#5CC8FF;color:#00030C}
+
+.auth-meter-bars i{background:#2a3354}
+.auth-meter span{color:#8892ab}
+
+.auth-shade{background:
+  radial-gradient(700px 420px at 88% 6%,rgba(44,91,214,.55),transparent 60%),
+  radial-gradient(620px 420px at 0% 100%,rgba(15,166,138,.45),transparent 55%),
+  linear-gradient(to top,rgba(0,3,12,.78),rgba(0,3,12,0) 55%),
+  rgba(11,16,32,.22)}
+.auth-glass{background:rgba(255,255,255,.1);border-color:rgba(127,212,255,.3)}
