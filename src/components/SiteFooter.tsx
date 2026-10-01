@@ -1,10 +1,13 @@
-import Link from 'next/link';
-import { ArrowUpRight } from 'lucide-react';
-import { VoltarisLogo } from './VoltarisLogo';
-import { SocialLinks } from './SocialLinks';
-import { site } from '@/config/site';
+'use client';
 
-const footerGroups = [
+import { Inter } from 'next/font/google';
+import Link from 'next/link';
+import { useEffect, useId, useRef, useState } from 'react';
+import { site } from '@/config/site';
+import { socialLinks } from '@/content/home';
+import s from './site-footer.module.css';
+
+const groups = [
   {
     heading: 'Discover',
     links: [
@@ -17,13 +20,13 @@ const footerGroups = [
     ],
   },
   {
-    heading: 'Buy & Sell',
+    heading: 'Buy and sell',
     links: [
       { label: 'How it works', href: '/how-it-works' },
       { label: 'Finance calculator', href: '/finance' },
       { label: 'Book a garage', href: '/garage' },
       { label: 'Sell a vehicle', href: '/sell' },
-      { label: 'Trust & verification', href: '/trust-and-verification' },
+      { label: 'Trust and verification', href: '/trust-and-verification' },
       { label: 'Guides', href: '/guides' },
       { label: 'Help', href: '/help' },
     ],
@@ -51,181 +54,295 @@ const footerGroups = [
   },
 ];
 
-function FooterLink({
-  label,
-  href,
-}: {
-  label: string;
-  href: string;
-}) {
-  return (
-    <Link
-      href={href}
-      className="group flex min-h-9 items-center gap-2 py-1 font-display text-[0.95rem] font-medium tracking-[-0.02em] text-white/85 transition-colors duration-200 hover:!text-white focus-visible:text-[color:var(--vds-brand-secondary)] focus-visible:outline-none sm:text-base"
-    >
-      <span>{label}</span>
+const social = [
+  {
+    key: 'instagram',
+    label: 'Instagram',
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+        <rect x="3.5" y="3.5" width="17" height="17" rx="5" />
+        <circle cx="12" cy="12" r="4" />
+        <circle cx="17.2" cy="6.8" r=".8" fill="currentColor" />
+      </svg>
+    ),
+  },
+  {
+    key: 'facebook',
+    label: 'Facebook',
+    icon: (
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M13.5 21v-7.5H16l.5-3h-3V8.7c0-.9.3-1.5 1.6-1.5h1.5V4.5c-.3 0-1.2-.1-2.2-.1-2.3 0-3.9 1.4-3.9 4v2.1H8v3h2.5V21z" />
+      </svg>
+    ),
+  },
+  {
+    key: 'linkedin',
+    label: 'LinkedIn',
+    icon: (
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <circle cx="6.2" cy="6.5" r="1.7" />
+        <rect x="4.7" y="9.3" width="3" height="9.5" />
+        <path d="M10 9.3h2.9v1.3c.5-.9 1.6-1.6 3-1.6 3 0 3.6 2 3.6 4.5v5.3h-3v-4.7c0-1.1-.2-2.1-1.5-2.1s-2 .9-2 2.1v4.7H10z" />
+      </svg>
+    ),
+  },
+  {
+    key: 'x',
+    label: 'X',
+    icon: (
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M4 4l6.8 9.2L4.2 20H6l5.6-5.8L16 20h4l-7.1-9.6L19.2 4h-1.8l-5 5.2L8.5 4z" />
+      </svg>
+    ),
+  },
+  {
+    key: 'whatsapp',
+    label: 'WhatsApp',
+    icon: (
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinejoin="round"
+      >
+        <path d="M20 12a8 8 0 0 1-11.8 7L4 20l1.1-4.1A8 8 0 1 1 20 12z" />
+      </svg>
+    ),
+  },
+].filter((p) => socialLinks[p.key]);
 
-      <ArrowUpRight
-        aria-hidden="true"
-        className="h-3.5 w-3.5 -translate-x-1 translate-y-0.5 opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:translate-y-0 group-hover:opacity-100"
-      />
-    </Link>
-  );
-}
+// The design's display weights. Scoped to the footer: the site's own Inter stays 400–600.
+const heavy = Inter({
+  subsets: ['latin'],
+  weight: ['700', '800'],
+  variable: '--font-inter-heavy',
+  display: 'swap',
+});
 
+const kigali = new Intl.DateTimeFormat('en-GB', {
+  hour: '2-digit',
+  minute: '2-digit',
+  timeZone: 'Africa/Kigali',
+});
+
+/**
+ * Site footer — built 1:1 from the approved design ("Voltaris Mobility – Footer"),
+ * with the design's green replaced by blues from the logo. Styles live in
+ * site-footer.module.css; layout follows the footer's own width (container queries).
+ */
 export function SiteFooter() {
-  const year = new Date().getFullYear();
+  const wrap = useRef<HTMLDivElement>(null);
+  const ft = useRef<HTMLElement>(null);
+  const wide = useRef<boolean | null>(null);
+  const gradient = `vft-${useId().replace(/:/g, '')}`;
+  const [on, setOn] = useState(false);
+  const [cells, setCells] = useState(0);
+  const [clock, setClock] = useState('');
+
+  // Columns open on wide screens, an accordion on phones.
+  useEffect(() => {
+    const el = wrap.current;
+    if (!el) return;
+    const sync = () => {
+      const w = el.clientWidth > 560;
+      if (w === wide.current) return;
+      wide.current = w;
+      el.querySelectorAll('details').forEach((d) => {
+        d.open = w;
+      });
+    };
+    const ro = new ResizeObserver(sync);
+    ro.observe(el);
+    sync();
+    return () => ro.disconnect();
+  }, []);
+
+  // Kigali clock.
+  useEffect(() => {
+    const tick = () => setClock(`· ${kigali.format(new Date())}`);
+    tick();
+    const t = setInterval(tick, 30000);
+    return () => clearInterval(t);
+  }, []);
+
+  // Charge up when the footer arrives.
+  useEffect(() => {
+    const el = ft.current;
+    if (!el) return;
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry?.isIntersecting) return;
+        io.disconnect();
+        setOn(true);
+        let n = 0;
+        const step = () => {
+          if (n >= 10) return;
+          n += 1;
+          setCells(n);
+          timer = setTimeout(step, reduce ? 0 : 130);
+        };
+        step();
+      },
+      { threshold: 0.2 },
+    );
+    io.observe(el);
+    return () => {
+      io.disconnect();
+      if (timer) clearTimeout(timer);
+    };
+  }, []);
+
+  // Cursor light.
+  const onPointerMove = (e: React.PointerEvent<HTMLElement>) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    e.currentTarget.style.setProperty('--mx', `${e.clientX - r.left}px`);
+    e.currentTarget.style.setProperty('--my', `${e.clientY - r.top}px`);
+  };
 
   return (
-    <footer className="mx-3 my-4 overflow-hidden bg-chrome font-sans text-white sm:mx-5 sm:my-6 lg:mx-8 lg:my-8 [&_a]:!text-white [&_p]:!text-white/70 [&_span]:!text-white/70 [&_h2]:!text-white/60 [&_svg]:!text-white">
-
-      {/* =========================================================
-          COMPACT FOOTER
-      ========================================================== */}
-
-      <div className="shell py-7 sm:py-12 lg:py-16">
-
-        <div className="grid gap-7 lg:grid-cols-[minmax(15rem,0.8fr)_minmax(0,2fr)] lg:gap-20 xl:gap-28">
-
-          {/* =====================================================
-              BRAND
-          ====================================================== */}
-
-          <div className="relative min-w-0">
-
-            <Link
-              href="/"
-              aria-label="Voltaris Mobility home"
-              className="logo-on-dark inline-flex transition-opacity duration-200 hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-volt"
-            >
-              <VoltarisLogo className="h-8 sm:h-9" />
-            </Link>
-
-            <p className="mt-3 max-w-xs text-sm leading-5 text-steel-muted">
-              Mobility, made simpler.
-            </p>
-
-            <div className="mt-4">
-              <SocialLinks className="flex flex-wrap gap-1" />
+    <div ref={wrap} className={`${s.wrap} ${heavy.variable}`} data-site-footer="">
+      <footer ref={ft} className={s.ft} data-on={on ? '' : undefined} onPointerMove={onPointerMove}>
+        <div className={`${s.blob} ${s.b1}`} />
+        <div className={`${s.blob} ${s.b2}`} />
+        <div className={s.spot} />
+        <div className={s.in}>
+          <div className={s.hero}>
+            <div>
+              <h2>
+                Charge into your <em>next car.</em>
+              </h2>
+              <p>
+                Verified electric and hybrid cars, compared side by side and ready for a free demo
+                drive in Kigali.
+              </p>
+              <div className={s.charge} aria-hidden="true">
+                <div className={s.cells}>
+                  {Array.from({ length: 10 }, (_, i) => (
+                    <i key={i} data-on={i < cells ? '' : undefined} />
+                  ))}
+                </div>
+                <span className={s.pct} data-full={cells === 10 ? '' : undefined}>
+                  {cells === 10 ? 'Fully charged' : `Charging ${cells * 10}%`}
+                </span>
+              </div>
             </div>
-
-            <div className="mt-4">
-              <span className="font-data text-[0.56rem] uppercase tracking-[0.16em] text-steel-muted">
-                Kigali · Rwanda
-              </span>
+            <div className={s.act}>
+              <Link className={s.b} href="/cars">
+                Browse cars <span>→</span>
+              </Link>
+              <Link className={`${s.b} ${s.g}`} href="/test-drive">
+                Book a test drive <span>→</span>
+              </Link>
             </div>
-
           </div>
 
-          {/* =====================================================
-              NAVIGATION
-          ====================================================== */}
-
-          <nav aria-label="Footer navigation">
-
-              {/* MOBILE — COMPACT EXPANDABLE NAVIGATION */}
-              <div className="sm:hidden divide-y divide-white/15 border-y border-white/15">
-
-                {footerGroups.map((group) => (
-                  <details key={group.heading} className="group">
-
-                    <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between py-3">
-                      <span className="font-data text-[0.58rem] font-medium uppercase tracking-[0.18em] text-steel-muted">
-                        {group.heading}
-                      </span>
-
-                      <span
-                        aria-hidden="true"
-                        className="relative flex h-7 w-7 shrink-0 items-center justify-center text-steel-muted"
-                      >
-                        <span className="absolute h-px w-3 bg-current" />
-                        <span className="absolute h-3 w-px bg-current transition-transform duration-200 group-open:rotate-90" />
-                      </span>
-                    </summary>
-
-                    <ul className="pb-3 pl-0">
-                      {group.links.map((link) => (
-                        <li key={link.href}>
-                          <FooterLink {...link} />
-                        </li>
-                      ))}
-                    </ul>
-
-                  </details>
-                ))}
-
-              </div>
-
-              {/* DESKTOP / TABLET — FULL NAVIGATION */}
-              <div className="hidden sm:grid sm:grid-cols-2 sm:gap-x-8 sm:gap-y-10 lg:grid-cols-4 lg:gap-x-10 xl:gap-x-14">
-
-                {footerGroups.map((group) => (
-                  <div key={group.heading} className="min-w-0">
-
-                    <h2 className="font-data text-[0.58rem] font-medium uppercase tracking-[0.18em] text-steel-muted">
-                      {group.heading}
-                    </h2>
-
-                    <ul className="mt-4 space-y-0.5">
-                      {group.links.map((link) => (
-                        <li key={link.href}>
-                          <FooterLink {...link} />
-                        </li>
-                      ))}
-                    </ul>
-
-                  </div>
-                ))}
-
-              </div>
-
-            </nav>
-
-        </div>
-
-        {/* =======================================================
-            ACCREDITATION + LEGAL
-        ======================================================== */}
-
-        <div className="mt-7 border-t border-white/15 pt-4 sm:mt-14 sm:pt-6">
-
-          <div className="flex flex-col gap-3 text-[0.52rem] uppercase tracking-[0.1em] text-steel-muted lg:flex-row lg:items-center lg:justify-between lg:gap-8">
-
-            <p>
-              © {year} {site.legalName}. All rights reserved.
-            </p>
-
-            <p>
-              Designed &amp; Developed by{' '}
-              <span className="text-steel">
-                <a href="https://www.linkedin.com/in/patrice-iradukunda-74931827a/" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4 hover:opacity-70">Patrice IRADUKUNDA</a>
-              </span>
-            </p>
-
-            <div className="flex flex-wrap gap-x-5 gap-y-2">
-
-              <Link
-                href="/legal/privacy"
-                className="transition-colors hover:!text-white focus-visible:!text-white focus-visible:outline-none"
-              >
-                Privacy
+          <div className={s.main}>
+            <div className={s.brand}>
+              <Link className={s.logo} href="/" aria-label="Voltaris Mobility home">
+                <svg width="36" height="36" viewBox="0 0 32 32" aria-hidden="true">
+                  <defs>
+                    <linearGradient id={gradient} x1="0" y1="0" x2="1" y2="1">
+                      <stop stopColor="#7fd4ff" />
+                      <stop offset="1" stopColor="#3aa8ff" />
+                    </linearGradient>
+                  </defs>
+                  <path
+                    d="M3 5l10 22h2L19 12"
+                    fill="none"
+                    stroke={`url(#${gradient})`}
+                    strokeWidth="3.2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M29 5L19 27"
+                    fill="none"
+                    stroke="#f3f5fa"
+                    strokeWidth="3.2"
+                    strokeLinecap="round"
+                  />
+                </svg>
+                <span>
+                  VOLTARIS<small>MOBILITY</small>
+                </span>
               </Link>
-
-              <Link
-                href="/legal/terms"
-                className="transition-colors hover:!text-white focus-visible:!text-white focus-visible:outline-none"
-              >
-                Terms
-              </Link>
-
+              <p>Mobility, made simpler.</p>
+              <ul className={s.soc}>
+                {social.map((p) => (
+                  <li key={p.key}>
+                    <a
+                      href={socialLinks[p.key]}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      aria-label={p.label}
+                    >
+                      {p.icon}
+                    </a>
+                  </li>
+                ))}
+              </ul>
             </div>
-
+            {groups.map((group) => (
+              <details key={group.heading} className={s.col} open>
+                <summary
+                  onClick={(e) => {
+                    if (wide.current) e.preventDefault();
+                  }}
+                >
+                  <b>{group.heading}</b>
+                  <i />
+                </summary>
+                <ul>
+                  {group.links.map((link) => (
+                    <li key={link.href}>
+                      <Link href={link.href}>{link.label}</Link>
+                    </li>
+                  ))}
+                </ul>
+              </details>
+            ))}
           </div>
 
+          <div className={s.base}>
+            <span className={s.now}>
+              Kigali, Rwanda <span suppressHydrationWarning>{clock}</span>
+            </span>
+            <span>
+              © {new Date().getFullYear()} {site.legalName}. All rights reserved.
+            </span>
+            <span>
+              Designed and developed by{' '}
+              <a
+                href="https://www.linkedin.com/in/patrice-iradukunda-74931827a/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Patrice Iradukunda
+              </a>
+            </span>
+            <span className={s.legal}>
+              <Link href="/legal/privacy">Privacy</Link>
+              <Link href="/legal/terms">Terms</Link>
+            </span>
+          </div>
         </div>
 
-      </div>
-
-    </footer>
+        <div className={s.scene} aria-hidden="true">
+          <div className={s.glow} />
+          <div className={s.road} />
+          <div className={s.lights} />
+          <div className={s.mark}>
+            {'VOLTARIS'.split('').map((ch, i) => (
+              <i key={i} style={{ '--d': i } as React.CSSProperties}>
+                {ch}
+              </i>
+            ))}
+          </div>
+        </div>
+      </footer>
+    </div>
   );
 }

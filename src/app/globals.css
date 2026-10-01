@@ -2869,7 +2869,7 @@ button[title*="ompare"]:focus-visible {
    site's header and footer step aside while one is on screen.
    ------------------------------------------------------------------ */
 body:has([data-app-shell]) header.z-40,
-body:has([data-app-shell]) footer.bg-chrome {
+body:has([data-app-shell]) [data-site-footer] {
   display: none;
 }
 body:has([data-app-shell]) #main {
