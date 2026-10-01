@@ -4,6 +4,7 @@ import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { LoadingSkeleton } from '@/components/ui';
 import { VehicleComparison } from '@/features/vehicles/VehicleComparison';
 import { buildMetadata } from '@/lib/seo/metadata';
+import '@/features/vehicles/vehicle-comparison.css';
 
 export const metadata: Metadata = buildMetadata({
   title: 'Compare electric and hybrid cars',
@@ -14,7 +15,7 @@ export const metadata: Metadata = buildMetadata({
 
 export default function ComparePage() {
   return (
-    <div className="shell py-10">
+    <div className="vc-page shell py-10">
       <Breadcrumbs
         trail={[
           { name: 'Home', path: '/' },

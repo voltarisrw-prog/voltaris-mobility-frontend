@@ -379,7 +379,7 @@ export function VehicleComparison() {
                       <i key={v.id} style={{ flex: wins[i], background: COLORS[i] }} />
                     ) : null,
                   )}
-                  {ties > 0 && <i style={{ flex: ties, background: '#e3e7f0' }} />}
+                  {ties > 0 && <i style={{ flex: ties, background: 'var(--vc-line)' }} />}
                 </div>
                 <div className="vc-vkey">
                   {vehicles.map((v, i) => (
@@ -388,7 +388,7 @@ export function VehicleComparison() {
                     </span>
                   ))}
                   {ties > 0 && (
-                    <span style={{ '--c': '#e3e7f0' } as CSSProperties}>Equal {ties}</span>
+                    <span style={{ '--c': 'var(--vc-line)' } as CSSProperties}>Equal {ties}</span>
                   )}
                 </div>
               </div>
