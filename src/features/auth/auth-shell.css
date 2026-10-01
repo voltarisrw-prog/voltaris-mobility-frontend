@@ -67,3 +67,15 @@
 .auth-phone{position:relative}
 .auth-phone span{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:15px;font-weight:600;color:#4a4a4a;pointer-events:none}
 .auth-phone input{padding-left:64px!important}
+
+/* floating labels (opt-in via <Field floating>) */
+.vds-floating{position:relative}
+.auth-panel .vds-floating-label{position:absolute;left:14px;top:17px;z-index:1;margin:0;font-size:15px;letter-spacing:0;text-transform:none;color:#767676;pointer-events:none;transition:top .15s,font-size .15s,letter-spacing .15s;line-height:1.2}
+.auth-panel .vds-floating input:not([type=checkbox]):not([type=radio]){height:54px;padding:22px 14px 6px}
+.auth-panel .vds-floating:focus-within .vds-floating-label,
+.auth-panel .vds-floating:has(input:not(:placeholder-shown)) .vds-floating-label,
+.auth-panel .vds-floating:has(.auth-phone) .vds-floating-label{top:8px;font-size:11px;letter-spacing:.04em}
+.auth-panel .vds-floating .auth-phone span{top:auto;bottom:10px;transform:none}
+.auth-panel .vds-floating input[aria-invalid="true"]{border-color:#e5484d}
+.auth-panel .auth-meter{margin-top:2px;margin-bottom:6px}
+.auth-panel label:has(input[type=checkbox]){text-transform:none;letter-spacing:0;font-size:13px;color:#4a4a4a}

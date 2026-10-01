@@ -69,52 +69,52 @@ export function RegisterForm() {
         </p>
       )}
 
-      <Field label="Full name" error={errors.full_name?.message} required>
+      <Field floating label="Full name" error={errors.full_name?.message} required>
         {(p) => (
-          <input {...p} {...register('full_name')} autoComplete="name" className={inputClass} />
+          <input {...p} {...register('full_name')} autoComplete="name" placeholder=" " className={inputClass} />
         )}
       </Field>
 
-      <Field label="Email" error={errors.email?.message} required>
+      <Field floating label="Email" error={errors.email?.message} required>
         {(p) => (
           <input
             {...p}
             {...register('email')}
             type="email"
             autoComplete="email"
-            className={inputClass}
+            placeholder=" " className={inputClass}
           />
         )}
       </Field>
 
-      <Field
+      <Field floating
         label="Phone"
         hint="Rwandan mobile number, e.g. 788 123 456"
         error={errors.phone?.message}
         required
       >
         {(p) => (
-          <PhoneInput {...p} {...register('phone')} autoComplete="tel-national" className={inputClass} />
+          <PhoneInput {...p} {...register('phone')} autoComplete="tel-national" placeholder=" " className={inputClass} />
         )}
       </Field>
 
-      <Field
+      <Field floating
         label="Password"
         hint="At least 12 characters, with upper and lower case and a number"
         error={errors.password?.message}
         required
       >
         {(p) => (
-          <PasswordInput {...p} {...register('password')} autoComplete="new-password" className={inputClass} />
+          <PasswordInput {...p} {...register('password')} autoComplete="new-password" placeholder=" " className={inputClass} />
         )}
       </Field>
 
       <PasswordMeter value={watch('password') ?? ''} />
 
 
-      <Field label="Confirm password" error={errors.confirm_password?.message} required>
+      <Field floating label="Confirm password" error={errors.confirm_password?.message} required>
         {(p) => (
-          <PasswordInput {...p} {...register('confirm_password')} autoComplete="new-password" className={inputClass} />
+          <PasswordInput {...p} {...register('confirm_password')} autoComplete="new-password" placeholder=" " className={inputClass} />
         )}
       </Field>
 

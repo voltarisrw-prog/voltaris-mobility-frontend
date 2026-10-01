@@ -70,12 +70,14 @@ export function Field({
   error,
   hint,
   required,
+  floating,
   children,
 }: {
   label: string;
   error?: string;
   hint?: string;
   required?: boolean;
+  floating?: boolean;
   children: (props: {
     id: string;
     'aria-describedby': string | undefined;
@@ -90,13 +92,13 @@ export function Field({
     [hintId, errorId].filter(Boolean).join(' ') || undefined;
 
   return (
-    <div>
-      <label htmlFor={id} className="eyebrow mb-2 block">
+    <div className={floating ? 'vds-floating' : undefined}>
+      <label htmlFor={id} className={floating ? 'vds-floating-label' : 'eyebrow mb-2 block'}>
         {label}
         {required && <span className="ml-1 text-danger">*</span>}
       </label>
 
-      {hint && (
+      {hint && !floating && (
         <p id={hintId} className="mb-2 text-xs text-steel-muted">
           {hint}
         </p>
@@ -108,6 +110,12 @@ export function Field({
         'aria-invalid': Boolean(error),
         'aria-required': Boolean(required),
       })}
+
+      {hint && floating && (
+        <p id={hintId} className="mt-1.5 text-xs text-steel-muted">
+          {hint}
+        </p>
+      )}
 
       {error && (
         <p

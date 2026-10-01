@@ -71,26 +71,26 @@ export function LoginForm() {
         </p>
       )}
 
-      <Field label="Email" error={errors.email?.message} required>
+      <Field floating label="Email" error={errors.email?.message} required>
         {(p) => (
           <input
             {...p}
             {...register('email')}
             type="email"
             autoComplete="email"
-            className={inputClass}
+            placeholder=" " className={inputClass}
           />
         )}
       </Field>
 
-      <Field label="Password" error={errors.password?.message} required>
+      <Field floating label="Password" error={errors.password?.message} required>
         {(p) => (
-          <PasswordInput {...p} {...register('password')} autoComplete="current-password" className={inputClass} />
+          <PasswordInput {...p} {...register('password')} autoComplete="current-password" placeholder=" " className={inputClass} />
         )}
       </Field>
 
       {mfaRequired && (
-        <Field label="Authentication code" error={errors.otp?.message} required>
+        <Field floating label="Authentication code" error={errors.otp?.message} required>
           {(p) => (
             <input
               {...p}
@@ -98,6 +98,7 @@ export function LoginForm() {
               inputMode="numeric"
               autoComplete="one-time-code"
               maxLength={6}
+              placeholder=" "
               className={`${inputClass} font-data tracking-[0.4em]`}
             />
           )}
