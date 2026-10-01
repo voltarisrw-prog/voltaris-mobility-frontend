@@ -2881,7 +2881,8 @@ body:has([data-app-shell]) {
 
 /* ==================================================================
    Dashboard theme — signed-in workspaces only (admin, company console,
-   account). Dark or light per role, one green accent, rounded cards.
+   account). Dark or light per role, the logo's blue as the one accent,
+   rounded cards.
    The public site keeps the monochrome system above.
    ================================================================== */
 [data-app-shell][data-theme='dark'] {
@@ -2892,9 +2893,9 @@ body:has([data-app-shell]) {
   --d-line: #1f2b35;
   --d-text: #e8eef2;
   --d-muted: #8a97a3;
-  --d-accent: #22c55e;
-  --d-accent-ink: #04140a;
-  --d-accent-soft: rgba(34, 197, 94, 0.14);
+  --d-accent: #5cc8ff; /* the logo's road light */
+  --d-accent-ink: #04111a;
+  --d-accent-soft: rgba(92, 200, 255, 0.14);
   --d-warn: #f5b544;
   --d-bad: #f87171;
   --d-shadow: 0 1px 0 rgba(255, 255, 255, 0.02), 0 8px 24px rgba(0, 0, 0, 0.35);
@@ -2908,9 +2909,9 @@ body:has([data-app-shell]) {
   --d-line: #e5e9ed;
   --d-text: #0f1720;
   --d-muted: #6b7785;
-  --d-accent: #16a34a;
+  --d-accent: #0779b8; /* logo blue, deepened to read on white (4.7:1) */
   --d-accent-ink: #ffffff;
-  --d-accent-soft: rgba(22, 163, 74, 0.1);
+  --d-accent-soft: rgba(7, 121, 184, 0.1);
   --d-warn: #d97706;
   --d-bad: #dc2626;
   --d-shadow: 0 1px 2px rgba(16, 24, 40, 0.04), 0 4px 16px rgba(16, 24, 40, 0.05);

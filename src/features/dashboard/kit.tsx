@@ -4,7 +4,7 @@ import { cn } from '@/lib/format';
 /*
  * Dashboard building blocks, drawn with the dashboard theme variables
  * (--d-bg, --d-card, --d-line, --d-text, --d-muted, --d-accent) so the same
- * component renders dark or light by role. Rounded cards, one green accent.
+ * component renders dark or light by role. Rounded cards, the logo blue as the accent.
  */
 
 const card =
