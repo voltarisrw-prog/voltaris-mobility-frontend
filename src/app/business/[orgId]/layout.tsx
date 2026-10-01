@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import { AppShell, type ShellNavItem } from '@/features/dashboard/AppShell';
 import { currentSession } from '@/lib/access/server';
-import { ORG_SECTIONS } from '@/lib/access/sections';
+import { ORG_SECTIONS, themeFor } from '@/lib/access/sections';
 import { orgHome } from '@/lib/api/orgs';
 import { ApiError } from '@/lib/api/errors';
 
@@ -40,6 +40,8 @@ export default async function OrgLayout({
 
   return (
     <AppShell
+      theme={themeFor(`${home.kind}:${home.role}`)}
+      search={{ action: '/buy', name: 'make', placeholder: 'Search the marketplace by make' }}
       context={home.name}
       nav={nav}
       user={{ name: session.user.full_name, email: session.user.email, role: home.role_label }}

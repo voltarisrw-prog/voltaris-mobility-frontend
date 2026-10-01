@@ -52,8 +52,7 @@ export function RwandaMap({
       <svg viewBox="0 0 100 88" className="h-auto w-full" role="img" aria-label="Map of Rwanda">
         <polygon
           points={OUTLINE.map(([lon, lat]) => `${X(lon)},${Y(lat)}`).join(' ')}
-          fill="#F2F2F2"
-          stroke="#BDBDBD"
+          style={{ fill: 'var(--d-card-2)', stroke: 'var(--d-line)' }}
           strokeWidth="0.4"
         />
         {points.map((p) => {
@@ -62,8 +61,20 @@ export function RwandaMap({
           const r = 1.4 + (p.value / max) * 3.2;
           return (
             <g key={p.place}>
-              <rect x={X(at[0]) - r / 2} y={Y(at[1]) - r / 2} width={r} height={r} fill="#111111" />
-              <text x={X(at[0]) + r / 2 + 1} y={Y(at[1]) + 1} fontSize="3" fill="#4A4A4A">
+              <circle
+                cx={X(at[0])}
+                cy={Y(at[1])}
+                r={r / 2 + 0.6}
+                style={{ fill: 'var(--d-accent)' }}
+                opacity="0.25"
+              />
+              <circle cx={X(at[0])} cy={Y(at[1])} r={r / 2.8} style={{ fill: 'var(--d-accent)' }} />
+              <text
+                x={X(at[0]) + r / 2 + 1}
+                y={Y(at[1]) + 1}
+                fontSize="3"
+                style={{ fill: 'var(--d-muted)' }}
+              >
                 {p.place} · {p.value}
               </text>
             </g>

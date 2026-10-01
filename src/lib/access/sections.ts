@@ -48,3 +48,28 @@ export const ORG_SECTIONS = [
   { key: 'vehicles', label: 'Vehicles', anyOf: ['org.vehicles.read'] },
   { key: 'leads', label: 'Leads', anyOf: ['org.leads.read_all', 'org.leads.read_assigned'] },
 ] as const;
+
+/**
+ * Each role's look, taken from the design reference: dark or light.
+ * Platform roles by role name; company roles by "kind:ROLE".
+ */
+const DARK = new Set([
+  'SUPER_ADMIN',
+  'SECURITY_ADMIN',
+  'FINANCE_MANAGER',
+  'RECONCILIATION_OFFICER',
+  'VERIFICATION_OFFICER',
+  'MARKETING_MANAGER',
+  'ADVERTISING_MANAGER',
+  'DEVELOPER',
+  'AUDITOR',
+  'CUSTOMER',
+  'dealer:OWNER',
+  'dealer:SALES_AGENT',
+  'rental:OWNER',
+  'rental:RENTAL_AGENT',
+]);
+
+export function themeFor(key: string | undefined): 'dark' | 'light' {
+  return key && DARK.has(key) ? 'dark' : 'light';
+}

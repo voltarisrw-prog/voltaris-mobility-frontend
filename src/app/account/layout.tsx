@@ -3,6 +3,7 @@ import { getSession } from '@/lib/api/auth';
 import { ApiError } from '@/lib/api/errors';
 import { AppShell, type ShellNavItem } from '@/features/dashboard/AppShell';
 import { AccountFrame } from '@/features/dashboard/AccountFrame';
+import { themeFor } from '@/lib/access/sections';
 
 const NAV: ShellNavItem[] = [
   { href: '/account', label: 'Overview', icon: 'overview', exact: true },
@@ -50,6 +51,8 @@ export default async function AccountLayout({ children }: { children: React.Reac
   return (
     <AppShell
       context="Your account"
+      theme={themeFor(user.roles.includes('SELLER') ? 'SELLER' : 'CUSTOMER')}
+      search={{ action: '/buy', name: 'make', placeholder: 'Search cars by make' }}
       nav={nav}
       user={{
         name: user.full_name,

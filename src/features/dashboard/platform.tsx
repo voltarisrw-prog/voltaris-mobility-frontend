@@ -819,7 +819,7 @@ export async function PlatformDashboard({
               <Ranked items={p?.tables ?? []} />
             </Panel>
             <Panel title="Applied migrations" span={6}>
-              <pre className="overflow-x-auto bg-chrome p-4 font-mono text-xs leading-relaxed text-white/90">
+              <pre className="overflow-x-auto rounded-[10px] bg-[#070b0f] p-4 font-mono text-xs leading-relaxed text-[#7ee2a8]">
                 {(p?.migrations ?? []).map((m) => `✓ ${m}`).join('\n') || '—'}
               </pre>
             </Panel>

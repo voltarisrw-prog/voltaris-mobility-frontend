@@ -7,6 +7,8 @@ export function AccountFrame({ children }: { children: React.ReactNode }) {
   return usePathname() === '/account' ? (
     <>{children}</>
   ) : (
-    <div className="max-w-5xl border border-hairline bg-surface p-5 sm:p-8">{children}</div>
+    <div className="max-w-5xl rounded-[14px] border border-[var(--d-line)] bg-[var(--d-card)] p-5 shadow-[var(--d-shadow)] sm:p-8">
+      {children}
+    </div>
   );
 }

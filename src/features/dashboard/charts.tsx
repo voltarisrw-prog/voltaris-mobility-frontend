@@ -56,16 +56,16 @@ function Frame({
 
   return (
     <figure className="relative" aria-describedby={tableId}>
-      <div className="flex items-baseline justify-between text-xs text-steel-muted">
+      <div className="flex items-baseline justify-between text-xs text-[var(--d-muted)]">
         <span className="tabular-nums">{format(nice)}</span>
-        <span aria-live="polite" className="tabular-nums text-chrome">
+        <span aria-live="polite" className="tabular-nums font-medium text-[var(--d-accent)]">
           {h ? `${short(h.label)} · ${format(h.value)}` : ''}
         </span>
       </div>
       <div className="relative mt-2" style={{ height }}>
         {children(hover, setHover, nice)}
       </div>
-      <div className="mt-2 flex justify-between text-[0.7rem] text-steel-muted">
+      <div className="mt-2 flex justify-between text-[0.7rem] text-[var(--d-muted)]">
         <span>{data[0] && short(data[0].label)}</span>
         <span>{short(data[Math.floor(data.length / 2)]?.label ?? '')}</span>
         <span>{data.at(-1) && short(data.at(-1)!.label)}</span>
@@ -102,7 +102,7 @@ function Grid() {
           x2="100"
           y1={y * 100}
           y2={y * 100}
-          stroke="#E5E5E5"
+          style={{ stroke: 'var(--d-line)' }}
           strokeWidth="1"
           vectorEffect="non-scaling-stroke"
         />
@@ -147,7 +147,13 @@ export function BarChart({
                     y={100 - bh}
                     width={w * 0.64}
                     height={Math.max(bh, d.value > 0 ? 1.5 : 0)}
-                    fill={hover === null || hover === i ? '#111111' : '#BDBDBD'}
+                    rx="0.6"
+                    style={{
+                      fill:
+                        hover === null || hover === i
+                          ? 'var(--d-accent)'
+                          : 'color-mix(in srgb, var(--d-accent) 35%, var(--d-card))',
+                    }}
                   />
                 </g>
               );
@@ -194,11 +200,15 @@ export function LineChart({
               aria-label={title}
             >
               <Grid />
-              <path d={`${path} L100,100 L0,100 Z`} fill="#111111" opacity="0.05" />
+              <path
+                d={`${path} L100,100 L0,100 Z`}
+                style={{ fill: 'var(--d-accent)' }}
+                opacity="0.12"
+              />
               <path
                 d={path}
                 fill="none"
-                stroke="#111111"
+                style={{ stroke: 'var(--d-accent)' }}
                 strokeWidth="2"
                 vectorEffect="non-scaling-stroke"
               />
@@ -208,7 +218,7 @@ export function LineChart({
                   x2={x(hover)}
                   y1="0"
                   y2="100"
-                  stroke="#767676"
+                  style={{ stroke: 'var(--d-muted)' }}
                   strokeWidth="1"
                   vectorEffect="non-scaling-stroke"
                 />
@@ -217,7 +227,7 @@ export function LineChart({
             {hover !== null && (
               <span
                 aria-hidden
-                className="pointer-events-none absolute h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 border-2 border-surface bg-chrome"
+                className="pointer-events-none absolute h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-[var(--d-card)] bg-[var(--d-accent)]"
                 style={{ left: `${x(hover)}%`, top: `${y(data[hover]?.value ?? 0)}%` }}
               />
             )}

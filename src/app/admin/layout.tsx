@@ -2,7 +2,8 @@ import { notFound } from 'next/navigation';
 import { MfaPanel } from '@/features/auth/MfaPanel';
 import { AppShell } from '@/features/dashboard/AppShell';
 import { currentSession } from '@/lib/access/server';
-import { visibleSections } from '@/lib/access/sections';
+import { themeFor, visibleSections } from '@/lib/access/sections';
+import { can } from '@/lib/api/auth';
 import { getMyAccess } from '@/lib/api/admin';
 
 /**
@@ -48,6 +49,12 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   return (
     <AppShell
       context="Admin"
+      theme={themeFor(user.roles[0])}
+      search={
+        can(user, 'users.read')
+          ? { action: '/admin/people', name: 'q', placeholder: 'Search people by name or email' }
+          : { action: '/buy', name: 'make', placeholder: 'Search the marketplace by make' }
+      }
       nav={nav}
       user={{ name: user.full_name, email: user.email, role: roleLabel }}
     >
@@ -55,7 +62,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         children
       ) : (
         // Staff powers only apply after an authenticator code in this session.
-        <div className="max-w-2xl border border-hairline bg-surface p-6 sm:p-8">
+        <div className="max-w-2xl rounded-[14px] border border-[var(--d-line)] bg-[var(--d-card)] p-6 shadow-[var(--d-shadow)] sm:p-8">
           <MfaPanel
             mode={user.mfa_enabled ? 'verify' : 'setup'}
             needsSetupCode

@@ -76,16 +76,28 @@ export function AppShell({
   context,
   nav,
   user,
+  theme = 'dark',
+  search,
   children,
 }: {
   /** Shown under the wordmark: "Admin", a company name, "Your account". */
   context: string;
   nav: ShellNavItem[];
   user: { name: string; email: string; role: string };
+  /** Each role has its look (from the design reference): dark or light. */
+  theme?: 'dark' | 'light';
+  /** Where the top-bar search goes. */
+  search?: { action: string; name: string; placeholder: string };
   children: React.ReactNode;
 }) {
+  const initials = user.name
+    .split(/[\s_.]+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((w) => w[0]?.toUpperCase())
+    .join('');
   const pathname = usePathname();
-  const search = useSearchParams();
+  const params = useSearchParams();
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -102,7 +114,7 @@ export function AppShell({
   const isActive = (item: ShellNavItem) => {
     const [path, query] = item.href.split('?');
     const tab = new URLSearchParams(query ?? '').get('tab');
-    if (tab || item.exact) return pathname === path && (search.get('tab') ?? null) === tab;
+    if (tab || item.exact) return pathname === path && (params.get('tab') ?? null) === tab;
     return pathname === path || pathname.startsWith(`${path}/`);
   };
 
@@ -120,10 +132,10 @@ export function AppShell({
                 onClick={() => setOpen(false)}
                 aria-current={active ? 'page' : undefined}
                 className={cn(
-                  'flex items-center gap-3 px-3 py-2.5 text-sm transition-colors',
+                  'flex items-center gap-3 rounded-[10px] px-3 py-2.5 text-sm transition-colors',
                   active
-                    ? 'bg-white text-chrome'
-                    : 'text-white/70 hover:bg-white/10 hover:text-white',
+                    ? 'bg-[var(--d-accent-soft)] font-medium text-[var(--d-accent)]'
+                    : 'text-[var(--d-muted)] hover:bg-[var(--d-card-2)] hover:text-[var(--d-text)]',
                 )}
               >
                 <Icon aria-hidden className="h-4 w-4 shrink-0" strokeWidth={1.75} />
@@ -137,16 +149,23 @@ export function AppShell({
   );
 
   const footer = (
-    <div className="border-t border-white/10 p-4">
-      <p className="truncate text-sm font-medium text-white">{user.name}</p>
-      <p className="truncate text-xs text-white/50">{user.role}</p>
-      <div className="mt-4 flex items-center justify-between text-xs uppercase tracking-[0.06em]">
-        <Link href="/" className="text-white/60 hover:text-white">
+    <div className="m-3 rounded-[12px] border border-[var(--d-line)] bg-[var(--d-card)] p-3">
+      <div className="flex items-center gap-3">
+        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[var(--d-accent)] text-xs font-semibold text-[var(--d-accent-ink)]">
+          {initials}
+        </span>
+        <div className="min-w-0">
+          <p className="truncate text-sm font-medium text-[var(--d-text)]">{user.name}</p>
+          <p className="truncate text-xs text-[var(--d-muted)]">{user.role}</p>
+        </div>
+      </div>
+      <div className="mt-3 flex items-center justify-between text-xs">
+        <Link href="/" className="text-[var(--d-muted)] hover:text-[var(--d-text)]">
           View site
         </Link>
         <button
           type="button"
-          className="inline-flex items-center gap-1.5 text-white/60 hover:text-white"
+          className="inline-flex items-center gap-1.5 text-[var(--d-muted)] hover:text-[var(--d-text)]"
           onClick={async () => {
             try {
               await logout();
@@ -162,11 +181,15 @@ export function AppShell({
   );
 
   const brand = (
-    <Link href="/" className="flex items-center gap-2.5 text-white" aria-label="Voltaris home">
+    <Link
+      href="/"
+      className="flex items-center gap-2.5 text-[var(--d-text)]"
+      aria-label="Voltaris home"
+    >
       <VoltarisMark className="h-7 w-auto" />
       <span className="leading-none">
         <span className="block text-[0.95rem] font-semibold tracking-[0.18em]">VOLTARIS</span>
-        <span className="mt-1 block max-w-[10rem] truncate text-[0.65rem] uppercase tracking-[0.14em] text-white/50">
+        <span className="mt-1 block max-w-[10rem] truncate text-[0.65rem] uppercase tracking-[0.14em] text-[var(--d-muted)]">
           {context}
         </span>
       </span>
@@ -176,24 +199,25 @@ export function AppShell({
   return (
     <div
       data-app-shell
-      className="min-h-[100dvh] bg-abyss lg:grid lg:grid-cols-[16rem_minmax(0,1fr)]"
+      data-theme={theme}
+      className="min-h-[100dvh] bg-[var(--d-bg)] font-sans text-[var(--d-text)] lg:grid lg:grid-cols-[16rem_minmax(0,1fr)]"
     >
       {/* Desktop sidebar */}
-      <aside className="sticky top-0 hidden h-[100dvh] flex-col bg-chrome lg:flex">
+      <aside className="sticky top-0 hidden h-[100dvh] flex-col border-r border-[var(--d-line)] bg-[var(--d-side)] lg:flex">
         <div className="px-5 pb-2 pt-6">{brand}</div>
         {navList}
         {footer}
       </aside>
 
       {/* Phone / tablet top bar */}
-      <div className="sticky top-0 z-40 flex h-14 items-center justify-between bg-chrome px-4 lg:hidden">
+      <div className="sticky top-0 z-40 flex h-14 items-center justify-between border-b border-[var(--d-line)] bg-[var(--d-side)] px-4 lg:hidden">
         {brand}
         <button
           type="button"
           aria-label="Open menu"
           aria-expanded={open}
           onClick={() => setOpen(true)}
-          className="grid h-10 w-10 place-items-center text-white"
+          className="grid h-10 w-10 place-items-center rounded-[10px] text-[var(--d-text)] hover:bg-[var(--d-card-2)]"
         >
           <Menu aria-hidden className="h-5 w-5" />
         </button>
@@ -212,14 +236,14 @@ export function AppShell({
             className="absolute inset-0 bg-black/40 animate-backdrop-in"
             onClick={() => setOpen(false)}
           />
-          <div className="absolute inset-y-0 left-0 flex w-[min(20rem,86vw)] flex-col bg-chrome">
+          <div className="absolute inset-y-0 left-0 flex w-[min(20rem,86vw)] flex-col bg-[var(--d-side)]">
             <div className="flex h-14 items-center justify-between px-4">
               {brand}
               <button
                 type="button"
                 aria-label="Close menu"
                 onClick={() => setOpen(false)}
-                className="grid h-10 w-10 place-items-center text-white"
+                className="grid h-10 w-10 place-items-center rounded-[10px] text-[var(--d-text)]"
               >
                 <X aria-hidden className="h-5 w-5" />
               </button>
@@ -230,7 +254,52 @@ export function AppShell({
         </div>
       )}
 
-      <div className="min-w-0 px-4 pb-16 pt-6 sm:px-6 lg:px-10 lg:pt-10">{children}</div>
+      <div className="min-w-0">
+        {/* Top bar: search, alerts, who's signed in */}
+        <div className="sticky top-14 z-30 flex h-16 items-center gap-3 border-b border-[var(--d-line)] bg-[color-mix(in_srgb,var(--d-bg)_88%,transparent)] px-4 backdrop-blur sm:px-6 lg:top-0 lg:px-10">
+          {search ? (
+            <form action={search.action} className="relative min-w-0 max-w-md flex-1" role="search">
+              <Search
+                aria-hidden
+                className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--d-muted)]"
+              />
+              <input
+                name={search.name}
+                type="search"
+                placeholder={search.placeholder}
+                aria-label={search.placeholder}
+                className="h-10 w-full rounded-[10px] border border-[var(--d-line)] bg-[var(--d-card)] pl-9 pr-3 text-sm text-[var(--d-text)] placeholder:text-[var(--d-muted)]"
+              />
+            </form>
+          ) : (
+            <div className="flex-1" />
+          )}
+          <div className="ml-auto flex items-center gap-2">
+            <Link
+              href="/account/notifications"
+              prefetch={false}
+              aria-label="Notifications"
+              className="grid h-10 w-10 place-items-center rounded-[10px] border border-[var(--d-line)] bg-[var(--d-card)] text-[var(--d-muted)] hover:text-[var(--d-text)]"
+            >
+              <Bell aria-hidden className="h-4 w-4" />
+            </Link>
+            <Link
+              href="/account/profile"
+              prefetch={false}
+              aria-label={`${user.name} — profile`}
+              className="hidden items-center gap-2.5 rounded-[10px] border border-[var(--d-line)] bg-[var(--d-card)] py-1 pl-1 pr-3 sm:flex"
+            >
+              <span className="grid h-8 w-8 place-items-center rounded-full bg-[var(--d-accent)] text-xs font-semibold text-[var(--d-accent-ink)]">
+                {initials}
+              </span>
+              <span className="max-w-[10rem] truncate text-sm text-[var(--d-text)]">
+                {user.name}
+              </span>
+            </Link>
+          </div>
+        </div>
+        <div className="px-4 pb-16 pt-6 sm:px-6 lg:px-10 lg:pt-8">{children}</div>
+      </div>
     </div>
   );
 }

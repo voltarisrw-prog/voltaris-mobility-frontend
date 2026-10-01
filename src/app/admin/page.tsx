@@ -14,13 +14,13 @@ export default async function AdminOverview() {
   return (
     <>
       <PlatformDashboard role={role?.role ?? ''} label={role?.label ?? 'Staff'} stats={stats} />
-      <details className="mt-10 border border-hairline bg-surface">
+      <details className="mt-6 overflow-hidden rounded-[14px] border border-[var(--d-line)] bg-[var(--d-card)]">
         <summary className="cursor-pointer px-5 py-4 text-sm font-medium">
           What your role lets you do ({access.permissions.length})
         </summary>
-        <ul className="grid gap-px border-t border-hairline bg-hairline sm:grid-cols-2">
+        <ul className="grid gap-px border-t border-[var(--d-line)] bg-[var(--d-line)] sm:grid-cols-2">
           {access.permissions.map((p) => (
-            <li key={p.key} className="bg-surface px-5 py-3 text-sm text-steel">
+            <li key={p.key} className="bg-[var(--d-card)] px-5 py-3 text-sm text-[var(--d-muted)]">
               {p.description}
             </li>
           ))}

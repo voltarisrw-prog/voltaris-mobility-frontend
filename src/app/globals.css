@@ -2878,3 +2878,141 @@ body:has([data-app-shell]) #main {
 body:has([data-app-shell]) {
   background: #f7f7f7;
 }
+
+/* ==================================================================
+   Dashboard theme — signed-in workspaces only (admin, company console,
+   account). Dark or light per role, one green accent, rounded cards.
+   The public site keeps the monochrome system above.
+   ================================================================== */
+[data-app-shell][data-theme='dark'] {
+  --d-bg: #0b1015;
+  --d-side: #0d1318;
+  --d-card: #121a21;
+  --d-card-2: #17212a;
+  --d-line: #1f2b35;
+  --d-text: #e8eef2;
+  --d-muted: #8a97a3;
+  --d-accent: #22c55e;
+  --d-accent-ink: #04140a;
+  --d-accent-soft: rgba(34, 197, 94, 0.14);
+  --d-warn: #f5b544;
+  --d-bad: #f87171;
+  --d-shadow: 0 1px 0 rgba(255, 255, 255, 0.02), 0 8px 24px rgba(0, 0, 0, 0.35);
+  color-scheme: dark;
+}
+[data-app-shell][data-theme='light'] {
+  --d-bg: #f4f6f8;
+  --d-side: #ffffff;
+  --d-card: #ffffff;
+  --d-card-2: #f8fafb;
+  --d-line: #e5e9ed;
+  --d-text: #0f1720;
+  --d-muted: #6b7785;
+  --d-accent: #16a34a;
+  --d-accent-ink: #ffffff;
+  --d-accent-soft: rgba(22, 163, 74, 0.1);
+  --d-warn: #d97706;
+  --d-bad: #dc2626;
+  --d-shadow: 0 1px 2px rgba(16, 24, 40, 0.04), 0 4px 16px rgba(16, 24, 40, 0.05);
+  color-scheme: light;
+}
+[data-app-shell] {
+  background: var(--d-bg);
+  color: var(--d-text);
+}
+body:has([data-app-shell][data-theme='dark']) {
+  background: #0b1015;
+}
+body:has([data-app-shell][data-theme='light']) {
+  background: #f4f6f8;
+}
+
+/* Pages built with the site's tokens (People, Companies, forms, account pages)
+   take the dashboard palette while inside the shell. */
+[data-app-shell] .bg-surface,
+[data-app-shell] .panel {
+  background-color: var(--d-card);
+}
+[data-app-shell] .bg-abyss,
+[data-app-shell] .bg-slab {
+  background-color: var(--d-card-2);
+}
+[data-app-shell] .bg-hairline {
+  background-color: var(--d-line);
+}
+[data-app-shell] .border-hairline,
+[data-app-shell] .border-hairline\/60,
+[data-app-shell] .border-hairline\/70,
+[data-app-shell] .border-chrome {
+  border-color: var(--d-line);
+}
+[data-app-shell] .text-chrome,
+[data-app-shell] .text-black {
+  color: var(--d-text);
+}
+[data-app-shell] .text-steel,
+[data-app-shell] .text-steel-muted,
+[data-app-shell] .eyebrow {
+  color: var(--d-muted);
+}
+[data-app-shell] .bg-chrome {
+  background-color: var(--d-accent);
+}
+[data-app-shell] .vds-button {
+  min-height: 42px;
+  padding: 0 18px;
+  border-radius: 8px;
+  border-color: var(--d-line);
+  background: var(--d-card-2);
+  color: var(--d-text);
+  font-size: 0.8125rem;
+}
+[data-app-shell] .vds-button:hover {
+  border-color: var(--d-accent);
+  background: var(--d-card-2);
+  color: var(--d-text);
+}
+[data-app-shell] .vds-button-primary,
+[data-app-shell] .vds-button-primary:hover {
+  background: var(--d-accent);
+  border-color: var(--d-accent);
+  color: var(--d-accent-ink);
+}
+[data-app-shell] .vds-button-primary:hover {
+  filter: brightness(1.08);
+}
+[data-app-shell] .vds-button-ghost {
+  border-color: transparent;
+  background: transparent;
+}
+[data-app-shell] .vds-button-danger {
+  color: var(--d-bad);
+  border-color: color-mix(in srgb, var(--d-bad) 40%, transparent);
+  background: transparent;
+}
+[data-app-shell] .vds-input,
+[data-app-shell] .vds-select,
+[data-app-shell] input:not([type='checkbox']):not([type='radio']),
+[data-app-shell] select {
+  border-radius: 8px;
+  border-color: var(--d-line);
+  background-color: var(--d-card-2);
+  color: var(--d-text);
+}
+[data-app-shell] input::placeholder {
+  color: var(--d-muted);
+}
+[data-app-shell] .vds-input:focus,
+[data-app-shell] .vds-select:focus,
+[data-app-shell] input:focus,
+[data-app-shell] select:focus {
+  border-color: var(--d-accent);
+  outline: none;
+  box-shadow: 0 0 0 3px var(--d-accent-soft);
+}
+[data-app-shell] table th {
+  color: var(--d-muted);
+}
+[data-app-shell] .font-display {
+  letter-spacing: -0.02em;
+}

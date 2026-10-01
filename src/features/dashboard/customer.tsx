@@ -1,5 +1,5 @@
-import Link from 'next/link';
 import {
+  DashButton,
   DashHead,
   Feed,
   Grid,
@@ -54,12 +54,10 @@ export async function CustomerDashboard({ user }: { user: PublicUser }) {
         title={isSeller ? 'Your vehicles. Your business.' : `Your journey, ${first}.`}
         actions={
           <>
-            <Link href="/buy" className="vds-button vds-button-primary">
-              Browse cars
-            </Link>
-            <Link href="/sell" className="vds-button vds-button-secondary">
+            <DashButton href="/buy">Browse cars</DashButton>
+            <DashButton href="/sell" variant="secondary">
               Sell a car
-            </Link>
+            </DashButton>
           </>
         }
       />
@@ -122,19 +120,17 @@ export async function CustomerDashboard({ user }: { user: PublicUser }) {
         <Panel title="Test drives" span={7} action={{ href: '/account/test-drives', label: 'All' }}>
           <MiniTable
             head={['Vehicle', 'Where', 'When', 'Status']}
-            rows={drives
-              .slice(0, 5)
-              .map((d) => [
-                `${d.vehicle.year} ${d.vehicle.make} ${d.vehicle.model}`,
-                d.location,
-                d.scheduled_for
-                  ? new Date(d.scheduled_for).toLocaleDateString('en-RW', {
-                      day: 'numeric',
-                      month: 'short',
-                    })
-                  : '—',
-                <Status key="s">{d.status}</Status>,
-              ])}
+            rows={drives.slice(0, 5).map((d) => [
+              `${d.vehicle.year} ${d.vehicle.make} ${d.vehicle.model}`,
+              d.location,
+              d.scheduled_for
+                ? new Date(d.scheduled_for).toLocaleDateString('en-RW', {
+                    day: 'numeric',
+                    month: 'short',
+                  })
+                : '—',
+              <Status key="s">{d.status}</Status>,
+            ])}
             empty="No test drives booked."
           />
         </Panel>

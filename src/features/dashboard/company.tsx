@@ -179,13 +179,11 @@ export async function CompanyDashboard({ org, home }: { org: string; home: OrgHo
             </Panel>
             <Panel title="Team performance" span={12} preview>
               <Meters
-                items={members
-                  .slice(0, 4)
-                  .map((m, i) => ({
-                    label: m.full_name,
-                    value: [72, 58, 41, 30][i] ?? 20,
-                    note: `${[18, 14, 9, 6][i] ?? 3} leads closed`,
-                  }))}
+                items={members.slice(0, 4).map((m, i) => ({
+                  label: m.full_name,
+                  value: [72, 58, 41, 30][i] ?? 20,
+                  note: `${[18, 14, 9, 6][i] ?? 3} leads closed`,
+                }))}
               />
             </Panel>
           </Grid>
