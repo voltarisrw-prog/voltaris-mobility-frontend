@@ -28,7 +28,7 @@
 
 /* hero */
 .auth-art{position:relative;overflow:hidden;background:#00030C;display:flex;align-items:flex-end;padding:40px}
-.auth-img{object-fit:cover;object-position:30% center}
+.auth-img{object-fit:cover;object-position:40% center}
 .auth-shade{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,3,12,.72),rgba(0,3,12,0) 55%)}
 .auth-glass{position:relative;max-width:430px;color:#fff;padding:22px 24px;border-radius:18px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
 .auth-glass h2{margin:0 0 6px;font-size:22px;font-weight:600;letter-spacing:-.01em}
