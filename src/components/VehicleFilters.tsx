@@ -1,8 +1,6 @@
 'use client';
 
-export function VehicleFilters({
-  resultCount,
-}: {
+export function VehicleFilters(_props: {
   facets: unknown;
   resultCount: number;
   basePath?: string;

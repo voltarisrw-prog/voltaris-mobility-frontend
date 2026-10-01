@@ -1,7 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { useState } from 'react';
 import Link from 'next/link';
 import { Button, Field, inputClass } from '@/components/ui';
@@ -22,9 +22,10 @@ export function RegisterForm() {
   const {
     register,
     handleSubmit,
-    watch,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<Values>({ resolver: zodResolver(registerSchema) });
+  const password = useWatch({ control, name: 'password' });
 
   const onSubmit = handleSubmit(async (values) => {
     setFormError(null);
@@ -109,7 +110,7 @@ export function RegisterForm() {
         )}
       </Field>
 
-      <PasswordMeter value={watch('password') ?? ''} />
+      <PasswordMeter value={password ?? ''} />
 
 
       <Field floating label="Confirm password" error={errors.confirm_password?.message} required>

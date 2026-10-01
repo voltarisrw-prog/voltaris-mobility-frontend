@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 import { ArrowLeft, Check } from 'lucide-react';
 import { Button, Field, inputClass, useToast } from '@/components/ui';
@@ -51,7 +51,7 @@ export function OrderFlow({ vehicle }: { vehicle: VehicleDetail }) {
   const title = `${vehicle.year} ${vehicle.make} ${vehicle.model}`;
   const price = vehicle.price ?? 0;
 
-  const { register, handleSubmit, setValue, watch, trigger, formState: { errors, isSubmitting } } = useForm<Values>({
+  const { register, handleSubmit, setValue, control, trigger, formState: { errors, isSubmitting } } = useForm<Values>({
     resolver: zodResolver(schema),
     mode: 'onTouched',
     defaultValues: {
@@ -59,7 +59,7 @@ export function OrderFlow({ vehicle }: { vehicle: VehicleDetail }) {
       deposit_bps: DEPOSITS.includes(Number(params.get('deposit')) as never) ? Number(params.get('deposit')) : 2000,
     },
   });
-  const v = watch();
+  const v = useWatch({ control });
 
   // Mirror the non-personal choices into the URL so a refresh lands on the same step.
   useEffect(() => {
