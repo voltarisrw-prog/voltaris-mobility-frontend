@@ -59,7 +59,7 @@ export function OrderFlow({ vehicle }: { vehicle: VehicleDetail }) {
       deposit_bps: DEPOSITS.includes(Number(params.get('deposit')) as never) ? Number(params.get('deposit')) : 2000,
     },
   });
-  const v = useWatch({ control });
+  const v = useWatch({ control }) as Values;
 
   // Mirror the non-personal choices into the URL so a refresh lands on the same step.
   useEffect(() => {
@@ -94,12 +94,6 @@ export function OrderFlow({ vehicle }: { vehicle: VehicleDetail }) {
     }
   });
 
-  const Choice = ({ on, onClick, title, line }: { on: boolean; onClick: () => void; title: string; line: string }) => (
-    <button type="button" onClick={onClick} aria-pressed={on} className={cn('flex min-h-20 w-full items-center gap-4 border p-5 text-left transition-colors', on ? 'border-chrome bg-abyss' : 'border-hairline hover:border-chrome')}>
-      <span className={cn('flex h-5 w-5 shrink-0 items-center justify-center rounded-full border', on ? 'border-chrome bg-chrome' : 'border-hairline')} aria-hidden="true">{on && <Check className="h-3 w-3 text-white" />}</span>
-      <span><span className="block font-display text-lg text-chrome">{title}</span><span className="mt-0.5 block text-sm text-steel">{line}</span></span>
-    </button>
-  );
 
   return (
     <form onSubmit={onSubmit} noValidate>
@@ -195,3 +189,10 @@ export function OrderFlow({ vehicle }: { vehicle: VehicleDetail }) {
     </form>
   );
 }
+
+const Choice = ({ on, onClick, title, line }: { on: boolean; onClick: () => void; title: string; line: string }) => (
+  <button type="button" onClick={onClick} aria-pressed={on} className={cn('flex min-h-20 w-full items-center gap-4 border p-5 text-left transition-colors', on ? 'border-chrome bg-abyss' : 'border-hairline hover:border-chrome')}>
+    <span className={cn('flex h-5 w-5 shrink-0 items-center justify-center rounded-full border', on ? 'border-chrome bg-chrome' : 'border-hairline')} aria-hidden="true">{on && <Check className="h-3 w-3 text-white" />}</span>
+    <span><span className="block font-display text-lg text-chrome">{title}</span><span className="mt-0.5 block text-sm text-steel">{line}</span></span>
+  </button>
+);
