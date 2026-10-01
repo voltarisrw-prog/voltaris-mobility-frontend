@@ -19,11 +19,14 @@ export function FinanceApplyForm({ summary, source }: { summary: string; source:
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<GeneralInquiryForm>({
     resolver: zodResolver(generalInquirySchema),
     defaultValues: { topic: 'buying', message: summary },
   });
+
+  const consent = watch('consent');
 
   if (reference) {
     return (
@@ -78,9 +81,12 @@ export function FinanceApplyForm({ summary, source }: { summary: string; source:
           </label>
         )}
       </Field>
-      <Button type="submit" loading={isSubmitting}>
+      <Button type="submit" loading={isSubmitting} disabled={!consent || isSubmitting}>
         Send application
       </Button>
+      {!consent ? (
+        <p className="text-center text-xs text-steel">Tick the box above to send your application.</p>
+      ) : null}
     </form>
   );
 }

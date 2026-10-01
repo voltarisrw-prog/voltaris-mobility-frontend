@@ -3,7 +3,6 @@
 import { useId, useMemo, useState } from 'react';
 import { financeDefaults, financePartners, type FinancePartner } from '@/config/finance';
 import { bpsFromDeposit, computeLoan, depositFromBps } from '@/lib/finance/amortisation';
-import { formatPrice } from '@/lib/format';
 import { cn } from '@/lib/format';
 import { FinanceApplyForm } from './FinanceApplyForm';
 import { Reveal } from '@/components/motion/Reveal';
@@ -15,6 +14,9 @@ import { Reveal } from '@/components/motion/Reveal';
  * are indicative — the partner bank sets the real rate at approval, and the
  * page says so.
  */
+
+/** Fixed locale so server and browser always print the same "RWF 45,000,000". */
+const formatPrice = (n: number) => `RWF ${Math.round(n).toLocaleString('en-US')}`;
 
 function fmtBps(bps: number) {
   return `${(bps / 100).toFixed(2).replace(/\.?0+$/, '')}%`;
@@ -83,6 +85,13 @@ export function FinanceCalculator({
 
   return (
     <div className="grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:gap-14">
+      <div className="fw-pay-bar">
+        <div>
+          <span>Monthly payment</span>
+          <b>{formatPrice(loan.monthlyRwf)}</b>
+        </div>
+        <a href="#finance-apply">Apply</a>
+      </div>
       {/* ------------------------------------------------------------ Inputs */}
       <div className="space-y-8">
         <div>

@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { getVehicleBySlug } from '@/lib/api/vehicles';
 import { financeDefaults } from '@/config/finance';
+import { FormWide } from '@/features/forms/FormWide';
 import { FinanceCalculator } from '@/features/finance/FinanceCalculator';
 
 export const metadata: Metadata = buildMetadata({
@@ -37,27 +37,12 @@ export default async function FinancePage({
   }
 
   return (
-    <div className="shell py-14 sm:py-20">
-      <nav aria-label="Breadcrumb" className="font-data text-xs uppercase tracking-[0.12em] text-steel-muted">
-        <Link href="/" className="hover:text-chrome">
-          Home
-        </Link>
-        <span className="mx-2">/</span>
-        <span className="text-chrome">Finance</span>
-      </nav>
-
-      <header className="mt-6 max-w-2xl">
-        <p className="eyebrow">Car finance</p>
-        <h1 className="mt-3 font-display text-hero text-chrome">What would it cost per month?</h1>
-        <p className="mt-4 text-base leading-relaxed text-steel">
-          Move the sliders. The number updates as you go. When it looks right, send it to an advisor
-          and we take it to the bank with you.
-        </p>
-      </header>
-
-      <div className="mt-12 sm:mt-16">
-        <FinanceCalculator initialPrice={initialPrice} vehicleLabel={vehicleLabel} vehicleSlug={slug} />
-      </div>
-    </div>
+    <FormWide
+      crumb="Finance"
+      title="What would it cost per month?"
+      intro="Move the sliders. The number updates as you go. When it looks right, send it to an advisor and we take it to the bank with you."
+    >
+      <FinanceCalculator initialPrice={initialPrice} vehicleLabel={vehicleLabel} vehicleSlug={slug} />
+    </FormWide>
   );
 }
