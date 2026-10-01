@@ -264,8 +264,10 @@ export function SiteHeader() {
     setSheetOpen((o) => !o);
   };
 
-  const onHero = isHome && !compact && !sheetOpen;
-  const darkLogo = onHero || sheetOpen;
+  // The platform runs on the logo's black and blues: the bar is dark glass on
+  // every page (clearest over the home hero, a touch more solid once scrolled).
+  const onHero = !sheetOpen;
+  const darkLogo = true;
   const open = openGroup
     ? (siteNav.find((e): e is NavGroup => isGroup(e) && e.label === openGroup) ?? null)
     : null;

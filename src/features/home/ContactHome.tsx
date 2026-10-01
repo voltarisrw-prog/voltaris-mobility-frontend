@@ -76,14 +76,14 @@ export function ContactHome() {
 
         <div className="relative">
           <div
-            className="absolute -inset-2 rounded-[2rem] bg-black/[0.07] blur-2xl"
+            className="absolute -inset-2 rounded-[2rem] bg-volt/[0.10] blur-2xl"
             aria-hidden="true"
           />
 
-          <div className="relative rounded-[1.75rem] border border-black/[0.08] bg-white p-5 text-[#0a0a0a] [color-scheme:light] shadow-[0_30px_90px_-28px_rgba(0,0,0,0.38)] sm:p-8 lg:p-10">
+          <div className="relative rounded-[1.75rem] border border-white/[0.10] bg-white p-5 text-[#0a0a0a] shadow-[0_30px_90px_-28px_rgba(0,0,0,0.75)] sm:p-8 lg:p-10">
             {reference ? (
               <div className="flex min-h-[32rem] flex-col justify-center">
-                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#0a0a0a] text-white">
+                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-volt text-ink">
                   <Check size={24} strokeWidth={2} />
                 </div>
 
@@ -100,7 +100,7 @@ export function ContactHome() {
                   using the contact details you provided
                 </p>
 
-                <div className="mt-7 inline-flex w-fit items-center gap-3 rounded-xl border border-black/[0.08] bg-[#f7f7f7] px-4 py-3 text-sm">
+                <div className="mt-7 inline-flex w-fit items-center gap-3 rounded-xl border border-white/[0.10] bg-[#f7f7f7] px-4 py-3 text-sm">
                   <span className="text-[#6b6b6b]">Reference</span>
                   <span className="font-data text-[color:var(--vds-text)]">{reference}</span>
                 </div>
@@ -108,7 +108,7 @@ export function ContactHome() {
                 <button
                   type="button"
                   onClick={() => setReference(null)}
-                  className="mt-8 flex w-fit items-center gap-2 text-sm font-semibold text-[#0a0a0a] underline decoration-black/20 underline-offset-4 transition hover:decoration-black"
+                  className="mt-8 flex w-fit items-center gap-2 text-sm font-semibold text-[#0a0a0a] underline decoration-white/25 underline-offset-4 transition hover:decoration-volt"
                 >
                   Send another enquiry
                   <ArrowUpRight size={15} />
@@ -116,7 +116,7 @@ export function ContactHome() {
               </div>
             ) : (
               <>
-                <div className="mb-8 border-b border-black/[0.08] pb-6">
+                <div className="mb-8 border-b border-white/[0.10] pb-6">
                   <p className="text-sm font-medium text-[#0a0a0a]">Start with a simple question</p>
                   <p className="mt-1 text-sm text-[#6b6b6b]">
                     You don&apos;t need to know exactly what you want yet
@@ -130,7 +130,7 @@ export function ContactHome() {
                         {...props}
                         {...register('full_name')}
                         autoComplete="name"
-                        className={`${inputClass} !bg-white !text-black !caret-black placeholder:!text-[#8a837a]`}
+                        className={`${inputClass}`}
                       />
                     )}
                   </Field>
@@ -143,7 +143,7 @@ export function ContactHome() {
                           {...register('email')}
                           type="email"
                           autoComplete="email"
-                          className={`${inputClass} !bg-white !text-black !caret-black placeholder:!text-[#8a837a]`}
+                          className={`${inputClass}`}
                         />
                       )}
                     </Field>
@@ -160,7 +160,7 @@ export function ContactHome() {
                           {...register('phone')}
                           type="tel"
                           autoComplete="tel"
-                          className={`${inputClass} !bg-white !text-black !caret-black placeholder:!text-[#8a837a]`}
+                          className={`${inputClass}`}
                         />
                       )}
                     </Field>
@@ -168,7 +168,7 @@ export function ContactHome() {
 
                   <Field label="What can we help with?" error={errors.topic?.message} required>
                     {(props) => (
-                      <select {...props} {...register('topic')} className={`${selectClass} !bg-white !text-[#0a0a0a]`}>
+                      <select {...props} {...register('topic')} className={`${selectClass}`}>
                         <option value="buying">I want to buy</option>
                         <option value="renting">I want to rent</option>
                         <option value="selling">I want to sell</option>
@@ -190,7 +190,7 @@ export function ContactHome() {
                         {...register('message')}
                         rows={6}
                         placeholder="For example, I'm looking for an affordable hybrid for daily driving in Kigali..."
-                        className={`${inputClass} !bg-white !text-black !caret-black placeholder:!text-[#8a837a]`}
+                        className={`${inputClass}`}
                       />
                     )}
                   </Field>
@@ -202,7 +202,7 @@ export function ContactHome() {
                           {...props}
                           {...register('consent')}
                           type="checkbox"
-                          className="mt-1 h-4 w-4 shrink-0 accent-[#0a0a0a]"
+                          className="mt-1 h-4 w-4 shrink-0 accent-[#5cc8ff]"
                         />
                         <span>
                           I&apos;m happy for Voltaris to use my contact details to reply to this

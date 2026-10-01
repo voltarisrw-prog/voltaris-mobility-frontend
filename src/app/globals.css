@@ -4,17 +4,34 @@
 @tailwind utilities;
 
 @layer base {
+  /* NIGHT SYSTEM — the logo's blue-black field, chrome type, its blues as accent.
+     Channels only (R G B), so Tailwind opacity modifiers keep working. */
   :root {
-    color-scheme: light;
+    color-scheme: dark;
+    --c-surface: 4 8 20; /* #040814 page */
+    --c-abyss: 7 13 34; /* #070D22 */
+    --c-slab: 12 21 52; /* #0C1534 raised */
+    --c-hairline: 30 43 79; /* #1E2B4F lines */
+    --c-chrome: 238 243 255; /* #EEF3FF text */
+    --c-steel: 183 194 220; /* #B7C2DC */
+    --c-steel-muted: 138 151 182; /* #8A97B6 */
+    --c-volt: 92 200 255; /* #5CC8FF road light */
+    --c-volt-bright: 127 212 255; /* #7FD4FF */
+    --c-volt-deep: 53 162 255; /* #35A2FF */
+    --c-volt-wash: 13 29 69; /* #0D1D45 */
   }
   html {
     -webkit-text-size-adjust: 100%;
     scroll-behavior: smooth;
-    background-color: #ffffff;
+    background-color: rgb(var(--c-surface));
   }
   body {
     /* Keep the page foundation clean and editorial. */
-    @apply bg-white text-black antialiased;
+    @apply bg-surface text-chrome antialiased;
+    background-image:
+      radial-gradient(70% 600px at 15% -10%, rgba(28, 63, 184, 0.28), transparent 70%),
+      radial-gradient(50% 500px at 95% 0%, rgba(53, 162, 255, 0.12), transparent 70%);
+    background-repeat: no-repeat;
     font-family: var(--font-body), sans-serif;
     font-weight: 400;
     text-rendering: optimizeLegibility;
@@ -82,7 +99,7 @@
     @apply outline-none ring-2 ring-chrome ring-offset-2 ring-offset-surface;
   }
   * {
-    scrollbar-color: #b8b8b8 #f2f2f2;
+    scrollbar-color: #24345f #050a1d;
   }
   @media (prefers-reduced-motion: reduce) {
     html {
@@ -148,7 +165,7 @@
     text-transform: uppercase;
     white-space: nowrap;
     color: transparent;
-    -webkit-text-stroke: 1px rgba(17, 17, 17, 0.18);
+    -webkit-text-stroke: 1px rgb(255 255 255 / 0.18);
   }
   /* Gallery photos cross-fade in as they change. */
   .gallery-in {
@@ -472,7 +489,7 @@
   gap: 0.7rem;
   border: 1px solid rgb(255 255 255 / 0.32);
   border-radius: 0;
-  background: rgb(10 10 10 / 0.82);
+  background: rgb(255 255 255 / 0.82);
   padding: 0.8rem 1.25rem;
   color: white;
   box-shadow:
@@ -507,7 +524,7 @@
 .marketplace-editorial-showroom-control:hover:not(:disabled) {
   transform: translateY(-3px);
   border-color: rgb(255 255 255 / 0.58);
-  background: rgb(10 10 10 / 0.94);
+  background: rgb(255 255 255 / 0.94);
   box-shadow:
     0 18px 42px rgb(0 0 0 / 0.34),
     inset 0 1px 0 rgb(255 255 255 / 0.14);
@@ -826,7 +843,7 @@
   }
 
   .marketplace-vehicle-card {
-    border: 1px solid rgb(10 10 10 / 0.08);
+    border: 1px solid rgb(255 255 255 / 0.08);
   }
 
   .marketplace-vehicle-card-media {
@@ -896,8 +913,8 @@
   min-width: 0;
   min-height: 58px;
   overflow: hidden;
-  border: 1px solid rgb(10 10 10 / 0.14);
-  background: #ffffff;
+  border: 1px solid rgb(255 255 255 / 0.14);
+  background: #0a1230;
   clip-path: polygon(
     0 0,
     calc(100% - 22px) 0,
@@ -911,12 +928,12 @@
 }
 
 .voltaris-discovery-search:hover {
-  border-color: rgb(10 10 10 / 0.28);
+  border-color: rgb(255 255 255 / 0.28);
 }
 
 .voltaris-discovery-search:focus-within {
-  border-color: #b8ff3d;
-  background: #f7f7f7;
+  border-color: #5cc8ff;
+  background: #0e1838;
 }
 
 .voltaris-discovery-search-mark {
@@ -925,7 +942,7 @@
   justify-content: center;
   width: 48px;
   flex: 0 0 48px;
-  color: #b8ff3d;
+  color: #5cc8ff;
   font-family: var(--font-data, monospace);
   font-size: 1.2rem;
   font-weight: 700;
@@ -938,24 +955,24 @@
   border: 0 !important;
   outline: 0 !important;
   background: transparent !important;
-  color: #0a0a0a !important;
-  caret-color: #b8ff3d;
+  color: #eef3ff !important;
+  caret-color: #5cc8ff;
   padding: 0.9rem 0.5rem;
   box-shadow: none !important;
 }
 
 .voltaris-discovery-search-input::placeholder {
-  color: #6b6b6b !important;
+  color: #8a97b6 !important;
   opacity: 1;
 }
 
 .voltaris-discovery-search-input:focus::placeholder {
-  color: #9a9a9a !important;
+  color: #5d6a8a !important;
 }
 
 .voltaris-discovery-search-index {
   padding: 0 1.25rem 0 0.75rem;
-  color: #6b6b6b;
+  color: #8a97b6;
   font-family: var(--font-data, monospace);
   font-size: 0.58rem;
   font-weight: 600;
@@ -973,13 +990,13 @@
   position: relative;
   min-width: 142px;
   min-height: 58px;
-  border: 1px solid rgb(10 10 10 / 0.14);
-  background: #ffffff;
+  border: 1px solid rgb(255 255 255 / 0.14);
+  background: #0a1230;
 }
 
 .voltaris-discovery-sort:hover,
 .voltaris-discovery-filter:hover {
-  border-color: rgb(10 10 10 / 0.28);
+  border-color: rgb(255 255 255 / 0.28);
 }
 
 .voltaris-discovery-sort {
@@ -998,7 +1015,7 @@
 
 .voltaris-discovery-control-label {
   display: block;
-  color: #6b6b6b;
+  color: #8a97b6;
   font-family: var(--font-data, monospace);
   font-size: 0.55rem;
   font-weight: 600;
@@ -1012,7 +1029,7 @@
   border: 0 !important;
   outline: 0 !important;
   background: transparent !important;
-  color: #0a0a0a !important;
+  color: #eef3ff !important;
   padding: 0.3rem 1.5rem 0 0;
   font-family: var(--font-data, monospace);
   font-size: 0.62rem;
@@ -1023,8 +1040,8 @@
 }
 
 .voltaris-discovery-sort:focus-within {
-  border-color: #b8ff3d;
-  background: #f7f7f7;
+  border-color: #5cc8ff;
+  background: #0e1838;
 }
 
 .voltaris-discovery-filter {
@@ -1033,7 +1050,7 @@
   justify-content: space-between;
   gap: 1rem;
   padding: 0.75rem 0.9rem;
-  color: #0a0a0a;
+  color: #eef3ff;
   text-align: left;
   cursor: pointer;
   clip-path: polygon(
@@ -1049,12 +1066,12 @@
 }
 
 .voltaris-discovery-filter-active {
-  border-color: #b8ff3d;
-  background: #f7f7f7;
+  border-color: #5cc8ff;
+  background: #0e1838;
 }
 
 .voltaris-discovery-filter-active .voltaris-discovery-control-label {
-  color: #b8ff3d;
+  color: #5cc8ff;
 }
 
 .voltaris-discovery-filter-count {
@@ -1063,9 +1080,9 @@
   justify-content: center;
   min-width: 28px;
   height: 28px;
-  border: 1px solid rgb(10 10 10 / 0.16);
-  background: rgb(10 10 10 / 0.04);
-  color: #0a0a0a;
+  border: 1px solid rgb(255 255 255 / 0.16);
+  background: rgb(255 255 255 / 0.04);
+  color: #eef3ff;
   font-family: var(--font-data, monospace);
   font-size: 0.58rem;
   font-weight: 700;
@@ -1082,8 +1099,8 @@
 .voltaris-rental-location,
 .voltaris-rental-date {
   min-height: 72px;
-  border: 1px solid rgb(10 10 10 / 0.14);
-  background: #ffffff;
+  border: 1px solid rgb(255 255 255 / 0.14);
+  background: #0a1230;
   padding: 0.65rem 0.85rem;
   transition:
     border-color 180ms ease,
@@ -1092,7 +1109,7 @@
 
 .voltaris-rental-location:hover,
 .voltaris-rental-date:hover {
-  border-color: rgb(10 10 10 / 0.28);
+  border-color: rgb(255 255 255 / 0.28);
 }
 
 .voltaris-rental-location {
@@ -1127,7 +1144,7 @@
 .voltaris-rental-label {
   display: block;
   margin-bottom: 0.35rem;
-  color: #6b6b6b;
+  color: #8a97b6;
   font-family: var(--font-data, monospace);
   font-size: 0.55rem;
   font-weight: 600;
@@ -1141,21 +1158,21 @@
   border: 0 !important;
   outline: 0 !important;
   background: transparent !important;
-  color: #0a0a0a !important;
+  color: #eef3ff !important;
   padding: 0;
   box-shadow: none !important;
   color-scheme: light;
 }
 
 .voltaris-rental-location-input::placeholder {
-  color: #6b6b6b !important;
+  color: #8a97b6 !important;
   opacity: 1;
 }
 
 .voltaris-rental-location:focus-within,
 .voltaris-rental-date:focus-within {
-  border-color: #b8ff3d;
-  background: #f7f7f7;
+  border-color: #5cc8ff;
+  background: #0e1838;
 }
 
 .voltaris-rental-date-input::-webkit-calendar-picker-indicator {
@@ -1168,17 +1185,17 @@
   align-items: center;
   justify-content: center;
   gap: 0.35rem;
-  background: #ffffff;
+  background: #0a1230;
 }
 
 .voltaris-rental-route span {
   width: 16px;
   height: 1px;
-  background: rgb(10 10 10 / 0.16);
+  background: rgb(255 255 255 / 0.16);
 }
 
 .voltaris-rental-route-arrow {
-  color: #b8ff3d;
+  color: #5cc8ff;
   font-family: var(--font-data, monospace);
   font-size: 1rem;
   font-weight: 700;
@@ -1208,7 +1225,7 @@
   .voltaris-rental-location,
   .voltaris-rental-date,
   .voltaris-rental-date-return {
-    border-left: 1px solid rgb(10 10 10 / 0.14);
+    border-left: 1px solid rgb(255 255 255 / 0.14);
     clip-path: none;
   }
 
@@ -1250,10 +1267,10 @@
 .voltaris-comparison-stage {
   position: relative;
   overflow: hidden;
-  border: 1px solid rgb(10 10 10 / 0.12);
+  border: 1px solid rgb(255 255 255 / 0.12);
   background:
     linear-gradient(180deg, rgb(255 255 255 / 0.025), transparent 22%),
-    #ffffff;
+    #0a1230;
   box-shadow:
     0 24px 70px rgb(10 10 10 / 0.10),
     0 6px 20px rgb(10 10 10 / 0.06);
@@ -1275,8 +1292,8 @@
   justify-content: space-between;
   gap: 1rem;
   padding: 1rem 1.25rem;
-  border-bottom: 1px solid rgb(10 10 10 / 0.10);
-  background: rgb(255 255 255 / 0.96);
+  border-bottom: 1px solid rgb(255 255 255 / 0.1);
+  background: rgb(10 18 48 / 0.96);
 }
 
 .voltaris-comparison-label-head {
@@ -1284,7 +1301,7 @@
   padding: 1.25rem;
   text-align: left;
   vertical-align: bottom;
-  border-bottom: 1px solid rgb(10 10 10 / 0.12);
+  border-bottom: 1px solid rgb(255 255 255 / 0.12);
 }
 
 .voltaris-comparison-vehicle-head {
@@ -1293,11 +1310,11 @@
   padding: 1.25rem;
   text-align: left;
   vertical-align: bottom;
-  border-bottom: 1px solid rgb(10 10 10 / 0.12);
-  border-left: 1px solid rgb(10 10 10 / 0.08);
+  border-bottom: 1px solid rgb(255 255 255 / 0.12);
+  border-left: 1px solid rgb(255 255 255 / 0.08);
   background:
     linear-gradient(145deg, rgb(92 200 255 / 0.055), transparent 42%),
-    rgb(247 247 247 / 0.96);
+    rgb(14 24 56 / 0.96);
   clip-path: polygon(
     0 0,
     calc(100% - 16px) 0,
@@ -1331,7 +1348,7 @@
 .voltaris-comparison-vehicle-name {
   display: block;
   max-width: 15rem;
-  color: #0a0a0a;
+  color: #eef3ff;
   font-family: var(--font-display, sans-serif);
   font-size: 1.05rem;
   font-weight: 600;
@@ -1351,7 +1368,7 @@
   gap: 1rem;
   margin-top: 1.25rem;
   padding-top: 0.75rem;
-  border-top: 1px solid rgb(10 10 10 / 0.10);
+  border-top: 1px solid rgb(255 255 255 / 0.1);
 }
 
 .voltaris-comparison-vehicle-head .range-meter {
@@ -1364,7 +1381,7 @@
   padding: 0;
   border: 0;
   background: transparent;
-  color: #6b6b6b;
+  color: #8a97b6;
   font-family: var(--font-data, monospace);
   font-size: 0.58rem;
   font-weight: 600;
@@ -1379,7 +1396,7 @@
 }
 
 .voltaris-comparison-remove:hover {
-  color: #0a0a0a;
+  color: #eef3ff;
   transform: translateX(2px);
 }
 
@@ -1387,7 +1404,7 @@
   position: relative;
   padding: 2rem 1.25rem 0.7rem;
   text-align: left;
-  border-bottom: 1px solid rgb(10 10 10 / 0.10);
+  border-bottom: 1px solid rgb(255 255 255 / 0.1);
   background: linear-gradient(90deg, rgb(92 200 255 / 0.035), transparent 60%);
 }
 
@@ -1405,7 +1422,7 @@
 }
 
 .voltaris-comparison-row:hover {
-  background: rgb(10 10 10 / 0.025);
+  background: rgb(255 255 255 / 0.025);
 }
 
 .voltaris-comparison-row-label {
@@ -1420,7 +1437,7 @@
   display: block;
   max-width: 14rem;
   margin-top: 0.3rem;
-  color: #6b6b6b;
+  color: #8a97b6;
   font-size: 0.68rem;
   line-height: 1.45;
 }
@@ -1429,8 +1446,8 @@
   position: relative;
   padding: 0.9rem 1.25rem;
   vertical-align: top;
-  color: #0a0a0a;
-  border-left: 1px solid rgb(10 10 10 / 0.06);
+  color: #eef3ff;
+  border-left: 1px solid rgb(255 255 255 / 0.06);
 }
 
 .voltaris-comparison-value.is-best {
@@ -1443,7 +1460,7 @@
   display: inline-block;
   margin-left: 0.55rem;
   padding: 0.16rem 0.3rem;
-  color: #0a0a0a;
+  color: #eef3ff;
   background: #5cc8ff;
   font-family: var(--font-data, monospace);
   font-size: 0.5rem;
@@ -1513,8 +1530,8 @@
   aspect-ratio: 4 / 3;
   margin-bottom: 1rem;
   overflow: hidden;
-  background: #0a0a0a;
-  border: 1px solid rgb(10 10 10 / 0.10);
+  background: #5cc8ff;
+  border: 1px solid rgb(255 255 255 / 0.1);
   clip-path: polygon(
     0 0,
     calc(100% - 14px) 0,
@@ -1554,7 +1571,7 @@
 
 .voltaris-comparison-actions {
   margin-top: 3rem;
-  border-top: 1px solid rgb(10 10 10 / 0.12);
+  border-top: 1px solid rgb(255 255 255 / 0.12);
   padding-top: 2rem;
 }
 
@@ -1575,10 +1592,10 @@
 .voltaris-comparison-action-card {
   position: relative;
   overflow: hidden;
-  border: 1px solid rgb(10 10 10 / 0.12);
+  border: 1px solid rgb(255 255 255 / 0.12);
   background:
     linear-gradient(145deg, rgb(92 200 255 / 0.035), transparent 55%),
-    rgb(255 255 255 / 0.96);
+    rgb(10 18 48 / 0.96);
   padding: 1.25rem;
   box-shadow: 0 18px 45px rgb(10 10 10 / 0.08);
 }
@@ -1685,7 +1702,7 @@
 }
 
 .voltaris-charging-map .leaflet-control-zoom {
-  border: 1px solid rgba(10, 10, 10, 0.14) !important;
+  border: 1px solid rgb(255 255 255 / 0.14) !important;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28) !important;
 }
 
@@ -1694,21 +1711,21 @@
   height: 34px !important;
   line-height: 34px !important;
   border: 0 !important;
-  background: rgba(255, 255, 255, 0.96) !important;
-  color: #0a0a0a !important;
+  background: rgb(10 18 48 / 0.96) !important;
+  color: #eef3ff !important;
   transition:
     background 180ms ease,
     color 180ms ease;
 }
 
 .voltaris-charging-map .leaflet-control-zoom a:hover {
-  background: rgba(247, 247, 247, 0.98) !important;
-  color: #0a0a0a !important;
+  background: rgb(14 24 56 / 0.98) !important;
+  color: #eef3ff !important;
 }
 
 .voltaris-charging-map .leaflet-control-attribution {
-  background: rgba(255, 255, 255, 0.94) !important;
-  color: rgba(10, 10, 10, 0.55) !important;
+  background: rgb(10 18 48 / 0.94) !important;
+  color: rgb(238 243 255 / 0.55) !important;
   backdrop-filter: blur(8px);
   font-size: 9px;
 }
@@ -1719,9 +1736,9 @@
 
 .voltaris-charging-map .leaflet-popup-content-wrapper,
 .voltaris-charging-map .leaflet-popup-tip {
-  background: #ffffff;
-  color: #0a0a0a;
-  border: 1px solid rgba(10, 10, 10, 0.12);
+  background: #0a1230;
+  color: #eef3ff;
+  border: 1px solid rgb(255 255 255 / 0.12);
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.48);
 }
 
@@ -1738,11 +1755,11 @@
 }
 
 .voltaris-charging-map .leaflet-popup-close-button {
-  color: rgba(10, 10, 10, 0.55) !important;
+  color: rgb(238 243 255 / 0.55) !important;
 }
 
 .voltaris-charging-map .leaflet-popup-close-button:hover {
-  color: #0a0a0a !important;
+  color: #eef3ff !important;
 }
 
 @media (max-width: 640px) {
@@ -1778,7 +1795,7 @@
 
 .marketplace-infinite-showroom-position {
   margin: 0;
-  color: #6b6b6b;
+  color: #8a97b6;
   font-family: var(--font-data, monospace);
   font-size: 0.58rem;
   font-weight: 600;
@@ -1799,11 +1816,11 @@
   align-items: center;
   justify-content: center;
   gap: 0.45rem;
-  border: 1px solid rgb(10 10 10 / 0.14);
+  border: 1px solid rgb(255 255 255 / 0.14);
   border-radius: 0;
-  background: #ffffff;
+  background: #0a1230;
   padding: 0.6rem 0.8rem;
-  color: #0a0a0a;
+  color: #eef3ff;
   font-size: 0.58rem;
   font-weight: 600;
   letter-spacing: 0.12em;
@@ -1817,9 +1834,9 @@
 }
 
 .marketplace-infinite-showroom-control:hover:not(:disabled) {
-  border-color: #0a0a0a;
-  background: #0a0a0a;
-  color: #ffffff;
+  border-color: rgba(255,255,255,.4);
+  background: #5cc8ff;
+  color: #04111a;
 }
 
 .marketplace-infinite-showroom-control:disabled {
@@ -1912,7 +1929,7 @@
   }
 
   .marketplace-vehicle-card {
-    border: 1px solid rgb(10 10 10 / 0.08);
+    border: 1px solid rgb(255 255 255 / 0.08);
   }
 
   .marketplace-vehicle-card-media {
@@ -2794,10 +2811,10 @@ button[title*="ompare"]:focus-visible {
 /* ---------------------------------------------------------------- Finance */
 /* Native range input, restyled once. Keyboard arrows work out of the box. */
 .voltaris-range { -webkit-appearance: none; appearance: none; height: 2.5rem; background: transparent; cursor: pointer; }
-.voltaris-range::-webkit-slider-runnable-track { height: 2px; background: #e5e5e5; }
-.voltaris-range::-moz-range-track { height: 2px; background: #e5e5e5; }
-.voltaris-range::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; margin-top: -11px; height: 24px; width: 24px; border-radius: 0; border: 2px solid #fff; background: #0a0a0a; box-shadow: 0 1px 4px rgba(0,0,0,.25); }
-.voltaris-range::-moz-range-thumb { height: 24px; width: 24px; border-radius: 0; border: 2px solid #fff; background: #0a0a0a; box-shadow: 0 1px 4px rgba(0,0,0,.25); }
+.voltaris-range::-webkit-slider-runnable-track { height: 2px; background: #1e2b4f; }
+.voltaris-range::-moz-range-track { height: 2px; background: #1e2b4f; }
+.voltaris-range::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; margin-top: -11px; height: 24px; width: 24px; border-radius: 0; border: 2px solid #fff; background: #5cc8ff; box-shadow: 0 1px 4px rgba(0,0,0,.25); }
+.voltaris-range::-moz-range-thumb { height: 24px; width: 24px; border-radius: 0; border: 2px solid #fff; background: #5cc8ff; box-shadow: 0 1px 4px rgba(0,0,0,.25); }
 .voltaris-range:focus-visible { outline: none; }
 .voltaris-range:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px rgba(10,99,196,.35); }
 .voltaris-range:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 4px rgba(10,99,196,.35); }
@@ -2848,10 +2865,10 @@ button[title*="ompare"]:focus-visible {
 ::view-transition-new(vehicle-hero) { animation-duration: 420ms; animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1); }
 
 /* Skeletons */
-.skeleton { position: relative; overflow: hidden; background: #f2f2f2; }
+.skeleton { position: relative; overflow: hidden; background: #0e1838; }
 .skeleton::after {
   content: ''; position: absolute; inset: 0;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,.7), transparent);
+  background: linear-gradient(90deg, transparent, rgb(10 18 48 / .7), transparent);
   transform: translateX(-100%); animation: skeleton-sheen 1.4s infinite;
 }
 @keyframes skeleton-sheen { to { transform: translateX(100%); } }
@@ -2862,6 +2879,65 @@ button[title*="ompare"]:focus-visible {
   ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
   .skeleton::after { animation: none; }
 }
+
+/* ==================================================================
+   NIGHT REMAP — classes written for the old white pages (bg-white,
+   text-black, border-black/10 …) re-pointed at the night palette, so every
+   page follows the logo's black and blues without editing each component.
+   Overlays on photos (bg-black/xx, from-black …) are left as they are.
+   ================================================================== */
+.bg-white { background-color: rgb(var(--c-slab)); }
+.text-black { color: rgb(var(--c-chrome)); }
+.border-black { border-color: rgb(255 255 255 / 0.35); }
+html .hover\:bg-white:hover { background-color: rgb(var(--c-slab)); }
+html .hover\:text-black:hover { color: rgb(var(--c-chrome)); }
+html .hover\:border-black:hover { border-color: rgb(255 255 255 / 0.35); }
+html .group:hover .group-hover\:bg-white { background-color: rgb(var(--c-slab)); }
+html .group:hover .group-hover\:text-black { color: rgb(var(--c-chrome)); }
+html .group:hover .group-hover\:border-black { border-color: rgb(255 255 255 / 0.35); }
+html .group:focus-visible .group-focus-visible\:bg-white { background-color: rgb(var(--c-slab)); }
+html .group:focus-visible .group-focus-visible\:text-black { color: rgb(var(--c-chrome)); }
+html .group:focus-visible .group-focus-visible\:border-black { border-color: rgb(255 255 255 / 0.35); }
+.bg-white\/5 { background-color: rgb(var(--c-slab) / 0.05); }
+html .hover\:bg-white\/5:hover { background-color: rgb(var(--c-slab) / 0.05); }
+.bg-white\/70 { background-color: rgb(var(--c-slab) / 0.7); }
+html .hover\:bg-white\/70:hover { background-color: rgb(var(--c-slab) / 0.7); }
+.bg-white\/80 { background-color: rgb(var(--c-slab) / 0.8); }
+html .hover\:bg-white\/80:hover { background-color: rgb(var(--c-slab) / 0.8); }
+.bg-white\/90 { background-color: rgb(var(--c-slab) / 0.9); }
+html .hover\:bg-white\/90:hover { background-color: rgb(var(--c-slab) / 0.9); }
+.bg-white\/95 { background-color: rgb(var(--c-slab) / 0.95); }
+html .hover\:bg-white\/95:hover { background-color: rgb(var(--c-slab) / 0.95); }
+.text-black\/35 { color: rgb(var(--c-chrome) / 0.50); }
+.text-black\/40 { color: rgb(var(--c-chrome) / 0.55); }
+.text-black\/45 { color: rgb(var(--c-chrome) / 0.60); }
+.text-black\/50 { color: rgb(var(--c-chrome) / 0.65); }
+.text-black\/55 { color: rgb(var(--c-chrome) / 0.70); }
+.text-black\/60 { color: rgb(var(--c-chrome) / 0.75); }
+.text-black\/65 { color: rgb(var(--c-chrome) / 0.80); }
+.text-black\/70 { color: rgb(var(--c-chrome) / 0.85); }
+.text-black\/75 { color: rgb(var(--c-chrome) / 0.90); }
+.text-black\/80 { color: rgb(var(--c-chrome) / 0.95); }
+.border-black\/5 { border-color: rgb(255 255 255 / 0.09); }
+html .hover\:border-black\/5:hover { border-color: rgb(255 255 255 / 0.09); }
+.border-black\/10 { border-color: rgb(255 255 255 / 0.14); }
+html .hover\:border-black\/10:hover { border-color: rgb(255 255 255 / 0.14); }
+.border-black\/15 { border-color: rgb(255 255 255 / 0.19); }
+html .hover\:border-black\/15:hover { border-color: rgb(255 255 255 / 0.19); }
+.border-black\/20 { border-color: rgb(255 255 255 / 0.24); }
+html .hover\:border-black\/20:hover { border-color: rgb(255 255 255 / 0.24); }
+.border-black\/25 { border-color: rgb(255 255 255 / 0.29); }
+html .hover\:border-black\/25:hover { border-color: rgb(255 255 255 / 0.29); }
+.border-black\/30 { border-color: rgb(255 255 255 / 0.34); }
+html .hover\:border-black\/30:hover { border-color: rgb(255 255 255 / 0.34); }
+.divide-black > :not([hidden]) ~ :not([hidden]) { border-color: rgb(255 255 255 / 0.2); }
+
+
+/* hex colours written straight into class names */
+html .text-\[\#0a0a0a\], html .hover\:text-\[\#0a0a0a\]:hover, html .group:hover .group-hover\:text-\[\#0a0a0a\] { color: rgb(var(--c-chrome)); }
+.text-\[\#4a4a4a\] { color: rgb(var(--c-steel)); }
+.text-\[\#6b6b6b\] { color: rgb(var(--c-steel-muted)); }
+html .bg-\[\#f7f7f7\], html .bg-\[\#f2f2f2\], html .hover\:bg-\[\#f7f7f7\]:hover, html .focus-visible\:bg-\[\#f7f7f7\]:focus-visible { background-color: rgb(var(--c-slab)); }
 
 /* ------------------------------------------------------------------
    Signed-in workspaces (admin, company console, account) bring their own
@@ -2874,13 +2950,13 @@ body:has([data-app-shell]) [data-site-footer] {
 }
 /* Marketplace pages sit on the logo's blue-black; no white around them. */
 body:has([data-market]) {
-  background: #03060f;
+  background-color: #03060f;
 }
 body:has([data-app-shell]) #main {
   padding-bottom: 0;
 }
 body:has([data-app-shell]) {
-  background: #f7f7f7;
+  background: #03060f;
 }
 
 /* ==================================================================
@@ -2890,13 +2966,13 @@ body:has([data-app-shell]) {
    The public site keeps the monochrome system above.
    ================================================================== */
 [data-app-shell][data-theme='dark'] {
-  --d-bg: #0b1015;
-  --d-side: #0d1318;
-  --d-card: #121a21;
-  --d-card-2: #17212a;
-  --d-line: #1f2b35;
-  --d-text: #e8eef2;
-  --d-muted: #8a97a3;
+  --d-bg: #03060f;
+  --d-side: #050b1f;
+  --d-card: #0a1230;
+  --d-card-2: #0e1838;
+  --d-line: #1b2747;
+  --d-text: #eef3ff;
+  --d-muted: #8a97b6;
   --d-accent: #5cc8ff; /* the logo's road light */
   --d-accent-ink: #04111a;
   --d-accent-soft: rgba(92, 200, 255, 0.14);
@@ -2926,7 +3002,7 @@ body:has([data-app-shell]) {
   color: var(--d-text);
 }
 body:has([data-app-shell][data-theme='dark']) {
-  background: #0b1015;
+  background: #03060f;
 }
 body:has([data-app-shell][data-theme='light']) {
   background: #f4f6f8;

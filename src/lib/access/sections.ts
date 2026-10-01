@@ -50,26 +50,10 @@ export const ORG_SECTIONS = [
 ] as const;
 
 /**
- * Each role's look, taken from the design reference: dark or light.
- * Platform roles by role name; company roles by "kind:ROLE".
+ * Each role's look. The design reference mixed dark and light per role; the
+ * platform now runs on the logo's black and blues everywhere, so every role is dark.
  */
-const DARK = new Set([
-  'SUPER_ADMIN',
-  'SECURITY_ADMIN',
-  'FINANCE_MANAGER',
-  'RECONCILIATION_OFFICER',
-  'VERIFICATION_OFFICER',
-  'MARKETING_MANAGER',
-  'ADVERTISING_MANAGER',
-  'DEVELOPER',
-  'AUDITOR',
-  'CUSTOMER',
-  'dealer:OWNER',
-  'dealer:SALES_AGENT',
-  'rental:OWNER',
-  'rental:RENTAL_AGENT',
-]);
-
 export function themeFor(key: string | undefined): 'dark' | 'light' {
-  return key && DARK.has(key) ? 'dark' : 'light';
+  void key;
+  return 'dark';
 }

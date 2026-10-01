@@ -1,5 +1,5 @@
-.vc-page{--vc-bg:#eef1f7;--vc-card:#fff;--vc-soft:#f6f8fc;--vc-ink:#0b1020;--vc-mute:#5b647a;--vc-line:#e3e7f0;--vc-acc:#5CC8FF;--vc-acc-ink:#0a7fb8;--vc-win:rgba(92,200,255,.14);--vc-btn:#0b1020;--vc-btn-ink:#fff;--vc-photo:radial-gradient(120% 90% at 50% 0%,#fff,#dfe5f0);--vc-top:4.25rem;position:relative;isolation:isolate;color:var(--vc-ink)}
-@media (prefers-color-scheme:dark){.vc-page{--vc-bg:#070a14;--vc-card:#0f1426;--vc-soft:#141a30;--vc-ink:#f3f5fa;--vc-mute:#9aa3b8;--vc-line:#232b45;--vc-acc-ink:#5CC8FF;--vc-win:rgba(92,200,255,.12);--vc-btn:#f3f5fa;--vc-btn-ink:#0b1020;--vc-photo:radial-gradient(120% 90% at 50% 0%,#222a48,#0c1020)}}
+.vc-page{--vc-bg:#040814;--vc-card:#0a1230;--vc-soft:#0e1838;--vc-ink:#eef3ff;--vc-mute:#8a97b6;--vc-line:#1e2b4f;--vc-acc:#5CC8FF;--vc-acc-ink:#5CC8FF;--vc-win:rgba(92,200,255,.12);--vc-btn:#5CC8FF;--vc-btn-ink:#04111a;--vc-photo:radial-gradient(120% 90% at 50% 0%,#1c2b5e,#0a1230);--vc-top:4.25rem;position:relative;isolation:isolate;color:var(--vc-ink)}
+/* night system: one palette, the logo's black and blues */
 .vc-page::before{content:"";position:absolute;z-index:-1;top:0;left:50%;width:100vw;height:100%;transform:translateX(-50%);background:var(--vc-bg);pointer-events:none}
 .vc-page h1,.vc-page h2{color:var(--vc-ink)}
 .vc-page p,.vc-page .text-steel{color:var(--vc-mute)}
@@ -28,7 +28,7 @@
 .vc-rng{display:flex;justify-content:space-between;font-size:13px;color:var(--vc-mute);margin:14px 0 6px}
 .vc-rng b{color:var(--vc-ink);font-weight:600}
 .vc-meter{height:6px;border-radius:6px;background:var(--vc-line);overflow:hidden}
-.vc-meter i{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,#5CC8FF,#12d6b0)}
+.vc-meter i{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,#5CC8FF,#35A2FF)}
 
 .vc-verdict{grid-column:1/-1;padding:22px;border-bottom:1px solid var(--vc-line);background:var(--vc-soft)}
 .vc-verdict p{margin:0 0 12px;font-size:16px;font-weight:600;letter-spacing:-.01em;color:var(--vc-ink)}
@@ -51,7 +51,7 @@
 .vc-l small{display:block;font-size:12px;line-height:1.4;margin-top:3px;opacity:.85}
 .vc-c{border-left:1px solid var(--vc-line);font-weight:500;font-size:14px;color:var(--vc-ink)}
 .vc-c.is-best{background:var(--vc-win);box-shadow:inset 3px 0 0 var(--vc-acc);font-weight:650}
-.vc-best{display:inline-block;align-self:flex-start;margin-top:4px;padding:2px 8px;border-radius:99px;font-size:11px;font-weight:700;background:linear-gradient(135deg,#5CC8FF,#12d6b0);color:#00131f}
+.vc-best{display:inline-block;align-self:flex-start;margin-top:4px;padding:2px 8px;border-radius:99px;font-size:11px;font-weight:700;background:linear-gradient(135deg,#5CC8FF,#35A2FF);color:#00131f}
 
 .vc-next{margin-top:40px}
 .vc-next h2{font-size:clamp(22px,3vw,30px);letter-spacing:-.025em;font-weight:650;margin:0}
@@ -92,7 +92,7 @@
 
 /* tokens for the two new controls */
 .vc-page{--vc-danger:#d93a3f;--vc-ok:#0c8f7c}
-@media (prefers-color-scheme:dark){.vc-page{--vc-danger:#ff6b60;--vc-ok:#12d6b0}}
+@media (prefers-color-scheme:dark){.vc-page{--vc-danger:#ff6b60;--vc-ok:#35A2FF}}
 
 /* Remove vehicle: a pill with a red circular cross that turns on hover */
 .vc-rm{display:inline-flex;align-items:center;gap:9px;margin-top:16px;padding:6px 15px 6px 6px;border:1.5px solid color-mix(in srgb,var(--vc-danger) 45%,var(--vc-line));border-radius:99px;background:transparent;color:var(--vc-ink);font-family:inherit;font-size:13px;font-weight:600;line-height:1;cursor:pointer;transition:background .15s,border-color .15s,color .15s,transform .15s}

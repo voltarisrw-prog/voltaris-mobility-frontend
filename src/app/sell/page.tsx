@@ -207,7 +207,7 @@ export default function SellPage() {
 
           <Link
             href="/login"
-            className="inline-flex w-fit items-center gap-3 border border-black/15 bg-[#0a0a0a] px-6 py-4 font-data text-[10px] font-bold uppercase tracking-[0.16em] text-white transition hover:bg-volt hover:text-[#0a0a0a]"
+            className="inline-flex w-fit items-center gap-3 border border-volt bg-volt px-6 py-4 font-data text-[10px] font-bold uppercase tracking-[0.16em] text-ink transition hover:bg-volt-bright"
           >
             Start listing
             <ArrowRight className="h-4 w-4" />

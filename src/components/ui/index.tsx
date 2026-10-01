@@ -131,10 +131,10 @@ export function Field({
 }
 
 export const inputClass =
-  'vds-input text-sm text-black placeholder:text-black/40 aria-[invalid=true]:border-danger';
+  'vds-input text-sm text-chrome placeholder:text-steel-muted aria-[invalid=true]:border-danger';
 
 export const selectClass =
-  'vds-select text-sm text-black aria-[invalid=true]:border-danger';
+  'vds-select text-sm text-chrome aria-[invalid=true]:border-danger';
 
 /* ------------------------------------------------------------------- Toast */
 

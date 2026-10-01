@@ -18,28 +18,31 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        // Night system: every colour is a CSS variable (RGB channels, so opacity
+        // modifiers like bg-surface/90 keep working). Values live in globals.css:
+        // the logo's blue-black field, chrome text, and its blues as the accent.
         // Surfaces, darkest to lightest
-        surface: '#FFFFFF',
-        abyss: '#F7F7F7',
-        slab: '#F2F2F2',
-        hairline: '#E5E5E5',
+        surface: 'rgb(var(--c-surface) / <alpha-value>)',
+        abyss: 'rgb(var(--c-abyss) / <alpha-value>)',
+        slab: 'rgb(var(--c-slab) / <alpha-value>)',
+        hairline: 'rgb(var(--c-hairline) / <alpha-value>)',
         // Type and metal
-        chrome: '#111111',
-        steel: { DEFAULT: '#4A4A4A', muted: '#767676' },
+        chrome: 'rgb(var(--c-chrome) / <alpha-value>)',
+        steel: {
+          DEFAULT: 'rgb(var(--c-steel) / <alpha-value>)',
+          muted: 'rgb(var(--c-steel-muted) / <alpha-value>)',
+        },
         bronze: '#6B4A2B',
-        // The single accent: the road light
-        // Monochrome system: the accent slots resolve to ink so every
-        // existing accent usage becomes black-on-white. The logo keeps its blue.
+        // The accent: the logo's road light
         volt: {
-          DEFAULT: '#111111',
-          bright: '#2E2E2E',
-          deep: '#111111',
-          wash: '#F2F2F2',
+          DEFAULT: 'rgb(var(--c-volt) / <alpha-value>)',
+          bright: 'rgb(var(--c-volt-bright) / <alpha-value>)',
+          deep: 'rgb(var(--c-volt-deep) / <alpha-value>)',
+          wash: 'rgb(var(--c-volt-wash) / <alpha-value>)',
         },
         danger: '#FF6B60',
         success: '#4ADE9B',
-        // The logo field and the chrome of the V, for the rare moments that
-        // want the mark's own materials rather than the type greys.
+        // The logo field and the chrome of the V.
         ink: '#00030C',
         metal: { DEFAULT: '#E8EAED', deep: '#6C727C' },
       },

@@ -14,18 +14,18 @@
      BRAND  (== tailwind: ink / volt.deep / volt)
      ---------------------------------------------------------- */
   /* SQUARESPACE SYSTEM — monochrome. */
-  --vds-brand-primary: #111111;
-  --vds-brand-secondary: #111111;
-  --vds-brand-primary-rgb: 17, 17, 17;
-  --vds-brand-secondary-rgb: 17, 17, 17;
+  --vds-brand-primary: #5cc8ff;
+  --vds-brand-secondary: #35a2ff;
+  --vds-brand-primary-rgb: 92, 200, 255;
+  --vds-brand-secondary-rgb: 53, 162, 255;
 
   /* ----------------------------------------------------------
      LIGHT  (the single accent)  (== tailwind: volt / volt.bright)
      ---------------------------------------------------------- */
-  --vds-accent: #111111;
-  --vds-accent-bright: #2E2E2E;
-  --vds-accent-rgb: 17, 17, 17;
-  --vds-accent-soft: rgba(17, 17, 17, .06);
+  --vds-accent: #5cc8ff;
+  --vds-accent-bright: #7fd4ff;
+  --vds-accent-rgb: 92, 200, 255;
+  --vds-accent-soft: rgba(92, 200, 255, .12);
 
   /* ----------------------------------------------------------
      METAL  (chrome of the V)  (== tailwind: metal / metal.deep)
@@ -36,35 +36,35 @@
   /* ----------------------------------------------------------
      SURFACES  (== tailwind: surface / abyss / slab)
      ---------------------------------------------------------- */
-  --vds-bg: #ffffff;
-  --vds-bg-elevated: #f7f7f7;
-  --vds-bg-slab: #f2f2f2;
+  --vds-bg: #040814;
+  --vds-bg-elevated: #070d22;
+  --vds-bg-slab: #0c1534;
 
-  --vds-surface: rgba(10,10,10,.035);
-  --vds-surface-hover: rgba(10,10,10,.055);
-  --vds-surface-active: rgba(10,10,10,.08);
+  --vds-surface: rgba(255,255,255,.04);
+  --vds-surface-hover: rgba(255,255,255,.07);
+  --vds-surface-active: rgba(255,255,255,.1);
 
-  --vds-glass: #ffffff;
+  --vds-glass: #0a1230;
 
-  --vds-glass-strong: #f7f7f7;
+  --vds-glass-strong: #0e1838;
 
   /* ----------------------------------------------------------
      BORDERS  (== tailwind: hairline)
      ---------------------------------------------------------- */
-  --vds-border: rgba(10,10,10,.12);
-  --vds-border-hover: rgba(10,10,10,.22);
-  --vds-border-strong: rgba(10,10,10,.32);
-  --vds-border-brand: #111111;
+  --vds-border: rgba(255,255,255,.12);
+  --vds-border-hover: rgba(255,255,255,.22);
+  --vds-border-strong: rgba(255,255,255,.34);
+  --vds-border-brand: #5cc8ff;
 
   /* ----------------------------------------------------------
      TEXT  (== tailwind: chrome / steel / steel.muted)
      ---------------------------------------------------------- */
-  --vds-text: #111111;
-  --vds-text-secondary: #4a4a4a;
-  --vds-text-muted: #767676;
-  --vds-text-disabled: #9a9a9a;
+  --vds-text: #eef3ff;
+  --vds-text-secondary: #b7c2dc;
+  --vds-text-muted: #8a97b6;
+  --vds-text-disabled: #5d6a8a;
   --vds-text-on-ink: #ffffff;
-  --vds-steel: #4a4a4a;           /* referenced by ContactHome; was never defined */
+  --vds-steel: #b7c2dc;           /* referenced by ContactHome; was never defined */
 
   /* ----------------------------------------------------------
      GEOMETRY  (== tailwind: rounded-xs/sm/DEFAULT/lg/xl)
@@ -117,7 +117,7 @@
      ---------------------------------------------------------- */
   --vds-glow-brand: none;
   --vds-glow-accent: none;
-  --vds-ring: 0 0 0 2px #ffffff, 0 0 0 4px #111111;
+  --vds-ring: 0 0 0 2px #040814, 0 0 0 4px #5cc8ff;
 
   /* ----------------------------------------------------------
      MOTION  (== tailwind: ease-out token)
@@ -140,7 +140,7 @@
 
   box-shadow:
     var(--vds-shadow-md),
-    inset 0 1px 0 rgba(255,255,255,.80);
+    inset 0 1px 0 rgba(255,255,255,.06);
 
   backdrop-filter: blur(var(--vds-blur));
   -webkit-backdrop-filter: blur(var(--vds-blur));
@@ -172,10 +172,10 @@
   justify-content: center;
   gap: 10px;
 
-  border: 1px solid #111111;
+  border: 1px solid rgba(255,255,255,.4);
   border-radius: 0;
 
-  color: #111111;
+  color: #eef3ff;
 
   font-size: 0.8125rem;
   font-weight: 600;
@@ -185,7 +185,7 @@
   white-space: nowrap;
 
   cursor: pointer;
-  background: #ffffff;
+  background: #0a1230;
   box-shadow: none;
 
   transition:
@@ -200,8 +200,8 @@
 }
 
 .vds-button:hover {
-  background: #111111;
-  color: #ffffff;
+  background: #5cc8ff;
+  color: #04111a;
 }
 
 .vds-button:active {
@@ -215,26 +215,26 @@
 
 /* Primary — black on white; inverts on hover. */
 .vds-button-primary {
-  color: #ffffff;
-  background: #111111;
-  border-color: #111111;
+  color: #04111a;
+  background: #5cc8ff;
+  border-color: rgba(255,255,255,.4);
 }
 
 .vds-button-primary:hover {
-  background: #ffffff;
-  color: #111111;
+  background: #0a1230;
+  color: #eef3ff;
 }
 
 /* Secondary — outlined. */
 .vds-button-secondary {
-  color: #111111;
+  color: #eef3ff;
   background: transparent;
-  border-color: #111111;
+  border-color: rgba(255,255,255,.4);
 }
 
 .vds-button-secondary:hover {
-  background: #111111;
-  color: #ffffff;
+  background: #5cc8ff;
+  color: #04111a;
 }
 
 /* Ghost — text with a rule beneath. */
@@ -250,7 +250,7 @@
 
 .vds-button-ghost:hover {
   background: transparent;
-  color: #767676;
+  color: #8a97b6;
 }
 
 /* Danger */
@@ -292,9 +292,9 @@
 .vds-select,
 .vds-textarea {
   width: 100%;
-  color: #111111;
-  background: #ffffff;
-  border: 1px solid #cccccc;
+  color: #eef3ff;
+  background: #0a1230;
+  border: 1px solid rgba(255,255,255,.16);
   border-radius: 0;
   box-shadow: none;
   transition: border-color var(--vds-transition);
@@ -327,8 +327,8 @@
 .vds-select:focus,
 .vds-textarea:focus {
   outline: none;
-  border-color: #111111;
-  box-shadow: none;
+  border-color: #5cc8ff;
+  box-shadow: 0 0 0 3px rgba(92,200,255,.18);
 }
 
 /* Search gets the more substantial command/search treatment. */
@@ -347,7 +347,7 @@
   overflow: hidden;
   border: 0;
   border-radius: 0;
-  background: #ffffff;
+  background: #0a1230;
   box-shadow: none;
   transition: opacity var(--vds-transition-slow);
 }
@@ -367,7 +367,7 @@
   border: 1px solid var(--vds-border);
   border-radius: var(--vds-radius-md);
 
-  background: rgba(10,10,10,.025);
+  background: rgb(255 255 255 / 0.025);
 
   box-shadow: var(--vds-shadow-sm);
 
@@ -394,7 +394,7 @@
 
 .vds-tab:hover {
   color: var(--vds-text);
-  background: rgba(10,10,10,.055);
+  background: rgb(255 255 255 / 0.055);
 }
 
 .vds-tab-active {
@@ -424,10 +424,10 @@
 
   flex: 0 0 auto;
 
-  border: 1px solid rgba(10,10,10,.18);
+  border: 1px solid rgb(255 255 255 / 0.18);
   border-radius: 7px;
 
-  background: rgba(10,10,10,.035);
+  background: rgb(255 255 255 / 0.035);
 
   cursor: pointer;
 
@@ -470,7 +470,7 @@
 
   padding: 3px;
 
-  border: 1px solid rgba(10,10,10,.16);
+  border: 1px solid rgb(255 255 255 / 0.16);
   border-radius: var(--vds-radius-pill);
 
   background: rgba(255,255,255,.065);
@@ -490,7 +490,7 @@
 
   border-radius: 50%;
 
-  background: #ffffff;
+  background: #0a1230;
 
   box-shadow: 0 3px 10px rgba(0,0,0,.35);
 
@@ -529,8 +529,8 @@
   background:
     linear-gradient(
       135deg,
-      rgba(255,255,255,.98),
-      rgba(247,247,247,.94)
+      rgb(10 18 48 / .98),
+      rgb(14 24 56 / 0.94)
     );
 
   box-shadow:
@@ -561,8 +561,8 @@
   background:
     linear-gradient(
       135deg,
-      rgba(255,255,255,.98),
-      rgba(247,247,247,.94)
+      rgb(10 18 48 / .98),
+      rgb(14 24 56 / 0.94)
     );
 
   box-shadow:
@@ -672,7 +672,7 @@
    ============================================================ */
 
 .vds-site-header {
-  background: #ffffff;
+  background: #0a1230;
   border-color: var(--vds-border);
   box-shadow: none;
 }
@@ -681,12 +681,12 @@
   background:
     linear-gradient(
       135deg,
-      rgba(255,255,255,.92),
-      rgba(247,247,247,.82)
+      rgb(10 18 48 / .92),
+      rgb(14 24 56 / 0.82)
     );
   border-color: var(--vds-border);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.75);
+    inset 0 1px 0 rgba(255,255,255,.06);
   backdrop-filter: blur(var(--vds-blur-heavy));
   -webkit-backdrop-filter: blur(var(--vds-blur-heavy));
 }
@@ -735,7 +735,7 @@
   color: var(--vds-text);
   background: var(--vds-glass);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.08),
+    inset 0 1px 0 rgba(255,255,255,.06),
     var(--vds-shadow-sm);
   backdrop-filter: blur(var(--vds-blur));
   -webkit-backdrop-filter: blur(var(--vds-blur));
@@ -765,13 +765,13 @@
   background:
     linear-gradient(
       135deg,
-      rgba(255,255,255,.96),
-      rgba(247,247,247,.88)
+      rgb(10 18 48 / .96),
+      rgb(14 24 56 / 0.88)
     );
   border-color: var(--vds-border);
   box-shadow:
     var(--vds-shadow-lg),
-    inset 0 1px 0 rgba(255,255,255,.08);
+    inset 0 1px 0 rgba(255,255,255,.06);
   backdrop-filter: blur(var(--vds-blur-heavy));
   -webkit-backdrop-filter: blur(var(--vds-blur-heavy));
 }
@@ -876,7 +876,7 @@
 
 .marketplace-infinite-showroom-dot-active {
   width: 1.35rem;
-  background: rgb(255 255 255 / 0.9);
+  background: rgb(10 18 48 / 0.9);
 }
 
 .marketplace-infinite-showroom-hint {
@@ -1016,7 +1016,7 @@
   }
 
   .marketplace-vehicle-card {
-    border: 1px solid rgb(10 10 10 / 0.08);
+    border: 1px solid rgb(255 255 255 / 0.08);
   }
 
   .marketplace-vehicle-card-media {

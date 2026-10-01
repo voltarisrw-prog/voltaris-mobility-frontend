@@ -143,6 +143,10 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
+/* dark glass everywhere; a little more solid once the page has scrolled */
+.hero.compact .bar {
+  background: rgba(5, 10, 29, 0.78);
+}
 /* over the home hero: dark glass */
 .hero .bar {
   color: #fff;
@@ -429,12 +433,12 @@
   pointer-events: auto;
   border-radius: 30px;
   padding: 10px;
-  background: rgba(255, 255, 255, 0.94);
+  background: rgba(7, 13, 34, 0.94);
   backdrop-filter: blur(22px) saturate(1.6);
   -webkit-backdrop-filter: blur(22px) saturate(1.6);
   box-shadow:
-    0 44px 90px -34px rgba(7, 13, 36, 0.6),
-    0 0 0 1px rgba(7, 13, 36, 0.07);
+    0 44px 90px -34px rgba(0, 0, 0, 0.85),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
   animation: panelIn 0.38s var(--spring);
   transform-origin: 50% 0;
 }
@@ -593,8 +597,8 @@
   height: 128px;
   padding: 14px;
   border-radius: 20px;
-  color: var(--ink) !important;
-  background: var(--ice);
+  color: #eef3ff !important;
+  background: rgba(255, 255, 255, 0.06);
   transition:
     transform 0.4s var(--spring),
     background 0.3s,
@@ -605,7 +609,7 @@
 .chip:hover,
 .chip:focus-visible,
 .chip[aria-current='page'] {
-  background: #fff;
+  background: rgba(92, 200, 255, 0.12);
   box-shadow:
     0 0 0 1.5px var(--volt),
     0 16px 30px -18px rgba(28, 63, 184, 0.7);
@@ -919,12 +923,12 @@
     gap: 4px;
     padding: 6px;
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(7, 13, 34, 0.86);
     backdrop-filter: blur(18px) saturate(1.6);
     -webkit-backdrop-filter: blur(18px) saturate(1.6);
     box-shadow:
-      0 16px 38px -12px rgba(7, 13, 36, 0.55),
-      0 0 0 1px rgba(7, 13, 36, 0.07);
+      0 16px 38px -12px rgba(0, 0, 0, 0.7),
+      0 0 0 1px rgba(255, 255, 255, 0.1);
     transform: translateX(-50%);
     transition:
       transform 0.45s var(--spring),
@@ -939,7 +943,7 @@
     border-radius: 99px;
     font-size: 13.5px;
     font-weight: 600;
-    color: var(--ink);
+    color: #eef3ff;
     transition:
       background 0.3s,
       color 0.3s;
@@ -947,7 +951,7 @@
   .dock a svg {
     width: 17px;
     height: 17px;
-    color: var(--royal);
+    color: var(--light);
   }
   .dock a[aria-current='page'] {
     background: linear-gradient(135deg, var(--navy), var(--royal));
