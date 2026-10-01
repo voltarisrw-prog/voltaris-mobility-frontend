@@ -2872,6 +2872,10 @@ body:has([data-app-shell]) header.z-40,
 body:has([data-app-shell]) [data-site-footer] {
   display: none;
 }
+/* Marketplace pages sit on the logo's blue-black; no white around them. */
+body:has([data-market]) {
+  background: #03060f;
+}
 body:has([data-app-shell]) #main {
   padding-bottom: 0;
 }

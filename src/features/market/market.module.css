@@ -1241,6 +1241,145 @@
   margin-top: 40px;
 }
 
+/* ───────────────────────── night: the logo's black and blues ─────────────────────────
+   The whole marketplace sits on a deep blue-black, lit by the logo's blues
+   (royal #1c3fb8, volt #35a2ff, road light #5cc8ff) — no white page. */
+.market {
+  color: #eef3ff;
+}
+.market::before {
+  inset: -140px 0 0;
+  background:
+    radial-gradient(
+      55% 520px at 18% 0%,
+      color-mix(in srgb, var(--g) 30%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(45% 460px at 88% 8%, rgba(28, 63, 184, 0.45), transparent 70%),
+    radial-gradient(60% 600px at 50% 100%, rgba(13, 26, 85, 0.85), transparent 75%),
+    linear-gradient(180deg, #050b22 0%, #03060f 38%, #040817 100%);
+}
+/* a faint road grid from the logo, fading away */
+.market::after {
+  content: '';
+  position: absolute;
+  inset: -140px 0 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(90deg, rgba(92, 200, 255, 0.05) 0 1px, transparent 1px 120px),
+    repeating-linear-gradient(0deg, rgba(92, 200, 255, 0.035) 0 1px, transparent 1px 120px);
+  -webkit-mask-image: radial-gradient(70% 50% at 50% 0%, #000, transparent 75%);
+  mask-image: radial-gradient(70% 50% at 50% 0%, #000, transparent 75%);
+}
+
+.gate {
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.12),
+    0 14px 30px -18px rgba(0, 0, 0, 0.8);
+}
+.gate i {
+  background: linear-gradient(135deg, var(--royal), var(--volt));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    0 8px 22px -6px rgba(53, 162, 255, 0.7);
+}
+.gate a {
+  color: #9aa7c4;
+}
+.gate a:hover {
+  color: #fff;
+}
+.filterBtn {
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow:
+    inset 0 0 0 1px rgba(92, 200, 255, 0.35),
+    0 10px 24px -14px rgba(53, 162, 255, 0.8);
+}
+.filterBtn:hover {
+  background: rgba(92, 200, 255, 0.14);
+}
+.exploreLabel {
+  color: #6f7c9c;
+}
+.pill {
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  color: #c9d3ea;
+}
+.pill:hover {
+  color: #fff;
+  box-shadow:
+    inset 0 0 0 1px rgba(92, 200, 255, 0.5),
+    0 8px 18px -12px rgba(53, 162, 255, 0.8);
+}
+.pill[aria-current='page'] {
+  background: #fff;
+  color: var(--ink);
+  box-shadow: 0 10px 26px -12px rgba(92, 200, 255, 0.7);
+}
+.pills {
+  -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent);
+  mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent);
+}
+
+.hero {
+  background: transparent;
+}
+.heroStage {
+  box-shadow:
+    0 -1px 0 rgba(255, 255, 255, 0.06),
+    0 1px 0 rgba(255, 255, 255, 0.06);
+}
+.heroBar {
+  border-top-color: transparent;
+}
+
+.gridHead h2 {
+  color: #fff;
+}
+.gridHead span {
+  color: #8a97b6;
+}
+.tile {
+  background: linear-gradient(170deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 24px 50px -34px rgba(0, 0, 0, 0.9);
+}
+.tile:hover,
+.cell[data-peek] .tile {
+  box-shadow:
+    inset 0 0 0 1.5px var(--g),
+    0 30px 60px -30px color-mix(in srgb, var(--g) 70%, #000);
+}
+.tileText b {
+  color: #fff;
+}
+.tileText span {
+  color: var(--light);
+}
+.tileHint span {
+  background: rgba(255, 255, 255, 0.07);
+  color: #c9d3ea;
+}
+.tileHint svg {
+  color: var(--light);
+}
+
+/* the page numbers, on the dark */
+.pager :global(nav) {
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+.pager :global(a) {
+  color: #fff !important;
+}
+.pager :global(span),
+.pager :global(p) {
+  color: #8a97b6 !important;
+}
+
 /* ───────────────────────── phones ───────────────────────── */
 @media (max-width: 639px) {
   .bar {
