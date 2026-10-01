@@ -31,11 +31,14 @@ export function TestDriveForm({
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<Values>({
     resolver: zodResolver(testDriveSchema),
     defaultValues: { vehicle_id: vehicleId ?? '', preferred_time_slot: 'morning' },
   });
+
+  const consent = watch('consent');
 
   if (result) {
     return (
@@ -75,7 +78,7 @@ export function TestDriveForm({
   const today = new Date().toISOString().slice(0, 10);
 
   return (
-    <div className="border border-black/10 bg-white p-6 text-black transition-all duration-500 hover:border-black/20 sm:p-8">
+    <div className="fs-form">
       <form onSubmit={onSubmit} noValidate className="space-y-5">
       {vehicleId ? (
         <input type="hidden" {...register('vehicle_id')} />
@@ -91,7 +94,7 @@ export function TestDriveForm({
       )}
 
       {vehicleTitle && (
-        <p className="border border-black/10 bg-black/[0.025] px-4 py-3 text-sm text-black">
+        <p className="rounded-xl border border-[#2a3354] bg-[#0f1630] px-4 py-3 text-sm text-[#f3f5fa]">
           Driving the <span className="font-medium">{vehicleTitle}</span>
         </p>
       )}
@@ -121,6 +124,8 @@ export function TestDriveForm({
               {...register('phone')}
               type="tel"
               autoComplete="tel"
+              inputMode="tel"
+              placeholder="0788 123 456"
               className={inputClass}
             />
           )}
@@ -155,7 +160,7 @@ export function TestDriveForm({
           <select
             {...props}
             {...register('location_slug')}
-            className={`${selectClass} !bg-black !text-black`}
+            className={selectClass}
           >
             <option value="">Choose a location</option>
             {LOCATIONS.map((location) => (
@@ -173,7 +178,7 @@ export function TestDriveForm({
 
       <Field label="" error={errors.consent?.message}>
         {(props) => (
-          <label className="flex items-start gap-3 text-sm text-black/65">
+          <label className="flex items-start gap-3 text-sm text-[#c7cee0]">
             <input
               {...props}
               {...register('consent')}
@@ -185,9 +190,12 @@ export function TestDriveForm({
         )}
       </Field>
 
-      <Button type="submit" loading={isSubmitting}>
+      <Button type="submit" loading={isSubmitting} disabled={!consent || isSubmitting}>
         Request this test drive
       </Button>
+      {!consent ? (
+        <p className="text-center text-xs text-steel">Tick the box above to send your request.</p>
+      ) : null}
       </form>
     </div>
   );
