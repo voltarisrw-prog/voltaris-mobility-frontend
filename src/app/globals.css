@@ -2949,7 +2949,8 @@ body:has([data-app-shell]) [data-site-footer] {
   display: none;
 }
 /* Marketplace pages sit on the logo's blue-black; no white around them. */
-body:has([data-market]) {
+body:has([data-market]),
+body:has([data-car]) {
   background-color: #03060f;
 }
 body:has([data-app-shell]) #main {
