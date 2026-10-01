@@ -5,6 +5,8 @@ import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 import Link from 'next/link';
 import { Button, Field, inputClass } from '@/components/ui';
+import { PasswordInput } from './PasswordInput';
+import { PasswordMeter } from './PasswordMeter';
 import { register as registerAccount } from '@/lib/api/auth';
 import { displayMessage } from '@/lib/api/errors';
 import { registerSchema } from '@/lib/validation/schemas';
@@ -19,6 +21,7 @@ export function RegisterForm() {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<Values>({ resolver: zodResolver(registerSchema) });
 
@@ -107,25 +110,16 @@ export function RegisterForm() {
         required
       >
         {(p) => (
-          <input
-            {...p}
-            {...register('password')}
-            type="password"
-            autoComplete="new-password"
-            className={inputClass}
-          />
+          <PasswordInput {...p} {...register('password')} autoComplete="new-password" className={inputClass} />
         )}
       </Field>
 
+      <PasswordMeter value={watch('password') ?? ''} />
+
+
       <Field label="Confirm password" error={errors.confirm_password?.message} required>
         {(p) => (
-          <input
-            {...p}
-            {...register('confirm_password')}
-            type="password"
-            autoComplete="new-password"
-            className={inputClass}
-          />
+          <PasswordInput {...p} {...register('confirm_password')} autoComplete="new-password" className={inputClass} />
         )}
       </Field>
 

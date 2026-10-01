@@ -6,6 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import Link from 'next/link';
 import { Button, Field, inputClass } from '@/components/ui';
+import { PasswordInput } from './PasswordInput';
 import { landingFor, login } from '@/lib/api/auth';
 import { ApiError, displayMessage } from '@/lib/api/errors';
 import { loginSchema } from '@/lib/validation/schemas';
@@ -84,13 +85,7 @@ export function LoginForm() {
 
       <Field label="Password" error={errors.password?.message} required>
         {(p) => (
-          <input
-            {...p}
-            {...register('password')}
-            type="password"
-            autoComplete="current-password"
-            className={inputClass}
-          />
+          <PasswordInput {...p} {...register('password')} autoComplete="current-password" className={inputClass} />
         )}
       </Field>
 
