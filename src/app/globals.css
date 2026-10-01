@@ -2862,3 +2862,19 @@ button[title*="ompare"]:focus-visible {
   ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
   .skeleton::after { animation: none; }
 }
+
+/* ------------------------------------------------------------------
+   Signed-in workspaces (admin, company console, account) bring their own
+   frame — black sidebar on desktop, black top bar on phones — so the public
+   site's header and footer step aside while one is on screen.
+   ------------------------------------------------------------------ */
+body:has([data-app-shell]) header.z-40,
+body:has([data-app-shell]) footer.bg-chrome {
+  display: none;
+}
+body:has([data-app-shell]) #main {
+  padding-bottom: 0;
+}
+body:has([data-app-shell]) {
+  background: #f7f7f7;
+}

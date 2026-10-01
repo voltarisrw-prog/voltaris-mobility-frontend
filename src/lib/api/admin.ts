@@ -36,6 +36,7 @@ export interface AdminVehicleRow {
   id: string;
   slug: string;
   title: string;
+  image_url?: string | null;
   seller_name: string;
   status: 'pending_review' | 'live' | 'rejected' | 'sold' | 'unpublished';
   verified: boolean;
@@ -210,4 +211,63 @@ export interface MyAccess {
 
 export function getMyAccess(): Promise<MyAccess> {
   return request<MyAccess>('/admin/me', { auth: true });
+}
+
+/* ------------------------------------------------------------ dashboards */
+
+export interface DayPoint {
+  day: string;
+  value: number;
+}
+
+/** Each block is present only when the caller's role may see it. */
+export interface AdminStats {
+  accounts?: { total: number; customers: number; sellers: number; staff: number; suspended: number; new_7d: number };
+  signups?: DayPoint[];
+  security?: {
+    staff: number;
+    staff_mfa: number;
+    mfa_total: number;
+    active_sessions: number;
+    mfa_failed_24h: number;
+    token_reuse_7d: number;
+    throttled_now: number;
+  };
+  security_events?: { action: string; actor: string; ip: string | null; created_at: string }[];
+  signins?: DayPoint[];
+  listings?: {
+    total: number;
+    live: number;
+    reserved: number;
+    sold: number;
+    unpublished: number;
+    verified: number;
+    rentable: number;
+    pending_review: number;
+  };
+  by_body?: { label: string; value: number }[];
+  by_make?: { label: string; value: number }[];
+  leads?: DayPoint[];
+  leads_total?: { inquiries: number; test_drives: number; open_inquiries: number };
+  orders?: {
+    total: number;
+    purchases: number;
+    rentals: number;
+    reservations: number;
+    pending: number;
+    paid: number;
+    other: number;
+    paid_value: number;
+    pending_value: number;
+  };
+  revenue?: DayPoint[];
+  companies?: { dealers: number; rentals: number; businesses: number; suspended: number; members: number };
+  content?: { guides: number; posts: number; last_updated: string | null };
+  articles?: { slug: string; kind: 'guide' | 'blog'; category: string; title: string; published_at: string }[];
+  audit?: { action: string; actor: string; entity: string; created_at: string }[];
+  platform?: { migrations: string[]; db_size: string; tables: { label: string; value: number }[]; api_version: string };
+}
+
+export function getAdminStats(): Promise<AdminStats> {
+  return request<AdminStats>('/admin/stats', { auth: true });
 }

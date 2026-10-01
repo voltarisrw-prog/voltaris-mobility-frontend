@@ -1,18 +1,19 @@
-import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { getSession } from '@/lib/api/auth';
 import { ApiError } from '@/lib/api/errors';
-import { SignOutButton } from '@/features/auth/SignOutButton';
+import { AppShell, type ShellNavItem } from '@/features/dashboard/AppShell';
+import { AccountFrame } from '@/features/dashboard/AccountFrame';
 
-const NAV = [
-  { href: '/account', label: 'Profile' },
-  { href: '/account/saved', label: 'Saved vehicles' },
-  { href: '/account/searches', label: 'Saved searches' },
-  { href: '/account/inquiries', label: 'Enquiries' },
-  { href: '/account/test-drives', label: 'Test drives' },
-  { href: '/account/orders', label: 'Orders' },
-  { href: '/account/notifications', label: 'Notifications' },
-  { href: '/account/security', label: 'Security' },
+const NAV: ShellNavItem[] = [
+  { href: '/account', label: 'Overview', icon: 'overview', exact: true },
+  { href: '/account/profile', label: 'Profile', icon: 'people' },
+  { href: '/account/saved', label: 'Saved vehicles', icon: 'saved' },
+  { href: '/account/searches', label: 'Saved searches', icon: 'search' },
+  { href: '/account/inquiries', label: 'Enquiries', icon: 'leads' },
+  { href: '/account/test-drives', label: 'Test drives', icon: 'vehicles' },
+  { href: '/account/orders', label: 'Orders', icon: 'orders' },
+  { href: '/account/notifications', label: 'Notifications', icon: 'notifications' },
+  { href: '/account/security', label: 'Security', icon: 'security' },
 ];
 
 /**
@@ -40,53 +41,29 @@ export default async function AccountLayout({ children }: { children: React.Reac
     if (cause instanceof ApiError && cause.isUnauthorized) redirect('/login?next=/account');
     throw cause;
   }
+  const user = session.user;
+  const nav = [...NAV];
+  if ((session.memberships ?? []).length > 0)
+    nav.push({ href: '/business', label: 'Company console', icon: 'companies' });
+  if (user.mfa_required) nav.push({ href: '/admin', label: 'Admin dashboard', icon: 'gauge' });
 
   return (
-    <div className="shell py-10">
-      <header className="flex flex-wrap items-baseline justify-between gap-4 border-b border-hairline/60 pb-6">
-        <div>
-          <p className="eyebrow">Your account</p>
-          <h1 className="mt-2 font-display text-headline">{session.user.full_name}</h1>
-        </div>
-        <div className="flex items-center gap-6">
-          {(session.memberships ?? []).length > 0 && (
-            <Link href="/business" prefetch={false} className="vds-button vds-button-secondary">
-              Company console
-            </Link>
-          )}
-          {session.user.mfa_required && (
-            <Link href="/admin" prefetch={false} className="vds-button vds-button-primary">
-              Admin dashboard
-            </Link>
-          )}
-          <SignOutButton />
-        </div>
-      </header>
-
-      {!session.user.email_verified && (
-        <p className="mt-6 border border-volt/25 bg-volt-wash px-4 py-3 text-sm">
+    <AppShell
+      context="Your account"
+      nav={nav}
+      user={{
+        name: user.full_name,
+        email: user.email,
+        role: user.roles.includes('SELLER') ? 'Individual Seller' : 'Registered Customer',
+      }}
+    >
+      {!user.email_verified && (
+        <p className="mb-6 border border-chrome bg-surface px-4 py-3 text-sm">
           Your email is not confirmed yet. Some features stay locked until it is — check your inbox
           for the verification link.
         </p>
       )}
-
-      <div className="mt-8 grid gap-10 lg:grid-cols-[13rem_minmax(0,1fr)]">
-        <nav aria-label="Account" className="lg:sticky lg:top-24 lg:self-start">
-          <ul className="flex flex-wrap gap-x-4 gap-y-2 lg:flex-col lg:gap-2">
-            {NAV.map((item) => (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  className="font-data text-eyebrow uppercase text-steel transition-colors hover:text-chrome"
-                >
-                  {item.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-        <div>{children}</div>
-      </div>
-    </div>
+      <AccountFrame>{children}</AccountFrame>
+    </AppShell>
   );
 }

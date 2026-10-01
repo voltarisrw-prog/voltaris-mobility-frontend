@@ -97,3 +97,18 @@ export function getSubmission(reference: string): Promise<SellerSubmission> {
     auth: true,
   });
 }
+
+export interface MySellerListing {
+  reference: string;
+  status: string;
+  submitted_at: string;
+  make: string | null;
+  model: string | null;
+  year: string | null;
+  expected_price: number | null;
+}
+
+/** The vehicles this person has submitted to sell. */
+export function getMySellerListings(): Promise<{ items: MySellerListing[] }> {
+  return request('/me/seller-listings', { auth: true });
+}

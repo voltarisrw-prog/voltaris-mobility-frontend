@@ -1,9 +1,10 @@
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { TeamPanel } from '@/features/business/TeamPanel';
 import { OrgVehiclesPanel } from '@/features/business/OrgVehiclesPanel';
 import { OrgLeadsPanel } from '@/features/business/OrgLeadsPanel';
 import { ORG_SECTIONS } from '@/lib/access/sections';
+import { CompanyDashboard } from '@/features/dashboard/company';
+import { DashHead } from '@/features/dashboard/kit';
 import { orgHome, orgLeads, orgMembers, orgVehicles } from '@/lib/api/orgs';
 import { ApiError } from '@/lib/api/errors';
 
@@ -27,48 +28,30 @@ export default async function OrgConsole({
   }
   const has = (perms: readonly string[]) => perms.some((p) => home.permissions.includes(p));
   const sections = ORG_SECTIONS.filter((s) => has(s.anyOf));
-  const active = sections.find((s) => s.key === tab) ?? sections[0];
+  const active = sections.find((s) => s.key === tab);
+  // No tab: the role's own dashboard.
+  if (!active) return <CompanyDashboard org={orgId} home={home} />;
 
   return (
     <section>
-      <p className="eyebrow">{home.role_label}</p>
-      <h1 className="mt-2 font-display text-headline">{home.name}</h1>
+      <DashHead eyebrow={`${home.name} · ${home.role_label}`} title={active.label} />
 
-      <nav
-        aria-label="Company"
-        className="mt-6 flex flex-wrap gap-5 border-b border-hairline/60 pb-4"
-      >
-        {sections.map((s) => (
-          <Link
-            key={s.key}
-            href={`/business/${orgId}?tab=${s.key}`}
-            aria-current={s.key === active?.key ? 'page' : undefined}
-            className={`font-data text-eyebrow uppercase ${s.key === active?.key ? 'text-chrome underline underline-offset-8' : 'text-steel hover:text-chrome'}`}
-          >
-            {s.label}
-          </Link>
-        ))}
-      </nav>
-
-      <div className="mt-8">
-        {!active && (
-          <p className="text-sm text-steel">Your role here has no console sections yet.</p>
-        )}
-        {active?.key === 'team' && (
+      <div>
+        {active.key === 'team' && (
           <TeamPanel
             org={orgId}
             members={(await orgMembers(orgId)).items}
             assignable={home.assignable_roles}
           />
         )}
-        {active?.key === 'vehicles' && (
+        {active.key === 'vehicles' && (
           <OrgVehiclesPanel
             org={orgId}
             vehicles={(await orgVehicles(orgId)).items}
             canChangeStatus={home.permissions.includes('org.vehicles.status')}
           />
         )}
-        {active?.key === 'leads' && (
+        {active.key === 'leads' && (
           <OrgLeadsPanel
             org={orgId}
             leads={(await orgLeads(orgId)).items}

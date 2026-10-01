@@ -29,6 +29,9 @@ export interface OrgVehicle {
   id: string;
   slug: string;
   title: string;
+  image_url?: string | null;
+  body_type?: string;
+  range_km?: number;
   status: 'available' | 'reserved' | 'sold' | 'unavailable';
   price: number | null;
   rental_price_per_day: number | null;

@@ -1,9 +1,10 @@
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { SignOutButton } from '@/features/auth/SignOutButton';
 import { MfaPanel } from '@/features/auth/MfaPanel';
+import { AppShell } from '@/features/dashboard/AppShell';
 import { currentSession } from '@/lib/access/server';
 import { visibleSections } from '@/lib/access/sections';
+import { getMyAccess } from '@/lib/api/admin';
+
 /**
  * Never prerendered. Every page in this segment is per-viewer: it reads the
  * session cookie and returns that person's data.
@@ -28,34 +29,33 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   // authorized by the backend against the session, independently of this check.
   if (!user.mfa_required) notFound();
 
-  const header = (
-    <header className="flex flex-wrap items-center justify-between gap-4 border-b border-chrome pb-4">
-      <div className="flex items-baseline gap-4">
-        <span className="font-display text-lg font-bold tracking-tight">Voltaris admin</span>
-        <span className="font-data text-eyebrow uppercase text-steel-muted">{user.email}</span>
-      </div>
-      <div className="flex items-center gap-6">
-        <Link href="/" className="font-data text-eyebrow uppercase text-steel hover:text-chrome">
-          View site
-        </Link>
-        <Link
-          href="/account"
-          prefetch={false}
-          className="font-data text-eyebrow uppercase text-steel hover:text-chrome"
-        >
-          My account
-        </Link>
-        <SignOutButton />
-      </div>
-    </header>
-  );
+  const verified = Boolean(user.mfa_verified);
+  const roleLabel = verified
+    ? (await getMyAccess()).roles.map((r) => r.label).join(' · ')
+    : 'Staff';
+  const nav = verified
+    ? visibleSections(user.permissions).map(({ href, label, icon }) => ({
+        href,
+        label,
+        icon,
+        exact: href === '/admin',
+      }))
+    : [];
+  if ((session.memberships ?? []).length)
+    nav.push({ href: '/business', label: 'Company console', icon: 'companies', exact: false });
+  nav.push({ href: '/account', label: 'My account', icon: 'people', exact: false });
 
-  // Staff powers only apply after an authenticator code in this session.
-  if (!user.mfa_verified) {
-    return (
-      <div className="shell py-8">
-        {header}
-        <div className="mt-10">
+  return (
+    <AppShell
+      context="Admin"
+      nav={nav}
+      user={{ name: user.full_name, email: user.email, role: roleLabel }}
+    >
+      {verified ? (
+        children
+      ) : (
+        // Staff powers only apply after an authenticator code in this session.
+        <div className="max-w-2xl border border-hairline bg-surface p-6 sm:p-8">
           <MfaPanel
             mode={user.mfa_enabled ? 'verify' : 'setup'}
             needsSetupCode
@@ -66,29 +66,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             }
           />
         </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="shell py-8">
-      {header}
-      <nav
-        aria-label="Admin"
-        className="mt-4 flex flex-wrap gap-5 border-b border-hairline/60 pb-4"
-      >
-        {visibleSections(user.permissions).map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className="font-data text-eyebrow uppercase text-steel hover:text-chrome"
-          >
-            {item.label}
-          </Link>
-        ))}
-      </nav>
-
-      <div className="mt-8">{children}</div>
-    </div>
+      )}
+    </AppShell>
   );
 }
