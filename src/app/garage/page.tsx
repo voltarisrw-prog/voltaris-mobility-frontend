@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { garageServices, type GarageServiceId } from '@/config/garage';
+import { FormWide } from '@/features/forms/FormWide';
 import { GarageBookingFlow } from '@/features/garage/GarageBookingFlow';
 
 export const metadata: Metadata = buildMetadata({
@@ -23,25 +23,12 @@ export default async function GaragePage({
     : undefined;
 
   return (
-    <div className="shell py-14 sm:py-20">
-      <nav aria-label="Breadcrumb" className="font-data text-xs uppercase tracking-[0.12em] text-steel-muted">
-        <Link href="/" className="hover:text-chrome">Home</Link>
-        <span className="mx-2">/</span>
-        <span className="text-chrome">Garage</span>
-      </nav>
-
-      <header className="mt-6 max-w-2xl">
-        <p className="eyebrow">Book a garage</p>
-        <h1 className="mt-3 font-display text-hero text-chrome">Service, inspection, charging. Booked in a minute.</h1>
-        <p className="mt-4 text-base leading-relaxed text-steel">
-          Partner workshops with high-voltage-certified technicians. Pick the job, the place and
-          the time; the garage confirms with you the same day.
-        </p>
-      </header>
-
-      <div className="mt-12 sm:mt-16">
-        <GarageBookingFlow initialService={initialService} />
-      </div>
-    </div>
+    <FormWide
+      crumb="Garage"
+      title="Service, inspection, charging. Booked in a minute."
+      intro="Partner workshops with high-voltage-certified technicians. Pick the job, the place and the time; the garage confirms with you the same day."
+    >
+      <GarageBookingFlow initialService={initialService} />
+    </FormWide>
   );
 }

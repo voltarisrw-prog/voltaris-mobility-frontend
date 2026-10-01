@@ -311,7 +311,7 @@ export function GarageBookingFlow({ initialService }: { initialService?: GarageS
           <ArrowLeft className="h-4 w-4" aria-hidden="true" /> Back
         </button>
         {step < 4 ? (
-          <Button type="button" onClick={next}>
+          <Button type="button" onClick={next} disabled={(step === 0 && !service) || (step === 1 && !garageSlug)}>
             Continue
           </Button>
         ) : (
