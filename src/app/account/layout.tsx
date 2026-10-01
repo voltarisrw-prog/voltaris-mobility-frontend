@@ -43,7 +43,8 @@ export default async function AccountLayout({ children }: { children: React.Reac
     throw cause;
   }
   const user = session.user;
-  const nav = [...NAV];
+  // Security only holds two-step sign-in, which is switched off for now.
+  const nav = NAV.filter((item) => item.href !== '/account/security' || user.two_step !== false);
   if ((session.memberships ?? []).length > 0)
     nav.push({ href: '/business', label: 'Company console', icon: 'companies' });
   if (user.mfa_required) nav.push({ href: '/admin', label: 'Admin dashboard', icon: 'gauge' });

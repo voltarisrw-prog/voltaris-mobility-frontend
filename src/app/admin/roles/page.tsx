@@ -20,8 +20,8 @@ export default async function AdminRolesPage() {
     <section>
       <h1 className="font-display text-headline">Roles and permissions</h1>
       <p className="mt-2 max-w-2xl text-sm text-steel">
-        Every role on Voltaris and exactly what it allows. Staff roles only take effect after
-        two-step sign-in. Company roles apply inside one company only.
+        Every role on Voltaris and exactly what it allows. Company roles apply inside one company
+        only.
       </p>
 
       {groups.map((group) => (

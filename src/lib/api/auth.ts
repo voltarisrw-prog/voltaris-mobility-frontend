@@ -65,6 +65,8 @@ export interface PublicUser {
   /** Staff: powers need an authenticator code in this session. */
   mfa_required?: boolean;
   mfa_verified?: boolean;
+  /** False while two-step sign-in is switched off platform-wide. */
+  two_step?: boolean;
   permissions?: string[];
 }
 

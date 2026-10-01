@@ -19,6 +19,8 @@ interface Allow {
   suspend: boolean;
   sessions: boolean;
   mfa: boolean;
+  /** Two-step sign-in is switched on platform-wide. */
+  twoStep: boolean;
   /** Super admin: may act on staff accounts too. */
   staff: boolean;
 }
@@ -120,7 +122,7 @@ export function PeopleTable({
       render: (row) => (
         <span className="font-data text-eyebrow uppercase text-steel">
           {row.suspended ? 'Suspended' : 'Active'}
-          {row.staff && (row.mfa_enabled ? ' · 2-step on' : ' · 2-step off')}
+          {allow.twoStep && row.staff && (row.mfa_enabled ? ' · 2-step on' : ' · 2-step off')}
         </span>
       ),
     },
@@ -195,7 +197,7 @@ export function PeopleTable({
                 Sign out everywhere
               </Button>
             )}
-            {allow.roles && row.staff && !row.mfa_enabled && (
+            {allow.twoStep && allow.roles && row.staff && !row.mfa_enabled && (
               <Button
                 variant="ghost"
                 className="px-3 py-1.5"

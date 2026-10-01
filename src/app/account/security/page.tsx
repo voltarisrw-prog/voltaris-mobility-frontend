@@ -1,8 +1,10 @@
+import { redirect } from 'next/navigation';
 import { MfaPanel } from '@/features/auth/MfaPanel';
 import { getSession } from '@/lib/api/auth';
 
 export default async function SecurityPage() {
   const { user } = await getSession();
+  if (user.two_step === false) redirect('/account');
   return (
     <section>
       <h2 className="section-heading">Security</h2>

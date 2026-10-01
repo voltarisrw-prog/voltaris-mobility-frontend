@@ -61,7 +61,8 @@ export default async function AdminPeoplePage({
             roles: can(user, 'roles.assign'),
             suspend: can(user, 'users.suspend'),
             sessions: can(user, 'security.sessions'),
-            mfa: can(user, 'security.mfa_reset'),
+            mfa: user.two_step !== false && can(user, 'security.mfa_reset'),
+            twoStep: user.two_step !== false,
             staff: user.roles.includes('SUPER_ADMIN'),
           }}
         />
