@@ -62,3 +62,8 @@
 .auth-meter[data-level="2"] i:nth-child(-n+2){background:#f5a524}
 .auth-meter[data-level="3"] i:nth-child(-n+3){background:#5CC8FF}
 .auth-meter[data-level="4"] i{background:#12a594}
+
+/* phone prefix */
+.auth-phone{position:relative}
+.auth-phone span{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:15px;font-weight:600;color:#4a4a4a;pointer-events:none}
+.auth-phone input{padding-left:64px!important}

@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { Button, Field, inputClass } from '@/components/ui';
 import { PasswordInput } from './PasswordInput';
 import { PasswordMeter } from './PasswordMeter';
+import { PhoneInput, toRwandaE164 } from './PhoneInput';
 import { register as registerAccount } from '@/lib/api/auth';
 import { displayMessage } from '@/lib/api/errors';
 import { registerSchema } from '@/lib/validation/schemas';
@@ -31,7 +32,7 @@ export function RegisterForm() {
       await registerAccount({
         full_name: values.full_name,
         email: values.email,
-        phone: values.phone,
+        phone: toRwandaE164(values.phone),
         password: values.password,
       });
       setDone(true);
@@ -88,18 +89,12 @@ export function RegisterForm() {
 
       <Field
         label="Phone"
-        hint="Rwandan mobile, e.g. 0788 123 456"
+        hint="Rwandan mobile number, e.g. 788 123 456"
         error={errors.phone?.message}
         required
       >
         {(p) => (
-          <input
-            {...p}
-            {...register('phone')}
-            type="tel"
-            autoComplete="tel"
-            className={inputClass}
-          />
+          <PhoneInput {...p} {...register('phone')} autoComplete="tel-national" className={inputClass} />
         )}
       </Field>
 
