@@ -1,7 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { useState } from 'react';
 import { Button, Field, inputClass, useToast } from '@/components/ui';
 import { createGeneralInquiry } from '@/lib/api/leads';
@@ -19,14 +19,14 @@ export function FinanceApplyForm({ summary, source }: { summary: string; source:
   const {
     register,
     handleSubmit,
-    watch,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<GeneralInquiryForm>({
     resolver: zodResolver(generalInquirySchema),
     defaultValues: { topic: 'buying', message: summary },
   });
 
-  const consent = watch('consent');
+  const consent = useWatch({ control, name: 'consent' });
 
   if (reference) {
     return (

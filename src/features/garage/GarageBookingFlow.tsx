@@ -3,7 +3,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import dynamic from 'next/dynamic';
 import { useMemo, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { Check, ArrowLeft } from 'lucide-react';
 import { Button, Field, inputClass, useToast } from '@/components/ui';
 import { ConfirmationCard } from '@/components/ConfirmationCard';
@@ -55,7 +55,7 @@ export function GarageBookingFlow({ initialService }: { initialService?: GarageS
     register,
     handleSubmit,
     setValue,
-    watch,
+    control,
     trigger,
     formState: { errors, isSubmitting },
   } = useForm<Values>({
@@ -68,9 +68,9 @@ export function GarageBookingFlow({ initialService }: { initialService?: GarageS
     },
   });
 
-  const service = watch('service');
-  const garageSlug = watch('garage_slug');
-  const values = watch();
+  const service = useWatch({ control, name: 'service' });
+  const garageSlug = useWatch({ control, name: 'garage_slug' });
+  const values = useWatch({ control });
 
   const eligible = useMemo(
     () => garagePartners.filter((p) => !service || p.services.includes(service)),

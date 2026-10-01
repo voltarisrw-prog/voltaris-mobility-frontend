@@ -1,7 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { useState } from 'react';
 import { Button, Field, inputClass, selectClass, useToast } from '@/components/ui';
 import { ConfirmationCard } from '@/components/ConfirmationCard';
@@ -31,14 +31,14 @@ export function TestDriveForm({
   const {
     register,
     handleSubmit,
-    watch,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<Values>({
     resolver: zodResolver(testDriveSchema),
     defaultValues: { vehicle_id: vehicleId ?? '', preferred_time_slot: 'morning' },
   });
 
-  const consent = watch('consent');
+  const consent = useWatch({ control, name: 'consent' });
 
   if (result) {
     return (
