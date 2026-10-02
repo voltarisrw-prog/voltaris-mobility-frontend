@@ -62,3 +62,21 @@ describe('car page model', () => {
     expect(photoLabels([undefined, undefined])).toEqual(['Front', 'View 1']);
   });
 });
+
+describe('gallery close-ups', () => {
+  it('frames the front on the side the car faces and stays inside the photo', async () => {
+    const { closeUps } = await import('./photo');
+    const box = { x0: 0.1, y0: 0.2, x1: 0.9, y1: 0.8 };
+    const left = closeUps({ box, nose: 'left' });
+    const right = closeUps({ box, nose: 'right' });
+    expect(left.map((v) => v.label)).toEqual(['Front', 'Wheels', 'Roofline']);
+    expect(left[0]!.cx).toBeLessThan(0.5);
+    expect(right[0]!.cx).toBeGreaterThan(0.5);
+    for (const v of [...left, ...right]) {
+      expect(v.cx).toBeGreaterThanOrEqual(0.5 / v.zoom);
+      expect(v.cx).toBeLessThanOrEqual(1 - 0.5 / v.zoom);
+      expect(v.cy).toBeGreaterThanOrEqual(0.5 / v.zoom);
+      expect(v.cy).toBeLessThanOrEqual(1 - 0.5 / v.zoom);
+    }
+  });
+});

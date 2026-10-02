@@ -138,7 +138,8 @@
   pointer-events: none;
   background: linear-gradient(transparent, rgba(7, 13, 36, 0.07));
 }
-/* the model's name, as tall as the room, behind the car */
+/* the model's name, as tall as the room, on the wall behind the car — cut
+   away along the car's silhouette (set from the page), so it never crosses it */
 .word {
   position: absolute;
   z-index: 1;
@@ -154,18 +155,21 @@
   line-height: 1;
   white-space: nowrap;
   color: transparent;
-  -webkit-text-stroke: 2px rgba(92, 200, 255, 0.28);
+  -webkit-text-stroke: 2px rgba(92, 200, 255, 0.3);
   transform: translate(calc(var(--tx) * -22px), calc(var(--ty) * -12px));
-  transition: transform 0.7s var(--spring);
-  -webkit-mask-image: linear-gradient(#000 30%, transparent 92%);
-  mask-image: linear-gradient(#000 30%, transparent 92%);
-  animation: wordIn 1.4s 0.2s var(--spring) both;
+  opacity: 0;
+  transition:
+    opacity 1.2s,
+    transform 0.7s var(--spring);
+}
+.word[data-ready] {
+  opacity: 1;
 }
 .studio {
   container-type: size;
 }
 .studio[data-light] .word {
-  -webkit-text-stroke-color: rgba(28, 63, 184, 0.3);
+  -webkit-text-stroke-color: rgba(28, 63, 184, 0.34);
 }
 .shot {
   position: absolute;
@@ -231,12 +235,6 @@
     transform: translateY(18px) scale(0.985);
   }
 }
-@keyframes wordIn {
-  from {
-    opacity: 0;
-    letter-spacing: 0.02em;
-  }
-}
 
 /* photo tabs and the full-screen button, under the studio */
 .tabs {
@@ -245,72 +243,6 @@
   justify-content: space-between;
   gap: 12px;
   margin-top: 14px;
-}
-.tabList {
-  display: flex;
-  gap: 8px;
-  min-width: 0;
-  overflow-x: auto;
-  scrollbar-width: none;
-  padding: 4px;
-  margin: -4px;
-}
-.tabList::-webkit-scrollbar {
-  display: none;
-}
-.tab {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-shrink: 0;
-  height: 54px;
-  padding: 6px 16px 6px 6px;
-  overflow: hidden;
-  border: 0;
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.05);
-  box-shadow: inset 0 0 0 1px var(--line);
-  color: var(--mut);
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition:
-    background 0.3s,
-    color 0.3s,
-    box-shadow 0.3s;
-}
-.tab:hover {
-  color: #fff;
-  background: rgba(255, 255, 255, 0.09);
-}
-.tab[aria-selected='true'] {
-  color: #fff;
-  background: rgba(53, 162, 255, 0.14);
-  box-shadow:
-    inset 0 0 0 1.5px rgba(92, 200, 255, 0.7),
-    0 10px 24px -14px rgba(53, 162, 255, 0.9);
-}
-.tabThumb {
-  position: relative;
-  width: 62px;
-  height: 42px;
-  overflow: hidden;
-  border-radius: 12px;
-  background: #eef1f6;
-}
-.tabThumb img {
-  object-fit: cover;
-}
-.tabRun {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  height: 3px;
-  width: 100%;
-  transform-origin: left;
-  background: linear-gradient(90deg, var(--volt), var(--light));
-  animation: run linear forwards;
 }
 @keyframes run {
   from {
@@ -326,7 +258,6 @@
   gap: 8px;
   margin-left: auto;
 }
-.round,
 .full {
   display: inline-flex;
   align-items: center;
@@ -343,20 +274,15 @@
     background 0.25s,
     transform 0.25s var(--spring);
 }
-.round {
-  width: 46px;
-}
 .full {
   padding: 0 18px;
   font-size: 14px;
   font-weight: 600;
 }
-.round:hover,
 .full:hover {
   background: rgba(92, 200, 255, 0.16);
   transform: translateY(-1px);
 }
-.round svg,
 .full svg {
   width: 18px;
   height: 18px;
@@ -1505,6 +1431,313 @@
   box-shadow: 0 10px 24px -10px rgba(53, 162, 255, 0.9);
 }
 
+/* ───────────────────────── gallery ───────────────────────── */
+.gal {
+  padding: clamp(10px, 1.4vw, 14px);
+}
+.galFrame {
+  --bg: #eef1f6;
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: var(--ar, 3 / 2);
+  border-radius: 22px;
+  background: var(--bg);
+  transition: background-color 0.9s;
+}
+.galSlide {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  container-type: size;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: zoom-in;
+  opacity: 0;
+  transition: opacity 0.8s;
+  pointer-events: none;
+}
+.galSlide[data-on] {
+  opacity: 1;
+  pointer-events: auto;
+}
+.galBox {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  width: min(100cqw, 100cqh * var(--arn, 1.5));
+  aspect-ratio: var(--ar, 3 / 2);
+}
+.galBox img {
+  object-fit: cover;
+}
+/* a close-up: the chosen point moved to the middle, then enlarged */
+.galBox img.galZoom {
+  transform: scale(var(--z)) translate(var(--dx), var(--dy));
+}
+.galSlide[data-on] .galZoom {
+  animation: drift 5.5s ease-out forwards;
+}
+@keyframes drift {
+  from {
+    transform: scale(var(--z)) translate(var(--dx), var(--dy));
+  }
+  to {
+    transform: scale(calc(var(--z) * 1.06)) translate(var(--dx), var(--dy));
+  }
+}
+.galSlide[data-on] .galBox > img:not(.galZoom) {
+  animation: breathe 5.5s ease-out forwards;
+}
+@keyframes breathe {
+  to {
+    transform: scale(1.03);
+  }
+}
+.galCount,
+.galCap {
+  position: absolute;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  background: rgba(4, 8, 22, 0.78);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: #fff;
+  pointer-events: none;
+}
+.galCount {
+  top: 14px;
+  right: 14px;
+  height: 30px;
+  padding: 0 12px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+}
+.galCap {
+  left: 14px;
+  bottom: 14px;
+  max-width: calc(100% - 28px);
+  min-height: 38px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+.galArrow {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  margin-top: -23px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(4, 8, 22, 0.72);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.14);
+  color: #fff;
+  cursor: pointer;
+  transition:
+    background 0.25s,
+    transform 0.25s var(--spring);
+}
+.galArrow:hover {
+  background: var(--volt);
+  transform: scale(1.06);
+}
+.galArrow svg {
+  width: 20px;
+  height: 20px;
+}
+.galPrev {
+  left: 14px;
+}
+.galNext {
+  right: 14px;
+}
+.galBar {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+.galTabs {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+.galTab {
+  position: relative;
+  display: grid;
+  gap: 8px;
+  padding: 6px 6px 10px;
+  overflow: hidden;
+  border: 0;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.045);
+  box-shadow: inset 0 0 0 1px var(--line);
+  color: var(--mut);
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  transition:
+    background 0.3s,
+    color 0.3s,
+    box-shadow 0.3s;
+}
+.galTab:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+}
+.galTab[aria-selected='true'] {
+  color: #fff;
+  background: rgba(53, 162, 255, 0.14);
+  box-shadow:
+    inset 0 0 0 1.5px rgba(92, 200, 255, 0.7),
+    0 12px 26px -16px rgba(53, 162, 255, 0.95);
+}
+.galTab[data-next] {
+  box-shadow: inset 0 0 0 1px rgba(92, 200, 255, 0.3);
+}
+.galThumb {
+  --bg: #eef1f6;
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: 12px;
+  background: var(--bg);
+  container-type: size;
+}
+.galThumb .galBox img.galZoom {
+  animation: none;
+}
+.galTab:not([aria-selected='true']) .galThumb {
+  opacity: 0.72;
+  transition: opacity 0.3s;
+}
+.galTab:hover .galThumb,
+.galTab[data-next] .galThumb {
+  opacity: 1;
+}
+.galLabel {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.galLabel em {
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: rgba(92, 200, 255, 0.16);
+  color: var(--light);
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.galRun {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: 100%;
+  transform-origin: left;
+  background: linear-gradient(90deg, var(--volt), var(--light));
+  animation: run linear forwards;
+}
+.galPlay {
+  display: grid;
+  place-items: center;
+  flex: 0 0 52px;
+  border: 0;
+  border-radius: 18px;
+  background: linear-gradient(135deg, var(--navy), var(--royal));
+  box-shadow: inset 0 0 0 1px rgba(92, 200, 255, 0.35);
+  color: #fff;
+  cursor: pointer;
+}
+.galPlay:hover {
+  background: linear-gradient(135deg, var(--royal), var(--volt));
+}
+.galPlay svg {
+  width: 18px;
+  height: 18px;
+}
+@media (max-width: 640px) {
+  .galFrame {
+    border-radius: 18px;
+  }
+  .galArrow {
+    width: 40px;
+    height: 40px;
+    margin-top: -20px;
+  }
+  .galPrev {
+    left: 10px;
+  }
+  .galNext {
+    right: 10px;
+  }
+  .galCount {
+    top: 10px;
+    right: 10px;
+  }
+  .galCap {
+    left: 10px;
+    bottom: 10px;
+    min-height: 32px;
+    max-width: calc(100% - 76px);
+    padding: 6px 12px;
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    line-height: 20px;
+  }
+  .galTab {
+    gap: 6px;
+    padding: 4px 4px 8px;
+    border-radius: 14px;
+    font-size: 11px;
+  }
+  .galThumb {
+    border-radius: 10px;
+  }
+  .galLabel em {
+    display: none;
+  }
+  .galPlay {
+    flex-basis: 40px;
+    border-radius: 14px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .galSlide[data-on] .galZoom,
+  .galSlide[data-on] .galBox > img:not(.galZoom),
+  .galRun {
+    animation: none;
+  }
+}
+
 /* ───────────────────────── tablets and phones ───────────────────────── */
 @media (max-width: 1023px) {
   .grid {
@@ -1542,31 +1775,9 @@
   .shot {
     inset: 3% 2% 2%;
   }
-  .tab {
-    height: 48px;
-    padding-right: 12px;
-  }
-  .tabThumb {
-    width: 52px;
-    height: 36px;
-  }
-  .full span,
-  .round {
-    width: 44px;
-    height: 44px;
-  }
   .full {
     height: 44px;
     padding: 0 14px;
-  }
-  .tabs[data-many] .round {
-    display: none;
-  }
-  .tabs[data-many] .full {
-    width: 44px;
-    padding: 0;
-    font-size: 0;
-    gap: 0;
   }
   .nums {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1659,18 +1870,15 @@
 @media (hover: none) {
   .tile:hover,
   .btnPrimary:hover,
-  .round:hover,
   .full:hover {
     transform: none;
   }
 }
 @media (prefers-reduced-motion: reduce) {
   .studio,
-  .word,
   .ident,
   .nums li,
   .deal,
-  .tabRun,
   .status i {
     animation: none;
   }

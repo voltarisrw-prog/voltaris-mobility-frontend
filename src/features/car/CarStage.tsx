@@ -3,75 +3,33 @@
 import Image from 'next/image';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { ChevronLeft, ChevronRight, Expand, Pause, Play, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Expand, X } from 'lucide-react';
 import type { VehicleImage } from '@/types/vehicle';
 import { heavy } from '@/features/market/fonts';
 import ms from '@/features/market/market.module.css';
 import { photoLabels, shapeVars } from './model';
+import { DEFAULT_INFO, readPhoto, type PhotoInfo } from './photo';
 import c from './car.module.css';
 
-const SLIDE_MS = 6000;
-const STUDIO = { color: '#eef1f6', light: true };
-
-/** Reads the colour of a photo's own backdrop (its four corners) so the studio can continue it. */
-function useBackdrop(src: string | null) {
-  const [bg, setBg] = useState(STUDIO);
+/** The studio's reading of a photo: backdrop colour, silhouette, framing. */
+export function usePhotoInfo(src: string | null): PhotoInfo {
+  const [info, setInfo] = useState<PhotoInfo>(DEFAULT_INFO);
   useEffect(() => {
     if (!src) return;
     let gone = false;
-    const img = new window.Image();
-    img.decoding = 'async';
-    img.onload = () => {
-      try {
-        const w = 48;
-        const h = Math.max(8, Math.round((img.naturalHeight / img.naturalWidth) * w));
-        const cv = document.createElement('canvas');
-        cv.width = w;
-        cv.height = h;
-        const cx = cv.getContext('2d', { willReadFrequently: true });
-        if (!cx) return;
-        cx.drawImage(img, 0, 0, w, h);
-        let r = 0;
-        let g = 0;
-        let b = 0;
-        let n = 0;
-        for (const [x0, y0] of [
-          [0, 0],
-          [w - 4, 0],
-          [0, h - 4],
-          [w - 4, h - 4],
-          [Math.round(w / 2) - 2, 0],
-        ] as const) {
-          const d = cx.getImageData(x0, y0, 4, 4).data;
-          for (let k = 0; k < d.length; k += 4) {
-            r += d[k]!;
-            g += d[k + 1]!;
-            b += d[k + 2]!;
-            n++;
-          }
-        }
-        r = Math.round(r / n);
-        g = Math.round(g / n);
-        b = Math.round(b / n);
-        const lum = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-        if (!gone) setBg({ color: `rgb(${r} ${g} ${b})`, light: lum > 170 });
-      } catch {
-        /* a photo we cannot read keeps the default studio */
-      }
-    };
-    img.src = `/_next/image?url=${encodeURIComponent(src)}&w=64&q=75`;
+    readPhoto(src).then((i) => !gone && setInfo(i));
     return () => {
       gone = true;
     };
   }, [src]);
-  return bg;
+  return info;
 }
 
 /**
  * The car, whole and huge, standing in a lit studio that continues the photo's
- * own backdrop — no frame, no crop, nothing written on it. The model's name
- * runs behind the car like lettering on a showroom wall. Click or tap for the
- * full-screen view; several photos get labelled tabs that move on by themselves.
+ * own backdrop — no frame, no crop. The model's name runs across the wall
+ * *behind* the car: the lettering is cut away along the car's silhouette, so
+ * the car always stands in front of it. Click or tap for the full-screen view.
  */
 export function CarStage({
   images,
@@ -82,28 +40,35 @@ export function CarStage({
   title: string;
   wordmark: string;
 }) {
-  const [cur, setCur] = useState(0);
+  const hero = images[0] ?? null;
+  const src = hero ? (hero.gallery ?? hero.detail ?? hero.card) : null;
+  const info = usePhotoInfo(src);
   const [open, setOpen] = useState(false);
-  const [playing, setPlaying] = useState(true);
-  const [hold, setHold] = useState(false);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
-  const touchX = useRef(0);
-  const many = images.length > 1;
-  const shot = images[cur] ?? null;
-  const bg = useBackdrop(shot ? (shot.thumb ?? shot.card) : null);
+  const shotRef = useRef<HTMLButtonElement>(null);
+  const boxRef = useRef<HTMLSpanElement>(null);
+  const [rect, setRect] = useState<{ l: number; t: number; w: number; h: number } | null>(null);
   const labels = photoLabels(images.map((i) => i.role));
 
-  const go = useCallback(
-    (n: number) => setCur(((n % images.length) + images.length) % images.length),
-    [images.length],
-  );
-
+  // Where the photo sits in the studio (transforms ignored), to line the
+  // silhouette up with the car.
   useEffect(() => {
-    if (!many || !playing || hold || open) return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const t = window.setTimeout(() => go(cur + 1), SLIDE_MS);
-    return () => window.clearTimeout(t);
-  }, [many, playing, hold, open, cur, go]);
+    const shot = shotRef.current;
+    const box = boxRef.current;
+    if (!shot || !box) return;
+    const measure = () =>
+      setRect({
+        l: shot.offsetLeft + box.offsetLeft,
+        t: shot.offsetTop + box.offsetTop,
+        w: box.offsetWidth,
+        h: box.offsetHeight,
+      });
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(box);
+    ro.observe(shot);
+    return () => ro.disconnect();
+  }, [src]);
 
   const onMove = (e: React.PointerEvent<HTMLDivElement>) => {
     if (e.pointerType !== 'mouse') return;
@@ -111,128 +76,84 @@ export function CarStage({
     setTilt({ x: (e.clientX - r.left) / r.width - 0.5, y: (e.clientY - r.top) / r.height - 0.5 });
   };
 
+  const lettering = Boolean(info.plain && info.hull && rect);
+  // The word moves one way and the car the other (−22/+14 px, −12/+8 px), so the
+  // cut-out follows the car by the difference.
+  const wordMask: React.CSSProperties | undefined =
+    lettering && rect
+      ? {
+          WebkitMaskImage: `linear-gradient(#000 30%, transparent 92%), url(${info.hull})`,
+          maskImage: `linear-gradient(#000 30%, transparent 92%), url(${info.hull})`,
+          WebkitMaskSize: `100% 100%, ${rect.w}px ${rect.h}px`,
+          maskSize: `100% 100%, ${rect.w}px ${rect.h}px`,
+          WebkitMaskPosition: `0 0, calc(${rect.l}px + var(--tx) * 36px) calc(${rect.t}px + var(--ty) * 20px)`,
+          maskPosition: `0 0, calc(${rect.l}px + var(--tx) * 36px) calc(${rect.t}px + var(--ty) * 20px)`,
+          WebkitMaskRepeat: 'no-repeat',
+          maskRepeat: 'no-repeat',
+          WebkitMaskComposite: 'source-out',
+          maskComposite: 'subtract',
+        }
+      : undefined;
+
   return (
-    <section className={c.stage} aria-label="Photos">
+    <section className={c.stage} aria-label="The car">
       <div
         className={c.studio}
-        data-light={bg.light ? '' : undefined}
+        data-light={info.light ? '' : undefined}
         style={
           {
-            '--bg': bg.color,
-            '--len': Math.max(3, wordmark.length),
+            '--bg': info.bg,
             '--tx': tilt.x.toFixed(3),
             '--ty': tilt.y.toFixed(3),
+            '--len': Math.max(3, wordmark.length),
           } as React.CSSProperties
         }
         onPointerMove={onMove}
-        onPointerLeave={() => {
-          setTilt({ x: 0, y: 0 });
-          setHold(false);
-        }}
-        onPointerEnter={() => setHold(true)}
-        onTouchStart={(e) => (touchX.current = e.touches[0]?.clientX ?? 0)}
-        onTouchEnd={(e) => {
-          if (!many) return;
-          const d = (e.changedTouches[0]?.clientX ?? 0) - touchX.current;
-          if (Math.abs(d) > 50) go(cur + (d < 0 ? 1 : -1));
-        }}
+        onPointerLeave={() => setTilt({ x: 0, y: 0 })}
       >
         <span className={c.softbox} aria-hidden="true" />
-        <b className={c.word} aria-hidden="true">
+        <b
+          className={c.word}
+          aria-hidden="true"
+          data-ready={lettering ? '' : undefined}
+          style={wordMask}
+        >
           {wordmark}
         </b>
-        {images.length === 0 && <span className={c.noPhoto}>Photos coming soon</span>}
-        {images.map((im, i) => (
+        {!hero && <span className={c.noPhoto}>Photos coming soon</span>}
+        {hero && (
           <button
-            key={`${im.gallery}-${i}`}
+            ref={shotRef}
             type="button"
             className={c.shot}
-            data-on={i === cur ? '' : undefined}
-            tabIndex={i === cur ? 0 : -1}
-            aria-hidden={i === cur ? undefined : true}
-            aria-label={`Open the photo full screen: ${im.alt || title}`}
+            data-on=""
+            aria-label={`Open the photo full screen: ${hero.alt || title}`}
             onClick={() => setOpen(true)}
           >
             <span
+              ref={boxRef}
               className={c.carBox}
-              style={shapeVars(im.width, im.height) as React.CSSProperties}
+              style={shapeVars(hero.width, hero.height) as React.CSSProperties}
             >
               <Image
-                src={im.gallery ?? im.detail ?? im.card}
-                alt={im.alt || title}
+                src={src!}
+                alt={hero.alt || title}
                 fill
-                priority={i === 0}
+                priority
                 sizes="(min-width: 1440px) 1360px, 100vw"
-                placeholder={im.blur_data_url ? 'blur' : 'empty'}
-                blurDataURL={im.blur_data_url}
+                placeholder={hero.blur_data_url ? 'blur' : 'empty'}
+                blurDataURL={hero.blur_data_url}
               />
             </span>
           </button>
-        ))}
+        )}
         <span className={c.floor} aria-hidden="true" />
       </div>
 
-      {images.length > 0 && (
-        <div className={c.tabs} data-many={many ? '' : undefined}>
-          {many ? (
-            <div className={c.tabList} role="tablist" aria-label="Choose a photo">
-              {images.map((im, i) => (
-                <button
-                  key={`t-${im.thumb}-${i}`}
-                  type="button"
-                  role="tab"
-                  aria-selected={i === cur}
-                  className={c.tab}
-                  onClick={() => go(i)}
-                  onFocus={() => setHold(true)}
-                  onBlur={() => setHold(false)}
-                >
-                  <span className={c.tabThumb}>
-                    <Image src={im.thumb ?? im.card} alt="" fill sizes="96px" />
-                  </span>
-                  <span className={c.tabLabel}>{labels[i]}</span>
-                  {i === cur && playing && !hold && !open && (
-                    <i
-                      key={`p-${cur}`}
-                      className={c.tabRun}
-                      style={{ animationDuration: `${SLIDE_MS}ms` }}
-                    />
-                  )}
-                </button>
-              ))}
-            </div>
-          ) : (
-            <span />
-          )}
+      {hero && (
+        <div className={c.tabs}>
+          <span />
           <div className={c.tabTools}>
-            {many && (
-              <>
-                <button
-                  type="button"
-                  className={c.round}
-                  aria-label="Previous photo"
-                  onClick={() => go(cur - 1)}
-                >
-                  <ChevronLeft aria-hidden="true" />
-                </button>
-                <button
-                  type="button"
-                  className={c.round}
-                  aria-label={playing ? 'Pause the photos' : 'Play the photos'}
-                  onClick={() => setPlaying((p) => !p)}
-                >
-                  {playing ? <Pause aria-hidden="true" /> : <Play aria-hidden="true" />}
-                </button>
-                <button
-                  type="button"
-                  className={c.round}
-                  aria-label="Next photo"
-                  onClick={() => go(cur + 1)}
-                >
-                  <ChevronRight aria-hidden="true" />
-                </button>
-              </>
-            )}
             <button type="button" className={c.full} onClick={() => setOpen(true)}>
               <Expand aria-hidden="true" />
               Full screen
@@ -241,14 +162,13 @@ export function CarStage({
         </div>
       )}
 
-      {open && images.length > 0 && (
+      {open && hero && (
         <Viewer
           images={images}
-          start={cur}
+          start={0}
           title={title}
           labels={labels}
           onClose={() => setOpen(false)}
-          onShow={go}
         />
       )}
     </section>
@@ -257,7 +177,7 @@ export function CarStage({
 
 /* ───────────── full screen: the same viewer as the marketplace, for one car's photos ───────────── */
 
-function Viewer({
+export function Viewer({
   images,
   start,
   title,
@@ -270,7 +190,7 @@ function Viewer({
   title: string;
   labels: string[];
   onClose: () => void;
-  onShow: (i: number) => void;
+  onShow?: (i: number) => void;
 }) {
   const [i, setI] = useState(start);
   const [zoom, setZoom] = useState(1);
@@ -283,7 +203,7 @@ function Viewer({
       const k = ((n % images.length) + images.length) % images.length;
       setZoom(1);
       setI(k);
-      onShow(k);
+      onShow?.(k);
     },
     [images.length, onShow],
   );
