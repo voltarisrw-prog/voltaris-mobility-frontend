@@ -1,17 +1,21 @@
 'use client';
 
 import Image from 'next/image';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { ChevronLeft, ChevronRight, Expand, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Expand, Pause, Play, X } from 'lucide-react';
 import type { VehicleImage } from '@/types/vehicle';
 import { heavy } from '@/features/market/fonts';
 import ms from '@/features/market/market.module.css';
 import { photoLabels, shapeVars } from './model';
-import { DEFAULT_INFO, readPhoto, type PhotoInfo } from './photo';
+import { closeUps, DEFAULT_INFO, readPhoto, silhouette, type PhotoInfo } from './photo';
 import c from './car.module.css';
 
-/** The studio's reading of a photo: backdrop colour, silhouette, framing. */
+const SLIDE_MS = 5000;
+
+export const srcOf = (im: VehicleImage) => im.gallery ?? im.detail ?? im.card;
+
+/** The studio's reading of a photo: backdrop colour, outline, framing. */
 export function usePhotoInfo(src: string | null): PhotoInfo {
   const [info, setInfo] = useState<PhotoInfo>(DEFAULT_INFO);
   useEffect(() => {
@@ -25,11 +29,43 @@ export function usePhotoInfo(src: string | null): PhotoInfo {
   return info;
 }
 
+/** One thing the stage can show: a photo, or a close-up of one. */
+interface View {
+  key: string;
+  image: VehicleImage;
+  /** Which real photo this is (or is a close-up of), for the full-screen viewer. */
+  photo: number;
+  label: string;
+  caption: string;
+  zoom: number;
+  cx: number;
+  cy: number;
+}
+
+const zoomStyle = (v: View) =>
+  ({
+    '--z': v.zoom,
+    '--dx': `${(0.5 - v.cx) * 100}%`,
+    '--dy': `${(0.5 - v.cy) * 100}%`,
+  }) as React.CSSProperties;
+
+const altOf = (v: View, title: string) =>
+  v.zoom > 1
+    ? `${v.image.alt || title} — ${v.label.toLowerCase()}, up close`
+    : v.image.alt || title;
+
 /**
  * The car, whole and huge, standing in a lit studio that continues the photo's
  * own backdrop — no frame, no crop. The model's name runs across the wall
- * *behind* the car: the lettering is cut away along the car's silhouette, so
- * the car always stands in front of it. Click or tap for the full-screen view.
+ * *behind* the car: the lettering is cut away along the car's outline, so the
+ * car always stands in front of it.
+ *
+ * This one card is the gallery. It moves through the photos by itself, with the
+ * whole set as labelled tabs underneath — the tab after the current one is
+ * where the next picture comes from. A listing with few photos gets close-ups
+ * of its main photo (front, wheels, roofline), framed on the car itself; the
+ * lettering stays behind the car on those too, the outline enlarged with it.
+ * Click or tap for the full-screen view.
  */
 export function CarStage({
   images,
@@ -41,17 +77,51 @@ export function CarStage({
   wordmark: string;
 }) {
   const hero = images[0] ?? null;
-  const src = hero ? (hero.gallery ?? hero.detail ?? hero.card) : null;
-  const info = usePhotoInfo(src);
-  const [open, setOpen] = useState(false);
-  const [tilt, setTilt] = useState({ x: 0, y: 0 });
-  const shotRef = useRef<HTMLButtonElement>(null);
-  const boxRef = useRef<HTMLSpanElement>(null);
-  const [rect, setRect] = useState<{ l: number; t: number; w: number; h: number } | null>(null);
-  const labels = photoLabels(images.map((i) => i.role));
+  const heroSrc = hero ? srcOf(hero) : null;
+  const heroInfo = usePhotoInfo(heroSrc);
+  const labels = useMemo(() => photoLabels(images.map((i) => i.role)), [images]);
 
-  // Where the photo sits in the studio (transforms ignored), to line the
-  // silhouette up with the car.
+  const views = useMemo<View[]>(() => {
+    if (!hero) return [];
+    const out: View[] = images.map((im, i) => ({
+      key: `p${i}`,
+      image: im,
+      photo: i,
+      label: i === 0 ? 'Whole car' : labels[i]!,
+      caption: im.alt || title,
+      zoom: 1,
+      cx: 0.5,
+      cy: 0.5,
+    }));
+    for (const z of closeUps(heroInfo)) {
+      if (out.length >= 4) break;
+      out.push({ key: `z${z.label}`, image: hero, photo: 0, ...z });
+    }
+    return out;
+  }, [images, hero, heroInfo, labels, title]);
+
+  const count = views.length;
+  const [at, setAt] = useState(0);
+  const cur = count ? Math.min(at, count - 1) : 0;
+  const next = count ? (cur + 1) % count : 0;
+  const view = views[cur] ?? null;
+  const info = usePhotoInfo(view ? srcOf(view.image) : heroSrc);
+
+  const [open, setOpen] = useState(false);
+  const [playing, setPlaying] = useState(true);
+  const [hold, setHold] = useState(false);
+  const [seen, setSeen] = useState(false);
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const [rect, setRect] = useState<{ l: number; t: number; w: number; h: number } | null>(null);
+  const secRef = useRef<HTMLElement>(null);
+  const shotRef = useRef<HTMLButtonElement>(null);
+  const boxRef = useRef<HTMLSpanElement | null>(null);
+  const touchX = useRef(0);
+
+  const go = useCallback((n: number) => count > 0 && setAt(((n % count) + count) % count), [count]);
+
+  // Where the photo on show sits in the studio (transforms ignored), to line
+  // the outline up with the car.
   useEffect(() => {
     const shot = shotRef.current;
     const box = boxRef.current;
@@ -68,22 +138,43 @@ export function CarStage({
     ro.observe(box);
     ro.observe(shot);
     return () => ro.disconnect();
-  }, [src]);
+  }, [view?.key]);
 
-  const onMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (e.pointerType !== 'mouse') return;
-    const r = e.currentTarget.getBoundingClientRect();
-    setTilt({ x: (e.clientX - r.left) / r.width - 0.5, y: (e.clientY - r.top) / r.height - 0.5 });
-  };
+  // Only move along while the car is on screen.
+  useEffect(() => {
+    const el = secRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => setSeen(Boolean(e?.isIntersecting)), {
+      threshold: 0.3,
+    });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
-  const lettering = Boolean(info.plain && info.hull && rect);
+  const running = count > 1 && playing && !hold && seen && !open;
+  useEffect(() => {
+    if (!running) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const t = window.setTimeout(() => go(cur + 1), SLIDE_MS);
+    return () => window.clearTimeout(t);
+  }, [running, cur, go]);
+
+  // The car's outline for the view on show: on a close-up the outline is
+  // enlarged exactly as the photo is, and clipped to the box with it.
+  const mask = useMemo(() => {
+    if (!view || !info.plain) return null;
+    const im = view.image;
+    return silhouette(info.shape, view, (im.width || 3) / (im.height || 2));
+  }, [view, info]);
+
+  const lettering = Boolean(mask && rect);
   // The word moves one way and the car the other (−22/+14 px, −12/+8 px), so the
   // cut-out follows the car by the difference.
   const wordMask: React.CSSProperties | undefined =
     lettering && rect
       ? {
-          WebkitMaskImage: `linear-gradient(#000 30%, transparent 92%), url(${info.hull})`,
-          maskImage: `linear-gradient(#000 30%, transparent 92%), url(${info.hull})`,
+          WebkitMaskImage: `linear-gradient(#000 30%, transparent 92%), url(${mask})`,
+          maskImage: `linear-gradient(#000 30%, transparent 92%), url(${mask})`,
           WebkitMaskSize: `100% 100%, ${rect.w}px ${rect.h}px`,
           maskSize: `100% 100%, ${rect.w}px ${rect.h}px`,
           WebkitMaskPosition: `0 0, calc(${rect.l}px + var(--tx) * 36px) calc(${rect.t}px + var(--ty) * 20px)`,
@@ -96,7 +187,12 @@ export function CarStage({
       : undefined;
 
   return (
-    <section className={c.stage} aria-label="The car">
+    <section
+      ref={secRef}
+      className={c.stage}
+      aria-label="The car"
+      aria-roledescription={count > 1 ? 'carousel' : undefined}
+    >
       <div
         className={c.studio}
         data-light={info.light ? '' : undefined}
@@ -108,8 +204,24 @@ export function CarStage({
             '--len': Math.max(3, wordmark.length),
           } as React.CSSProperties
         }
-        onPointerMove={onMove}
-        onPointerLeave={() => setTilt({ x: 0, y: 0 })}
+        onPointerEnter={(e) => e.pointerType === 'mouse' && setHold(true)}
+        onPointerMove={(e) => {
+          if (e.pointerType !== 'mouse') return;
+          const r = e.currentTarget.getBoundingClientRect();
+          setTilt({
+            x: (e.clientX - r.left) / r.width - 0.5,
+            y: (e.clientY - r.top) / r.height - 0.5,
+          });
+        }}
+        onPointerLeave={() => {
+          setHold(false);
+          setTilt({ x: 0, y: 0 });
+        }}
+        onTouchStart={(e) => (touchX.current = e.touches[0]?.clientX ?? 0)}
+        onTouchEnd={(e) => {
+          const d = (e.changedTouches[0]?.clientX ?? 0) - touchX.current;
+          if (Math.abs(d) > 50) go(cur + (d < 0 ? 1 : -1));
+        }}
       >
         <span className={c.softbox} aria-hidden="true" />
         <b
@@ -121,39 +233,126 @@ export function CarStage({
           {wordmark}
         </b>
         {!hero && <span className={c.noPhoto}>Photos coming soon</span>}
-        {hero && (
+        {view && (
           <button
             ref={shotRef}
             type="button"
             className={c.shot}
             data-on=""
-            aria-label={`Open the photo full screen: ${hero.alt || title}`}
+            aria-label={`Open full screen: ${view.caption}`}
             onClick={() => setOpen(true)}
           >
-            <span
-              ref={boxRef}
-              className={c.carBox}
-              style={shapeVars(hero.width, hero.height) as React.CSSProperties}
-            >
-              <Image
-                src={src!}
-                alt={hero.alt || title}
-                fill
-                priority
-                sizes="(min-width: 1440px) 1360px, 100vw"
-                placeholder={hero.blur_data_url ? 'blur' : 'empty'}
-                blurDataURL={hero.blur_data_url}
-              />
-            </span>
+            {views.map((v, i) => (
+              <span
+                key={v.key}
+                ref={i === cur ? boxRef : null}
+                className={c.carBox}
+                data-on={i === cur ? '' : undefined}
+                data-close={v.zoom > 1 ? '' : undefined}
+                aria-hidden={i === cur ? undefined : true}
+                style={shapeVars(v.image.width, v.image.height) as React.CSSProperties}
+              >
+                <Image
+                  src={srcOf(v.image)}
+                  alt={altOf(v, title)}
+                  fill
+                  priority={i === 0}
+                  sizes="(min-width: 1440px) 1360px, 100vw"
+                  placeholder={v.zoom === 1 && v.image.blur_data_url ? 'blur' : 'empty'}
+                  blurDataURL={v.image.blur_data_url}
+                  className={v.zoom > 1 ? c.carZoom : undefined}
+                  style={v.zoom > 1 ? zoomStyle(v) : undefined}
+                />
+              </span>
+            ))}
           </button>
+        )}
+        {count > 1 && view && (
+          <>
+            <span className={c.galCount} aria-live="polite">
+              {cur + 1} / {count}
+            </span>
+            <span className={c.galCap}>{view.caption}</span>
+            <button
+              type="button"
+              className={`${c.galArrow} ${c.galPrev}`}
+              aria-label="Previous photo"
+              onClick={() => go(cur - 1)}
+            >
+              <ChevronLeft aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              className={`${c.galArrow} ${c.galNext}`}
+              aria-label="Next photo"
+              onClick={() => go(cur + 1)}
+            >
+              <ChevronRight aria-hidden="true" />
+            </button>
+          </>
         )}
         <span className={c.floor} aria-hidden="true" />
       </div>
 
       {hero && (
         <div className={c.tabs}>
-          <span />
+          {count > 1 ? (
+            <div className={c.galTabs} role="tablist" aria-label="Choose a photo">
+              {views.map((v, i) => (
+                <button
+                  key={`t-${v.key}`}
+                  type="button"
+                  role="tab"
+                  aria-selected={i === cur}
+                  data-next={i === next ? '' : undefined}
+                  className={c.galTab}
+                  onClick={() => go(i)}
+                  onFocus={() => setHold(true)}
+                  onBlur={() => setHold(false)}
+                >
+                  <span className={c.galThumb} style={{ '--bg': info.bg } as React.CSSProperties}>
+                    <span
+                      className={c.galBox}
+                      style={shapeVars(v.image.width, v.image.height) as React.CSSProperties}
+                    >
+                      <Image
+                        src={srcOf(v.image)}
+                        alt=""
+                        fill
+                        sizes="160px"
+                        className={v.zoom > 1 ? c.galZoom : undefined}
+                        style={v.zoom > 1 ? zoomStyle(v) : undefined}
+                      />
+                    </span>
+                  </span>
+                  <span className={c.galLabel}>
+                    {i === next && running ? <em>Next</em> : null}
+                    {v.label}
+                  </span>
+                  {i === cur && running && (
+                    <i
+                      key={`run-${cur}`}
+                      className={c.galRun}
+                      style={{ animationDuration: `${SLIDE_MS}ms` }}
+                    />
+                  )}
+                </button>
+              ))}
+            </div>
+          ) : (
+            <span />
+          )}
           <div className={c.tabTools}>
+            {count > 1 && (
+              <button
+                type="button"
+                className={c.galPlay}
+                aria-label={playing ? 'Pause the gallery' : 'Play the gallery'}
+                onClick={() => setPlaying((p) => !p)}
+              >
+                {playing ? <Pause aria-hidden="true" /> : <Play aria-hidden="true" />}
+              </button>
+            )}
             <button type="button" className={c.full} onClick={() => setOpen(true)}>
               <Expand aria-hidden="true" />
               Full screen
@@ -162,10 +361,10 @@ export function CarStage({
         </div>
       )}
 
-      {open && hero && (
+      {open && view && (
         <Viewer
           images={images}
-          start={0}
+          start={view.photo}
           title={title}
           labels={labels}
           onClose={() => setOpen(false)}

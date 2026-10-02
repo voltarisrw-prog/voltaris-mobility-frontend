@@ -26,7 +26,6 @@ import { features } from '@/config/features';
 import { heavy } from '@/features/market/fonts';
 import { BatteryLab } from '@/features/car/BatteryLab';
 import { CarBar } from '@/features/car/CarBar';
-import { CarGallery } from '@/features/car/CarGallery';
 import { CarStage } from '@/features/car/CarStage';
 import { DealCard } from '@/features/car/DealCard';
 import {
@@ -272,10 +271,6 @@ export default async function VehiclePage({
         </aside>
 
         <div className={c.main}>
-          {(vehicle.images ?? []).length > 0 && (
-            <CarGallery images={vehicle.images} title={title} />
-          )}
-
           {(story.headline || vehicle.features.length > 0) && (
             <section className={`${c.slab} ${c.story}`} aria-label="About this car">
               {story.headline && <h2 className={c.storyHead}>{story.headline}</h2>}

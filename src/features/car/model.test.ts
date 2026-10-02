@@ -64,6 +64,21 @@ describe('car page model', () => {
 });
 
 describe('gallery close-ups', () => {
+  it('puts the whole photo through unchanged, and a close-up on its own centre', async () => {
+    const { project, WHOLE, closeUps } = await import('./photo');
+    // The whole photo: a point stays where it was, so the outline lines up.
+    expect(project([0.25, 0.8], WHOLE)).toEqual([0.25, 0.8]);
+    // A close-up: its centre lands in the middle, and the car grows with it.
+    for (const v of closeUps({ box: { x0: 0.1, y0: 0.2, x1: 0.9, y1: 0.8 }, nose: 'left' })) {
+      const [mx, my] = project([v.cx, v.cy], v);
+      expect(mx).toBeCloseTo(0.5);
+      expect(my).toBeCloseTo(0.5);
+      const [ax, ay] = project([v.cx + 0.1, v.cy + 0.1], v);
+      expect(ax - mx).toBeCloseTo(0.1 * v.zoom);
+      expect(ay - my).toBeCloseTo(0.1 * v.zoom);
+    }
+  });
+
   it('frames the front on the side the car faces and stays inside the photo', async () => {
     const { closeUps } = await import('./photo');
     const box = { x0: 0.1, y0: 0.2, x1: 0.9, y1: 0.8 };

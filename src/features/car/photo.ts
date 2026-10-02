@@ -2,7 +2,8 @@
  * Reads a studio car photo in the browser: the backdrop's colour, where the
  * car stands, and which way it faces. The studio uses this to continue the
  * backdrop, to keep the model's name *behind* the car (the lettering is cut
- * away wherever the car's silhouette is) and to frame the gallery's close-ups.
+ * away wherever the car's outline is — see `silhouette`) and to frame the
+ * gallery's close-ups.
  *
  * How: the backdrop is flood-filled in from the photo's edges, stopping at any
  * colour step — what is left is the car. Its convex outline is the
@@ -17,8 +18,8 @@ export interface PhotoInfo {
   light: boolean;
   /** True when the photo sits on one even studio backdrop. */
   plain: boolean;
-  /** The car's silhouette as a PNG (opaque = car), the photo's own shape. */
-  hull: string | null;
+  /** The car's outline, as points in the photo's own 0–1 space. */
+  shape: [number, number][];
   /** Where the car is, as fractions of the photo (reflections left out). */
   box: { x0: number; y0: number; x1: number; y1: number };
   /** The end of the car nearest the camera — its front, for a front three-quarter shot. */
@@ -29,7 +30,7 @@ export const DEFAULT_INFO: PhotoInfo = {
   bg: '#eef1f6',
   light: true,
   plain: false,
-  hull: null,
+  shape: [],
   box: { x0: 0.12, y0: 0.18, x1: 0.88, y1: 0.86 },
   nose: 'left',
 };
@@ -246,31 +247,11 @@ function analyse(img: HTMLImageElement): PhotoInfo {
     const nose: 'left' | 'right' =
       lowest(minX, minX + part) >= lowest(maxX - part, maxX) ? 'left' : 'right';
 
-    // Draw the silhouette, a touch larger and soft-edged.
-    const mk = document.createElement('canvas');
-    mk.width = W;
-    mk.height = H;
-    const m = mk.getContext('2d');
-    let hullUrl: string | null = null;
-    if (m && hull.length > 2) {
-      m.filter = 'blur(2px)';
-      m.fillStyle = '#000';
-      m.strokeStyle = '#000';
-      m.lineWidth = 6;
-      m.lineJoin = 'round';
-      m.beginPath();
-      hull.forEach(([x, y], k) => (k ? m.lineTo(x, y) : m.moveTo(x, y)));
-      m.closePath();
-      m.fill();
-      m.stroke();
-      hullUrl = mk.toDataURL('image/png');
-    }
-
     return {
       bg,
       light,
       plain,
-      hull: hullUrl,
+      shape: hull.map(([x, y]) => [x / W, y / H] as [number, number]),
       box: { x0: minX / W, y0: y0 / H, x1: maxX / W, y1: y1 / H },
       nose,
     };
@@ -330,4 +311,54 @@ export function closeUps(info: Pick<PhotoInfo, 'box' | 'nose'>): CloseUp[] {
     frame('Wheels', 'Wheels and stance', 2.3, along(0.41), y0 + 0.74 * h),
     frame('Roofline', 'Roofline and glass', 2.1, along(0.6), y0 + 0.24 * h),
   ];
+}
+
+/** How a view frames the photo: enlarged `zoom`× about the point (cx, cy). */
+export interface Frame {
+  zoom: number;
+  cx: number;
+  cy: number;
+}
+
+export const WHOLE: Frame = { zoom: 1, cx: 0.5, cy: 0.5 };
+
+/**
+ * Where a point of the photo lands in a view, as fractions of the view's box:
+ * the view's own centre point goes to the middle, the rest spreads out by the
+ * zoom. For the whole photo (zoom 1, centred) a point stays where it was.
+ */
+export function project([x, y]: [number, number], v: Frame): [number, number] {
+  return [0.5 + v.zoom * (x - v.cx), 0.5 + v.zoom * (y - v.cy)];
+}
+
+/**
+ * The car's silhouette for one view, as a soft-edged PNG the shape of the
+ * view's box (opaque = car). The studio subtracts this from the model's name,
+ * so the lettering runs behind the car — on a close-up too, where the outline
+ * is enlarged the same way the photo is and clipped to the box with it.
+ */
+export function silhouette(shape: [number, number][], v: Frame, ar: number): string | null {
+  if (shape.length < 3 || typeof document === 'undefined') return null;
+  const W = 512;
+  const H = Math.max(16, Math.round(W / Math.min(4, Math.max(0.25, ar))));
+  const cv = document.createElement('canvas');
+  cv.width = W;
+  cv.height = H;
+  const m = cv.getContext('2d');
+  if (!m) return null;
+  m.filter = 'blur(2px)';
+  m.fillStyle = '#000';
+  m.strokeStyle = '#000';
+  m.lineWidth = 5;
+  m.lineJoin = 'round';
+  m.beginPath();
+  shape.forEach((p, k) => {
+    const [x, y] = project(p, v);
+    if (k) m.lineTo(x * W, y * H);
+    else m.moveTo(x * W, y * H);
+  });
+  m.closePath();
+  m.fill();
+  m.stroke();
+  return cv.toDataURL('image/png');
 }

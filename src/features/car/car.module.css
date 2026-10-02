@@ -203,11 +203,16 @@
 .studio:not([data-light]) .shot {
   mix-blend-mode: screen;
 }
+/* every photo of the gallery stands in the same spot; the one on show is lit */
 .carBox {
   position: relative;
+  grid-area: 1 / 1;
   display: block;
+  overflow: hidden;
   width: min(100cqw, 100cqh * var(--arn, 1.5));
   aspect-ratio: var(--ar, 3 / 2);
+  opacity: 0;
+  transition: opacity 0.8s;
   -webkit-mask-image:
     linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent),
     linear-gradient(transparent, #000 8%, #000 90%, transparent);
@@ -217,8 +222,26 @@
     linear-gradient(transparent, #000 8%, #000 90%, transparent);
   mask-composite: intersect;
 }
+/* a close-up fills the frame, so its edges melt in closer than a whole car's */
+.carBox[data-close] {
+  -webkit-mask-image:
+    linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent),
+    linear-gradient(transparent, #000 3%, #000 96%, transparent);
+  mask-image:
+    linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent),
+    linear-gradient(transparent, #000 3%, #000 96%, transparent);
+}
+.carBox[data-on] {
+  opacity: 1;
+}
 .carBox img {
   object-fit: cover;
+}
+/* a close-up: the chosen point moved to the middle, then enlarged. It holds
+   still — the lettering is cut to the car where it stands, so if the photo
+   drifted the car would slide out from under its own cut-out. */
+.carBox img.carZoom {
+  transform: scale(var(--z)) translate(var(--dx), var(--dy));
 }
 .noPhoto {
   position: absolute;
@@ -1431,37 +1454,7 @@
   box-shadow: 0 10px 24px -10px rgba(53, 162, 255, 0.9);
 }
 
-/* ───────────────────────── gallery ───────────────────────── */
-.gal {
-  padding: clamp(10px, 1.4vw, 14px);
-}
-.galFrame {
-  --bg: #eef1f6;
-  position: relative;
-  overflow: hidden;
-  aspect-ratio: var(--ar, 3 / 2);
-  border-radius: 22px;
-  background: var(--bg);
-  transition: background-color 0.9s;
-}
-.galSlide {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  container-type: size;
-  padding: 0;
-  border: 0;
-  background: none;
-  cursor: zoom-in;
-  opacity: 0;
-  transition: opacity 0.8s;
-  pointer-events: none;
-}
-.galSlide[data-on] {
-  opacity: 1;
-  pointer-events: auto;
-}
+/* ──────────── gallery: the studio's own controls and photo tabs ──────────── */
 .galBox {
   position: relative;
   display: block;
@@ -1476,29 +1469,11 @@
 .galBox img.galZoom {
   transform: scale(var(--z)) translate(var(--dx), var(--dy));
 }
-.galSlide[data-on] .galZoom {
-  animation: drift 5.5s ease-out forwards;
-}
-@keyframes drift {
-  from {
-    transform: scale(var(--z)) translate(var(--dx), var(--dy));
-  }
-  to {
-    transform: scale(calc(var(--z) * 1.06)) translate(var(--dx), var(--dy));
-  }
-}
-.galSlide[data-on] .galBox > img:not(.galZoom) {
-  animation: breathe 5.5s ease-out forwards;
-}
-@keyframes breathe {
-  to {
-    transform: scale(1.03);
-  }
-}
+/* the studio's own badges and arrows, above its light and shade */
 .galCount,
 .galCap {
   position: absolute;
-  z-index: 2;
+  z-index: 5;
   display: inline-flex;
   align-items: center;
   border-radius: 999px;
@@ -1530,7 +1505,7 @@
 }
 .galArrow {
   position: absolute;
-  z-index: 2;
+  z-index: 5;
   top: 50%;
   display: grid;
   place-items: center;
@@ -1562,11 +1537,6 @@
 }
 .galNext {
   right: 14px;
-}
-.galBar {
-  display: flex;
-  gap: 8px;
-  margin-top: 10px;
 }
 .galTabs {
   display: grid;
@@ -1621,9 +1591,6 @@
   background: var(--bg);
   container-type: size;
 }
-.galThumb .galBox img.galZoom {
-  animation: none;
-}
 .galTab:not([aria-selected='true']) .galThumb {
   opacity: 0.72;
   transition: opacity 0.3s;
@@ -1667,8 +1634,9 @@
   display: grid;
   place-items: center;
   flex: 0 0 52px;
+  height: 46px;
   border: 0;
-  border-radius: 18px;
+  border-radius: 999px;
   background: linear-gradient(135deg, var(--navy), var(--royal));
   box-shadow: inset 0 0 0 1px rgba(92, 200, 255, 0.35);
   color: #fff;
@@ -1682,8 +1650,12 @@
   height: 18px;
 }
 @media (max-width: 640px) {
-  .galFrame {
-    border-radius: 18px;
+  /* the tabs take a line of their own, the buttons sit under them */
+  .tabs {
+    flex-wrap: wrap;
+  }
+  .galTabs {
+    flex: 1 0 100%;
   }
   .galArrow {
     width: 40px;
@@ -1722,19 +1694,26 @@
   .galThumb {
     border-radius: 10px;
   }
+  .galLabel {
+    gap: 4px;
+  }
   .galLabel em {
-    display: none;
+    padding: 2px 5px;
+    font-size: 9px;
+    letter-spacing: 0.04em;
   }
   .galPlay {
-    flex-basis: 40px;
+    flex: 0 0 44px;
+    height: 44px;
     border-radius: 14px;
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .galSlide[data-on] .galZoom,
-  .galSlide[data-on] .galBox > img:not(.galZoom),
   .galRun {
     animation: none;
+  }
+  .carBox {
+    transition: none;
   }
 }
 
