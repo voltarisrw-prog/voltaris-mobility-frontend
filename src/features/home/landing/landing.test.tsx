@@ -60,6 +60,8 @@ describe('featured vehicle cards', () => {
     expect(c.price).toMatch(/148,000,000$/);
     expect(c.image).toBe('/d.jpg');
     expect(c.alt).toBe('Tesla Model S');
+    expect(c.wordmark).toBe('Model S');
+    expect([c.width, c.height]).toEqual([3, 2]);
   });
 
   it('labels and links the second button by how the car is offered', () => {

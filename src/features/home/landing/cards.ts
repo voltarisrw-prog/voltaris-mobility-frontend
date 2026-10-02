@@ -1,11 +1,16 @@
 import { formatPrice } from '@/lib/format';
 import type { VehicleSummary } from '@/types/vehicle';
 
-/** One featured listing, as the coverflow shows it. */
+/** One featured listing, as the showroom shows it. */
 export interface CoverCard {
   id: string;
   image: string | null;
+  /** The photo's own proportions, so the car is shown whole. */
+  width: number;
+  height: number;
   alt: string;
+  /** The model's name, lettered on the studio wall behind the car. */
+  wordmark: string;
   year: number;
   title: string;
   city: string;
@@ -16,13 +21,16 @@ export interface CoverCard {
   dealLabel: string;
 }
 
-/** A listing as a card in the featured fan: what it is, where, and what it costs. */
+/** A listing as the showroom shows it: what it is, where, and what it costs. */
 export function toCard(v: VehicleSummary): CoverCard {
   const title = `${v.make} ${v.model}`;
   return {
     id: v.id,
     image: v.primary_image ? v.primary_image.detail || v.primary_image.card : null,
+    width: v.primary_image?.width || 3,
+    height: v.primary_image?.height || 2,
     alt: v.primary_image?.alt || title,
+    wordmark: v.model,
     year: v.year,
     title,
     city: v.location.city,

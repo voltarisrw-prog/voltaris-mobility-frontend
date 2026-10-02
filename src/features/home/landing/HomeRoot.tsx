@@ -9,15 +9,14 @@ const clamp = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v));
  * The home page's root, and the one place its page-wide motion runs:
  *
  *   · reveals — sections, headings (word by word) and eyebrows as they arrive
- *   · the cursor ring, which grows and names what is under it ("Drag", "View")
  *   · magnetic buttons, card tilt and glare, the glow that follows the pointer
- *   · the hero spotlight, and its blue / teal tint over "Electric" / "Hybrid"
  *   · per frame while scrolling: headings open out to full width, the ticker
- *     runs and leans with scroll speed, the statement lights word by word,
- *     garage cards step back as the next one arrives, the hero drifts
+ *     runs and leans with scroll speed, the statement lights word by word over
+ *     the road as it drifts, garage cards step back as the next one arrives
  *
- * Elements opt in with data attributes (data-mag, data-tilt, data-glow,
- * data-wide, data-cur …), so the sections themselves stay plain markup.
+ * The pointer is the ordinary mouse pointer throughout. Elements opt in with
+ * data attributes (data-mag, data-tilt, data-glow, data-wide …), so the
+ * sections themselves stay plain markup.
  */
 export function HomeRoot({
   className,
@@ -27,7 +26,6 @@ export function HomeRoot({
   children: React.ReactNode;
 }) {
   const root = useRef<HTMLDivElement>(null);
-  const cur = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const el = root.current;
@@ -68,59 +66,14 @@ export function HomeRoot({
     );
     $$(`.${s.eb}`).forEach((n) => ebo.observe(n));
 
-    /* cursor, magnetic buttons */
-    const fine = window.matchMedia('(pointer: fine)').matches;
-    const ring = cur.current;
-    let raf = 0;
-    if (fine && ring) {
-      document.body.classList.add('home-cursor');
-      off.push(() => document.body.classList.remove('home-cursor'));
-      let x = -99;
-      let y = -99;
-      let cx = -99;
-      let cy = -99;
-      on(window, 'pointermove', (e) => {
-        x = e.clientX;
-        y = e.clientY;
-      });
-      const follow = () => {
-        cx += (x - cx) * 0.2;
-        cy += (y - cy) * 0.2;
-        ring.style.transform = `translate(${cx}px,${cy}px)`;
-        raf = requestAnimationFrame(follow);
-      };
-      raf = requestAnimationFrame(follow);
-      on(document, 'pointerover', (e) => {
-        const t = (e.target as Element | null)?.closest<HTMLElement>('[data-cur],a,button');
-        const label = t?.dataset.cur ?? '';
-        if (label) ring.setAttribute('data-big', '');
-        else ring.removeAttribute('data-big');
-        ring.dataset.t = label;
-      });
+    /* magnetic buttons, for a mouse */
+    if (window.matchMedia('(pointer: fine)').matches) {
       $$('[data-mag]').forEach((m) => {
         on(m, 'pointermove', (e) => {
           const r = m.getBoundingClientRect();
           m.style.transform = `translate(${(e.clientX - r.left - r.width / 2) * 0.22}px,${(e.clientY - r.top - r.height / 2) * 0.3}px)`;
         });
         on(m, 'pointerleave', () => (m.style.transform = ''));
-      });
-    }
-
-    /* hero spotlight and tints */
-    const hero = el.querySelector<HTMLElement>('[data-hero]');
-    if (hero) {
-      on(hero, 'pointermove', (e) => {
-        const r = hero.getBoundingClientRect();
-        const px = (e.clientX - r.left) / r.width;
-        const py = (e.clientY - r.top) / r.height;
-        hero.style.setProperty('--mx', `${px * 100}%`);
-        hero.style.setProperty('--my', `${py * 100}%`);
-        hero.style.setProperty('--px', String(px - 0.5));
-        hero.style.setProperty('--py', String(py - 0.5));
-      });
-      $$('[data-tint]').forEach((w) => {
-        on(w, 'pointerenter', () => (hero.dataset.t = w.dataset.tint));
-        on(w, 'pointerleave', () => (hero.dataset.t = ''));
       });
     }
 
@@ -179,8 +132,11 @@ export function HomeRoot({
         const half = mq.scrollWidth / 2 || 1;
         mq.style.transform = `translateX(${-((y * 0.7) % half)}px) skewX(${clamp(vy * -0.3, -9, 9).toFixed(2)}deg)`;
       }
-      if (st && lit.length) {
+      if (st) {
         const r = st.getBoundingClientRect();
+        if (r.bottom > 0 && r.top < vh) {
+          st.style.setProperty('--rp', clamp((vh - r.top) / (vh + r.height)).toFixed(3));
+        }
         const p = clamp((vh * 0.85 - r.top) / (vh * 0.75));
         lit.forEach((w, k) => {
           const want = k < p * lit.length + 0.01;
@@ -195,14 +151,12 @@ export function HomeRoot({
         c.style.transform = `scale(${(1 - 0.05 * p).toFixed(3)})`;
         c.style.filter = `brightness(${(1 - 0.45 * p).toFixed(2)})`;
       });
-      if (hero) hero.style.setProperty('--sy', String(clamp(y / vh) * 140));
     };
     loop = requestAnimationFrame(frame);
 
     return () => {
       io.disconnect();
       ebo.disconnect();
-      cancelAnimationFrame(raf);
       cancelAnimationFrame(loop);
       off.forEach((f) => f());
     };
@@ -210,7 +164,6 @@ export function HomeRoot({
 
   return (
     <div ref={root} className={className} data-motion-ignore="">
-      <div ref={cur} className={s.cur} aria-hidden="true" />
       {children}
     </div>
   );

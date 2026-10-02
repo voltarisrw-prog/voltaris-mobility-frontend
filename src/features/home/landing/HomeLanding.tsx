@@ -1,12 +1,13 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { hero } from '@/content/home';
 import type { CoverCard } from './cards';
-import { Coverflow } from './Coverflow';
 import { EnquiryForm } from './EnquiryForm';
 import { HeroBackdrop } from './HeroBackdrop';
 import { HomeRoot } from './HomeRoot';
 import { NetworkCanvas } from './NetworkCanvas';
 import { Photo } from './Photo';
+import { Showroom } from './Showroom';
 import { homeFonts } from './fonts';
 import { Arrow, Roll, words } from './text';
 import s from './home.module.css';
@@ -101,8 +102,6 @@ const NO_JS = [
   `.${s.rv},.${s.wi},.${s.fw},.${s.sw} span{opacity:1!important;transform:none!important;filter:none!important}`,
   `.${s.eb}{clip-path:none!important}`,
   `.${s.ph} img,.${s.bgp} img{opacity:1!important;filter:none!important;transform:none!important}`,
-  `.${s.cf}[data-pre] .${s.cc}{opacity:1!important;transform:translate(-50%,-50%)!important}`,
-  `.${s.cc}:last-child .${s.a}{max-height:60px;opacity:1}`,
 ].join('');
 
 /**
@@ -118,21 +117,14 @@ export function HomeLanding({ cards }: { cards: CoverCard[] }) {
       </noscript>
 
       {/* hero */}
-      <section className={s.hero} id="top" data-hero="">
+      <section className={s.hero} id="top">
         <HeroBackdrop />
-        <div className={`${s.tint} ${s.te}`} />
-        <div className={`${s.tint} ${s.th}`} />
         <p className={`${s.kick} ${s.rv}`}>{hero.eyebrow}</p>
         <h1 className={`${s.rv} ${s.sp}`} data-wide="">
           {words(
             <>
-              <span className={s.we} data-cur="Electric" data-tint="e">
-                Electric
-              </span>{' '}
-              or{' '}
-              <span className={`${s.wh} ${s.g} ${s.ser}`} data-cur="Hybrid" data-tint="h">
-                Hybrid
-              </span>
+              <span className={s.we}>Electric</span> or{' '}
+              <span className={`${s.wh} ${s.g} ${s.ser}`}>Hybrid</span>
             </>,
           )}
         </h1>
@@ -168,7 +160,7 @@ export function HomeLanding({ cards }: { cards: CoverCard[] }) {
               <Roll>Explore all vehicles →</Roll>
             </Link>
           </div>
-          <Coverflow cards={cards} />
+          <Showroom cards={cards} />
         </section>
       )}
 
@@ -196,7 +188,7 @@ export function HomeLanding({ cards }: { cards: CoverCard[] }) {
           <div className={s.two}>
             {POWERTRAINS.map((p, k) => (
               <Link key={p.title} className={`${s.pc} ${s.rv}`} style={i(k)} href={p.href}>
-                <div className={`${s.pcard} ${p.key}`} data-tilt="" data-cur="Explore">
+                <div className={`${s.pcard} ${p.key}`} data-tilt="">
                   <Photo src={p.image} sizes="(min-width: 980px) 560px, 100vw" />
                   <span className={s.n}>{`0${k + 1} / 02`}</span>
                   <span className={s.t}>{p.tag}</span>
@@ -220,6 +212,9 @@ export function HomeLanding({ cards }: { cards: CoverCard[] }) {
 
       {/* beyond the showroom */}
       <section className={s.st2} id="move" data-statement="">
+        <div className={s.road} aria-hidden="true">
+          <Image src="/demo/lifestyle/driving-pov-palms.jpg" alt="" fill sizes="100vw" />
+        </div>
         <div className={s.w}>
           <span className={`${s.eb} ${s.rv}`}>Beyond the showroom</span>
           {['Not just a car', 'A way to move'].map((line) => (
@@ -252,14 +247,7 @@ export function HomeLanding({ cards }: { cards: CoverCard[] }) {
             )}
           </h2>
           {GARAGE.map((g, k) => (
-            <Link
-              key={g.model}
-              className={s.gc}
-              style={i(k)}
-              href={g.href}
-              data-cur="View"
-              data-gc=""
-            >
+            <Link key={g.model} className={s.gc} style={i(k)} href={g.href} data-gc="">
               <Photo
                 src={g.image}
                 alt={`${g.make} ${g.model}`}
@@ -308,7 +296,6 @@ export function HomeLanding({ cards }: { cards: CoverCard[] }) {
                 className={`${s.tc} ${s.rv}`}
                 style={i(k)}
                 href={m.href}
-                data-cur="Open"
                 data-glow=""
               >
                 <Photo
