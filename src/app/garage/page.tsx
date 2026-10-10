@@ -48,10 +48,6 @@ export default async function GaragePage({
             Booked in <em>a minute.</em>
           </span>
         </h1>
-        <p className="rp-lead">
-          Partner workshops with high-voltage-certified technicians. Pick the job, the place and
-          the time; the garage confirms with you the same day.
-        </p>
         <GarageBookingFlow initialService={initialService} />
       </div>
     </div>
