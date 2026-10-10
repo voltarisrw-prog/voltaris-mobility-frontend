@@ -43,10 +43,6 @@ export default async function TestDrivePage({
         <h1 className="td-h1">
           Drive it before you <em>decide</em>
         </h1>
-        <p className="td-lead">
-          Range on paper and range on the Nyabugogo climb are different numbers. Pick a slot and a
-          district, and Voltaris arranges the drive with the seller.
-        </p>
         <TestDriveForm
           {...(vehicleId ? { vehicleId } : {})}
           {...(vehicleTitle ? { vehicleTitle } : {})}
