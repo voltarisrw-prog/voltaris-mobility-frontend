@@ -4,6 +4,7 @@ import { TestDriveForm } from '@/features/leads/TestDriveForm';
 import { ApiError } from '@/lib/api/errors';
 import { getVehicleBySlug } from '@/lib/api/vehicles';
 import { buildMetadata } from '@/lib/seo/metadata';
+import '@/features/leads/test-drive.css';
 
 export const metadata: Metadata = buildMetadata({
   title: 'Book an EV test drive in Rwanda',
@@ -31,21 +32,21 @@ export default async function TestDrivePage({
   }
 
   return (
-    <div className="voltaris-form-page shell max-w-2xl py-10">
-      <div className="voltaris-form-background-copy">
+    <div className="td-page">
+      <div className="td-w">
         <Breadcrumbs
           trail={[
             { name: 'Home', path: '/' },
             { name: 'Test drive', path: '/test-drive' },
           ]}
         />
-        <h1 className="mt-6 font-display text-headline">Drive it before you decide</h1>
-        <p className="mt-3 max-w-prose text-sm leading-relaxed text-steel">
+        <h1 className="td-h1">
+          Drive it before you <em>decide</em>
+        </h1>
+        <p className="td-lead">
           Range on paper and range on the Nyabugogo climb are different numbers. Pick a slot and a
           district, and Voltaris arranges the drive with the seller.
         </p>
-      </div>
-      <div className="mt-8">
         <TestDriveForm
           {...(vehicleId ? { vehicleId } : {})}
           {...(vehicleTitle ? { vehicleTitle } : {})}
