@@ -45,7 +45,7 @@ export const siteNav: NavEntry[] = [
     items: [
       { label: 'Test drive', href: '/test-drive', description: 'Drive it before you decide, in Kigali.' },
       { label: 'Reserve a vehicle', href: '/cars', description: 'Pick a car and reserve it from its page.' },
-      { label: 'Garage', href: '/garage', description: 'Service, inspection and charger installation.' },
+      { label: 'Repair', href: '/garage', description: 'Service, inspection and charger installation.' },
       { label: 'Finance calculator', href: '/finance', description: 'What it costs per month, with partner rates.' },
     ],
   },

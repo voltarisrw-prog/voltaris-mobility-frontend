@@ -24,7 +24,7 @@ const groups = [
     links: [
       { label: 'How it works', href: '/how-it-works' },
       { label: 'Finance calculator', href: '/finance' },
-      { label: 'Book a garage', href: '/garage' },
+      { label: 'Repair', href: '/garage' },
       { label: 'Sell a vehicle', href: '/sell' },
       { label: 'Trust and verification', href: '/trust-and-verification' },
       { label: 'Guides', href: '/guides' },
