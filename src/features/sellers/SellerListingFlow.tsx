@@ -9,6 +9,7 @@ import { createMediaIntents, finalizeMedia, submitListing, uploadToStorage } fro
 import { displayMessage } from '@/lib/api/errors';
 import { track } from '@/lib/analytics';
 import { sellerListingSchema, type SellerListingForm as Values } from '@/lib/validation/schemas';
+import { IntlPhone } from '@/components/IntlPhone';
 
 const STEPS = [
   {
@@ -252,7 +253,7 @@ export function SellerListingFlow() {
               {(p) => <input {...p} {...register('email')} type="email" className={inputClass} />}
             </Field>
             <Field label="Phone" error={errors.phone?.message} required>
-              {(p) => <input {...p} {...register('phone')} type="tel" className={inputClass} />}
+              {(p) => <IntlPhone {...p} {...register('phone')} type="tel" className={inputClass} />}
             </Field>
           </div>
           <div className="grid gap-5 sm:grid-cols-2">

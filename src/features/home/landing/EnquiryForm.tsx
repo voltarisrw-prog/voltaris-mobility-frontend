@@ -8,6 +8,7 @@ import { track } from '@/lib/analytics';
 import { generalInquirySchema } from '@/lib/validation/schemas';
 import { Roll } from './text';
 import s from './home.module.css';
+import { IntlPhone } from '@/components/IntlPhone';
 
 const TOPICS = [
   { value: 'buying', label: 'I want to buy' },
@@ -115,7 +116,7 @@ export function EnquiryForm() {
           </label>
         </div>
         <div className={s.f}>
-          <input
+          <IntlPhone
             id={FIELD.phone}
             name="phone"
             type="tel"
@@ -128,7 +129,7 @@ export function EnquiryForm() {
           <label htmlFor={FIELD.phone}>
             Phone / WhatsApp<i>*</i>
           </label>
-          <small id="enq-phone-hint">Rwandan mobile, e.g. 0788 123 456</small>
+          <small id="enq-phone-hint">Include your country code if outside Rwanda, e.g. +44 7700 900123</small>
         </div>
       </div>
       <div className={`${s.f} ${s.rv}`} style={{ '--i': 3 } as React.CSSProperties}>

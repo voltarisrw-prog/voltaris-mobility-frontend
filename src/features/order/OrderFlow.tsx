@@ -16,6 +16,7 @@ import { displayMessage } from '@/lib/api/errors';
 import { cn, formatPrice } from '@/lib/format';
 import { emailSchema, fullNameSchema, phoneSchema } from '@/lib/validation/schemas';
 import type { VehicleDetail } from '@/types/vehicle';
+import { IntlPhone } from '@/components/IntlPhone';
 
 const STEPS = ['Vehicle', 'Payment', 'Deposit', 'Details', 'Confirm'] as const;
 type Step = 0 | 1 | 2 | 3 | 4;
@@ -165,7 +166,7 @@ export function OrderFlow({ vehicle }: { vehicle: VehicleDetail }) {
             <h1 ref={heading} tabIndex={-1} className="font-display text-display text-chrome outline-none">How do we reach you?</h1>
             <div className="mt-6 grid gap-5 sm:grid-cols-2">
               <Field label="Your name" error={errors.full_name?.message} required>{(p) => <input {...p} {...register('full_name')} autoComplete="name" className={inputClass} />}</Field>
-              <Field label="Phone" error={errors.phone?.message} required>{(p) => <input {...p} {...register('phone')} type="tel" autoComplete="tel" className={inputClass} />}</Field>
+              <Field label="Phone" error={errors.phone?.message} required>{(p) => <IntlPhone {...p} {...register('phone')} type="tel" autoComplete="tel" className={inputClass} />}</Field>
               <Field label="Email" error={errors.email?.message} required>{(p) => <input {...p} {...register('email')} type="email" autoComplete="email" className={inputClass} />}</Field>
             </div>
           </section>

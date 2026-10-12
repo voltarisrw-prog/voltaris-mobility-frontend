@@ -22,7 +22,7 @@ import { ConfirmationCard } from '@/components/ConfirmationCard';
 import { requestTestDrive } from '@/lib/api/leads';
 import { displayMessage } from '@/lib/api/errors';
 import { track } from '@/lib/analytics';
-import { toRwandaE164 } from '@/features/auth/PhoneInput';
+import { IntlPhone } from '@/components/IntlPhone';
 import { testDriveSchema, type TestDriveForm as Values } from '@/lib/validation/schemas';
 import './test-drive.css';
 
@@ -243,7 +243,7 @@ export function TestDriveForm({
           vehicle_id: values.vehicle_id,
           full_name: values.full_name,
           email: values.email,
-          phone: toRwandaE164(values.phone),
+          phone: values.phone,
           preferred_date: values.preferred_date,
           preferred_time_slot: values.preferred_time_slot,
           location_slug: values.location_slug,
@@ -506,21 +506,8 @@ export function TestDriveForm({
                   </p>
                 </div>
                 <div>
-                  <div className={`td-f td-ph${errors.phone ? ' is-bad' : ''}`}>
-                    <input
-                      id="td-phone"
-                      type="tel"
-                      inputMode="tel"
-                      placeholder="788 123 456"
-                      autoComplete="tel-national"
-                      aria-invalid={Boolean(errors.phone)}
-                      {...phoneReg}
-                      onChange={(e) => {
-                        e.target.value = e.target.value.replace(/[\s-]/g, '');
-                        void phoneReg.onChange(e);
-                      }}
-                    />
-                    <span className="td-pre">+250</span>
+                  <div className={`td-f td-ip${errors.phone ? ' is-bad' : ''}`}>
+                    <IntlPhone bare id="td-phone" placeholder="788 123 456" aria-invalid={Boolean(errors.phone)} {...phoneReg} />
                     <label htmlFor="td-phone">
                       Phone<i>*</i>
                     </label>

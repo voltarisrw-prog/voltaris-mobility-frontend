@@ -99,3 +99,31 @@ const TZ: Record<string, string> = {
   'Australia/Sydney': 'AU', 'Australia/Melbourne': 'AU', 'Pacific/Auckland': 'NZ', 'America/Sao_Paulo': 'BR',
 };
 export const guessCountry = (tz: string): string | undefined => TZ[tz];
+
+/* ---- accept a number from any country, output one format (E.164) ---- */
+export const PHONE_ERROR =
+  'Enter a valid phone number. If it is not a Rwandan number, include the country code, for example +44 7700 900123';
+export const PHONE_HINT = 'Include your country code if outside Rwanda, e.g. +44 7700 900123';
+
+/**
+ * Starts with "+" or "00": the country is read from the code and the length checked for it
+ * (unknown codes accept 8 to 15 digits). No "+": treated as a Rwandan number, as before.
+ */
+export function parsePhone(raw: string): { ok: boolean; e164: string } {
+  const t = raw.trim().replace(/[()\s.-]/g, '');
+  if (/^(\+|00)/.test(t)) {
+    const digits = t.replace(/^(\+|00)/, '');
+    if (!/^\d+$/.test(digits)) return { ok: false, e164: '' };
+    const c = detectCountry(digits);
+    if (c) {
+      const rest = digits.slice(c.dial.length);
+      const nat = !c.keepZero && rest.startsWith('0') ? rest.slice(1) : rest;
+      const ok = c.iso === 'RW' ? /^7[2389]\d{7}$/.test(nat) : nat.length >= c.min && nat.length <= c.max;
+      return { ok, e164: ok ? `+${c.dial}${nat}` : '' };
+    }
+    const ok = digits.length >= 8 && digits.length <= 15;
+    return { ok, e164: ok ? `+${digits}` : '' };
+  }
+  const m = /^(250)?0?(7[2389]\d{7})$/.exec(t);
+  return m ? { ok: true, e164: `+250${m[2]}` } : { ok: false, e164: '' };
+}

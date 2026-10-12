@@ -21,7 +21,7 @@ import { garagePartners, garageServices, garageSlots, type GarageServiceId } fro
 import { requestGarageBooking } from './api';
 import { displayMessage } from '@/lib/api/errors';
 import { cn } from '@/lib/format';
-import { toRwandaE164 } from '@/features/auth/PhoneInput';
+import { IntlPhone } from '@/components/IntlPhone';
 import { garageBookingSchema, type GarageBookingForm as Values } from './schema';
 import './repair.css';
 
@@ -268,7 +268,7 @@ export function GarageBookingFlow({ initialService }: { initialService?: GarageS
           preferred_slot: v.preferred_slot,
           vehicle: { make: v.vehicle_make, model: v.vehicle_model, ...(v.vehicle_plate ? { plate: v.vehicle_plate } : {}) },
           full_name: v.full_name,
-          phone: toRwandaE164(v.phone),
+          phone: v.phone,
           email: v.email,
           ...(v.notes ? { notes: v.notes } : {}),
         });
@@ -295,7 +295,7 @@ export function GarageBookingFlow({ initialService }: { initialService?: GarageS
     ['When', dateObj ? `${LONG.format(dateObj)} at ${values.preferred_slot}` : '—', 2],
     ['Vehicle', carText ? `${carText}${values.vehicle_plate ? ` · ${values.vehicle_plate}` : ''}` : '—', 3],
     ['Name', values.full_name || '—', 3],
-    ['Phone', values.phone ? `+250 ${values.phone.replace(/^(\+?250)?0?/, '')}` : '—', 3],
+    ['Phone', values.phone || '—', 3],
   ];
 
   return (
@@ -564,21 +564,8 @@ export function GarageBookingFlow({ initialService }: { initialService?: GarageS
               </p>
               <div className="rp-r2">
                 <div>
-                  <div className={`rp-f rp-ph${errors.phone ? ' is-bad' : ''}`}>
-                    <input
-                      id="rp-phone"
-                      type="tel"
-                      inputMode="tel"
-                      placeholder="788 123 456"
-                      autoComplete="tel-national"
-                      aria-invalid={Boolean(errors.phone)}
-                      {...phoneReg}
-                      onChange={(e) => {
-                        e.target.value = e.target.value.replace(/[\s-]/g, '');
-                        void phoneReg.onChange(e);
-                      }}
-                    />
-                    <span className="rp-pre">+250</span>
+                  <div className={`rp-f rp-ip${errors.phone ? ' is-bad' : ''}`}>
+                    <IntlPhone bare id="rp-phone" placeholder="788 123 456" aria-invalid={Boolean(errors.phone)} {...phoneReg} />
                     <label htmlFor="rp-phone">
                       Phone<i>*</i>
                     </label>

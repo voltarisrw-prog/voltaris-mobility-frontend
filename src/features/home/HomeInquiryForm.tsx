@@ -8,6 +8,7 @@ import { createGeneralInquiry } from '@/lib/api/leads';
 import { displayMessage } from '@/lib/api/errors';
 import { track } from '@/lib/analytics';
 import { generalInquirySchema, type GeneralInquiryForm } from '@/lib/validation/schemas';
+import { IntlPhone } from '@/components/IntlPhone';
 
 const TOPICS = [
   { value: 'buying', label: 'I want to buy a vehicle' },
@@ -98,11 +99,11 @@ export function HomeInquiryForm() {
         </Field>
         <Field
           label="Phone"
-          hint="Rwandan mobile, e.g. 0788 123 456"
+          hint="Include your country code if outside Rwanda, e.g. +44 7700 900123"
           error={errors.phone?.message}
           required
         >
-          {(p) => <input {...p} {...register('phone')} type="tel" autoComplete="tel" className={inputClass} />}
+          {(p) => <IntlPhone {...p} {...register('phone')} type="tel" autoComplete="tel" className={inputClass} />}
         </Field>
       </div>
 

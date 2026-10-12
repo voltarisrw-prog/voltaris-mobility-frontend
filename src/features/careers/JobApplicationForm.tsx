@@ -14,6 +14,7 @@ import {
   jobApplicationSchema,
   type JobApplicationForm as Values,
 } from '@/lib/validation/schemas';
+import { IntlPhone } from '@/components/IntlPhone';
 
 const MAX_CV_SIZE = 8 * 1024 * 1024;
 
@@ -196,7 +197,7 @@ export function JobApplicationForm({
 
               <Field label="Phone" error={errors.phone?.message} required>
                 {(props) => (
-                  <input
+                  <IntlPhone
                     {...props}
                     {...register('phone')}
                     type="tel"

@@ -1,15 +1,24 @@
 import { z } from 'zod';
+import { parsePhone, PHONE_ERROR } from './phone';
 
 /**
  * Client-side validation is a courtesy to the person filling the form, nothing more.
  * The backend re-validates everything. Nothing here is a security control.
  */
 
-// Rwandan mobile numbers: +2507XXXXXXXX or 07XXXXXXXX.
+// Any country: "+44 7700 900123", "+254 712 345 678". A number without "+" is read as a Rwandan one
+// (07XXXXXXXX or 7XXXXXXXX). The output is always one format: +<country><number>.
 export const phoneSchema = z
   .string()
   .trim()
-  .regex(/^(\+?250)?0?7[2389]\d{7}$/, 'Enter a Rwandan mobile number, for example 0788 123 456');
+  .transform((value, ctx) => {
+    const r = parsePhone(value);
+    if (!r.ok) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: PHONE_ERROR });
+      return z.NEVER;
+    }
+    return r.e164;
+  });
 
 export const emailSchema = z.string().trim().toLowerCase().email('Enter a valid email address');
 

@@ -7,6 +7,7 @@ import { updateProfile, type Profile } from '@/lib/api/users';
 import { displayMessage } from '@/lib/api/errors';
 import { profileSchema } from '@/lib/validation/schemas';
 import type { z } from 'zod';
+import { IntlPhone } from '@/components/IntlPhone';
 
 type Values = z.infer<typeof profileSchema>;
 
@@ -45,7 +46,7 @@ export function ProfileForm({ profile }: { profile: Profile }) {
 
       <Field label="Phone" error={errors.phone?.message} required>
         {(p) => (
-          <input
+          <IntlPhone
             {...p}
             {...register('phone')}
             type="tel"

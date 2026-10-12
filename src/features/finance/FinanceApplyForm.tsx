@@ -7,6 +7,7 @@ import { Button, Field, inputClass, useToast } from '@/components/ui';
 import { createGeneralInquiry } from '@/lib/api/leads';
 import { displayMessage } from '@/lib/api/errors';
 import { generalInquirySchema, type GeneralInquiryForm } from '@/lib/validation/schemas';
+import { IntlPhone } from '@/components/IntlPhone';
 
 /**
  * The "apply through Voltaris" form. Self-contained so the finance page adds no
@@ -60,8 +61,8 @@ export function FinanceApplyForm({ summary, source }: { summary: string; source:
         {(p) => <input {...p} {...register('full_name')} autoComplete="name" className={inputClass} />}
       </Field>
       <div className="grid gap-5 sm:grid-cols-2">
-        <Field label="Phone" hint="Rwandan mobile, e.g. 0788 123 456" error={errors.phone?.message} required>
-          {(p) => <input {...p} {...register('phone')} type="tel" autoComplete="tel" className={inputClass} />}
+        <Field label="Phone" hint="Include your country code if outside Rwanda, e.g. +44 7700 900123" error={errors.phone?.message} required>
+          {(p) => <IntlPhone {...p} {...register('phone')} type="tel" autoComplete="tel" className={inputClass} />}
         </Field>
         <Field label="Email" error={errors.email?.message} required>
           {(p) => <input {...p} {...register('email')} type="email" autoComplete="email" className={inputClass} />}
