@@ -358,6 +358,24 @@
 .bgp img.ld {
   opacity: 1;
 }
+/* autofit: on tablet and phone the hero follows the photo's proportions,
+   so the picture fills it edge to edge with minimal cropping. The text can
+   still make the hero taller if it needs the room. */
+@media (max-width: 1024px) {
+  .hero {
+    min-height: 0;
+    aspect-ratio: 4 / 3;
+  }
+  .bgp img {
+    object-fit: cover;
+    object-position: 50% 40%;
+  }
+}
+@media (max-width: 640px) {
+  .hero {
+    aspect-ratio: 4 / 5;
+  }
+}
 /* the words carry their own soft shadow instead of a shade over the photo */
 .kick,
 .hero h1 {
@@ -1651,4 +1669,29 @@
   .road img {
     transform: none !important;
   }
+}
+
+/* tablet + phone: photo shown whole on top, copy underneath */
+@media (max-width: 1024px) {
+  .hero {
+    aspect-ratio: auto;
+    min-height: 0;
+    align-content: start;
+    padding: 72px 20px 56px;
+  }
+  .bgp {
+    position: relative;
+    inset: auto;
+    z-index: 0;
+    width: calc(100% + 40px);
+    margin: 0 -20px 28px;
+    aspect-ratio: 16 / 9;
+  }
+  .bgp img {
+    object-fit: cover;
+    object-position: 50% 50%;
+  }
+}
+@media (max-width: 640px) {
+  .bgp { aspect-ratio: 4 / 3; }
 }
