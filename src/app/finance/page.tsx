@@ -1,3 +1,4 @@
+
 import type { Metadata } from 'next';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { buildMetadata } from '@/lib/seo/metadata';
@@ -24,15 +25,24 @@ export default async function FinancePage({
 }) {
   const params = await searchParams;
   const slug = typeof params.vehicle === 'string' ? params.vehicle : undefined;
-  const priceParam = typeof params.price === 'string' ? Number(params.price.replace(/\D/g, '')) : NaN;
+  const priceParam =
+    typeof params.price === 'string'
+      ? Number(params.price.replace(/\D/g, ''))
+      : NaN;
 
-  let initialPrice = Number.isFinite(priceParam) && priceParam > 0 ? priceParam : financeDefaults.fallbackPriceRwf;
+  let initialPrice =
+    Number.isFinite(priceParam) && priceParam > 0
+      ? priceParam
+      : financeDefaults.fallbackPriceRwf;
+
   let vehicleLabel: string | undefined;
 
   if (slug) {
     try {
       const v = await getVehicleBySlug(slug);
+
       if (v.price !== null) initialPrice = v.price;
+
       vehicleLabel = `${v.year} ${v.make} ${v.model}${v.variant ? ` ${v.variant}` : ''}`;
     } catch {
       // Unknown slug: fall through to the default price; the calculator still works.
@@ -53,6 +63,7 @@ export default async function FinancePage({
           <path className="p" d={CURVE} />
         </svg>
       </div>
+
       <div className="fc-w">
         <Breadcrumbs
           trail={[
@@ -60,15 +71,18 @@ export default async function FinancePage({
             { name: 'Finance', path: '/finance' },
           ]}
         />
+
         <p className="fc-eb">Car finance</p>
+
         <h1 className="fc-h1">
           What would it cost per <em>month?</em>
         </h1>
-        <p className="fc-lead">
-          Move the sliders. The number updates as you go. When it looks right, send it to an advisor
-          and we take it to the bank with you.
-        </p>
-        <FinanceCalculator initialPrice={initialPrice} vehicleLabel={vehicleLabel} vehicleSlug={slug} />
+
+        <FinanceCalculator
+          initialPrice={initialPrice}
+          vehicleLabel={vehicleLabel}
+          vehicleSlug={slug}
+        />
       </div>
     </div>
   );
