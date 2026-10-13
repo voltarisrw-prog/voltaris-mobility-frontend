@@ -7,12 +7,12 @@ import { useForm } from 'react-hook-form';
 import { ArrowLeft, ArrowRight, Check, ImagePlus, Info, ShieldCheck, X } from 'lucide-react';
 import { useToast } from '@/components/ui';
 import { IntlPhone } from '@/components/IntlPhone';
-import { features } from '@/config/features';
 import { createMediaIntents, finalizeMedia, submitListing, uploadToStorage } from '@/lib/api/sellers';
 import { displayMessage } from '@/lib/api/errors';
 import { track } from '@/lib/analytics';
 import { sellerListingSchema, type SellerListingForm as Values } from '@/lib/validation/schemas';
 import { SellTicket } from './SellTicket';
+import type { Goal, SellerUser } from './sell-types';
 import './sell.css';
 
 const LOCATIONS = [
@@ -53,31 +53,27 @@ const STEPS = [
     fields: ['make', 'model', 'variant', 'year', 'condition', 'mileage_km', 'battery_kwh', 'range_km', 'body_type', 'description'],
   },
   { label: 'Photos', fields: [] },
-  {
-    label: 'Price and documents',
-    fields: ['expected_price', 'has_registration_document', 'has_import_documents', 'accepts_review'],
-  },
+  { label: 'Price', fields: ['expected_price', 'has_registration_document', 'has_import_documents', 'accepts_review'] },
 ] as const satisfies readonly { label: string; fields: readonly (keyof Values)[] }[];
 
 const MAX_PHOTOS = 12;
 const MAX_BYTES = 12 * 1024 * 1024;
 const TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+const SHOTS = ['Exterior', 'Interior', 'Dashboard', 'Wheels', 'Charging gear'];
+// Renting has no field of its own in the listing API yet, so a rental request says so up front for the reviewer.
 const RENT_PREFIX = 'RENTAL REQUEST. The expected price below is the daily rate in RWF.\n\n';
 
-type SellerUser = { full_name?: string | undefined; email?: string | undefined; phone?: string | undefined };
-
-export function SellerListingFlow({ user }: { user: SellerUser }) {
+export function SellerListingFlow({ user, goal }: { user: SellerUser; goal: Goal }) {
   const toast = useToast();
+  const rent = goal === 'rent';
   const [step, setStep] = useState(0);
   const [maxStep, setMaxStep] = useState(0);
   const [back, setBack] = useState(false);
-  const [goal, setGoal] = useState<'sell' | 'rent'>('sell');
   const [photos, setPhotos] = useState<File[]>([]);
   const [reference, setReference] = useState<string | null>(null);
   const [uploadStage, setUploadStage] = useState<string | null>(null);
   const [priceText, setPriceText] = useState('');
   const [dragging, setDragging] = useState(false);
-  const rent = features.rentals && goal === 'rent';
 
   const {
     register,
@@ -139,6 +135,7 @@ export function SellerListingFlow({ user }: { user: SellerUser }) {
     photos.length > 0,
     price > 0 && Boolean(w.accepts_review),
   ].filter(Boolean).length;
+  const badge = rent ? 'Rent it out' : 'Sell it';
 
   const pick = (name: 'seller_type' | 'location_slug' | 'condition' | 'body_type', value: string) =>
     setValue(name, value as never, { shouldValidate: true, shouldDirty: true, shouldTouch: true });
@@ -233,7 +230,7 @@ export function SellerListingFlow({ user }: { user: SellerUser }) {
 
   if (reference) {
     return (
-      <div className="sl-grid" id="list">
+      <div className="sl-grid">
         <section className="sl-card sl-done" role="status">
           <svg viewBox="0 0 80 80" fill="none" aria-hidden="true">
             <circle cx="40" cy="40" r="36" stroke="#7fd4ff" strokeWidth="3" />
@@ -241,12 +238,11 @@ export function SellerListingFlow({ user }: { user: SellerUser }) {
           </svg>
           <h2>Submitted for review</h2>
           <p>
-            Reference <b>{reference}</b>. Your listing is <strong>not published yet</strong>. A Voltaris reviewer checks
-            the documents and photos first, and we will contact you on the number you gave if anything is missing. Most
-            reviews finish within two working days.
+            Reference <b>{reference}</b>. <strong>Not published yet.</strong> We will contact you if anything is
+            missing. Most reviews finish within two working days.
           </p>
         </section>
-        <SellTicket badge={rent ? 'Rent it out' : 'Sell it'} title={car} meta={meta} photo={previews[0]} priceLine={priceLine} done={4} total={4} stamped />
+        <SellTicket badge={badge} title={car} meta={meta} photo={previews[0]} priceLine={priceLine} done={4} total={4} stamped />
       </div>
     );
   }
@@ -256,7 +252,7 @@ export function SellerListingFlow({ user }: { user: SellerUser }) {
   const stepKey = (k: number) => `Step ${k + 1} of ${STEPS.length}`;
 
   return (
-    <div className="sl-grid" id="list">
+    <div className="sl-grid">
       <section className="sl-card" aria-label="List your vehicle">
         <div className="sl-stp" role="group" aria-label="Steps">
           {STEPS.map((s, k) => {
@@ -302,19 +298,6 @@ export function SellerListingFlow({ user }: { user: SellerUser }) {
                 <h2 className="sl-t">About you</h2>
               </div>
 
-              {features.rentals && (
-                <div>
-                  <span className="sl-lb">What would you like to do?</span>
-                  <div className="sl-chs" role="radiogroup" aria-label="Goal">
-                    {([['sell', 'Sell it'], ['rent', 'Rent it out']] as const).map(([v, l]) => (
-                      <button key={v} type="button" role="radio" aria-checked={goal === v} className={`sl-ch${goal === v ? ' is-on' : ''}`} onClick={() => setGoal(v)}>
-                        {l}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-
               <div>
                 <div className={`sl-f${errors.full_name ? ' is-bad' : ''}`}>
                   <input id="sl-name" placeholder=" " autoComplete="name" aria-invalid={Boolean(errors.full_name)} {...register('full_name')} />
@@ -348,9 +331,10 @@ export function SellerListingFlow({ user }: { user: SellerUser }) {
 
               <div>
                 <span className="sl-lb">
-                  Selling as<i>*</i>
+                  {rent ? 'Renting out as' : 'Selling as'}
+                  <i>*</i>
                 </span>
-                <div className="sl-chs" role="radiogroup" aria-label="Selling as">
+                <div className="sl-chs" role="radiogroup" aria-label="Owner type">
                   {SELLER_TYPES.map(({ value, label }) => (
                     <button key={value} type="button" role="radio" aria-checked={w.seller_type === value} className={`sl-ch${w.seller_type === value ? ' is-on' : ''}`} onClick={() => pick('seller_type', value)}>
                       {label}
@@ -408,10 +392,10 @@ export function SellerListingFlow({ user }: { user: SellerUser }) {
               <div className="sl-r2">
                 {(
                   [
-                    ['year', 'Year', '', 'year'],
-                    ['mileage_km', 'Odometer', 'km', 'mileage_km'],
-                    ['battery_kwh', 'Battery', 'kWh', 'battery_kwh'],
-                    ['range_km', 'Range (manufacturer figure)', 'km', 'range_km'],
+                    ['year', 'Year', ''],
+                    ['mileage_km', 'Odometer', 'km'],
+                    ['battery_kwh', 'Battery', 'kWh'],
+                    ['range_km', 'Range (manufacturer figure)', 'km'],
                   ] as const
                 ).map(([name, label, unit]) => (
                   <div key={name}>
@@ -456,7 +440,7 @@ export function SellerListingFlow({ user }: { user: SellerUser }) {
 
               <div>
                 <div className={`sl-f${errors.description ? ' is-bad' : ''}`}>
-                  <textarea id="sl-desc" rows={6} placeholder=" " maxLength={rent ? 3900 : 4000} aria-invalid={Boolean(errors.description)} {...register('description')} />
+                  <textarea id="sl-desc" rows={5} placeholder=" " maxLength={rent ? 3900 : 4000} aria-invalid={Boolean(errors.description)} {...register('description')} />
                   <label htmlFor="sl-desc">
                     Describe it<i>*</i>
                   </label>
@@ -465,7 +449,7 @@ export function SellerListingFlow({ user }: { user: SellerUser }) {
                   <i style={{ width: `${Math.min(dlen / 40, 1) * 100}%` }} />
                 </div>
                 <div className="sl-cnt">
-                  <span>{dlen >= 40 ? 'That is enough detail' : 'Service history, why you are selling, anything a buyer would ask'}</span>
+                  <span>{dlen >= 40 ? 'Good detail' : rent ? 'Condition, extras, anything a renter would ask' : 'Service history, condition, anything a buyer would ask'}</span>
                   <span>
                     <b>{(w.description ?? '').length}</b> / {rent ? 3900 : 4000}
                   </span>
@@ -480,8 +464,8 @@ export function SellerListingFlow({ user }: { user: SellerUser }) {
             <div className="sl-step">
               <div>
                 <p className="sl-k">{stepKey(2)}</p>
-                <h2 className="sl-t">Let the car speak for itself</h2>
-                <p className="sl-sub">Strong photography makes a listing feel trustworthy before a buyer reads a single specification. Add up to 12 clear photos.</p>
+                <h2 className="sl-t">Photos</h2>
+                <p className="sl-sub">Up to 12. The first one is the cover.</p>
               </div>
 
               <label
@@ -498,9 +482,9 @@ export function SellerListingFlow({ user }: { user: SellerUser }) {
                 }}
               >
                 <ImagePlus size={34} strokeWidth={1.8} aria-hidden="true" />
-                <b>Add vehicle photos</b>
+                <b>Add photos</b>
                 <small>
-                  {photos.length}/{MAX_PHOTOS} photos added. Drag them here, or choose files. JPG, PNG or WEBP, maximum 12 MB each.
+                  {photos.length}/{MAX_PHOTOS} · JPG, PNG or WEBP · 12 MB each
                 </small>
                 <input
                   type="file"
@@ -513,42 +497,36 @@ export function SellerListingFlow({ user }: { user: SellerUser }) {
                 />
               </label>
 
+              <div className="sl-shots" aria-label="Photo ideas">
+                {SHOTS.map((s) => (
+                  <span key={s}>{s}</span>
+                ))}
+              </div>
+
               {photos.length > 0 && (
-                <div>
-                  <p className="sl-hint">
-                    {photos.length === 1 ? '1 photo ready for review' : `${photos.length} photos ready for review`}. The first photo is the cover.
-                  </p>
-                  <div className="sl-ths">
-                    {photos.map((file, index) => (
-                      <div key={`${file.name}-${file.lastModified}-${index}`} className="sl-th">
-                        {previews[index] && <Image src={previews[index]!} alt={`Vehicle photo ${index + 1}`} fill unoptimized sizes="(min-width: 1024px) 15vw, 40vw" className="object-cover" />}
-                        {index === 0 ? <span className="sl-cv">Cover</span> : (
-                          <button type="button" className="sl-mc" onClick={() => makeCover(index)}>
-                            Make cover
-                          </button>
-                        )}
-                        <button type="button" className="sl-x" aria-label={`Remove photo ${index + 1}`} onClick={() => setPhotos((c) => c.filter((_, i) => i !== index))}>
-                          <X size={14} strokeWidth={2.6} />
+                <div className="sl-ths">
+                  {photos.map((file, index) => (
+                    <div key={`${file.name}-${file.lastModified}-${index}`} className="sl-th">
+                      {previews[index] && <Image src={previews[index]!} alt={`Vehicle photo ${index + 1}`} fill unoptimized sizes="(min-width: 1024px) 15vw, 40vw" className="object-cover" />}
+                      {index === 0 ? (
+                        <span className="sl-cv">Cover</span>
+                      ) : (
+                        <button type="button" className="sl-mc" onClick={() => makeCover(index)}>
+                          Make cover
                         </button>
-                      </div>
-                    ))}
-                  </div>
+                      )}
+                      <button type="button" className="sl-x" aria-label={`Remove photo ${index + 1}`} onClick={() => setPhotos((c) => c.filter((_, i) => i !== index))}>
+                        <X size={14} strokeWidth={2.6} />
+                      </button>
+                    </div>
+                  ))}
                 </div>
               )}
 
               <p className="sl-shield">
                 <ShieldCheck size={20} aria-hidden="true" />
-                <span>We remove the hidden data inside photos, including GPS location, before publishing, so your home address is not shown.</span>
+                <span>GPS and other hidden photo data are removed before publishing.</span>
               </p>
-
-              <div className="sl-tips">
-                {([['Exterior', 'Show the full vehicle from multiple angles.'], ['Interior', 'Include seats, dashboard and controls.'], ['Details', 'Highlight wheels, charging gear and notable features.']] as const).map(([h, p]) => (
-                  <div key={h}>
-                    <b>{h}</b>
-                    <small>{p}</small>
-                  </div>
-                ))}
-              </div>
             </div>
           )}
 
@@ -557,12 +535,12 @@ export function SellerListingFlow({ user }: { user: SellerUser }) {
             <div className="sl-step">
               <div>
                 <p className="sl-k">{stepKey(3)}</p>
-                <h2 className="sl-t">{rent ? 'What would make renting it worthwhile?' : 'What would make the sale worthwhile?'}</h2>
+                <h2 className="sl-t">{rent ? 'Your daily rate' : 'Your asking price'}</h2>
               </div>
 
               <div>
                 <span className="sl-lb" id="sl-pl">
-                  {rent ? 'Daily rate you want (RWF)' : 'Expected price (RWF)'}
+                  {rent ? 'Daily rate (RWF)' : 'Expected price (RWF)'}
                   <i>*</i>
                 </span>
                 <div className={`sl-price${errors.expected_price ? ' is-bad' : ''}`}>
@@ -571,11 +549,7 @@ export function SellerListingFlow({ user }: { user: SellerUser }) {
                 </div>
                 <p className="sl-note">
                   <Info size={20} aria-hidden="true" />
-                  <span>
-                    {rent
-                      ? 'A starting point for the daily rate. Voltaris confirms the final rate after review.'
-                      : 'The published price is set by Voltaris after review. This amount helps us decide; it is never shown to buyers.'}
-                  </span>
+                  <span>{rent ? 'Voltaris confirms the final rate after review.' : 'Voltaris sets the published price after review. Buyers never see this amount.'}</span>
                 </p>
                 <p className="sl-er" role="alert">{errors.expected_price?.message}</p>
               </div>
@@ -594,7 +568,6 @@ export function SellerListingFlow({ user }: { user: SellerUser }) {
                     <span>{text}</span>
                   </label>
                 ))}
-                <p className="sl-hint">Having them ready speeds up the review. You can submit without them.</p>
               </div>
 
               <div>
@@ -619,11 +592,15 @@ export function SellerListingFlow({ user }: { user: SellerUser }) {
               {!lastStep && <ArrowRight size={18} />}
             </button>
           </div>
-          {isSubmitting && uploadStage && <div className="sl-prog" aria-hidden="true"><i /></div>}
+          {isSubmitting && uploadStage && (
+            <div className="sl-prog" aria-hidden="true">
+              <i />
+            </div>
+          )}
         </form>
       </section>
 
-      <SellTicket badge={rent ? 'Rent it out' : 'Sell it'} title={car} meta={meta} photo={previews[0]} priceLine={priceLine} done={done} total={4} />
+      <SellTicket badge={badge} title={car} meta={meta} photo={previews[0]} priceLine={priceLine} done={done} total={4} />
     </div>
   );
 }

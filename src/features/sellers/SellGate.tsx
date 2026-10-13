@@ -1,12 +1,12 @@
 import Link from 'next/link';
 import { Lock } from 'lucide-react';
 import { SellTicket } from './SellTicket';
-import './sell.css';
+import type { Goal } from './sell-types';
 
 /** Shown to visitors who are not signed in. Listing needs a Voltaris account. */
-export function SellGate() {
+export function SellGate({ goal }: { goal: Goal }) {
   return (
-    <div className="sl-grid" id="list">
+    <div className="sl-grid">
       <section className="sl-card sl-gate" aria-label="Sign in to list your car">
         <div className="sl-sk" aria-hidden="true">
           <i />
@@ -21,22 +21,18 @@ export function SellGate() {
             <Lock size={28} strokeWidth={2.2} />
           </span>
           <h2>Sign in to list your car</h2>
-          <p>
-            Sign in to your Voltaris account to create a listing. Private owners, dealers and
-            businesses are welcome. Saved vehicles, enquiries, and test drives in one place.
-          </p>
+          <p>Private owners, dealers and businesses are welcome.</p>
           <div className="sl-gbt">
             <Link className="sl-btn" href="/login?next=/sell">
-              Sign in to list your car
+              Sign in
             </Link>
             <Link className="sl-btn sl-gh" href="/register">
               Create an account
             </Link>
           </div>
-          <small>New here? Create an account, verify your email, then come back to list your car.</small>
         </div>
       </section>
-      <SellTicket badge="Listing" title="" meta={[]} priceLine="Set by Voltaris after review" done={0} total={4} />
+      <SellTicket badge={goal === 'rent' ? 'Rent it out' : 'Sell it'} title="" meta={[]} priceLine="Set by Voltaris after review" done={0} total={4} />
     </div>
   );
 }

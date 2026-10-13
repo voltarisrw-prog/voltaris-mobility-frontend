@@ -12,7 +12,7 @@ interface Props {
   stamped?: boolean;
 }
 
-/** The live "how your car will be described" card. Presentational only, so the sign-in gate can show it empty. */
+/** The live card showing how the car will be described. Presentational only. */
 export function SellTicket({ badge, title, meta, photo, priceLine, done, total, stamped = false }: Props) {
   const C = 2 * Math.PI * 22;
   return (
@@ -62,7 +62,6 @@ export function SellTicket({ badge, title, meta, photo, priceLine, done, total, 
           <Check size={14} strokeWidth={3} /> Sent
         </span>
       </div>
-      <p className="sl-hint">Voltaris reviews every listing before it goes live.</p>
     </aside>
   );
 }
