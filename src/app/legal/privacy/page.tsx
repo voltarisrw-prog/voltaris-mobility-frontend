@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
-import { ProsePage } from '@/components/ProsePage';
-import { lastUpdated, privacy } from '@/content/legal';
+import { Breadcrumbs } from '@/components/Breadcrumbs';
+import { company, lastUpdated, privacy } from '@/content/legal';
 import { buildMetadata } from '@/lib/seo/metadata';
+import { homeFonts } from '@/features/home/landing/fonts';
+import { LegalDocument } from '@/features/legal/LegalDocument';
 
 export const metadata: Metadata = buildMetadata({
   title: privacy.title,
@@ -12,12 +14,21 @@ export const metadata: Metadata = buildMetadata({
 
 export default function PrivacyPage() {
   return (
-    <ProsePage
-      title={privacy.title}
-      intro={privacy.intro}
-      path="/legal/privacy"
-      updated={lastUpdated}
-      sections={privacy.sections}
-    />
+    <div className={`lg-page ${homeFonts}`}>
+      <LegalDocument
+        crumbs={<Breadcrumbs trail={[{ name: 'Home', path: '/' }, { name: privacy.title, path: '/legal/privacy' }]} />}
+        title={privacy.title}
+        intro={privacy.intro}
+        updated={lastUpdated}
+        path="/legal/privacy"
+        sections={privacy.sections.map((s) => ({ heading: s.heading, body: s.body }))}
+        keyPoints={[
+          { section: 'Who sees it', text: 'We do not sell personal data.' },
+          { section: 'Payment details', text: 'We do not see or store card details.' },
+          { section: 'Cookies', text: 'We do not use advertising cookies.' },
+        ]}
+        contact={{ label: 'Questions or complaints', email: company.privacyEmail }}
+      />
+    </div>
   );
 }
