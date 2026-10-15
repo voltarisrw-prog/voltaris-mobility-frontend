@@ -1,10 +1,16 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { AlertCircle, ArrowRight, Check, FileCheck2, Landmark, BatteryCharging, Mail, ScanSearch, ShieldCheck, type LucideIcon } from 'lucide-react';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { JsonLd } from '@/components/JsonLd';
-import { trust } from '@/content/legal';
+import { company, trust } from '@/content/legal';
 import { breadcrumbJsonLd } from '@/lib/seo/jsonld';
 import { buildMetadata } from '@/lib/seo/metadata';
+import { homeFonts } from '@/features/home/landing/fonts';
+import { TrustCopy } from '@/features/trust/TrustCopy';
+import { TrustDemo } from '@/features/trust/TrustDemo';
+import { TrustMotion } from '@/features/trust/TrustMotion';
+import '@/features/trust/trust.css';
 
 export const metadata: Metadata = buildMetadata({
   title: 'Trust and verification',
@@ -13,149 +19,120 @@ export const metadata: Metadata = buildMetadata({
   path: '/trust-and-verification',
 });
 
+const ICONS: LucideIcon[] = [FileCheck2, Landmark, BatteryCharging, ScanSearch];
+const NUMBER_WORDS = ['Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight'];
+
 export default function TrustPage() {
   const trail = [
     { name: 'Home', path: '/' },
     { name: 'Trust and verification', path: '/trust-and-verification' },
   ];
+  const words = trust.title.split(' ');
+  const accent = words.pop() ?? '';
+  const count = trust.checks.length;
 
   return (
-    <div className="shell py-10">
+    <div className={`tr-page ${homeFonts}`}>
+      <TrustMotion />
       <JsonLd data={breadcrumbJsonLd(trail)} />
-      <Breadcrumbs trail={trail} />
+      <div className="tr-w">
+        <Breadcrumbs trail={trail} />
 
-      <header className="mt-10 border-b border-hairline pb-10 lg:mt-14 lg:pb-12">
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between lg:gap-12">
-          <div className="max-w-3xl">
-            <p className="font-data text-[9px] uppercase tracking-[0.2em] text-volt">
-              Trust / Verification
-            </p>
-
-            <h1 className="mt-4 font-display text-display tracking-[-0.04em]">
-              {trust.title}
+        <section className="tr-hero">
+          <div>
+            <p className="tr-eb">Trust / Verification</p>
+            <h1 className="tr-h1" data-tr-split data-tr-wide data-tr-in>
+              <span className="tr-ln">{words.join(' ')}</span>{' '}
+              <span className="tr-ln">
+                <em>{accent}</em>
+              </span>
             </h1>
-          </div>
-
-          <p className="max-w-md text-sm leading-6 text-black/65 lg:pb-1">
-            {trust.intro}
-          </p>
-        </div>
-      </header>
-
-      <ol className="mt-14 grid gap-4 sm:grid-cols-2">
-        {trust.checks.map((check, index) => (
-          <li
-            key={check.title}
-            className="group relative min-h-[240px] overflow-hidden border border-black/10 bg-white p-7 transition-all duration-500 hover:border-black/20 sm:p-8"
-          >
-            <div className="flex items-start justify-between gap-6">
-              <span className="font-data text-[9px] uppercase tracking-[0.18em] text-volt">
-                Verification {String(index + 1).padStart(2, '0')}
-              </span>
-
-              <span className="font-display text-5xl font-semibold leading-none tracking-[-0.06em] text-white/[0.07] transition-colors duration-500 group-hover:text-white/[0.14]">
-                {String(index + 1).padStart(2, '0')}
-              </span>
-            </div>
-
-            <div className="mt-14 max-w-md">
-              <h2 className="font-display text-xl font-semibold leading-tight tracking-tight text-black sm:text-2xl">
-                {check.title}
-              </h2>
-
-              <p className="mt-3 text-sm leading-6 text-black/65">
-                {check.body}
-              </p>
-            </div>
-
-            <div className="absolute inset-x-0 bottom-0 h-px origin-left scale-x-0 bg-volt transition-transform duration-500 group-hover:scale-x-100" />
-          </li>
-        ))}
-      </ol>
-
-      <div className="mt-14 grid gap-4 lg:grid-cols-2">
-        <section className="group relative overflow-hidden border border-volt/25 bg-volt-wash p-7 transition-all duration-500 hover:border-volt/40 sm:p-8">
-          <div className="flex items-start justify-between gap-6">
-            <p className="font-data text-[9px] uppercase tracking-[0.18em] text-volt">
-              Verified mark
+            <p className="tr-lead" data-tr-focus data-tr-in>
+              {trust.intro}
             </p>
-
-            <span className="font-display text-4xl font-semibold leading-none tracking-[-0.06em] text-volt/20 transition-colors duration-500 group-hover:text-volt/35">
-              ✓
-            </span>
+            <div className="tr-ctas">
+              <Link href="/cars?verified=true" className="tr-btn">
+                Browse verified vehicles <ArrowRight size={18} />
+              </Link>
+              <Link href="/how-it-works" className="tr-btn tr-gh">
+                How it works <ArrowRight size={18} />
+              </Link>
+            </div>
           </div>
-
-          <h2 className="mt-10 font-display text-xl font-semibold leading-tight tracking-tight text-black sm:text-2xl">
-            {trust.badge.title}
-          </h2>
-
-          <p className="mt-3 max-w-xl text-sm leading-6 text-black/65">
-            {trust.badge.body}
-          </p>
-
-          <div className="absolute inset-x-0 bottom-0 h-px origin-left scale-x-0 bg-volt transition-transform duration-500 group-hover:scale-x-100" />
+          <TrustDemo checks={trust.checks.map((c) => ({ title: c.title }))} />
         </section>
 
-        {/* Stating the limits is what makes the claims above credible. */}
-        <section className="group relative overflow-hidden border border-black/10 bg-white p-7 transition-all duration-500 hover:border-black/20 sm:p-8">
-          <div className="flex items-start justify-between gap-6">
-            <p className="font-data text-[9px] uppercase tracking-[0.18em] text-black/45">
-              Important limits
-            </p>
+        <section className="tr-sec" aria-labelledby="tr-checks">
+          <p className="tr-eb">The checks</p>
+          <h2 className="tr-h2" id="tr-checks" data-tr-split data-tr-wide data-tr-in>
+            {NUMBER_WORDS[count] ?? count} <em>checks.</em>
+          </h2>
 
-            <span className="font-display text-4xl font-semibold leading-none tracking-[-0.06em] text-white/[0.07] transition-colors duration-500 group-hover:text-white/[0.14]">
-              !
-            </span>
+          <ol className="tr-vgrid">
+            {trust.checks.map((check, index) => {
+              const Icon = ICONS[index] ?? ShieldCheck;
+              return (
+                <li key={check.title} className="tr-vc">
+                  <span className="tr-vn" aria-hidden="true">
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
+                  <span className="tr-vi">
+                    <Icon size={28} strokeWidth={1.8} />
+                  </span>
+                  <small>Verification {String(index + 1).padStart(2, '0')}</small>
+                  <h3>{check.title}</h3>
+                  <p>{check.body}</p>
+                </li>
+              );
+            })}
+          </ol>
+
+          <div className="tr-pair">
+            <section className="tr-pc tr-m">
+              <span className="tr-bd">
+                <Check size={30} strokeWidth={2.4} />
+              </span>
+              <small>Verified mark</small>
+              <h3>{trust.badge.title}</h3>
+              <p>{trust.badge.body}</p>
+            </section>
+            {/* Stating the limits is what makes the claims above credible. */}
+            <section className="tr-pc tr-l">
+              <span className="tr-bd">
+                <AlertCircle size={30} strokeWidth={2.2} />
+              </span>
+              <small>Important limits</small>
+              <h3>{trust.limits.title}</h3>
+              <p>{trust.limits.body}</p>
+            </section>
           </div>
 
-          <h2 className="mt-10 font-display text-xl font-semibold leading-tight tracking-tight text-black sm:text-2xl">
-            {trust.limits.title}
-          </h2>
+          <section className="tr-rp">
+            <span className="tr-ri">
+              <Mail size={30} strokeWidth={1.8} />
+            </span>
+            <div>
+              <small>Report an issue</small>
+              <h3>{trust.reporting.title}</h3>
+              <p>{trust.reporting.body}</p>
+            </div>
+            <div className="tr-mail">
+              <a className="tr-btn" href={`mailto:${company.email}?subject=Listing%20report`}>
+                Write to us <ArrowRight size={18} />
+              </a>
+              <TrustCopy text={company.email} />
+            </div>
+          </section>
 
-          <p className="mt-3 max-w-xl text-sm leading-6 text-black/65">
-            {trust.limits.body}
-          </p>
-
-          <div className="absolute inset-x-0 bottom-0 h-px origin-left scale-x-0 bg-volt transition-transform duration-500 group-hover:scale-x-100" />
+          <div className="tr-end">
+            <Link href="/cars?verified=true" className="tr-btn">
+              Browse verified vehicles <ArrowRight size={18} />
+            </Link>
+            <Link href="/how-it-works" className="tr-btn tr-gh">
+              How it works <ArrowRight size={18} />
+            </Link>
+          </div>
         </section>
-      </div>
-
-      <section className="group relative mt-14 overflow-hidden border border-black/10 bg-white p-7 transition-all duration-500 hover:border-black/20 sm:p-8 lg:p-9">
-        <p className="font-data text-[9px] uppercase tracking-[0.18em] text-volt">
-          Report an issue
-        </p>
-
-        <div className="mt-4 max-w-2xl">
-          <h2 className="font-display text-xl font-semibold leading-tight tracking-tight text-black sm:text-2xl">
-            {trust.reporting.title}
-          </h2>
-
-          <p className="mt-3 text-sm leading-6 text-black/65">
-            {trust.reporting.body}
-          </p>
-        </div>
-
-        <div className="absolute inset-x-0 bottom-0 h-px origin-left scale-x-0 bg-volt transition-transform duration-500 group-hover:scale-x-100" />
-      </section>
-
-      <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-        <Link
-          href="/cars?verified=true"
-          className="group inline-flex w-fit items-center gap-3 bg-volt px-6 py-3.5 font-data text-eyebrow uppercase text-surface transition-colors hover:bg-volt-bright"
-        >
-          Browse verified vehicles
-          <span className="transition-transform duration-300 group-hover:translate-x-1">
-            →
-          </span>
-        </Link>
-
-        <Link
-          href="/how-it-works"
-          className="inline-flex w-fit items-center gap-3 border border-black/10 bg-white px-6 py-3.5 font-data text-eyebrow uppercase text-black transition-all duration-300 hover:border-black/25 hover:bg-white/[0.025]"
-        >
-          How it works
-          <span className="text-black/45">→</span>
-        </Link>
       </div>
     </div>
   );
