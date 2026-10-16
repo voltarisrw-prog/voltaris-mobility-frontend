@@ -245,16 +245,6 @@ export function Showroom({ cards }: { cards: CoverCard[] }) {
         </div>
 
         <div className={s.srInfo} key={car.id}>
-          <div className={s.srName}>
-            <small>
-              {car.year} · {car.city}
-            </small>
-            <h3>{car.title}</h3>
-          </div>
-          <div className={s.srPrice}>
-            {car.price && <b>{car.price}</b>}
-            {car.verified && <span className={s.vf}>Verified</span>}
-          </div>
           <div className={s.srActs}>
             <Link href={car.viewHref}>
               <Roll>View vehicle</Roll>

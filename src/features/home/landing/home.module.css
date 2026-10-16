@@ -1695,3 +1695,74 @@
 @media (max-width: 640px) {
   .bgp { aspect-ratio: 4 / 3; }
 }
+
+/* ───────────── top trending: stacked, never overlapping ───────────── */
+.gc {
+  position: relative;
+  top: auto;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  min-height: 340px;
+  max-height: 620px;
+  transform: none !important;
+  filter: none !important;
+}
+.gc .ph img {
+  object-fit: cover;
+  object-position: center;
+}
+@media (max-width: 700px) {
+  .gc {
+    aspect-ratio: auto;
+    min-height: 0;
+    max-height: none;
+    padding: 0 0 26px;
+    justify-content: flex-start;
+  }
+  .gc .ph {
+    position: relative;
+    inset: auto;
+    z-index: 0;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+  }
+  .gc::before {
+    display: none;
+  }
+  .gc small {
+    margin: 20px 22px 0;
+  }
+  .gc h3 {
+    margin: 8px 22px 10px;
+  }
+  .gc p {
+    max-width: none;
+    margin: 0 22px;
+  }
+  .gc .num {
+    top: 16px;
+    right: 18px;
+  }
+  .gc .go {
+    right: 18px;
+    bottom: 18px;
+    width: 48px;
+    height: 48px;
+  }
+}
+
+/* Buy / Rent / Sell cards without the paragraph */
+.tc h3 {
+  margin-bottom: 20px;
+}
+
+/* showroom: only the buttons remain under the car */
+.srInfo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.srActs {
+  justify-content: center;
+}
+

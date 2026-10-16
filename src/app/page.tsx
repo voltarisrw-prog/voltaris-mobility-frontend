@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { JsonLd } from '@/components/JsonLd';
 import { HomeLanding } from '@/features/home/landing/HomeLanding';
 import { toCard, type CoverCard } from '@/features/home/landing/cards';
+import { loadStats } from '@/features/home/landing/stats';
 import { listVehicles } from '@/lib/api/vehicles';
 import { buildMetadata, absoluteUrl } from '@/lib/seo/metadata';
 import { site } from '@/config/site';
@@ -36,14 +37,17 @@ function websiteJsonLd() {
 export default async function HomePage() {
   // A real query, not a hand-picked list; if it fails the section is left out
   // rather than taking the page down with it.
-  const cards = await listVehicles({ ...showcase.query })
-    .then((page) => page.items.slice(0, 6).map(toCard))
-    .catch(() => [] as CoverCard[]);
+  const [cards, stats] = await Promise.all([
+    listVehicles({ ...showcase.query })
+      .then((page) => page.items.slice(0, 6).map(toCard))
+      .catch(() => [] as CoverCard[]),
+    loadStats(),
+  ]);
 
   return (
     <>
       <JsonLd data={websiteJsonLd()} />
-      <HomeLanding cards={cards} />
+      <HomeLanding cards={cards} stats={stats} />
     </>
   );
 }

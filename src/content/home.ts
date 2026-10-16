@@ -304,3 +304,20 @@ export const footerColumns = [
  * When the inputs exist, add them as `partners` and `testimonials` arrays here and
  * render them between the culture and final-CTA sections. The layout leaves room.
  */
+
+/**
+ * Section 05 — the numbers.
+ *
+ * Live counts (vehicles, brands, dealers, garage partners) are read from the
+ * marketplace and never typed here. The three below have no source in the code,
+ * so they start empty and stay hidden. To show one, enter a real, current number
+ * and the date it is true as of; nothing else needs to change.
+ */
+export const statsConfig = {
+  eyebrow: 'Voltaris in numbers',
+  manual: [
+    { key: 'sold', label: 'Cars sold', value: null as number | null, asOf: '' },
+    { key: 'rented', label: 'Cars rented', value: null as number | null, asOf: '' },
+    { key: 'trusted', label: 'People who trusted us', value: null as number | null, asOf: '' },
+  ],
+};

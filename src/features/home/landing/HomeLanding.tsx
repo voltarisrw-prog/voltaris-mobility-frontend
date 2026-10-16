@@ -1,9 +1,9 @@
-import Image from 'next/image';
 import Link from 'next/link';
-import { hero } from '@/content/home';
+import { hero, statsConfig } from '@/content/home';
 import type { CoverCard } from './cards';
 import { EnquiryForm } from './EnquiryForm';
 import { HeroBackdrop } from './HeroBackdrop';
+import { HomeStats, type StatItem } from './HomeStats';
 import { HomeRoot } from './HomeRoot';
 import { NetworkCanvas } from './NetworkCanvas';
 import { Photo } from './Photo';
@@ -35,7 +35,7 @@ const POWERTRAINS = [
   },
 ];
 
-const GARAGE = [
+const TRENDING = [
   {
     kicker: 'The quiet arrival',
     make: 'Mercedes-Benz',
@@ -68,7 +68,6 @@ const GARAGE = [
 const MOVES = [
   {
     title: 'Buy',
-    body: 'Find an electric or hybrid vehicle that fits your life, your budget and the way you move',
     cta: 'Find a vehicle ↗',
     image: '/next/buy.png',
     href: '/buy',
@@ -76,7 +75,6 @@ const MOVES = [
   },
   {
     title: 'Rent',
-    body: 'Choose a vehicle for the journey you have in mind without making a long-term commitment',
     cta: 'Find a rental ↗',
     image: '/next/rent.png',
     href: '/rent',
@@ -89,7 +87,6 @@ const MOVES = [
   },
   {
     title: 'Sell',
-    body: 'Put your EV or hybrid in front of people who are already looking for their next vehicle',
     cta: 'Sell your vehicle ↗',
     image: '/next/sell.png',
     href: '/sell',
@@ -105,11 +102,11 @@ const NO_JS = [
 ].join('');
 
 /**
- * The home page: hero, featured vehicles, powertrains, the statement, the
- * garage, the next move, an enquiry and the network. The site header and
+ * The home page: hero, featured vehicles, powertrains, the numbers, top
+ * trending, the next move, an enquiry and the network. The site header and
  * footer are the layout's and are not part of this.
  */
-export function HomeLanding({ cards }: { cards: CoverCard[] }) {
+export function HomeLanding({ cards, stats }: { cards: CoverCard[]; stats: StatItem[] }) {
   return (
     <HomeRoot className={`${s.home} ${homeFonts}`}>
       <noscript>
@@ -210,44 +207,21 @@ export function HomeLanding({ cards }: { cards: CoverCard[] }) {
         </div>
       </section>
 
-      {/* beyond the showroom */}
-      <section className={s.st2} id="move" data-statement="">
-        <div className={s.road} aria-hidden="true">
-          <Image src="/demo/lifestyle/driving-pov-palms.jpg" alt="" fill sizes="100vw" />
-        </div>
-        <div className={s.w}>
-          <span className={`${s.eb} ${s.rv}`}>Beyond the showroom</span>
-          {['Not just a car', 'A way to move'].map((line) => (
-            <h2 key={line} className={s.sw} data-sw="" data-wide="">
-              {line
-                .split(' ')
-                .flatMap((w, k) =>
-                  k ? [' ', <span key={w}>{w}</span>] : [<span key={w}>{w}</span>],
-                )}
-            </h2>
-          ))}
-        </div>
-        <div className={s.mq} aria-hidden="true">
-          <div data-mq="">
-            {Array.from({ length: 8 }, (_, k) => (
-              <span key={k}>Keep moving</span>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* numbers */}
+      {stats.length > 0 && <HomeStats eyebrow={statsConfig.eyebrow} items={stats} />}
 
-      {/* the garage */}
-      <section className={s.sec} id="garage">
+      {/* top trending */}
+      <section className={s.sec} id="trending">
         <div className={s.w}>
           <h2 className={`${s.gt} ${s.rv} ${s.sp}`} data-wide="">
             {words(
               <>
-                The <em className={s.ser}>Garage</em>
+                Top <em className={s.ser}>Trending</em>
               </>,
             )}
           </h2>
-          {GARAGE.map((g, k) => (
-            <Link key={g.model} className={s.gc} style={i(k)} href={g.href} data-gc="">
+          {TRENDING.map((g, k) => (
+            <Link key={g.model} className={s.gc} style={i(k)} href={g.href}>
               <Photo
                 src={g.image}
                 alt={`${g.make} ${g.model}`}
@@ -319,7 +293,6 @@ export function HomeLanding({ cards }: { cards: CoverCard[] }) {
                 <h3 className={s.sp} data-wide="">
                   {words(m.title)}
                 </h3>
-                <p className={s.sp}>{words(m.body, 'focus')}</p>
                 <span className={s.lnk}>
                   <Roll>{m.cta}</Roll>
                 </span>
