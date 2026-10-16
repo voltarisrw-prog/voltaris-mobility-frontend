@@ -137,7 +137,6 @@ export function SiteFooter() {
   const wide = useRef<boolean | null>(null);
   const gradient = `vft-${useId().replace(/:/g, '')}`;
   const [on, setOn] = useState(false);
-  const [cells, setCells] = useState(0);
   const [clock, setClock] = useState('');
 
   // Columns open on wide screens, an accordion on phones.
@@ -166,33 +165,20 @@ export function SiteFooter() {
     return () => clearInterval(t);
   }, []);
 
-  // Charge up when the footer arrives.
+  // Reveal the footer scene when it arrives.
   useEffect(() => {
     const el = ft.current;
     if (!el) return;
-    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    let timer: ReturnType<typeof setTimeout> | undefined;
     const io = new IntersectionObserver(
       ([entry]) => {
         if (!entry?.isIntersecting) return;
         io.disconnect();
         setOn(true);
-        let n = 0;
-        const step = () => {
-          if (n >= 10) return;
-          n += 1;
-          setCells(n);
-          timer = setTimeout(step, reduce ? 0 : 130);
-        };
-        step();
       },
       { threshold: 0.2 },
     );
     io.observe(el);
-    return () => {
-      io.disconnect();
-      if (timer) clearTimeout(timer);
-    };
+    return () => io.disconnect();
   }, []);
 
   // Cursor light.
@@ -210,26 +196,7 @@ export function SiteFooter() {
         <div className={s.spot} />
         <div className={s.in}>
           <div className={s.hero}>
-            <div>
-              <h2>
-                Charge into your <em>next car.</em>
-              </h2>
-              <p>
-                Verified electric and hybrid cars, compared side by side and ready for a free demo
-                drive in Kigali.
-              </p>
-              <div className={s.charge} aria-hidden="true">
-                <div className={s.cells}>
-                  {Array.from({ length: 10 }, (_, i) => (
-                    <i key={i} data-on={i < cells ? '' : undefined} />
-                  ))}
-                </div>
-                <span className={s.pct} data-full={cells === 10 ? '' : undefined}>
-                  {cells === 10 ? 'Fully charged' : `Charging ${cells * 10}%`}
-                </span>
-              </div>
-            </div>
-            <div className={s.act}>
+<div className={s.act}>
               <Link className={s.b} href="/cars">
                 Browse cars <span>→</span>
               </Link>
