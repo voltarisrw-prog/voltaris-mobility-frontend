@@ -3098,3 +3098,13 @@ body:has([data-app-shell][data-theme='light']) {
 [data-app-shell] .font-display {
   letter-spacing: -0.02em;
 }
+
+/* feed cards: no halo around the photo.
+   The space around a fitted photo is the photo's own backdrop colour (set by FeedBackdrop),
+   and the photo itself carries no placeholder background. */
+.marketplace-vertical-showcase .marketplace-vehicle-card-media {
+  background-color: var(--photo-bg, #060912);
+}
+.marketplace-vertical-showcase .marketplace-vehicle-card-media img {
+  background: none !important;
+}
