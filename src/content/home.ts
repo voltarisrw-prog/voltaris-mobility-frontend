@@ -319,7 +319,7 @@ export const statsConfig = {
     { key: 'sold', label: 'Cars sold', value: null as number | null, asOf: '' },
     { key: 'rented', label: 'Cars rented', value: null as number | null, asOf: '' },
     { key: 'testdrives', label: 'Test drives booked', value: null as number | null, asOf: '' },
-    { key: 'partners', label: 'Partner companies', value: null as number | null, asOf: '' },
-    { key: 'trusted', label: 'People who trusted us', value: null as number | null, asOf: '' },
+    { key: 'partners', label: 'Partner companies', value: 12 as number | null, asOf: 'Oct 2026' },
+    { key: 'trusted', label: 'Clients who trusted us', value: 250 as number | null, asOf: 'Oct 2026' },
   ],
 };
