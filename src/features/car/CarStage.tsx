@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { ChevronLeft, ChevronRight, Expand, Pause, Play, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Expand, X } from 'lucide-react';
 import type { VehicleImage } from '@/types/vehicle';
 import { heavy } from '@/features/market/fonts';
 import ms from '@/features/market/market.module.css';
@@ -108,7 +108,6 @@ export function CarStage({
   const info = usePhotoInfo(view ? srcOf(view.image) : heroSrc);
 
   const [open, setOpen] = useState(false);
-  const [playing, setPlaying] = useState(true);
   const [hold, setHold] = useState(false);
   const [seen, setSeen] = useState(false);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
@@ -151,7 +150,7 @@ export function CarStage({
     return () => io.disconnect();
   }, []);
 
-  const running = count > 1 && playing && !hold && seen && !open;
+  const running = count > 1 && !hold && seen && !open;
   useEffect(() => {
     if (!running) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -343,16 +342,7 @@ export function CarStage({
             <span />
           )}
           <div className={c.tabTools}>
-            {count > 1 && (
-              <button
-                type="button"
-                className={c.galPlay}
-                aria-label={playing ? 'Pause the gallery' : 'Play the gallery'}
-                onClick={() => setPlaying((p) => !p)}
-              >
-                {playing ? <Pause aria-hidden="true" /> : <Play aria-hidden="true" />}
-              </button>
-            )}
+            
             <button type="button" className={c.full} onClick={() => setOpen(true)}>
               <Expand aria-hidden="true" />
               Full screen

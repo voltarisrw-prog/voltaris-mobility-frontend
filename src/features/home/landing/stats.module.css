@@ -47,7 +47,6 @@
   animation: slide var(--dur, 30s) linear infinite;
   will-change: transform;
 }
-.track[data-paused],
 .viewport:hover .track,
 .viewport:focus-within .track,
 .viewport:active .track {
@@ -181,32 +180,6 @@
   white-space: nowrap;
 }
 
-/* pause / play */
-.tools {
-  display: flex;
-  justify-content: center;
-}
-.pause {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 18px;
-  border: 1px solid var(--line, rgba(255, 255, 255, 0.13));
-  border-radius: 99px;
-  background: transparent;
-  color: #fff;
-  font: 700 14px var(--fb, inherit);
-  cursor: pointer;
-  transition: 0.25s;
-}
-.pause:hover {
-  border-color: var(--acc, #5cc8ff);
-  background: rgba(92, 200, 255, 0.1);
-}
-.pause:focus-visible {
-  outline: 2px solid var(--acc, #5cc8ff);
-  outline-offset: 3px;
-}
 
 /* people who prefer less motion get a still row they can swipe */
 @media (prefers-reduced-motion: reduce) {
@@ -228,8 +201,5 @@
   }
   .card::before {
     transform: scaleX(1);
-  }
-  .tools {
-    display: none;
   }
 }

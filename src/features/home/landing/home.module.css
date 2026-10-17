@@ -839,24 +839,6 @@
     transform: scaleX(1);
   }
 }
-.srPlay {
-  display: grid;
-  flex: 0 0 52px;
-  place-items: center;
-  border: 0;
-  border-radius: 18px;
-  background: linear-gradient(135deg, #101a45, #1c3fb8);
-  box-shadow: inset 0 0 0 1px rgba(92, 200, 255, 0.35);
-  color: #fff;
-  cursor: pointer;
-  transition:
-    background 0.25s,
-    color 0.25s;
-}
-.srPlay:hover {
-  background: var(--grad);
-  color: #00131f;
-}
 /* ───────────── powertrain ───────────── */
 .pt {
   border-block: 1px solid var(--line);
@@ -1630,10 +1612,6 @@
   .srTab {
     scroll-snap-align: start;
     font-size: 12px;
-  }
-  .srPlay {
-    flex-basis: 44px;
-    border-radius: 14px;
   }
   .road::after {
     background:

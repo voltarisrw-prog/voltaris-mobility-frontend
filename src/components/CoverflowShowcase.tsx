@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState, type ReactNode } from 'react';
-import { ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 /** How long each slide stays centered before autoplay advances to the next. */
 const AUTOPLAY_INTERVAL_MS = 6000;
@@ -78,7 +78,6 @@ export function CoverflowShowcase<T>({
 
   // Autoplay state — see the component doc comment for exactly what has to
   // be true for it to actually run.
-  const [paused, setPaused] = useState(false);
   const [hovered, setHovered] = useState(false);
   const [focused, setFocused] = useState(false);
   // Read once at init (guarded for SSR, where `window` doesn't exist) rather
@@ -97,7 +96,7 @@ export function CoverflowShowcase<T>({
     return () => query.removeEventListener('change', onChange);
   }, []);
 
-  const autoplayActive = count > 1 && !paused && !hovered && !focused && !prefersReducedMotion;
+  const autoplayActive = count > 1 && !hovered && !focused && !prefersReducedMotion;
 
   useEffect(() => {
     if (!autoplayActive) return;
@@ -247,26 +246,7 @@ export function CoverflowShowcase<T>({
         </div>
       )}
 
-      {/* Always rendered (not just on desktop, unlike the arrows above) —
-          the one control here that has to be reachable on every breakpoint
-          whenever autoplay is actually running. Not shown at all once
-          reduced-motion has taken autoplay off the table, since there is
-          nothing left for it to stop. */}
-      {count > 1 && !prefersReducedMotion && (
-        <button
-          type="button"
-          onClick={() => setPaused((value) => !value)}
-          aria-label={paused ? 'Play showcase' : 'Pause showcase'}
-          aria-pressed={paused}
-          className="absolute right-2 top-2 z-40 inline-flex h-9 w-9 items-center justify-center rounded-full border border-hairline bg-surface/85 text-steel backdrop-blur-md transition-colors hover:border-volt hover:text-volt sm:right-4 sm:top-4 sm:h-10 sm:w-10 lg:right-6"
-        >
-          {paused ? (
-            <Play className="h-4 w-4" aria-hidden="true" />
-          ) : (
-            <Pause className="h-4 w-4" aria-hidden="true" />
-          )}
-        </button>
-      )}
+
     </section>
   );
 }

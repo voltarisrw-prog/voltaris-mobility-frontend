@@ -57,7 +57,6 @@ export function Showroom({ cards }: { cards: CoverCard[] }) {
     if (upNext) void readPhoto(upNext);
   }, [upNext]);
 
-  const [playing, setPlaying] = useState(true);
   const [hold, setHold] = useState(false);
   const [seen, setSeen] = useState(false);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
@@ -110,7 +109,7 @@ export function Showroom({ cards }: { cards: CoverCard[] }) {
     return () => io.disconnect();
   }, []);
 
-  const running = count > 1 && playing && !hold && seen;
+  const running = count > 1 && !hold && seen;
   useEffect(() => {
     if (!running) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -288,22 +287,6 @@ export function Showroom({ cards }: { cards: CoverCard[] }) {
               </button>
             ))}
           </div>
-          <button
-            type="button"
-            className={s.srPlay}
-            aria-label={playing ? 'Pause the showroom' : 'Play the showroom'}
-            onClick={() => setPlaying((p) => !p)}
-          >
-            {playing ? (
-              <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M7 5h3v14H7zM14 5h3v14h-3z" fill="currentColor" />
-              </svg>
-            ) : (
-              <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M8 5l11 7-11 7z" fill="currentColor" />
-              </svg>
-            )}
-          </button>
         </div>
       )}
     </div>

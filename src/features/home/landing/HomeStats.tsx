@@ -9,8 +9,6 @@ import {
   KeyRound,
   LayoutGrid,
   MapPin,
-  Pause,
-  Play,
   Settings,
   ShoppingBag,
   Tag,
@@ -130,7 +128,6 @@ function Card({ item, index, clone }: { item: StatItem; index: number; clone: bo
 }
 
 export function HomeStats({ eyebrow, items }: { eyebrow: string; items: StatItem[] }) {
-  const [paused, setPaused] = useState(false);
   // Enough copies that the row always fills the screen and loops without a gap.
   const copies = Math.max(2, Math.ceil(8.1 / Math.max(items.length, 1)) + 1);
   const seconds = Math.max(24, items.length * 5);
@@ -154,7 +151,6 @@ export function HomeStats({ eyebrow, items }: { eyebrow: string; items: StatItem
       <div className={st.viewport}>
         <div
           className={st.track}
-          data-paused={paused ? '' : undefined}
           style={{ '--copies': copies, '--dur': `${seconds}s` } as CSSProperties}
         >
           {Array.from({ length: copies }, (_, c) =>
@@ -165,17 +161,6 @@ export function HomeStats({ eyebrow, items }: { eyebrow: string; items: StatItem
         </div>
       </div>
 
-      <div className={st.tools}>
-        <button
-          type="button"
-          className={st.pause}
-          aria-pressed={paused}
-          onClick={() => setPaused((p) => !p)}
-        >
-          {paused ? <Play size={16} /> : <Pause size={16} />}
-          {paused ? 'Play' : 'Pause'}
-        </button>
-      </div>
     </section>
   );
 }
