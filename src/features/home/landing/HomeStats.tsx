@@ -14,10 +14,17 @@ export interface StatItem {
 
 const fmt = (n: number) => n.toLocaleString('en-US');
 
+/**
+ * A count is shown as one less than the real figure with a plus ("5" reads "4+"),
+ * which is always true. A count of 1 is shown as it is, because "0+" would not be.
+ */
+const floor = (v: number) => (v > 1 ? { shown: v - 1, plus: true } : { shown: v, plus: false });
+
 /** One figure that counts up from zero the first time it is on screen. */
 function Stat({ item, index }: { item: StatItem; index: number }) {
+  const { shown, plus } = floor(item.value);
   const box = useRef<HTMLDivElement>(null);
-  const [n, setN] = useState(item.value);
+  const [n, setN] = useState(shown);
   const [on, setOn] = useState(false);
 
   useEffect(() => {
@@ -31,13 +38,13 @@ function Stat({ item, index }: { item: StatItem; index: number }) {
         io.disconnect();
         setOn(true);
         if (reduce) return;
-        const delay = index * 120;
-        const duration = 1800;
+        const delay = (index % 4) * 140;
+        const duration = 2000;
         let t0 = 0;
         const step = (t: number) => {
           if (!t0) t0 = t;
           const p = Math.min(Math.max((t - t0 - delay) / duration, 0), 1);
-          setN(Math.round(item.value * (p === 1 ? 1 : 1 - Math.pow(2, -10 * p))));
+          setN(Math.round(shown * (p === 1 ? 1 : 1 - Math.pow(2, -10 * p))));
           if (p < 1) raf = requestAnimationFrame(step);
         };
         raf = requestAnimationFrame(step);
@@ -52,24 +59,23 @@ function Stat({ item, index }: { item: StatItem; index: number }) {
       io.disconnect();
       cancelAnimationFrame(raf);
     };
-  }, [item.value, index]);
+  }, [shown, index]);
 
   return (
     <div
       ref={box}
-      className={`${st.card} ${s.rv}`}
+      className={`${st.item} ${s.rv}`}
       data-on={on ? '' : undefined}
       style={{ '--i': index } as CSSProperties}
     >
-      <span className={st.idx} aria-hidden="true">
-        {String(index + 1).padStart(2, '0')}
-      </span>
       <span className={st.sr}>
-        {fmt(item.value)} {item.label}
+        {fmt(shown)}
+        {plus ? '+' : ''} {item.label}
       </span>
-      <b className={st.num} aria-hidden="true">
-        {fmt(n)}
-      </b>
+      <div className={st.fig} aria-hidden="true">
+        <b className={st.num}>{fmt(n)}</b>
+        {plus && <i className={st.plus}>+</i>}
+      </div>
       <span className={st.label} aria-hidden="true">
         {item.label}
       </span>
@@ -84,17 +90,20 @@ function Stat({ item, index }: { item: StatItem; index: number }) {
 
 export function HomeStats({ eyebrow, items }: { eyebrow: string; items: StatItem[] }) {
   return (
-    <section className={s.sec} id="numbers" aria-labelledby="numbers-h">
+    <section className={st.sec} id="numbers" aria-labelledby="numbers-h">
+      <div className={st.bg} aria-hidden="true" />
       <div className={s.w}>
-        <span className={`${s.eb} ${s.rv}`}>{eyebrow}</span>
-        <h2 id="numbers-h" className={`${s.h2} ${s.rv} ${s.sp}`} data-wide="">
-          {words(
-            <>
-              Voltaris in <em className={s.ser}>numbers</em>
-            </>,
-          )}
-        </h2>
-        <div className={st.grid}>
+        <div className={st.head}>
+          <span className={`${s.eb} ${s.rv}`}>{eyebrow}</span>
+          <h2 id="numbers-h" className={`${s.h2} ${s.rv} ${s.sp}`} data-wide="">
+            {words(
+              <>
+                Voltaris in <em className={s.ser}>numbers</em>
+              </>,
+            )}
+          </h2>
+        </div>
+        <div className={st.row}>
           {items.map((item, i) => (
             <Stat key={item.key} item={item} index={i} />
           ))}

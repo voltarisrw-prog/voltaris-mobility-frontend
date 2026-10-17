@@ -207,9 +207,6 @@ export function HomeLanding({ cards, stats }: { cards: CoverCard[]; stats: StatI
         </div>
       </section>
 
-      {/* numbers */}
-      {stats.length > 0 && <HomeStats eyebrow={statsConfig.eyebrow} items={stats} />}
-
       {/* top trending */}
       <section className={s.sec} id="trending">
         <div className={s.w}>
@@ -386,6 +383,9 @@ export function HomeLanding({ cards, stats }: { cards: CoverCard[]; stats: StatI
           </div>
         </div>
       </section>
+
+      {/* numbers: the last section of the page */}
+      {stats.length > 0 && <HomeStats eyebrow={statsConfig.eyebrow} items={stats} />}
     </HomeRoot>
   );
 }
