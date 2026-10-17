@@ -1,6 +1,23 @@
 'use client';
 
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
+import {
+  BadgeCheck,
+  Building2,
+  CalendarCheck,
+  Car,
+  KeyRound,
+  LayoutGrid,
+  MapPin,
+  Pause,
+  Play,
+  Settings,
+  ShoppingBag,
+  Tag,
+  Users,
+  Wrench,
+  type LucideIcon,
+} from 'lucide-react';
 import s from './home.module.css';
 import st from './stats.module.css';
 import { words } from './text';
@@ -12,6 +29,21 @@ export interface StatItem {
   note?: string | undefined;
 }
 
+const ICONS: Record<string, LucideIcon> = {
+  sold: ShoppingBag,
+  rented: KeyRound,
+  testdrives: CalendarCheck,
+  partners: Building2,
+  trusted: Users,
+  listed: Car,
+  brands: Tag,
+  dealers: BadgeCheck,
+  garages: Wrench,
+  locations: MapPin,
+  bodies: LayoutGrid,
+  services: Settings,
+};
+
 const fmt = (n: number) => n.toLocaleString('en-US');
 
 /**
@@ -20,9 +52,10 @@ const fmt = (n: number) => n.toLocaleString('en-US');
  */
 const floor = (v: number) => (v > 1 ? { shown: v - 1, plus: true } : { shown: v, plus: false });
 
-/** One figure that counts up from zero the first time it is on screen. */
-function Stat({ item, index }: { item: StatItem; index: number }) {
+/** One card. Its figure counts up from zero the first time the card slides into view. */
+function Card({ item, index, clone }: { item: StatItem; index: number; clone: boolean }) {
   const { shown, plus } = floor(item.value);
+  const Icon = ICONS[item.key] ?? Car;
   const box = useRef<HTMLDivElement>(null);
   const [n, setN] = useState(shown);
   const [on, setOn] = useState(false);
@@ -38,18 +71,17 @@ function Stat({ item, index }: { item: StatItem; index: number }) {
         io.disconnect();
         setOn(true);
         if (reduce) return;
-        const delay = (index % 4) * 140;
-        const duration = 2000;
+        const duration = 1900;
         let t0 = 0;
         const step = (t: number) => {
           if (!t0) t0 = t;
-          const p = Math.min(Math.max((t - t0 - delay) / duration, 0), 1);
+          const p = Math.min((t - t0) / duration, 1);
           setN(Math.round(shown * (p === 1 ? 1 : 1 - Math.pow(2, -10 * p))));
           if (p < 1) raf = requestAnimationFrame(step);
         };
         raf = requestAnimationFrame(step);
       },
-      { threshold: 0.4 },
+      { threshold: 0.55 },
     );
     // Start from zero only when it will animate; with reduced motion the real number just shows.
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -59,19 +91,28 @@ function Stat({ item, index }: { item: StatItem; index: number }) {
       io.disconnect();
       cancelAnimationFrame(raf);
     };
-  }, [shown, index]);
+  }, [shown]);
 
   return (
     <div
       ref={box}
-      className={`${st.item} ${s.rv}`}
+      className={st.card}
       data-on={on ? '' : undefined}
-      style={{ '--i': index } as CSSProperties}
+      data-clone={clone ? '' : undefined}
+      aria-hidden={clone ? true : undefined}
     >
-      <span className={st.sr}>
-        {fmt(shown)}
-        {plus ? '+' : ''} {item.label}
-      </span>
+      {!clone && (
+        <span className={st.sr}>
+          {fmt(shown)}
+          {plus ? '+' : ''} {item.label}
+        </span>
+      )}
+      <div className={st.top} aria-hidden="true">
+        <span className={st.ico}>
+          <Icon size={20} strokeWidth={1.8} />
+        </span>
+        <span className={st.idx}>{String(index + 1).padStart(2, '0')}</span>
+      </div>
       <div className={st.fig} aria-hidden="true">
         <b className={st.num}>{fmt(n)}</b>
         {plus && <i className={st.plus}>+</i>}
@@ -89,6 +130,11 @@ function Stat({ item, index }: { item: StatItem; index: number }) {
 }
 
 export function HomeStats({ eyebrow, items }: { eyebrow: string; items: StatItem[] }) {
+  const [paused, setPaused] = useState(false);
+  // Enough copies that the row always fills the screen and loops without a gap.
+  const copies = Math.max(2, Math.ceil(8.1 / Math.max(items.length, 1)) + 1);
+  const seconds = Math.max(24, items.length * 5);
+
   return (
     <section className={st.sec} id="numbers" aria-labelledby="numbers-h">
       <div className={st.bg} aria-hidden="true" />
@@ -103,11 +149,32 @@ export function HomeStats({ eyebrow, items }: { eyebrow: string; items: StatItem
             )}
           </h2>
         </div>
-        <div className={st.row}>
-          {items.map((item, i) => (
-            <Stat key={item.key} item={item} index={i} />
-          ))}
+      </div>
+
+      <div className={st.viewport}>
+        <div
+          className={st.track}
+          data-paused={paused ? '' : undefined}
+          style={{ '--copies': copies, '--dur': `${seconds}s` } as CSSProperties}
+        >
+          {Array.from({ length: copies }, (_, c) =>
+            items.map((item, i) => (
+              <Card key={`${c}-${item.key}`} item={item} index={i} clone={c > 0} />
+            )),
+          )}
         </div>
+      </div>
+
+      <div className={st.tools}>
+        <button
+          type="button"
+          className={st.pause}
+          aria-pressed={paused}
+          onClick={() => setPaused((p) => !p)}
+        >
+          {paused ? <Play size={16} /> : <Pause size={16} />}
+          {paused ? 'Play' : 'Pause'}
+        </button>
       </div>
     </section>
   );
