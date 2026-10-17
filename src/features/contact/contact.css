@@ -82,3 +82,11 @@
 @media (max-width:980px){.ct-grid{grid-template-columns:1fr}.ct-cards{grid-template-columns:1fr 1fr}}
 @media (max-width:700px){.ct-h1{white-space:normal;font-variation-settings:"wdth" 100}.ct-cards{grid-template-columns:1fr}.ct-r2{grid-template-columns:1fr}.ct-btn{justify-self:stretch;justify-content:center}.ct-f.ct-ip label{left:132px}}
 @media (prefers-reduced-motion:reduce){.ct-page *,.ct-page *::before{animation:none!important;transition:none!important}.ct-wi{transform:none!important}.ct-fw{opacity:1!important;filter:none!important;transform:none!important}}
+
+/* phone: own box. The number and its label live in their own area beside the picker,
+   so neither can run under the country code, whatever its width or the column's. */
+.ct-f.ct-ip{overflow:hidden}
+.ct-f.ct-ip .ct-cc{flex:0 0 auto;width:auto;min-width:112px;padding:12px 14px 0}
+.ct-f.ct-ip .ct-in{position:relative;flex:1 1 0;min-width:0}
+.ct-f.ct-ip .ct-in input{width:100%;padding:26px 16px 9px}
+.ct-f.ct-ip .ct-in label{left:16px;top:8px;font-size:12px}

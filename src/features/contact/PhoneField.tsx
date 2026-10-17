@@ -53,19 +53,21 @@ export function PhoneField({
           ))}
         </select>
       </div>
-      <input
-        id={id}
-        type="tel"
-        inputMode="tel"
-        autoComplete="tel-national"
-        placeholder={country.ex}
-        aria-invalid={invalid}
-        {...inputProps}
-        onChange={onChange}
-      />
-      <label htmlFor={id}>
-        Phone<i>*</i>
-      </label>
+      <div className="ct-in">
+        <input
+          id={id}
+          type="tel"
+          inputMode="tel"
+          autoComplete="tel-national"
+          placeholder={country.ex}
+          aria-invalid={invalid}
+          {...inputProps}
+          onChange={onChange}
+        />
+        <label htmlFor={id}>
+          Phone<i>*</i>
+        </label>
+      </div>
     </div>
   );
 }
