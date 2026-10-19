@@ -127,7 +127,7 @@ function Card({ item, index, clone }: { item: StatItem; index: number; clone: bo
   );
 }
 
-export function HomeStats({ eyebrow, items }: { eyebrow: string; items: StatItem[] }) {
+export function HomeStats({ items }: { items: StatItem[] }) {
   // Enough copies that the row always fills the screen and loops without a gap.
   const copies = Math.max(2, Math.ceil(8.1 / Math.max(items.length, 1)) + 1);
   const seconds = Math.max(24, items.length * 5);
@@ -137,7 +137,6 @@ export function HomeStats({ eyebrow, items }: { eyebrow: string; items: StatItem
       <div className={st.bg} aria-hidden="true" />
       <div className={s.w}>
         <div className={st.head}>
-          <span className={`${s.eb} ${s.rv}`}>{eyebrow}</span>
           <h2 id="numbers-h" className={`${s.h2} ${s.rv} ${s.sp}`} data-wide="">
             {words(
               <>

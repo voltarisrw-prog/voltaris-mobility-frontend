@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { hero, statsConfig } from '@/content/home';
+import { hero } from '@/content/home';
 import type { CoverCard } from './cards';
 import { EnquiryForm } from './EnquiryForm';
 import { HeroBackdrop } from './HeroBackdrop';
@@ -141,7 +141,6 @@ export function HomeLanding({ cards, stats }: { cards: CoverCard[]; stats: StatI
         <section className={s.sec} id="cars" style={{ paddingBottom: 50 }}>
           <div className={`${s.w} ${s.hd}`}>
             <div>
-              <span className={`${s.eb} ${s.rv}`}>Worth a closer look</span>
               <h2 className={`${s.h2} ${s.rv} ${s.sp}`} data-wide="">
                 {words(
                   <>
@@ -166,7 +165,6 @@ export function HomeLanding({ cards, stats }: { cards: CoverCard[]; stats: StatI
         <div className={s.w}>
           <div className={s.hd}>
             <div>
-              <span className={`${s.eb} ${s.rv}`}>Find your fit</span>
               <h2 className={`${s.h2} ${s.rv} ${s.sp}`} data-wide="">
                 {words(
                   <>
@@ -246,7 +244,6 @@ export function HomeLanding({ cards, stats }: { cards: CoverCard[]; stats: StatI
       {/* your next move */}
       <section className={s.sec} id="next" style={{ paddingTop: 30 }}>
         <div className={s.w}>
-          <span className={`${s.eb} ${s.rv}`}>Your next move</span>
           <h2 className={`${s.h2} ${s.rv} ${s.sp}`} data-wide="">
             {words(
               <>
@@ -308,7 +305,6 @@ export function HomeLanding({ cards, stats }: { cards: CoverCard[]; stats: StatI
       {/* talk to voltaris */}
       <section className={`${s.sec} ${s.enq}`} id="enquire">
         <div className={s.w}>
-          <span className={`${s.eb} ${s.rv}`}>Talk to Voltaris</span>
           <h2 className={`${s.h2} ${s.rv} ${s.sp}`} data-wide="">
             {words(
               <>
@@ -350,7 +346,6 @@ export function HomeLanding({ cards, stats }: { cards: CoverCard[]; stats: StatI
       {/* our network */}
       <section className={s.sec} id="network">
         <div className={s.w}>
-          <span className={`${s.eb} ${s.rv}`}>Our network</span>
           <h2 className={`${s.h2} ${s.rv} ${s.sp}`} data-wide="">
             {words(
               <>
@@ -385,7 +380,7 @@ export function HomeLanding({ cards, stats }: { cards: CoverCard[]; stats: StatI
       </section>
 
       {/* numbers: the last section of the page */}
-      {stats.length > 0 && <HomeStats eyebrow={statsConfig.eyebrow} items={stats} />}
+      {stats.length > 0 && <HomeStats items={stats} />}
     </HomeRoot>
   );
 }
