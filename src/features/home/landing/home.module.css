@@ -1744,3 +1744,22 @@
   justify-content: center;
 }
 
+/* showroom: no shadows. The dark vignette, the floor shadow and the card's black shadow are
+   removed, and the photo's feathered edge is narrowed. The model name and the blue glow stay. */
+.srStudio::after {
+  display: none;
+}
+.srFloor {
+  display: none;
+}
+.srCard {
+  box-shadow: 0 50px 120px -50px rgba(53, 162, 255, 0.6);
+}
+.srBox {
+  -webkit-mask-image:
+    linear-gradient(90deg, transparent, #000 2.5%, #000 97.5%, transparent),
+    linear-gradient(transparent, #000 2.5%, #000 97.5%, transparent);
+  mask-image:
+    linear-gradient(90deg, transparent, #000 2.5%, #000 97.5%, transparent),
+    linear-gradient(transparent, #000 2.5%, #000 97.5%, transparent);
+}
