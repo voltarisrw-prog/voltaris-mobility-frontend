@@ -1,5 +1,4 @@
 import Image from 'next/image';
-import { FeedBackdrop } from '@/components/FeedBackdrop';
 import Link from 'next/link';
 import { ArrowUpRight, BatteryCharging, Zap } from 'lucide-react';
 import { CompareToggleButton } from './CompareToggleButton';
@@ -85,16 +84,18 @@ export function MarketplaceVehicleCard({
               }
               className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.035]"
               priority={priority}
+              {...(vehicle.primary_image.blur_data_url
+                ? {
+                    placeholder: 'blur' as const,
+                    blurDataURL: vehicle.primary_image.blur_data_url,
+                  }
+                : {})}
             />
           </Link>
         ) : (
           <div className="absolute inset-0 flex items-center justify-center font-data text-eyebrow uppercase text-steel-muted">
             Photos coming soon
           </div>
-        )}
-
-        {vehicle.primary_image && (
-          <FeedBackdrop src={vehicle.primary_image.detail ?? vehicle.primary_image.card} />
         )}
 
         <div

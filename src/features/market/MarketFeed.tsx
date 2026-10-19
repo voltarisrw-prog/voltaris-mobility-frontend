@@ -17,6 +17,7 @@ import { CompareToggleButton } from '@/components/CompareToggleButton';
 import { financeDefaults, financePartners } from '@/config/finance';
 import { computeLoan, depositFromBps } from '@/lib/finance/amortisation';
 import { formatPrice } from '@/lib/format';
+import { readPhoto } from '@/features/car/photo';
 import type { VehicleSummary } from '@/types/vehicle';
 import { heavy } from './fonts';
 import s from './market.module.css';
@@ -420,6 +421,21 @@ function Viewer({
   const [i, setI] = useState(start);
   const [zoom, setZoom] = useState(1);
   const [origin, setOrigin] = useState({ x: 50, y: 50 });
+  const [bg, setBg] = useState('#050a1d');
+  useEffect(() => {
+    const c = cars[i];
+    const u = c ? bigOf(c) : null;
+    if (!u) return;
+    let gone = false;
+    readPhoto(u)
+      .then((info) => {
+        if (!gone && info?.bg) setBg(info.bg);
+      })
+      .catch(() => undefined);
+    return () => {
+      gone = true;
+    };
+  }, [cars, i]);
   const ref = useRef<HTMLDivElement>(null);
   const drag = useRef<{ x: number; y: number; ox: number; oy: number } | null>(null);
   const touchX = useRef(0);
@@ -465,11 +481,8 @@ function Viewer({
         role="dialog"
         aria-modal="true"
         aria-label={`${titleOf(car)} — full screen`}
-        style={{ '--g': glowOf(i) } as React.CSSProperties}
+        style={{ '--g': glowOf(i), background: bg } as React.CSSProperties}
       >
-        {src && (
-          <Image className={s.ambient} src={src} alt="" fill sizes="100vw" aria-hidden="true" />
-        )}
         <div
           className={s.canvas}
           data-zoom={zoom > 1 ? '' : undefined}
@@ -609,9 +622,27 @@ function Showroom({
   const [i, setI] = useState(0);
   const [hold, setHold] = useState(false);
   const [visible, setVisible] = useState(true);
+  const [bgs, setBgs] = useState<Record<string, string>>({});
   const ref = useRef<HTMLElement>(null);
   const touchX = useRef(0);
   const go = useCallback((n: number) => setI((n + cars.length) % cars.length), [cars.length]);
+  const photoKey = cars.map((c) => c.id).join();
+  useEffect(() => {
+    let gone = false;
+    cars.forEach((v) => {
+      const u = bigOf(v);
+      if (!u) return;
+      readPhoto(u)
+        .then((info) => {
+          if (!gone && info?.bg) setBgs((b) => ({ ...b, [v.id]: info.bg }));
+        })
+        .catch(() => undefined);
+    });
+    return () => {
+      gone = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [photoKey]);
 
   useEffect(() => {
     const io = new IntersectionObserver(([e]) => setVisible(Boolean(e?.isIntersecting)), {
@@ -671,17 +702,8 @@ function Showroom({
               data-on={k === i ? '' : undefined}
               data-gone={k < i ? '' : undefined}
               aria-hidden={k !== i}
+              style={{ background: bgs[v.id] ?? '#050a1d' }}
             >
-              {src && (
-                <Image
-                  className={s.ambient}
-                  src={src}
-                  alt=""
-                  fill
-                  sizes="100vw"
-                  aria-hidden="true"
-                />
-              )}
               <a
                 href={`/cars/${v.slug}?mode=${mode}`}
                 className={s.slideCar}

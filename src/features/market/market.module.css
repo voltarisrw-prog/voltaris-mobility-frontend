@@ -1487,3 +1487,16 @@
     transform: none;
   }
 }
+
+/* no halo: the stage is one flat colour taken from the photo's own backdrop (set in MarketFeed),
+   with no blurred copy, no dark vignette or floor shadow, and no feathered photo edges. */
+.heroStage::after {
+  display: none;
+}
+.ambient {
+  display: none;
+}
+.carBox {
+  -webkit-mask-image: none;
+  mask-image: none;
+}
