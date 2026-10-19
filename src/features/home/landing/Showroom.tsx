@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { DEFAULT_INFO, readPhoto, silhouette, WHOLE, type PhotoInfo } from '@/features/car/photo';
 import type { CoverCard } from './cards';
-import { Arrow, Roll } from './text';
+import { Arrow } from './text';
 import s from './home.module.css';
 
 const SLIDE_MS = 5000;
@@ -243,16 +243,6 @@ export function Showroom({ cards }: { cards: CoverCard[] }) {
           )}
         </div>
 
-        <div className={s.srInfo} key={car.id}>
-          <div className={s.srActs}>
-            <Link href={car.viewHref}>
-              <Roll>View vehicle</Roll>
-            </Link>
-            <Link href={car.dealHref}>
-              <Roll>{car.dealLabel}</Roll>
-            </Link>
-          </div>
-        </div>
       </div>
 
       {count > 1 && (

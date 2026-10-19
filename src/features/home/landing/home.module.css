@@ -1763,3 +1763,9 @@
     linear-gradient(90deg, transparent, #000 2.5%, #000 97.5%, transparent),
     linear-gradient(transparent, #000 2.5%, #000 97.5%, transparent);
 }
+
+/* showroom: car fits the card. The whole car shows with room around it on every screen,
+   on the photo's own backdrop colour; the buttons strip below it is gone. */
+.srBox {
+  width: min(92cqw, 92cqh * var(--arn, 1.5));
+}
