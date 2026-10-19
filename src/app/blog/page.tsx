@@ -64,7 +64,6 @@ export default async function BlogPage() {
       <div className="bl-w">
         <Breadcrumbs trail={trail} />
 
-        <p className="bl-eb">From the team</p>
         <h1 className="bl-h1">
           <span className="bl-wd">
             <span className="bl-wi">
@@ -72,11 +71,6 @@ export default async function BlogPage() {
             </span>
           </span>
         </h1>
-        <p className="bl-lead">
-          What is changing in Rwanda&rsquo;s EV market, and what we are building. For the evergreen
-          material — buying, charging, ownership — see the <Link href="/guides">guides</Link>.
-        </p>
-
         {failed || cards.length === 0 ? (
           <div className="bl-empty">
             <EmptyState
