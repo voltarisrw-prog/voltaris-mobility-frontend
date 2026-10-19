@@ -1500,3 +1500,23 @@
   -webkit-mask-image: none;
   mask-image: none;
 }
+
+/* compare icon on the grid tiles, the showroom and the full-screen viewer.
+   It sits above the photo, outside the tile's own button, so tapping it never opens the tile. */
+.cmp {
+  position: absolute;
+  z-index: 6;
+  top: 20px;
+  right: 20px;
+}
+.cmpHero {
+  z-index: 8;
+  top: clamp(14px, 2.6vw, 30px);
+  right: clamp(14px, 3vw, 40px);
+}
+.vCmp {
+  display: inline-flex;
+  align-items: center;
+  margin-left: auto;
+  margin-right: 10px;
+}

@@ -565,6 +565,14 @@ function Viewer({
           <span className={s.vHint}>
             {zoom > 1 ? 'Drag to look around · click to zoom out' : 'Click or scroll to zoom'}
           </span>
+          <span className={s.vCmp}>
+            <CompareToggleButton
+              vehicleId={car.id}
+              mode={mode}
+              variant="icon"
+              className="rounded-full border-white/30 bg-black/70 text-white backdrop-blur-md hover:border-white hover:bg-black"
+            />
+          </span>
           <button type="button" className={s.vBtn} aria-label="Close" onClick={onClose}>
             <X aria-hidden="true" />
           </button>
@@ -733,6 +741,14 @@ function Showroom({
           );
         })}
       </div>
+      <div className={`${s.cmp} ${s.cmpHero}`}>
+        <CompareToggleButton
+          vehicleId={car.id}
+          mode={mode}
+          variant="icon"
+          className="rounded-full border-white/30 bg-black/70 text-white backdrop-blur-md hover:border-white hover:bg-black"
+        />
+      </div>
       <div className={s.heroBar}>
         <div className={s.heroName} aria-live="polite">
           <span>
@@ -873,6 +889,14 @@ function Tile({
           <span>{vehicle.year}</span>
         </span>
       </button>
+      <div className={s.cmp}>
+        <CompareToggleButton
+          vehicleId={vehicle.id}
+          mode={mode}
+          variant="icon"
+          className="rounded-full border-white/30 bg-black/70 text-white backdrop-blur-md hover:border-white hover:bg-black"
+        />
+      </div>
       {peek && (
         <div className={s.peek} data-side={peek}>
           <InfoCard vehicle={vehicle} mode={mode} index={index} />
