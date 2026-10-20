@@ -113,3 +113,15 @@
 @media (max-width:980px){.fc-cg,.fc-ap{grid-template-columns:1fr}.fc-res{position:relative;top:0}.fc-pgrid{grid-template-columns:1fr}.fc-mb{display:flex}.fc-curve{height:240px}}
 @media (max-width:700px){.fc-lg dd{font-size:13px}.fc-lg{gap:6px}}
 @media (prefers-reduced-motion:reduce){.fc-curve .p{animation:none;stroke-dashoffset:0}}
+
+/* finance: stop the calculator card clipping its own content.
+   The card's single grid column used to grow to the price input's built-in minimum width and then
+   get cut off by the card. The column now fits the card, the price input shrinks with it, and the
+   rows that hold several controls wrap when the card is narrow. */
+.fc-ctls{grid-template-columns:minmax(0,1fr)}
+.fc-ctls>*{min-width:0}
+.fc-pin input{width:100%}
+.fc-ch,.fc-rt{flex-wrap:wrap}
+.fc-ctrl{flex-wrap:wrap;justify-content:flex-end;max-width:100%}
+.fc-cv{gap:12px}
+.fc-curve{opacity:.35}
