@@ -13,12 +13,71 @@ export interface DealerCardData {
   verified: boolean;
   vehicleCount: number;
   logo: string | null;
-  cover: string | null;
   whatsapp: string | null;
 }
 
 const HUES = ['#2b6fe0', '#12d6b0', '#a98bff', '#ffb15c', '#5cc8ff', '#ff8fb1'];
 const initialOf = (name: string) => (name.trim().charAt(0) || '·').toUpperCase();
+
+/** One dealer's profile card: logo first, then who and where, then the verification. */
+function Profile({ d, i, maxV, clone }: { d: DealerCardData; i: number; maxV: number; clone: boolean }) {
+  const href = `/dealers/${d.slug}`;
+  const n = d.vehicleCount;
+  const tab = clone ? -1 : undefined;
+  return (
+    <article
+      className="dl-pc"
+      aria-hidden={clone ? true : undefined}
+      data-clone={clone ? '' : undefined}
+      style={{ '--c1': HUES[i % HUES.length] } as CSSProperties}
+    >
+      <Link href={href} className="dl-cover" aria-label={`View ${d.name}`} tabIndex={tab} />
+      <div className="dl-top">
+        <span className="dl-lg" aria-hidden="true">
+          {d.logo ? <Image src={d.logo} alt="" width={96} height={96} unoptimized /> : <b>{initialOf(d.name)}</b>}
+        </span>
+        {d.city && (
+          <span className="dl-pill">
+            <MapPin size={14} aria-hidden="true" />
+            {d.city}
+          </span>
+        )}
+      </div>
+      <h2 className="dl-name">{d.name}</h2>
+      <p className="dl-meta">
+        {d.city ? `${d.city} · ` : ''}
+        {n} {n === 1 ? 'vehicle' : 'vehicles'} listed
+      </p>
+      <div className="dl-vb">
+        <span>
+          Vehicles <b>{n}</b>
+        </span>
+        <i style={{ '--w': `${Math.round((n / maxV) * 100)}%` } as CSSProperties} />
+      </div>
+      {d.verified ? (
+        <span className="dl-bdg dl-ok">
+          <ShieldCheck size={14} aria-hidden="true" />
+          Documents verified
+        </span>
+      ) : (
+        <span className="dl-bdg dl-no">Not yet verified</span>
+      )}
+      <div className="dl-acts">
+        <Link href={href} className="dl-view" tabIndex={tab}>
+          View dealer
+          <span>
+            <ArrowRight size={20} strokeWidth={2.4} />
+          </span>
+        </Link>
+        {d.whatsapp && (
+          <a href={d.whatsapp} target="_blank" rel="noopener noreferrer" className="dl-wa" aria-label={`WhatsApp ${d.name}`} tabIndex={tab}>
+            <MessageCircle size={22} />
+          </a>
+        )}
+      </div>
+    </article>
+  );
+}
 
 export function DealersExplorer({
   dealers,
@@ -44,6 +103,12 @@ export function DealersExplorer({
       (!qn || d.name.toLowerCase().includes(qn)),
   );
   const maxV = Math.max(1, ...dealers.map((d) => d.vehicleCount));
+
+  // Sliding needs a few cards to be worth it; one or two just sit still, centred.
+  const slides = list.length >= 3;
+  // Enough copies that the track is always wider than the screen plus one full set, so the loop has no gap.
+  const copies = Math.max(2, Math.ceil(8 / Math.max(list.length, 1)) + 1);
+  const seconds = Math.max(28, list.length * 6);
 
   function reset() {
     setPlace('all');
@@ -134,81 +199,27 @@ export function DealersExplorer({
         )}
       </p>
 
-      <div className="dl-gr">
-        {list.map((d, i) => {
-          const href = `/dealers/${d.slug}`;
-          const n = d.vehicleCount;
-          return (
-            <article key={d.id} className="dl-dc" style={{ '--c1': HUES[i % HUES.length], '--d': i % 3 } as CSSProperties}>
-              <Link href={href} className="dl-cover" aria-label={`View ${d.name}`} />
-              <div className="dl-im">
-                {d.cover ? (
-                  <Image src={d.cover} alt="" fill unoptimized sizes="(min-width: 1024px) 30vw, (min-width: 700px) 50vw, 100vw" className="object-cover" />
-                ) : (
-                  <span className="dl-mono" aria-hidden="true">
-                    {initialOf(d.name)}
-                  </span>
-                )}
-                {d.city && (
-                  <span className="dl-pill dl-l">
-                    <MapPin size={14} aria-hidden="true" />
-                    {d.city}
-                  </span>
-                )}
-              </div>
-              <div className="dl-bd">
-                <div className="dl-id">
-                  <span className="dl-av" aria-hidden="true">
-                    {d.logo ? <Image src={d.logo} alt="" width={62} height={62} unoptimized className="object-cover" /> : initialOf(d.name)}
-                  </span>
-                  <div>
-                    <h2>{d.name}</h2>
-                    <small>
-                      {d.city ? `${d.city} · ` : ''}
-                      {n} {n === 1 ? 'vehicle' : 'vehicles'} listed
-                    </small>
-                  </div>
-                </div>
-                <div className="dl-vb">
-                  <span>
-                    Vehicles <b>{n}</b>
-                  </span>
-                  <i style={{ '--w': `${Math.round((n / maxV) * 100)}%` } as CSSProperties} />
-                </div>
-                {d.verified ? (
-                  <span className="dl-bdg dl-ok">
-                    <ShieldCheck size={14} aria-hidden="true" />
-                    Documents verified
-                  </span>
-                ) : (
-                  <span className="dl-bdg dl-no">Not yet verified</span>
-                )}
-                <div className="dl-acts">
-                  <Link href={href} className="dl-view">
-                    View dealer
-                    <span>
-                      <ArrowRight size={20} strokeWidth={2.4} />
-                    </span>
-                  </Link>
-                  {d.whatsapp && (
-                    <a href={d.whatsapp} target="_blank" rel="noopener noreferrer" className="dl-wa" aria-label={`WhatsApp ${d.name}`}>
-                      <MessageCircle size={22} />
-                    </a>
-                  )}
-                </div>
-              </div>
-            </article>
-          );
-        })}
-      </div>
-
-      {list.length === 0 && (
+      {list.length === 0 ? (
         <div className="dl-none">
           <h3>No dealer matches that</h3>
           <p>Try another place or word, or clear the filters.</p>
           <button type="button" className="dl-btn" onClick={reset}>
             Clear filters
           </button>
+        </div>
+      ) : slides ? (
+        <div className="dl-viewport" role="region" aria-label="Dealers">
+          <div className="dl-track" style={{ '--copies': copies, '--dur': `${seconds}s` } as CSSProperties}>
+            {Array.from({ length: copies }, (_, c) =>
+              list.map((d, i) => <Profile key={`${c}-${d.id}`} d={d} i={i} maxV={maxV} clone={c > 0} />),
+            )}
+          </div>
+        </div>
+      ) : (
+        <div className="dl-still">
+          {list.map((d, i) => (
+            <Profile key={d.id} d={d} i={i} maxV={maxV} clone={false} />
+          ))}
         </div>
       )}
     </>

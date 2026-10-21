@@ -17,14 +17,14 @@ export const metadata: Metadata = buildMetadata({
   path: '/dealers',
 });
 
-/** How many dealers get their profile fetched for a cover photo and WhatsApp number. */
+/** How many dealers get their profile fetched for a WhatsApp number. */
 const DETAIL_LIMIT = 12;
 
 /**
- * The directory only carries a small square logo. The cover photo and contact numbers live on the
- * dealer's own profile, a separate request, so the first few profiles are fetched in parallel
- * (both calls are cached). A dealer whose profile fails or has no photo simply gets a card without
- * one; the directory still lists every dealer.
+ * The directory carries the logo, name, city, verification and vehicle count. The WhatsApp number
+ * lives on the dealer's own profile, a separate request, so the first few profiles are fetched in
+ * parallel (both calls are cached). A dealer whose profile fails just gets a card without the
+ * WhatsApp button; the directory still lists every dealer.
  */
 async function loadDetails(dealers: DealerSummary[]): Promise<Map<string, DealerDetail>> {
   const details = await Promise.all(
@@ -58,20 +58,16 @@ export default async function DealersPage() {
 
   const details = dealers.length > 0 ? await loadDetails(dealers) : new Map<string, DealerDetail>();
 
-  const cards: DealerCardData[] = dealers.map((d) => {
-    const detail = details.get(d.slug);
-    return {
-      id: d.id,
-      slug: d.slug,
-      name: d.name,
-      city: d.city,
-      verified: d.verified,
-      vehicleCount: d.vehicle_count,
-      logo: d.logo_url,
-      cover: detail?.cover_image_url ?? null,
-      whatsapp: whatsappHref(detail?.whatsapp),
-    };
-  });
+  const cards: DealerCardData[] = dealers.map((d) => ({
+    id: d.id,
+    slug: d.slug,
+    name: d.name,
+    city: d.city,
+    verified: d.verified,
+    vehicleCount: d.vehicle_count,
+    logo: d.logo_url,
+    whatsapp: whatsappHref(details.get(d.slug)?.whatsapp),
+  }));
 
   // The totals are only honest when every dealer is on this page.
   const showStats = typeof total !== 'number' || total <= dealers.length;
